@@ -15,15 +15,12 @@
 		<SharpDXPlatform>Unknown</SharpDXPlatform>
 		<MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
 		</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-		<OutputPath>bin\Debug\$(Platform)</OutputPath>
-		<DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;DIRECTX11_1</DefineConstants>
-		<OdysseyEngine>0</OdysseyEngine>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-		<OutputPath>bin\Release\$(Platform)</OutputPath>
-		<DefineConstants>WIN8METRO;W8CORE;DIRECTX11_1</DefineConstants>
-		<OdysseyEngine>0</OdysseyEngine>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Win7Debug'">
+    <Platform>AnyCpu</Platform>
+    <SharpDXPlatform>net40</SharpDXPlatform>
+		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+		<OutputPath>bin\Debug\$(SharpDXPlatform)</OutputPath>
+		<DefineConstants>TRACE;DEBUG;DIRECTX11_1</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug'">
 		<Platform>AnyCpu</Platform>
@@ -34,7 +31,7 @@
 		<DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1</DefineConstants>
 		<OutputPath>bin\Debug\$(SharpDXPlatform)</OutputPath>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'Win8Release'  ">
+	<PropertyGroup Condition=" '$(Configuration)' == 'Win8Release' ">
 		<Platform>AnyCpu</Platform>
 		<SharpDXPlatform>winrt</SharpDXPlatform>
 		<OdysseyEngine>1</OdysseyEngine>
@@ -43,7 +40,7 @@
 		<DefineConstants>W8CORE;NETFX_CORE;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1</DefineConstants>
 		<OutputPath>bin\Release\$(SharpDXPlatform)</OutputPath>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'WP8Debug'  ">
+	<PropertyGroup Condition=" '$(Configuration)' == 'WP8Debug' ">
 		<SharpDXPlatform>wp8-x86</SharpDXPlatform>
 		<MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
 		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -60,29 +57,7 @@
 		<DefineConstants>WP8;ODYSSEY_ENGINE;DIRECTX11_1</DefineConstants>
 		<OutputPath>bin\Release\$(SharpDXPlatform)</OutputPath>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'RedistWin8Debug' ">
-		<Platform>AnyCpu</Platform>
-		<SharpDXPlatform>winrt</SharpDXPlatform>
-		<OdysseyEngine>0</OdysseyEngine>
-		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-		<TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
-		<DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;DIRECTX11_1</DefineConstants>
-		<OutputPath>bin\Debug\$(SharpDXPlatform)</OutputPath>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)' == 'RedistWP8Debug'  ">
-		<SharpDXPlatform>wp8-x86</SharpDXPlatform>
-		<OdysseyEngine>0</OdysseyEngine>
-		<Platform>x86</Platform>
-		<MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-		<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-		<TargetFrameworkProfile>Profile49</TargetFrameworkProfile>
-		<DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE;WP8;DIRECTX11_1</DefineConstants>
-		<OutputPath>bin\Debug\$(SharpDXPlatform)</OutputPath>
-		<ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'WP8Debug' Or '$(Configuration)' == 'RedistWin8Debug' Or '$(Configuration)' == 'RedistWP8Debug'" >
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'WP8Debug' " >
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
 		<Optimize>false</Optimize>

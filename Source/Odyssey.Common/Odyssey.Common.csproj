@@ -6,6 +6,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win7Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Win7Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(SolutionDir)\Odyssey.PreSettings.targets" />
   <ItemGroup>
@@ -105,7 +114,7 @@
       <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release' Or '$(Configuration)' == 'RedistWin8Debug' ">
+  <ItemGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release' Or '$(Configuration)' == 'Win7Debug' ">
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>C:\Program Files (x86)\Dev\SharpDX-2.5.0\Bin\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>

@@ -16,13 +16,13 @@ namespace ShaderGenerator.Data
         public ShaderDescription[] Load()
         {
             return new[] {
-                new ShaderDescription() { Shader = new SpritePS()},
-                new ShaderDescription() { Shader = new SpriteVS()},
-                //new ShaderDescription() { Shader= new PhongVS()},
-                //new ShaderDescription() { Shader= new PhongShadowsVS()},
-                //new ShaderDescription() { Shader= new PhongPS()},
-                //new ShaderDescription() { Shader= new PhongShadowsPS()},
-                //new ShaderDescription() { Shader= new PhongDiffuseMapPS()},
+                //new ShaderDescription() { Shader = new SpritePS()},
+                //new ShaderDescription() { Shader = new SpriteVS()},
+                new ShaderDescription() { Shader= new PhongVS()},
+                new ShaderDescription() { Shader= new PhongShadowsVS()},
+                new ShaderDescription() { Shader= new PhongPS()},
+                new ShaderDescription() { Shader= new PhongShadowsPS()},
+                new ShaderDescription() { Shader= new PhongDiffuseMapPS()},
             };
         }
 
