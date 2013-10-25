@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vc="clr-namespace:Odyssey.Tools.ShaderGenerator.View.Converters"
+                    xmlns:vm="clr-namespace:Odyssey.Tools.ShaderGenerator.ViewModel">
+    <vc:TechniqueTagConverter x:Key="techniqueTagConverter"/>
+    <DataTemplate DataType="{x:Type vm:TechniqueMappingViewModel}">
+        <Border Background="{Binding Index, Converter={StaticResource techniqueTagConverter}}" CornerRadius="8" BorderBrush="DarkGray" Margin="4" >
+            <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="4 0 4 0"/>
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Image x:Key="iError" Source="/Resources/Icons/Error.png"/>
+    <Image x:Key="iWarning" Source="/Resources/Icons/Warning.png"/>
+    <Image x:Key="iNodeException" Source="/Resources/Icons/NodeException.png" />
+    <Image x:Key="iSettings" Source="/Resources/Icons/Settings.png" />
+    <Image x:Key="iOpen" Source="/Resources/Icons/Open.png" />
+    <Image x:Key="iPlay" Source="/Resources/Icons/Play.png" />
+    <Image x:Key="iSave" Source="/Resources/Icons/Save.png" />
+    <Image x:Key="iMerge" Source="/Resources/Icons/Merge.png" />
+</ResourceDictionary>

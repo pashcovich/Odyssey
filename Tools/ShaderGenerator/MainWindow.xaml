@@ -1,0 +1,57 @@
+﻿<Window x:Class="Odyssey.Tools.ShaderGenerator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:view="clr-namespace:Odyssey.Tools.ShaderGenerator.View"
+        mc:Ignorable="d" 
+        d:DesignHeight="128" Height="600" Width="800"
+        Title="Shader Generator" 
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <Grid Background="#FF181818">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56"/>
+            <RowDefinition Height="*"/>
+            <!--<RowDefinition Height="*"/>-->
+        </Grid.RowDefinitions>
+        <DockPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <Button x:Name="cmdOpen" Content="{StaticResource iOpen}" Grid.Row="0" Margin="4" Width="48" Height="48" 
+                        Command="{Binding OpenCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                        ToolTip="Open Shader Graph"/>
+                <Button x:Name="cmdSave" Content="{StaticResource iSave}" Grid.Row="0" Margin="4" Width="48" Height="48" 
+                        Command="{Binding SaveCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                        ToolTip="Save Shader Graph"/>
+                <Button x:Name="cmdCompile" Content="{StaticResource iPlay}" Grid.Row="0" Margin="4" Width="48" Height="48"
+                        Command="{Binding CompileCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                        ToolTip="Compile all Shaders"/>
+                <Button x:Name="cmdCreateTechnique" Content="{StaticResource iMerge}" Grid.Row="0" Margin="4" Width="48" Height="48" 
+                        Command="{Binding CreateTechniqueCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                        ToolTip="Define a new Technique"/>
+                <Button x:Name="cmdSettings" Content="{StaticResource iSettings}" Grid.Row="0" Margin="4" Width="48" Height="48" 
+                        Command="{Binding OpenSettingsCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                        ToolTip="Open Settings"/>
+                
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="tbName" Text="{Binding ShaderCollectionName}" FontSize="32" Grid.Row="0" Foreground="Silver" Margin="8,8,8,0" BorderThickness="0" 
+                         ToolTip="Click to change the name of this Shader Collection."/>
+            </StackPanel>
+        </DockPanel>
+
+        <DockPanel Grid.Row="1" Grid.ColumnSpan="2" LastChildFill="True" Margin="8">
+            <StackPanel DockPanel.Dock="Bottom"  >
+                <view:TechniquePanelView Grid.Row="2"/>
+                <view:DebugView x:Name="DebugView" Margin="0 8 0 0" MinHeight="32" />
+            </StackPanel>
+            
+            <view:CompilationView x:Name="ShaderList" Grid.Column="0"/>
+        </DockPanel>
+
+        <!--<TextBlock Text="Build Output" FontSize="24" Grid.Row="2" Foreground="Silver" Grid.ColumnSpan="2" Margin="4 0 0 4"/>-->
+
+    </Grid>
+</Window>

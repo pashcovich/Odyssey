@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderGenerator", "Tools\ShaderGenerator\ShaderGenerator.csproj", "{AECE17C4-C423-45EE-93F8-A888C6BDA617}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.Common", "Source\Odyssey.Common\Odyssey.Common.csproj", "{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.Content", "Source\Odyssey.Content\Odyssey.Content.csproj", "{E503A265-F72B-472E-A702-5B4011D8F1D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{A55D0E48-C1DF-4D85-ADDB-261E7D33DB8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{5E89462A-E334-4DC6-A827-24A453212437}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{79BD8914-5011-4E46-A989-D4BDFE2EDFA6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		RedistWin8Debug|Any CPU = RedistWin8Debug|Any CPU
+		RedistWP8Debug|Any CPU = RedistWP8Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Win8Debug|Any CPU = Win8Debug|Any CPU
+		Win8Release|Any CPU = Win8Release|Any CPU
+		WP8Debug|Any CPU = WP8Debug|Any CPU
+		WP8Release|Any CPU = WP8Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.RedistWin8Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.RedistWin8Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.RedistWP8Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.RedistWP8Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Win8Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Win8Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Win8Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.Win8Release|Any CPU.Build.0 = Release|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.WP8Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.WP8Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.WP8Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617}.WP8Release|Any CPU.Build.0 = Release|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Debug|Any CPU.ActiveCfg = RedistWin8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Debug|Any CPU.Build.0 = RedistWin8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.RedistWin8Debug|Any CPU.ActiveCfg = RedistWin8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.RedistWin8Debug|Any CPU.Build.0 = RedistWin8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.RedistWP8Debug|Any CPU.ActiveCfg = RedistWP8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.RedistWP8Debug|Any CPU.Build.0 = RedistWP8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Win8Debug|Any CPU.ActiveCfg = Win8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Win8Debug|Any CPU.Build.0 = Win8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Win8Release|Any CPU.ActiveCfg = Win8Release|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.Win8Release|Any CPU.Build.0 = Win8Release|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.WP8Debug|Any CPU.ActiveCfg = WP8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.WP8Debug|Any CPU.Build.0 = WP8Debug|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.WP8Release|Any CPU.ActiveCfg = WP8Release|Any CPU
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}.WP8Release|Any CPU.Build.0 = WP8Release|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Debug|Any CPU.ActiveCfg = RedistWin8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Debug|Any CPU.Build.0 = RedistWin8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.RedistWin8Debug|Any CPU.ActiveCfg = RedistWin8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.RedistWin8Debug|Any CPU.Build.0 = RedistWin8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.RedistWP8Debug|Any CPU.ActiveCfg = RedistWP8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.RedistWP8Debug|Any CPU.Build.0 = RedistWP8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Win8Debug|Any CPU.ActiveCfg = Win8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Win8Debug|Any CPU.Build.0 = Win8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Win8Release|Any CPU.ActiveCfg = Win8Release|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.Win8Release|Any CPU.Build.0 = Win8Release|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.WP8Debug|Any CPU.ActiveCfg = WP8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.WP8Debug|Any CPU.Build.0 = WP8Debug|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.WP8Release|Any CPU.ActiveCfg = WP8Release|Any CPU
+		{E503A265-F72B-472E-A702-5B4011D8F1D1}.WP8Release|Any CPU.Build.0 = WP8Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5E89462A-E334-4DC6-A827-24A453212437} = {A55D0E48-C1DF-4D85-ADDB-261E7D33DB8F}
+		{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28} = {5E89462A-E334-4DC6-A827-24A453212437}
+		{E503A265-F72B-472E-A702-5B4011D8F1D1} = {5E89462A-E334-4DC6-A827-24A453212437}
+		{AECE17C4-C423-45EE-93F8-A888C6BDA617} = {79BD8914-5011-4E46-A989-D4BDFE2EDFA6}
+	EndGlobalSection
+EndGlobal

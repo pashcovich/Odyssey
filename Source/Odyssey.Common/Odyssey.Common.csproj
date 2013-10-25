@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\Odyssey.PreSettings.targets" />
+  <ItemGroup>
+    <Compile Include="Content\IByteSize.cs" />
+    <Compile Include="DeviceSettings.cs" />
+    <Compile Include="Engine\IDeviceDependentComponent.cs" />
+    <Compile Include="Engine\IValidable.cs" />
+    <Compile Include="Engine\Param.cs" />
+    <Compile Include="Engine\RenderEventArgs.cs" />
+    <Compile Include="Engine\Error.cs" />
+    <Compile Include="Engine\FpsTimer.cs" />
+    <Compile Include="Engine\ICameraProvider.cs" />
+    <Compile Include="Engine\IDevice.cs" />
+    <Compile Include="Engine\InitializeDirectXEventArgs.cs" />
+    <Compile Include="Engine\IOdysseyTarget.cs" />
+    <Compile Include="Engine\ISettings.cs" />
+    <Compile Include="Engine\TargetBase.cs" />
+    <Compile Include="Geometry\Extensions.cs" />
+    <Compile Include="Geometry\MathHelper.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Graphics\Effects\IEffect.cs" />
+    <Compile Include="Graphics\Effects\IParameter.cs" />
+    <Compile Include="Graphics\Effects\ParamHandles.cs" />
+    <Compile Include="Engine\DeviceManager.cs" />
+    <Compile Include="Engine\ICamera.cs" />
+    <Compile Include="Engine\ITarget.cs" />
+    <Compile Include="Graphics\Enums.cs" />
+    <Compile Include="Graphics\IConstantBuffer.cs" />
+    <Compile Include="Graphics\IRenderer.cs" />
+    <Compile Include="Graphics\Materials\IResourceData.cs" />
+    <Compile Include="Graphics\Materials\ReferenceEnums.cs" />
+    <Compile Include="Graphics\Materials\TechniqueKey.cs" />
+    <Compile Include="Graphics\Meshes\ColoredVertex.cs" />
+    <Compile Include="Graphics\IInstance.cs" />
+    <Compile Include="Graphics\IRenderable.cs" />
+    <Compile Include="Graphics\Meshes\ShaderData.cs" />
+    <Compile Include="Graphics\Rendering\Enums.cs" />
+    <Compile Include="Graphics\Rendering\ICommand.cs" />
+    <Compile Include="Graphics\Rendering\IScene.cs" />
+    <Compile Include="Graphics\Rendering\ISceneItemsProvider.cs" />
+    <Compile Include="Graphics\Rendering\Lights\Enums.cs" />
+    <Compile Include="Graphics\Rendering\Lights\ILight.cs" />
+    <Compile Include="Graphics\Rendering\Management\Enums.cs" />
+    <Compile Include="Graphics\Rendering\Management\ISceneTree.cs" />
+    <Compile Include="Graphics\Rendering\Management\RenderableCollectionDescription.cs" />
+    <Compile Include="Graphics\Rendering\Management\SceneNode.cs" />
+    <Compile Include="Graphics\Rendering\Management\ShadowMappingDescription.cs" />
+    <Compile Include="Graphics\Rendering\SceneStateEventArgs.cs" />
+    <Compile Include="Interaction\IInteractive3D.cs" />
+    <Compile Include="Interaction\IInteractiveItemsProvider.cs" />
+    <Compile Include="Network\PacketEventArgs.cs" />
+    <Compile Include="Properties\Info.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Info.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Errors.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Geometry\Enums.cs" />
+    <Compile Include="Graphics\Meshes\IGeometry.cs" />
+    <Compile Include="Graphics\Meshes\IVertex.cs" />
+    <Compile Include="Graphics\Meshes\VertexDescription.cs" />
+    <Compile Include="Graphics\Materials\Enums.cs" />
+    <Compile Include="Graphics\Materials\IMaterial.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserInterface\Size.cs" />
+    <Compile Include="Utils\Collections\Cache.cs" />
+    <Compile Include="Utils\Collections\GenericNode.cs" />
+    <Compile Include="Utils\Collections\INode.cs" />
+    <Compile Include="Utils\Collections\Node.cs" />
+    <Compile Include="Utils\Logging\AbstractLogEvent.cs" />
+    <Compile Include="Utils\Logging\LogEvent.cs" />
+    <Compile Include="Utils\Logging\TraceData.cs" />
+    <Compile Include="Utils\Text\Text.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Info.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Info.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Errors.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release' Or '$(Configuration)' == 'RedistWin8Debug' ">
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>C:\Program Files (x86)\Dev\SharpDX-2.5.0\Bin\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
