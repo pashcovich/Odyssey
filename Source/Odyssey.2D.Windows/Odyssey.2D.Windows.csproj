@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)Odyssey.PreSettings.targets" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F0723B5E-4509-4C6B-BCDF-F8B6B67D4F10}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Odyssey</RootNamespace>
+    <AssemblyName>Odyssey.2D.Windows</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\Odyssey.2D\Odyssey.2D.csproj">
+      <Project>{b948170f-4bc3-4d84-b2f3-f369b3a82b5b}</Project>
+      <Name>Odyssey.2D</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(OdysseyEngine)' == '1'">
+    <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
+      <Project>{c7ce7794-eafe-49e0-ba0a-bc2cb3f65b28}</Project>
+      <Name>Odyssey.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Effects\StereoEffect.cs" />
+    <Compile Include="Graphics\Rendering2D\FpsRenderer.cs" />
+    <Compile Include="Graphics\Rendering2D\Renderer.cs" />
+    <Compile Include="Graphics\Rendering2D\Shapes\Rectangle.cs" />
+    <Compile Include="Graphics\Rendering2D\Shapes\IShapeD2D.cs" />
+    <Compile Include="Graphics\Rendering2D\StereoRenderer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Style\Exensions.cs" />
+    <Compile Include="UserInterface\Controls\Button.cs" />
+    <Compile Include="UserInterface\Controls\Label.cs" />
+    <Compile Include="UserInterface\Controls\Panel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-winrt\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-winrt\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-winrt\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -156,13 +156,9 @@ $RECYCLE.BIN/
 /Apps/
 /packages/
 /Source/Odyssey/
-/Source/Odyssey.2D/
-/Source/Odyssey.2D.*
 /Source/Odyssey.Interaction/
 /Source/Odyssey.Geometry/
-/Source/Odyssey.Windows/
 /Source/Odyssey.Windows.Network/
 /Source/Odyssey.Windows8.Network/
-/Source/Odyssey.WP8/
 /Samples
 OdysseyDesktop.sln
