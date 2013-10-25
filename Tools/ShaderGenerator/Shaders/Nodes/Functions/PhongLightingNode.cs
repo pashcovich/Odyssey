@@ -1,13 +1,8 @@
 ﻿using Odyssey.Graphics.Materials;
 using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
 {
@@ -17,26 +12,26 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
         IVariable output;
         PhongLighting phongMethod;
         TexOffset texOffset;
-             
+
         IMethod shadowMethod;
-        
+
         [DataMember]
         [SupportedType(Type.Struct)]
         public INode Light { get; set; }
-        
+
         [DataMember]
         [SupportedType(Type.Struct)]
         [PixelShader(PixelShaderFlags.Diffuse)]
         public INode Material { get; set; }
-        
+
         [DataMember]
         [SupportedType(Type.Float3)]
         public INode ViewDirection { get; set; }
-        
+
         [DataMember]
         [SupportedType(Type.Float3)]
         public INode LightDirection { get; set; }
-        
+
         [DataMember]
         [SupportedType(Type.Float3)]
         [PixelShader(PixelShaderFlags.Specular)]
@@ -180,7 +175,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
                     (Vector)ShadowMapSamplerNode.Coordinates.Output);
             else
                 return phongMethod.Call((Struct)Light.Output, (Struct)Material.Output, (Vector)ViewDirection.Output, (Vector)LightDirection.Output, (Vector)Normal.Output);
-            
+
         }
     }
 }

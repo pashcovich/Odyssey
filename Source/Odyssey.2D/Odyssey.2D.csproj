@@ -17,23 +17,9 @@
     <Compile Include="Devices\PointerEventArgs.cs" />
     <Compile Include="Devices\PointerPoint.cs" />
     <Compile Include="Devices\PointerProperties.cs" />
-    <Compile Include="Engine\DeviceManager.cs" />
-    <Compile Include="Engine\DeviceSettings.cs" />
-    <Compile Include="Engine\FpsTimer.cs" />
-    <Compile Include="Engine\ICameraProvider.cs" />
-    <Compile Include="Engine\IDevice.cs" />
-    <Compile Include="Engine\InitializeDirectXEventArgs.cs" />
-    <Compile Include="Engine\ISettings.cs" />
-    <Compile Include="Engine\ITarget.cs" />
-    <Compile Include="Engine\RenderEventArgs.cs" />
-    <Compile Include="Engine\TargetBase.cs" />
-    <Compile Include="Graphics\IRenderable.cs" />
-    <Compile Include="Graphics\IRenderer.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\IShape.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\RectangleBase.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\ShapeBase.cs" />
-    <Compile Include="Interaction\IInteractive3D.cs" />
-    <Compile Include="Interaction\ISceneProvider.cs" />
     <Compile Include="UserInterface\Controls\ButtonBase.cs" />
     <Compile Include="UserInterface\Controls\Enums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -42,7 +28,6 @@
     <Compile Include="UserInterface\Controls\LabelBase.cs" />
     <Compile Include="UserInterface\Controls\PanelBase.cs" />
     <Compile Include="UserInterface\IUIElement.cs" />
-    <Compile Include="UserInterface\Size.cs" />
     <Compile Include="UserInterface\Style\ShapeMap.cs" />
     <Compile Include="UserInterface\Style\TextEnums.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
@@ -78,19 +63,17 @@
     <Compile Include="UserInterface\Xml\XmlControlDescription.cs" />
     <Compile Include="UserInterface\Xml\XmlGradient.cs" />
     <Compile Include="UserInterface\Xml\XmlTextDescription.cs" />
-    <Compile Include="Utils\Logging\AbstractLogEvent.cs" />
-    <Compile Include="Utils\Logging\LogEvent.cs" />
-    <Compile Include="Utils\Logging\TraceData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Graphics\Effects\" />
+    <Folder Include="Interaction\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
       <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(OdysseyEngine)' != '1'">
+  <ItemGroup>
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>

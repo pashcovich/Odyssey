@@ -1,4 +1,5 @@
-﻿using Odyssey.Graphics.Rendering2D.Shapes;
+﻿using Odyssey.Engine;
+using Odyssey.Graphics.Rendering2D.Shapes;
 using Odyssey.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -18,7 +19,7 @@ namespace Odyssey.UserInterface.Controls
             Label = ToDispose(new Label() { TextDescriptionClass = this.TextDescriptionClass });
         }
 
-        public override void Initialize(Engine.IDirectXProvider directX)
+        public override void Initialize(IDirectXProvider directX)
         {
             base.Initialize(directX);
             if (string.Equals(ControlDescriptionClass, "Empty"))

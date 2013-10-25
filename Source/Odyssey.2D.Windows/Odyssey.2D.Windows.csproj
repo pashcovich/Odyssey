@@ -36,7 +36,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win7Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Win7Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ODYSSEY_ENGINE;DIRECTX11_1</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -49,7 +49,7 @@
       <Name>Odyssey.2D</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup Condition="'$(OdysseyEngine)' == '1'">
+  <ItemGroup>
     <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
       <Project>{c7ce7794-eafe-49e0-ba0a-bc2cb3f65b28}</Project>
       <Name>Odyssey.Common</Name>
