@@ -29,8 +29,10 @@ namespace Odyssey.Graphics.Materials
     {
         SM20_level_9_1,
         SM20_level_9_3,
+        SM30,
         SM40,
-        SM51,
+        SM41,
+        SM50,
     }
 
     public enum FeatureLevel

@@ -40,7 +40,7 @@ namespace Odyssey.Tools.ShaderGenerator
             ShaderGen.Initialize();
             var data = manager.Load();
 
-            var shaderList = new ObservableCollection<ShaderDescriptionViewModel>();
+            var shaderList = new ObservableCollection<IShaderViewModel>();
             foreach (var shader in data)
             {
                 shaderList.Add(new ShaderDescriptionViewModel { ShaderDescriptionModel = shader });

@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Win32;
 using Odyssey.Content.Shaders;
 using Odyssey.Graphics.Materials;
@@ -8,12 +9,14 @@ using Odyssey.Tools.ShaderGenerator.Properties;
 using Odyssey.Tools.ShaderGenerator.Shaders;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
 using Odyssey.Tools.ShaderGenerator.View;
+using Odyssey.Tools.ShaderGenerator.ViewModel.Messages;
 using Odyssey.Utils.Logging;
 using ShaderGenerator.Data;
 using SharpDX.D3DCompiler;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -24,7 +27,8 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
 {
     public class CompilationViewModel : ViewModelBase
     {
-        ObservableCollection<ShaderDescriptionViewModel> shaderList;
+        const string NewTechnique = "Technique";
+        ObservableCollection<IShaderViewModel> shaderList;
         ObservableCollection<TechniqueMappingViewModel> techniques;
         ShaderCompiler compiler;
         DebugViewModel vmDebug;
@@ -50,6 +54,27 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             TechniqueMappingViewModel tmDiffuse = new TechniqueMappingViewModel { Index = 3, TechniqueMapping = new TechniqueMapping("Shadows") };
             techniques.Add(tmDiffuse);
             shaderCollection.Add(tmDiffuse.TechniqueMapping);
+
+            Messenger.Default.Register<TechniqueMessage> (this, (message) => ReceiveTechniqueMessage(message));
+        }
+
+        private void ReceiveTechniqueMessage(TechniqueMessage message)
+        {
+            switch (message.Action)
+            {
+                case TechniqueAction.Remove:
+                    if (techniques.Contains(message.Technique))
+                        techniques.Remove(message.Technique);
+                    break;
+
+                case TechniqueAction.Unassign:
+                    foreach (var shaderVM in shaderList.OfType<ShaderDescriptionViewModel>())
+                    {
+                        if (shaderVM.IsAssignedTo(message.Technique))
+                            shaderVM.RemoveTechnique(message.Technique);
+                    }
+                    break;
+            }
         }
 
         public ObservableCollection<TechniqueMappingViewModel> Techniques
@@ -64,7 +89,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
 
         public int TechniqueCount { get { return techniques.Count; } }
 
-        public ObservableCollection<ShaderDescriptionViewModel> Shaders
+        public ObservableCollection<IShaderViewModel> Shaders
         {
             get {return shaderList;}
             set
@@ -74,29 +99,18 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             }
         }
 
-        public void CompileShader(string techniqueName, ShaderDescriptionViewModel vmShader, out IEnumerable<ErrorViewModel> errors)
+        
+
+        public void CompileAllCode()
         {
-            List<ErrorViewModel> errorList = new List<ErrorViewModel>();
-            
-            CompilationResult compilationResult;
-            bool result = compiler.Compile(vmShader, out compilationResult);
-            vmShader.CompilationStatus = result == true ? CompilationStatus.Successful : CompilationStatus.Failed;
-            if (!result)
+            ObservableCollection<ErrorViewModel> errorList = new ObservableCollection<ErrorViewModel>();
+            IEnumerable<ErrorViewModel> errors;
+
+            foreach (var shaderVM in shaderList.OfType<ShaderCodeViewModel>())
             {
-                foreach (ErrorModel error in compiler.CompilationErrors)
-                    errorList.Add(new ErrorViewModel { ErrorModel = error });
-                errors = errorList;
-            }
-            else
-            {
-                errors = null;
-                var references = vmShader.ShaderDescriptionModel.Shader.References;
-                var textureReferences = vmShader.ShaderDescriptionModel.Shader.TextureReferences;
-                var samplerReferences = vmShader.ShaderDescriptionModel.Shader.SamplerReferences;
-                ShaderObject shaderObject = new ShaderObject(vmShader.Name, vmShader.Type, vmShader.FeatureLevel,
-                    compilationResult.Bytecode, references, textureReferences, samplerReferences);
-                
-                shaderCollection.Add(techniqueName, shaderObject);
+                if (!compiler.CompileShader(shaderVM, out errors));
+                    foreach (var error in errors)
+                        errorList.Add(error);
             }
         }
 
@@ -107,20 +121,20 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
 
             foreach (var vmTm in Techniques)
             {
-                var techniqueShaders = from shader in shaderList
+                var techniqueShaders = from shader in shaderList.OfType<ShaderDescriptionViewModel>()
                                        where shader.IsAssignedTo(vmTm.Name)
                                        select shader;
 
-                if (techniqueShaders.Count()==0)
+                if (techniqueShaders.Count() == 0)
                     continue;
 
                 foreach (var vmShader in techniqueShaders)
                 {
-                    CompileShader(vmTm.Name, vmShader, out errors);
-
-                    if (errors == null)
+                    ShaderObject shaderObject;
+                    if (compiler.CompileShader(vmTm.Name, vmShader, out shaderObject, out errors))
                     {
                         vmShader.UpdateKeyPart();
+                        shaderCollection.Add(vmTm.Name, shaderObject);
                         continue;
                     }
                     foreach (var error in errors)
@@ -137,12 +151,40 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             vmDebug.Errors = errorList;
         }
 
-        public void Open()
+        public bool Import()
+        {
+            OpenFileDialog openDialog = new OpenFileDialog
+            {
+                Filter = "HLSL source code|*.hlsl;*.fx|All Files|*.*",
+                Multiselect = true
+            };
+            bool? result = openDialog.ShowDialog();
+            if (result == false)
+                return false;
+            shaderList.Clear(); 
+            IncludeHandler.BaseDirectory =  Path.GetDirectoryName(openDialog.FileNames.First());
+            foreach (string file in openDialog.FileNames)
+            {
+                string sourceCode = string.Empty;
+                using (StreamReader sr = new StreamReader(file))
+                    sourceCode = sr.ReadToEnd();
+
+                ShaderCodeViewModel shaderVM = new ShaderCodeViewModel
+                {
+                    Name = Path.GetFileNameWithoutExtension(file),
+                    SourceCode = sourceCode
+                };
+                shaderList.Add(shaderVM);
+            }
+            return true;
+        }
+
+        public bool Open()
         {
             OpenFileDialog openDialog = new OpenFileDialog { Filter = "Odyssey Shader Graph|*.osg" };
             bool? result = openDialog.ShowDialog();
             if (result == false)
-                return;
+                return false;
             var derivedTypes = Shader.KnownTypes().Concat(NodeBase.KnownTypes()).ToArray();
             try
             {
@@ -150,12 +192,11 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                 if (shaders.Count() == 0)
                 {
                     MessageBox.Show("No techniques found in file.", "Error", MessageBoxButton.OK);
-                    return;
+                    return false;
                 }
                 shaderList.Clear();
 
                 var techniques = shaders.Values.SelectMany(s => s).Distinct().Select((t, index) => new TechniqueMappingViewModel { Index = index + 1, TechniqueMapping = new TechniqueMapping(t) });
-                                         
 
                 foreach (var kvp in shaders)
                 {
@@ -168,13 +209,16 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                 }
 
                 var vmLocator = ((ViewModelLocator)Application.Current.FindResource("Locator"));
-                RelayCommand cmd = (RelayCommand)vmLocator.Main.CompileCommand;
+                RelayCommand cmd = (RelayCommand)vmLocator.Main.CompileShaderGraphCommand;
                 cmd.RaiseCanExecuteChanged();
+                return true;
             }
             catch (SerializationException ex)
             {
-                LogEvent.Tool.Error("Failed to open file {0}.", openDialog.FileName);
-                return;
+                string errorMsg = "Failed to open file {0}";
+                MessageBox.Show(string.Format(errorMsg, ex.Data), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                LogEvent.Tool.Error(errorMsg, openDialog.FileName);
+                return false;
             }
         }
 
@@ -192,7 +236,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                                 select lType).ToArray();
 
 
-            var shaderGraph = (from s in shaderList
+            var shaderGraph = (from s in shaderList.OfType<ShaderDescriptionViewModel>()
                         let mappedTo = (from t in techniques where s.IsAssignedTo(t) select t.Name)
                         select new { Shader = s.ShaderDescriptionModel.Shader, Techniques = mappedTo }).ToDictionary(s => s.Shader, s => s.Techniques.ToArray());
             
@@ -214,14 +258,28 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
         
         public void CreateTechnique()
         {
-            CustomDialog dialog = new CustomDialog { Title="Create new", Header= "Please name the new Technique:"};
-            if (dialog.ShowDialog() == true)
+            CreateTechniqueView view = new CreateTechniqueView();
+            view.ShowDialog();
+            if(!view.DialogResult.HasValue)
+                return;
+
+            var vmCT = (CreateTechniqueViewModel)view.DataContext;
+            TechniqueMappingViewModel vmTM = new TechniqueMappingViewModel
             {
-                TechniqueMapping tMapping = new TechniqueMapping(dialog.Result);
-                TechniqueMappingViewModel tMappingVM = new TechniqueMappingViewModel { TechniqueMapping =tMapping, Index = techniques.Count+1};
-                techniques.Add(tMappingVM);
-                shaderCollection.Add(tMapping);
-            }
+                Index = techniques.Count + 1,
+                TechniqueMapping = new TechniqueMapping(string.Format("{0}{1}", NewTechnique, techniques.Count(t=> t.Name.StartsWith(NewTechnique))+1)) 
+                { Key = vmCT.Key }
+            };
+            techniques.Add(vmTM);
+
+            //CustomDialog dialog = new CustomDialog { Title="Create new", Header= "Please name the new Technique:"};
+            //if (dialog.ShowDialog() == true)
+            //{
+            //    TechniqueMapping tMapping = new TechniqueMapping(dialog.Result);
+            //    TechniqueMappingViewModel tMappingVM = new TechniqueMappingViewModel { TechniqueMapping =tMapping, Index = techniques.Count+1};
+            //    techniques.Add(tMappingVM);
+            //    shaderCollection.Add(tMapping);
+            //}
         }
     }
 }

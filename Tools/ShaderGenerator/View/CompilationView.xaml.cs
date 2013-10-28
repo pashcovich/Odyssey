@@ -33,7 +33,12 @@ namespace Odyssey.Tools.ShaderGenerator.View
             var item = ItemsControl.ContainerFromElement(ShaderList, e.OriginalSource as DependencyObject) as ListBoxItem;
             if (item != null)
             {
-                ShaderDescriptionViewModel sVm = (ShaderDescriptionViewModel)item.Content;
+                ShaderDescriptionViewModel sVm = item.Content as ShaderDescriptionViewModel;
+                if (sVm == null)
+                {
+                    e.Effects = DragDropEffects.None;
+                    return;
+                }
                 if (e.Data.GetDataPresent(typeof(TechniqueMappingViewModel)) && !sVm.Techniques.Contains(e.Data.GetData(typeof(TechniqueMappingViewModel))))
                     e.Effects = DragDropEffects.Link;
             }
@@ -48,7 +53,7 @@ namespace Odyssey.Tools.ShaderGenerator.View
                 ShaderDescriptionViewModel sVM = ((ShaderDescriptionViewModel)item.Content);
 
                 var vmLocator = ((ViewModelLocator)Application.Current.FindResource("Locator"));
-                foreach (var shader in vmLocator.Compilation.Shaders)
+                foreach (var shader in vmLocator.Compilation.Shaders.OfType<ShaderDescriptionViewModel>())
                 {
                     if (shader.Name != sVM.Name && shader.Type == sVM.Type && shader.Techniques.Contains(tMapping))
                         shader.RemoveTechnique(tMapping);

@@ -19,37 +19,46 @@
             <RowDefinition Height="24"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBlock Text="Technique" FontSize="16" FontStyle="Italic" Foreground="Silver" Width="112" Margin="16 0 0 0"/>
-            <TextBlock Text="Type" FontSize="16" FontStyle="Italic" Foreground="Silver"  Width="80" Margin="16 0 0 0"/>
-            <TextBlock Text="Name" FontSize="16" FontStyle="Italic" Foreground="Silver" Width="112" Margin="16 0 0 0"/>
-            <TextBlock Text="Feature Level" FontSize="16" FontStyle="Italic" Foreground="Silver" Width="112" Margin="16 0 0 0"/>
-            <TextBlock Text="Compilation" FontSize="16" FontStyle="Italic" Foreground="Silver" Width="112" Margin="16 0 0 0"/>
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Technique" FontSize="16" FontStyle="Italic" Foreground="Silver"/>
+            <TextBlock Text="Type" FontSize="16" FontStyle="Italic" Foreground="Silver"  Grid.Column="1"/>
+            <TextBlock Text="Name" FontSize="16" FontStyle="Italic" Foreground="Silver"  Grid.Column="2"/>
+            <TextBlock Text="Feature Level" FontSize="16" FontStyle="Italic" Foreground="Silver" Grid.Column="3"/>
+            <TextBlock Text="Compilation" HorizontalAlignment="Center" FontSize="16" FontStyle="Italic" Foreground="Silver"  Grid.Column="4"/>
+        </Grid>
+
         <ListBox Name="ShaderList" ItemsSource="{Binding Shaders}" Grid.Row="1" SelectionMode="Extended" AllowDrop="True" DragOver="ShaderList_DragOver" Drop="ShaderList_Drop">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid >
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="128"/>
-                            <ColumnDefinition Width="96"/>
-                            <ColumnDefinition Width="128"/>
-                            <ColumnDefinition Width="128"/>
-                            <ColumnDefinition Width="128"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
-                        <ItemsControl ItemsSource="{Binding Techniques}">
+                        <ItemsControl ItemsSource="{Binding Techniques}" ItemTemplate="{StaticResource BriefTechniqueMapping}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel Orientation="Horizontal"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
-                        <TextBlock Text="{Binding Type}" Width="96" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding Name}" Width="128" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Type}" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding FeatureLevel}" Grid.Column="3" VerticalAlignment="Center"/>
                         <Ellipse Width="24" Height="24" Fill="{Binding CompilationStatus, Converter={StaticResource compilationStatusConverter}}" Grid.Column="4" VerticalAlignment="Center"/>
                         <Button Content="View" Command="{Binding ViewCodeCommand}" CommandParameter="{Binding}" Grid.Column="5" />

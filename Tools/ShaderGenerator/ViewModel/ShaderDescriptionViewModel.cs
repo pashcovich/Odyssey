@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace Odyssey.Tools.ShaderGenerator.ViewModel
 {
-    public class ShaderDescriptionViewModel : ViewModelBase
+    public class ShaderDescriptionViewModel : ViewModelBase, IShaderViewModel
     {
         ObservableCollection<TechniqueMappingViewModel> techniques;
         public ShaderDescription ShaderDescriptionModel { get; internal set; }
@@ -86,7 +86,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                 techniques.Clear();
             techniques.Add(tMapping);
             var vmLocator = ((ViewModelLocator)Application.Current.FindResource("Locator"));
-            RelayCommand cmd = (RelayCommand)vmLocator.Main.CompileCommand;
+            RelayCommand cmd = (RelayCommand)vmLocator.Main.CompileShaderGraphCommand;
             cmd.RaiseCanExecuteChanged();
         }
 

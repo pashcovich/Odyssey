@@ -46,12 +46,14 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             SimpleIoc.Default.Register<CompilationViewModel>();
             SimpleIoc.Default.Register<DebugViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
+            SimpleIoc.Default.Register<CreateTechniqueViewModel>();
         }
 
         public CompilationViewModel Compilation { get { return ServiceLocator.Current.GetInstance<CompilationViewModel>(); } }
         public DebugViewModel Debug { get { return ServiceLocator.Current.GetInstance<DebugViewModel>(); } }
         public MainViewModel Main { get { return ServiceLocator.Current.GetInstance<MainViewModel>(); } }
         public SettingsViewModel Settings { get { return ServiceLocator.Current.GetInstance<SettingsViewModel>(); } }
+        public CreateTechniqueViewModel CreateTechnique { get { return ServiceLocator.Current.GetInstance<CreateTechniqueViewModel>(); } }
         
         public static void Cleanup()
         {

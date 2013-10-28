@@ -9,14 +9,17 @@
              d:DesignHeight="72" d:DesignWidth="512" Foreground="Silver">
     <StackPanel Orientation="Vertical">
         <TextBlock Text="Techniques" FontSize="18" Margin="4"/>
-        <Border BorderBrush="{DynamicResource Brush04}" BorderThickness="1">
-        <ListBox x:Name="techniquePanel"  Height="32" ItemsSource="{Binding Techniques}" PreviewMouseMove="techniquePanel_PreviewMouseMove">
+        <ListBox x:Name="techniquePanel" ItemsSource="{Binding Techniques}" PreviewMouseMove="techniquePanel_PreviewMouseMove" Focusable="False">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
                 </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-        </Border>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}">
+                    <Setter Property="Focusable" Value="False"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </StackPanel>
 </UserControl>

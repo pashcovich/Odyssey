@@ -13,28 +13,27 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="56"/>
+            <RowDefinition Height="72"/>
             <RowDefinition Height="*"/>
             <!--<RowDefinition Height="*"/>-->
         </Grid.RowDefinitions>
         <DockPanel>
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                <Button x:Name="cmdOpen" Content="{StaticResource iOpen}" Grid.Row="0" Margin="4" Width="48" Height="48" 
-                        Command="{Binding OpenCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
-                        ToolTip="Open Shader Graph"/>
-                <Button x:Name="cmdSave" Content="{StaticResource iSave}" Grid.Row="0" Margin="4" Width="48" Height="48" 
-                        Command="{Binding SaveCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
-                        ToolTip="Save Shader Graph"/>
-                <Button x:Name="cmdCompile" Content="{StaticResource iPlay}" Grid.Row="0" Margin="4" Width="48" Height="48"
-                        Command="{Binding CompileCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
-                        ToolTip="Compile all Shaders"/>
-                <Button x:Name="cmdCreateTechnique" Content="{StaticResource iMerge}" Grid.Row="0" Margin="4" Width="48" Height="48" 
-                        Command="{Binding CreateTechniqueCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
-                        ToolTip="Define a new Technique"/>
-                <Button x:Name="cmdSettings" Content="{StaticResource iSettings}" Grid.Row="0" Margin="4" Width="48" Height="48" 
-                        Command="{Binding OpenSettingsCommand}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
-                        ToolTip="Open Settings"/>
-                
+            <StackPanel DockPanel.Dock="Right">
+            <ItemsControl ItemsSource="{Binding Commands}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,4,8,0">
+                                <Button Content="{Binding Content}" Padding="2" Width="48" Height="48" ToolTip="{Binding Tooltip}" Command="{Binding Command}"/>
+                            <TextBlock Text="{Binding Label}" HorizontalAlignment="Center" Foreground="{StaticResource Brush03}" FontSize="10"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBox x:Name="tbName" Text="{Binding ShaderCollectionName}" FontSize="32" Grid.Row="0" Foreground="Silver" Margin="8,8,8,0" BorderThickness="0" 

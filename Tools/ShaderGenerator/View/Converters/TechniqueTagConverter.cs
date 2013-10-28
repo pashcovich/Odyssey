@@ -12,9 +12,10 @@ namespace Odyssey.Tools.ShaderGenerator.View.Converters
     {
         Brush[] brushes = new[] {
             new SolidColorBrush(Colors.DimGray),
-            new SolidColorBrush ( Colors.RoyalBlue ),
+            new SolidColorBrush (Colors.RoyalBlue ),
             new SolidColorBrush (Colors.DarkRed),
-            new SolidColorBrush (Colors.Gold)
+            new SolidColorBrush(Colors.DarkGreen),
+            new SolidColorBrush(Colors.Purple)
         };
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

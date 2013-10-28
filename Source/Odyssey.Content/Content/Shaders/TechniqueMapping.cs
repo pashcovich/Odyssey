@@ -20,9 +20,6 @@ namespace Odyssey.Content.Shaders
         public TechniqueKey Key { get; internal set; }
 
         [DataMember]
-        public ShaderModel ShaderModel { get; internal set; }
-
-        [DataMember]
         public string Name { get; private set; }
 
         public IEnumerable<ShaderObject> Shaders { get { return techniqueMap.Values; } }
@@ -31,7 +28,6 @@ namespace Odyssey.Content.Shaders
         {
             techniqueMap = new Dictionary<ShaderType, ShaderObject>();
             Name = name;
-            ShaderModel = ShaderModel.SM20_level_9_1;
         }
 
         public void Set(ShaderObject shader)

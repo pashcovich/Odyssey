@@ -29,13 +29,14 @@ namespace Odyssey.Tools.ShaderGenerator.View
 
         private void techniquePanel_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton != MouseButtonState.Pressed)
+            if (e.LeftButton != MouseButtonState.Pressed || Mouse.DirectlyOver is Button)
                 return;
             var item = ItemsControl.ContainerFromElement(techniquePanel, e.OriginalSource as DependencyObject) as ListBoxItem;
             if (item != null)
             {
                 DragDrop.DoDragDrop(item, (TechniqueMappingViewModel)item.Content, DragDropEffects.Link);
             }
+            e.Handled = false; item.IsSelected = false;
         }
     }
 }
