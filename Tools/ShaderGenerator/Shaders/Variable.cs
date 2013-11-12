@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-using Odyssey.Content.Shaders;
+﻿using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
+using Odyssey.Utils;
 using ShaderGenerator.Data;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Runtime.Serialization;
-
+using System.Text;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders
 {
-    [DataContract(IsReference=true)]
-    [KnownType("KnownTypes")]   
-    public abstract class Variable : IEquatable<Variable>, IVariable
+    [DataContract(IsReference = true)]
+    [KnownType("KnownTypes")]
+    public abstract partial class Variable : IEquatable<Variable>, IVariable, IYamlVariable
     {
-        internal static int Counter { get; set; }
+        internal static Dictionary<string, int> NodeCounter = new Dictionary<string, int>();
 
         [DataMember]
-        private Dictionary<string, object> markupData;
+        private Dictionary<string, string> markupData;
         [DataMember]
         public virtual Type Type { get; set; }
         [DataMember]
@@ -32,11 +31,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         [DataMember]
         public Semantic Semantic { get; set; }
         [DataMember]
-        public int Index { get; set; }
+        public int? Index { get; set; }
         [DataMember]
         public IStruct Owner { get; internal set; }
 
-        public IEnumerable<KeyValuePair<string, object>> Markup { get { return markupData; } }
+        public IEnumerable<KeyValuePair<string, string>> Markup { get { return markupData; } }
 
         public string FullName
         {
@@ -48,7 +47,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     return string.Format("{0}.{1}", Owner.Name, Name);
             }
         }
-
 
         public bool IsEmpty
         {
@@ -62,19 +60,19 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                 StringBuilder sb = new StringBuilder();
 
                 if (!string.IsNullOrEmpty(Comments))
-                foreach (string commentLine in Comments.Split('\n'))
-                    sb.AppendLine(string.Format("// {0}", commentLine));
+                    foreach (string commentLine in Comments.Split('\n'))
+                        sb.AppendLine(string.Format("// {0}", commentLine));
                 foreach (var kvp in Markup)
                     sb.AppendLine(string.Format("// {0} = <{1}>", kvp.Key, kvp.Value));
-                
+
                 sb.AppendFormat("{0} {1}", Mapper.Map(Type), Name);
-                if (Semantic != Semantic.Null)
+                if (Semantic != Semantic.None)
                 {
                     sb.AppendFormat(": {0}", Mapper.Map(Semantic));
                     if (Index != -1)
                         sb.Append(Index);
                 }
-                else if (Index != -1)
+                else if (Index.HasValue)
                     sb.Append(string.Format(" : {0}", GetRegister(this)));
                 sb.Append(";\n");
 
@@ -84,9 +82,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public Variable()
         {
-            Index = -1;
-            Counter++;
-            markupData = new Dictionary<string, object>();
+            markupData = new Dictionary<string, string>();
+            string type = this.GetType().Name;
+            if (!NodeCounter.ContainsKey(type))
+                NodeCounter.Add(type, 0);
+
+            Name = string.Format("{0}{1}", type, NodeCounter[type]++);
         }
 
         #region Equality
@@ -128,7 +129,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         public static bool operator !=(Variable left, Variable right)
         {
             return !(left == right);
-        } 
+        }
         #endregion
 
         public override string ToString()
@@ -136,20 +137,43 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             return Definition;
         }
 
+        public bool HasMarkup
+        {
+            get { return markupData.Any(); }
+        }
+
         public bool ContainsMarkup(string key)
         {
             return markupData.ContainsKey(key);
         }
 
-        public void SetMarkup<T>(string key, T value)
+        public void SetMarkup(string key, string value)
         {
             markupData[key] = value;
         }
 
-        public T GetMarkupValue<T>(string key)
+        public void SetMarkup(string key, object value)
+        {
+            SetMarkup(key, value.ToString());
+        }
+
+        public void SetMarkup(IEnumerable<KeyValuePair<string, string>> values)
+        {
+            Contract.Requires<ArgumentNullException>(values != null);
+            foreach (var kvp in values)
+                SetMarkup(kvp.Key, kvp.Value);
+        }
+
+        public string GetMarkupValue(string key)
         {
             Contract.Requires<ArgumentException>(ContainsMarkup(key), "Variable does not contain requested markup.");
-            return (T)markupData[key];
+            return markupData[key];
+        }
+
+        public YamlVariable ToYaml()
+        {
+            var attribute = ReflectionHelper.GetAttribute<YamlMappingAttribute>(this.GetType());
+            return (YamlVariable)Activator.CreateInstance(attribute.MatchingType, new[] { this });
         }
 
         internal static string GetRegister(IVariable variable)
@@ -168,6 +192,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     break;
 
                 case Shaders.Type.Texture2D:
+                case Shaders.Type.Texture3D:
+                case Shaders.Type.TextureCube:
                     prefix = "t";
                     break;
 
@@ -214,7 +240,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             switch (type)
             {
                 case Type.Struct:
-                    variable= new Struct
+                    variable = new Struct
                     {
                         Name = name,
                         Type = type,
@@ -243,6 +269,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
 
             return variable;
+        }
+
+        IStruct IVariable.Owner
+        {
+            get { return Owner; }
+            set { Owner = value; }
         }
 
     }

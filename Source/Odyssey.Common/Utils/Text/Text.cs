@@ -23,5 +23,15 @@ namespace Odyssey.Utils.Text
 
             return sb.ToString();
         }
+
+        public static string FirstCharacterToLowerCase(string s)
+        {
+            return Char.ToLowerInvariant(s[0]) + s.Substring(1);
+        }
+
+        public static string FirstCharacterToUpperCase(string s)
+        {
+            return Char.ToUpperInvariant(s[0]) + s.Substring(1);
+        }
     }
 }

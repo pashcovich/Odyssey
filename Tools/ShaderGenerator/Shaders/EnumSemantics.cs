@@ -8,7 +8,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 {
     public enum Semantic
     {
-        Null,
+        None,
         Position,
         Color,
         Normal,

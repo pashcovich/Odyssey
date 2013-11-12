@@ -6,6 +6,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
         string ColorizedSourceCode { get; }
         Odyssey.Tools.ShaderGenerator.Model.CompilationStatus CompilationStatus { get; set; }
         Odyssey.Graphics.Materials.FeatureLevel FeatureLevel { get; }
+        Odyssey.Graphics.Materials.ShaderModel ShaderModel { get; }
         bool IsEmpty { get; }
         string Name { get; }
         string SourceCode { get; }

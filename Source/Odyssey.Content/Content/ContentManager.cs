@@ -27,7 +27,7 @@ namespace Odyssey.Content
 
         public ContentManager()
         {
-            cachedAssets = new Cache<string, CacheNode<object>>(20 * 1024 * 1024);
+            cachedAssets = new Cache<string, CacheNode<object>>(40 * 1024 * 1024);
             managedAssets = new SortedDictionary<string, object>();
             resolvers = new List<IResourceResolver>();
             readers = new List<IResourceReader>();

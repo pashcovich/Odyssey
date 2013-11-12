@@ -45,7 +45,7 @@
             internal const string Normal = "Normal";
             internal const string Color = "Color";
             internal const string ViewDirection = "ViewDirection";
-            internal const string TextureUV = "TextureUV";
+            internal const string Texture = "Texture";
             internal const string SVTarget = "SV_Target";
             internal const string ShadowProjection = "ShadowProjection";
         }
@@ -76,6 +76,7 @@
 
         internal struct Textures
         {
+            internal const string CubeMap = "tDiffuseMap";
             internal const string DiffuseMap = "tDiffuseMap";
             internal const string ShadowMap = "tShadowMap";
         }

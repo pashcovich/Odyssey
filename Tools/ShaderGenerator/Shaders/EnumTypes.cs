@@ -19,9 +19,10 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         Struct,
         ConstantBuffer,
         Texture2D,
+        Texture3D,
+        TextureCube,
         Sampler,
         SamplerComparisonState,
-        Method
     }
 
     public enum CustomType
@@ -44,6 +45,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         internal const string Matrix = "matrix";
         internal const string Struct = "struct";
         internal const string Texture2D = "Texture2D";
+        internal const string Texture3D = "Texture3D";
+        internal const string TextureCube = "TextureCube";
         internal const string Sampler = "sampler";
         internal const string SamplerComparisonState = "SamplerComparisonState";
         internal const string ConstantBuffer = "cbuffer";
@@ -70,6 +73,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             types.Add(Type.Matrix, Matrix);
             types.Add(Type.Struct, Struct);
             types.Add(Type.Texture2D, Texture2D);
+            types.Add(Type.Texture3D, Texture3D);
+            types.Add(Type.TextureCube, TextureCube);
             types.Add(Type.Sampler, Sampler);
             types.Add(Type.SamplerComparisonState, SamplerComparisonState);
             types.Add(Type.ConstantBuffer, ConstantBuffer);
@@ -89,7 +94,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
             catch (KeyNotFoundException ex)
             {
-                LogEvent.Tool.Warning("Key '{0}' not in dictionary.", type);
+                Log.Daedalus.Warning("Key '{0}' not in dictionary.", type);
                 return type.ToString();
             }
         }
@@ -102,7 +107,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
             catch (KeyNotFoundException ex)
             {
-                LogEvent.Tool.Warning("Key '{0}' not in dictionary.", type);
+                Log.Daedalus.Warning("Key '{0}' not in dictionary.", type);
                 return type.ToString();
             }
         }

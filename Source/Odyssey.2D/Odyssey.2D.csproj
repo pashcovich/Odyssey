@@ -17,6 +17,7 @@
     <Compile Include="Devices\PointerEventArgs.cs" />
     <Compile Include="Devices\PointerPoint.cs" />
     <Compile Include="Devices\PointerProperties.cs" />
+    <Compile Include="Graphics\Rendering2D\Shapes\EllipseBase.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\IShape.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\RectangleBase.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\ShapeBase.cs" />

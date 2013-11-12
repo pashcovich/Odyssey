@@ -35,7 +35,6 @@ namespace Odyssey.Utils.Logging
             AdditionalData.Add(key, value);
         }
 
-
         public string MethodSignature 
         {
             get

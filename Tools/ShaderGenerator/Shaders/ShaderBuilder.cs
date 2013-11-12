@@ -45,7 +45,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public void AddSeparator(string label)
         {
-            Add();
             stringList.Add(separator);
             stringList.Add(string.Format("// {0}\n", label));
             stringList.Add(separator);

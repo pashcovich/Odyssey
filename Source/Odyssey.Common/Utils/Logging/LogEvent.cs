@@ -64,6 +64,14 @@ namespace Odyssey.Utils.Logging
             Log(logEntry);
         }
 
+        public void Error(Exception ex)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(ex.Message);
+            sb.AppendLine(ex.StackTrace);
+            LogData logEntry = new LogData(DateTime.Now, EventLevel.Error, EventCode.CriticalFault, Source, sb.ToString());
+        }
+
         public void Error(string message, EventCode code, params object[] args)
         {
             LogData logEntry = new LogData(DateTime.Now, EventLevel.Error, code, Source, message, args);

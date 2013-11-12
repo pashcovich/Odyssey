@@ -84,8 +84,6 @@ namespace Odyssey.Engine
 #endif
         }
 
-
-
         public abstract void Close();
 
         private void devices_OnDpiChanged(DeviceManager obj)

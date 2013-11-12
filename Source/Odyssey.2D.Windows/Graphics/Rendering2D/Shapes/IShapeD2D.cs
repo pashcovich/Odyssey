@@ -14,7 +14,7 @@ namespace Odyssey.Graphics.Rendering2D.Shapes
 
     public interface IShapeD2D : IShape
     {
-        Brush FillBrush { get; }
-        Brush StrokeBrush { get; }
+        Brush Fill { get; set; }
+        Brush Stroke { get; set; }
     }
 }

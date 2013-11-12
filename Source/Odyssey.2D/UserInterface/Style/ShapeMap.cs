@@ -63,8 +63,8 @@ namespace Odyssey.UserInterface.Style
         private void ProcessInsertion(ControlStatus status, IShape shape)
         {
             Contract.Requires<NullReferenceException>(shape != null);
-            shape.Fill = description.GetFillGradient(status);
-            shape.Stroke = description.GetStrokeGradient(status);
+            shape.FillShader = description.GetFillGradient(status);
+            shape.StrokeShader = description.GetStrokeGradient(status);
 
             if (!map.ContainsKey(status))
                 map.Add(status, new List<IShape>());

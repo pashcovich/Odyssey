@@ -99,24 +99,30 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="ColorCode, Version=1.0.1.62759, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\ColorCode.1.0.1\lib\ColorCode.dll</HintPath>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Extras.WPF45">
-      <HintPath>..\..\packages\MvvmLightLibs.4.1.27.1\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Extras.WPF45, Version=4.2.30.23246, Culture=neutral, PublicKeyToken=0e27b6f8be9b2ef7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MvvmLightLibs.4.2.30.0\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.WPF45">
-      <HintPath>..\..\packages\MvvmLightLibs.4.1.27.1\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.WPF45, Version=4.2.30.23246, Culture=neutral, PublicKeyToken=eabbf6a5f5af5004, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MvvmLightLibs.4.2.30.0\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Practices.ServiceLocation">
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="ReachFramework" />
     <Reference Include="SharpDX">
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Dev\SharpDX-2.5.0\Bin\DirectX11_1-net40\SharpDX.dll</HintPath>
     </Reference>
@@ -126,14 +132,17 @@
     <Reference Include="SharpDX.Direct3D11">
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Dev\SharpDX-2.5.0\Bin\DirectX11_1-net40\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\..\packages\MvvmLightLibs.4.2.30.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -154,9 +163,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\FeatureLevelProvider.cs" />
     <Compile Include="Data\ResourceManager.cs" />
-    <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Shaders\IgnoreValidationAttribute.cs" />
+    <Compile Include="Shaders\Yaml\YamlTechniqueKey.cs" />
+    <Compile Include="Utilities\EnumExtensions.cs" />
+    <Compile Include="Utilities\ReflectionHelper.cs" />
     <Compile Include="Shaders\Methods\TexOffset.cs" />
+    <Compile Include="Shaders\Nodes\Operators\ConstantNode.cs" />
     <Compile Include="Shaders\Sampler.cs" />
     <Compile Include="Shaders\Texture.cs" />
     <Compile Include="Shaders\Methods\MethodBase.cs" />
@@ -170,7 +185,7 @@
     <Compile Include="Model\Enums.cs" />
     <Compile Include="Model\ErrorModel.cs" />
     <Compile Include="ShaderCompiler.cs" />
-    <Compile Include="ShaderGen.cs" />
+    <Compile Include="Daedalus.cs" />
     <Compile Include="Shaders\Binding.cs" />
     <Compile Include="Shaders\Float.cs" />
     <Compile Include="Shaders\Matrix.cs" />
@@ -184,10 +199,9 @@
     <Compile Include="Shaders\Methods\PhongLighting.cs" />
     <Compile Include="Shaders\Nodes\Functions\PhongLightingNode.cs" />
     <Compile Include="Shaders\Nodes\Math\SubtractionNode.cs" />
-    <Compile Include="Shaders\Nodes\VSOutputNode.cs" />
+    <Compile Include="Shaders\Nodes\VSNormalTexturedOutputNode.cs" />
     <Compile Include="Shaders\ReferenceAttribute.cs" />
-    <Compile Include="Shaders\Nodes\CastNode.cs" />
-    <Compile Include="Shaders\Nodes\Constants\VectorConstantNode.cs" />
+    <Compile Include="Shaders\Nodes\Operators\CastNode.cs" />
     <Compile Include="Shaders\Nodes\Math\MatrixMultiplyNode.cs" />
     <Compile Include="Shaders\Nodes\PhongVSOutputNode.cs" />
     <Compile Include="Shaders\Nodes\VSOutputNodeBase.cs" />
@@ -203,11 +217,10 @@
     <Compile Include="Shaders\EnumSemantics.cs" />
     <Compile Include="Shaders\EnumTypes.cs" />
     <Compile Include="Shaders\Variable.cs" />
-    <Compile Include="Shaders\Nodes\Constants\ColorConstantNode.cs" />
     <Compile Include="Shaders\Nodes\INode.cs" />
     <Compile Include="Shaders\Nodes\Math\MultiplyNode.cs" />
     <Compile Include="Shaders\Nodes\SupportedTypeAttribute.cs" />
-    <Compile Include="Shaders\Nodes\TextureSampleNode.cs" />
+    <Compile Include="Shaders\Nodes\Operators\TextureSampleNode.cs" />
     <Compile Include="Shaders\Structs\ConstantBuffer.Factory.cs" />
     <Compile Include="Shaders\Structs\IStruct.cs" />
     <Compile Include="Shaders\Nodes\NodeBase.cs" />
@@ -216,6 +229,20 @@
     <Compile Include="Shaders\Structs\Struct.Factory.cs" />
     <Compile Include="Shaders\Techniques\SpritePS.cs" />
     <Compile Include="Shaders\Vector.Factory.cs" />
+    <Compile Include="Shaders\Yaml\IYaml.cs" />
+    <Compile Include="Shaders\Yaml\YamlMappingAttribute.cs" />
+    <Compile Include="Shaders\Yaml\YamlMatrix.cs" />
+    <Compile Include="Shaders\Yaml\YamlNode.cs" />
+    <Compile Include="Shaders\Yaml\YamlNodeTypes.cs" />
+    <Compile Include="Shaders\Yaml\YamlSampler.cs" />
+    <Compile Include="Shaders\Yaml\YamlConstantBuffer.cs" />
+    <Compile Include="Shaders\Yaml\YamlSerializer.cs" />
+    <Compile Include="Shaders\Yaml\YamlShader.cs" />
+    <Compile Include="Shaders\Yaml\YamlShaderReference.cs" />
+    <Compile Include="Shaders\Yaml\YamlStruct.cs" />
+    <Compile Include="Shaders\Yaml\YamlTexture.cs" />
+    <Compile Include="Shaders\Yaml\YamlVariable.cs" />
+    <Compile Include="Shaders\Yaml\YamlVector.cs" />
     <Compile Include="ViewModel\ButtonViewModel.cs" />
     <Compile Include="ViewModel\CompilationResultViewModel.cs" />
     <Compile Include="ViewModel\CompilationViewModel.cs" />
@@ -232,6 +259,15 @@
     <Compile Include="ViewModel\TechniqueMappingViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\BrowserBehavior.cs" />
+    <Compile Include="View\Controls\FolderBrowserDialog.cs" />
+    <Compile Include="View\Controls\Interop\Comguids.cs" />
+    <Compile Include="View\Controls\Interop\Errorhelper.cs" />
+    <Compile Include="View\Controls\Interop\Helpers.cs" />
+    <Compile Include="View\Controls\Interop\NativeMethods.cs" />
+    <Compile Include="View\Controls\Interop\NativeDialogShowState.cs" />
+    <Compile Include="View\Controls\Interop\ShellComInterfaces.cs" />
+    <Compile Include="View\Controls\Interop\ShellWrapperDefinitions.cs" />
+    <Compile Include="View\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="View\Converters\CategoryToIconConverter.cs" />
     <Compile Include="View\Converters\CompilationStatusToBrushConverter.cs" />
     <Compile Include="View\Converters\ShaderModelConverter.cs" />
@@ -247,6 +283,7 @@
       <DependentUpon>DebugView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Controls\ImageButton.cs" />
+    <Compile Include="View\InputBindingsManager.cs" />
     <Compile Include="View\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -356,6 +393,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Resources\GPLv3.rtf" />
     <None Include="ShaderGenerator_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -414,6 +452,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\FolderOpen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\AppIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\AppIcon64.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

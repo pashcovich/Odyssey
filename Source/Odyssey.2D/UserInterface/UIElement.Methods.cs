@@ -44,7 +44,7 @@ namespace Odyssey.UserInterface
         //        return OdysseyUI.CurrentOverlay.WindowManager[depth.WindowLayer - 1];
         //}
 
-
+        public abstract void Initialize(IDirectXProvider directX);
 
         #endregion Public methods
 

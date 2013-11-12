@@ -35,8 +35,9 @@ namespace Odyssey.Tools.ShaderGenerator.View
             if (item != null)
             {
                 DragDrop.DoDragDrop(item, (TechniqueMappingViewModel)item.Content, DragDropEffects.Link);
+                item.IsSelected = false;
             }
-            e.Handled = false; item.IsSelected = false;
+            e.Handled = false; 
         }
     }
 }

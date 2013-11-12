@@ -59,6 +59,7 @@
     <Compile Include="Graphics\Effects\StereoEffect.cs" />
     <Compile Include="Graphics\Rendering2D\FpsRenderer.cs" />
     <Compile Include="Graphics\Rendering2D\Renderer.cs" />
+    <Compile Include="Graphics\Rendering2D\Shapes\Ellipse.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\Rectangle.cs" />
     <Compile Include="Graphics\Rendering2D\Shapes\IShapeD2D.cs" />
     <Compile Include="Graphics\Rendering2D\StereoRenderer.cs" />

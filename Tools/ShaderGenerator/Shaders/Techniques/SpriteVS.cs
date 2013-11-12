@@ -2,7 +2,7 @@
 using Odyssey.Graphics.Materials;
 using Odyssey.Graphics.Rendering;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System;
@@ -24,6 +24,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             Name = "SpriteVS";
             Type = ShaderType.Vertex;
             FeatureLevel = FeatureLevel.VS_4_0_Level_9_1;
+            KeyPart = new TechniqueKey(vs: VertexShaderFlags.Position | VertexShaderFlags.TextureUV);
             EnableSeparators = true;
             InputStruct = Struct.VertexPositionNormalTexture;
             OutputStruct = VSOut;
@@ -45,7 +46,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             Result = new VSTexturedOutputNode
             {
                 Position = cstNode,
-                TextureUV = new ConstantNode { Value = InputStruct[Param.SemanticVariables.TextureUV] },
+                Texture = new ConstantNode { Value = InputStruct[Param.SemanticVariables.Texture] },
                 Output = OutputStruct
             };
         }

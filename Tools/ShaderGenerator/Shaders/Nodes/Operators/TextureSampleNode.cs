@@ -1,15 +1,19 @@
 ﻿using Odyssey.Graphics.Materials;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
 {
+    [YamlMapping(typeof(YamlTextureSampleNode))]
     public class TextureSampleNode : NodeBase
     {
         [SupportedType(Type.Texture2D)]
+        [SupportedType(Type.Texture3D)]
+        [SupportedType(Type.TextureCube)]
         public IVariable Texture { get; set; }
 
         [SupportedType(Type.Sampler)]
@@ -42,7 +46,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
         public override void Validate(TechniqueKey key)
         {
             base.Validate(key);
-            Texture.SetMarkup(Shaders.Texture.SamplerIndex, Sampler.Index);
+            Texture.SetMarkup(Shaders.Texture.SamplerIndex, Sampler.Index.ToString());
         }
 
         public override string Operation()
@@ -53,11 +57,14 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
         public override string Access()
         {
             bool requiresSwizzle = false;
-            if (Coordinates.Output.Type == Type.Float3 || Coordinates.Output.Type == Type.Float4 && ((Vector)Coordinates.Output).Swizzle.Length == 2)
+            if (((Vector)Coordinates.Output).HasSwizzle)
                 requiresSwizzle = true;
+
+            string command = string.Empty;
 
             return string.Format("{0}.Sample({1}, {2})", Texture.Name, Sampler.Name,
                 requiresSwizzle ? string.Format("{0}.{1}", Coordinates.Reference, ((Vector)Coordinates.Output).PrintSwizzle()) : Coordinates.Reference);
         }
+
     }
 }

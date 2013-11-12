@@ -4,11 +4,11 @@ namespace Odyssey.UserInterface.Controls
 {
     public class ControlEventArgs : EventArgs
     {
-        public ControlEventArgs(IUIElement control)
+        public ControlEventArgs(UIElement control)
         {
             this.Control = control;
         }
 
-        public IUIElement Control { get; set; }
+        public UIElement Control { get; set; }
     }
 }

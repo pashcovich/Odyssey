@@ -25,6 +25,20 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
         }
 
+        public static Texture CubeMap
+        {
+            get
+            {
+                return new Texture
+                {
+                    Name = Param.Textures.CubeMap,
+                    Type = Shaders.Type.TextureCube,
+                    Index = 0,
+                    ShaderReference = new ShaderReference(TextureReference.Diffuse)
+                };
+            }
+        }
+
         public static Texture ShadowMap
         {
             get

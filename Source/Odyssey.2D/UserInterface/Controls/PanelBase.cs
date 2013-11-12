@@ -11,12 +11,12 @@ namespace Odyssey.UserInterface.Controls
         #region Constructors
 
         public PanelBase()
-            : base(ControlTag + ++count, ControlTag)
+            : base(ControlTag)
         {
         }
 
         protected PanelBase(string tag, string controlClass)
-            : base(tag, controlClass)
+            : base(controlClass)
         {}
 
         #endregion

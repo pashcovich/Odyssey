@@ -34,6 +34,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public Shader()
         {
+            NodeBase.NodeCounter.Clear();
             variables = new Dictionary<string, IVariable>();
         }
 
@@ -70,6 +71,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
         }
 
+        public IEnumerable<IVariable> Variables { get { return variables.Values; } }
+
         [DataMember]
         public bool EnableSeparators { get; set; }
         [DataMember]
@@ -79,11 +82,13 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         [DataMember]
         public IStruct InputStruct { get; set; }
         [DataMember]
-        public IStruct OutputStruct { get; protected set; }
+        public IStruct OutputStruct { get; set; }
         [DataMember]
-        public INode Result { get; protected set; }
+        public INode Result { get; set; }
         [DataMember]
         public ShaderType Type { get; set; }
+        [DataMember]
+        public TechniqueKey KeyPart { get; set; }
 
         public IEnumerable<Sampler> Samplers
         {
@@ -125,7 +130,9 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             get
             {
                 return (from kvp in variables
-                        where kvp.Value.Type == Shaders.Type.Texture2D
+                        where kvp.Value.Type == Shaders.Type.Texture2D ||
+                        kvp.Value.Type == Shaders.Type.Texture3D ||
+                        kvp.Value.Type == Shaders.Type.TextureCube
                         select kvp.Value).Cast<Variable>();
             }
         }
@@ -145,12 +152,18 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     break;
 
                 case Shaders.Type.Texture2D:
+                case Shaders.Type.Texture3D:
+                case Shaders.Type.TextureCube:
                     variable.Index = textureCount++;
                     break;
 
                 case Shaders.Type.Sampler:
                 case Shaders.Type.SamplerComparisonState:
                     variable.Index = samplerCount++;
+                    break;
+
+                case Shaders.Type.Struct:
+                    variable.Index = customTypeCount++;
                     break;
             }
                 
@@ -183,6 +196,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             variables.Remove(Variable.GetRegister(variable));
         }
 
+        public void Remove(string variableName)
+        {
+            Contract.Requires<ArgumentException>(Contains(variableName));
+            variables.Remove(variables.Where(kvp => kvp.Value.Name == variableName).First().Key);
+        }
+
         public void Clear()
         {
             variables.Clear();
@@ -200,28 +219,33 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
             foreach (ConstantBuffer cb in ConstantBuffers)
             {
-                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Index, cb.UpdateFrequency, cb.References);
+                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Index.Value, cb.UpdateFrequency, cb.References);
                 cbReferences.Add(cbReference.Index, cbReference);
             }
             foreach (var texture in Textures)
             {
                 TextureReference reference =  (TextureReference)texture.ShaderReference.Value;
-                string key = texture.ContainsMarkup(Texture.Key) ? texture.GetMarkupValue<string>(Texture.Key) : "Empty";
-                int samplerIndex = texture.GetMarkupValue<int>(Texture.SamplerIndex);
-                UpdateFrequency updateFrequency = texture.ContainsMarkup(Texture.UpdateFrequency) ? 
-                    texture.GetMarkupValue<UpdateFrequency>(Texture.UpdateFrequency)
-                    : UpdateFrequency.Static;
-                TextureDescription tDescription = new TextureDescription(texture.Index, key, reference, samplerIndex, updateFrequency);
+                string key = texture.ContainsMarkup(Texture.Key) ? texture.GetMarkupValue(Texture.Key) : "Empty";
+                UpdateFrequency updateFrequency = UpdateFrequency.None;
+                int samplerIndex = 0;
+                if (texture.HasMarkup)
+                {
+                    samplerIndex = int.Parse(texture.GetMarkupValue(Texture.SamplerIndex));
+                    updateFrequency = texture.ContainsMarkup(Texture.UpdateFrequency) ?
+                        ReflectionHelper.ParseEnum<UpdateFrequency>(texture.GetMarkupValue(Texture.UpdateFrequency))
+                        : UpdateFrequency.Static;
+                }
+                TextureDescription tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, updateFrequency);
                 textureReferences.Add(tDescription.Index, tDescription);
             }
             foreach (var sampler in Samplers)
             {
-                Filter filter = sampler.GetMarkupValue<Filter>(Sampler.Filter);
-                TextureAddressMode tAddressMode = sampler.GetMarkupValue<TextureAddressMode>(Sampler.TextureAddressMode);
-                Comparison comparison = sampler.GetMarkupValue<Comparison>(Sampler.Comparison);
+                Filter filter = ReflectionHelper.ParseEnum<Filter>(sampler.GetMarkupValue(Sampler.Filter));
+                TextureAddressMode tAddressMode = ReflectionHelper.ParseEnum<TextureAddressMode>(sampler.GetMarkupValue(Sampler.TextureAddressMode));
+                Comparison comparison = ReflectionHelper.ParseEnum<Comparison>(sampler.GetMarkupValue(Sampler.Comparison));
                 Odyssey.Content.Shaders.SamplerStateDescription samplerDesc = new Content.Shaders.SamplerStateDescription
                 {
-                    Index = sampler.Index,
+                    Index = sampler.Index.Value,
                     Comparison = comparison,
                     Filter = filter,
                     TextureAddressMode = tAddressMode,
@@ -232,8 +256,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public void Build()
         {
-           
-            ShaderBuilder sb = new ShaderBuilder(GenerateKeyPartRequirements(this));
+            ShaderBuilder sb = new ShaderBuilder(KeyPart != null ? KeyPart : GenerateKeyPartRequirements(this));
             IEnumerable<IMethod> requiredMethods;
             sb.BuildMethod(Signature, Result, out requiredMethods);
             CollectReferences();
@@ -290,6 +313,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             return variables.ContainsKey(Variable.GetRegister(variable));
         }
 
+        public bool Contains(string variableName)
+        {
+            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(variableName));
+            return variables.Any(kvp => kvp.Value.Name == variableName);
+        }
+
         public override string ToString()
         {
             return SourceCode;
@@ -302,24 +331,37 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         internal static ShaderModel FromFeatureLevel(FeatureLevel featureLevel)
         {
-            switch (featureLevel)
-            {
-                case FeatureLevel.VS_4_0_Level_9_1:
-                case FeatureLevel.PS_4_0_Level_9_1:
-                    return ShaderModel.SM20_level_9_1;
-                case FeatureLevel.VS_4_0_Level_9_3:
-                case FeatureLevel.PS_4_0_Level_9_3:
-                    return ShaderModel.SM20_level_9_3;
+            string featureLevelValue = featureLevel.ToString();
 
-                default:
-                    return ShaderModel.SM40;
-            }
+            string shaderModelValue = "SM" + featureLevelValue.Substring(2, featureLevelValue.Length-2);
+            return (ShaderModel)Enum.Parse(typeof(ShaderModel), shaderModelValue);
         }
 
-        public static TechniqueKey GenerateKeyPartRequirements(Shader shader)
+        internal static FeatureLevel FromShaderModel(ShaderModel model, ShaderType type)
+        {
+            string shaderCode = string.Empty;
+            switch (type)
+            {
+                case ShaderType.Pixel:
+                    shaderCode = "PS";
+                    break;
+
+                case ShaderType.Vertex:
+                    shaderCode = "VS";
+                    break;
+            }
+            string shaderModelValue = model.ToString();
+            string featureLevelValue = shaderCode + shaderModelValue.Substring(2, shaderModelValue.Length-2);
+            if (type == ShaderType.Vertex && model == ShaderModel.SM_2_B)
+                featureLevelValue.Replace('B','A');
+            return (FeatureLevel)Enum.Parse(typeof(FeatureLevel), featureLevelValue);
+        }
+
+        internal static TechniqueKey GenerateKeyPartRequirements(Shader shader)
         {
             var vsAttributes = shader.GetType().GetCustomAttributes<VertexShaderAttribute>();
             var psAttributes = shader.GetType().GetCustomAttributes<PixelShaderAttribute>();
+
             VertexShaderFlags vsFlags = VertexShaderFlags.None;
             PixelShaderFlags psFlags = PixelShaderFlags.None;
             ShaderModel model = FromFeatureLevel(shader.FeatureLevel);
@@ -329,6 +371,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             foreach (var psAttribute in psAttributes)
                 psFlags |= psAttribute.Features;
 
+            
             return new TechniqueKey(vsFlags, psFlags, sm: model);
         }
 

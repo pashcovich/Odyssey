@@ -1,4 +1,5 @@
-﻿using Odyssey.Tools.ShaderGenerator.Model;
+﻿using Odyssey.Tools.ShaderGenerator;
+using Odyssey.Tools.ShaderGenerator.Model;
 using Odyssey.Tools.ShaderGenerator.Shaders.Techniques;
 using Odyssey.Utils.Logging;
 using System;
@@ -13,18 +14,21 @@ namespace ShaderGenerator.Data
 {
     public class ResourceManager
     {
-        public ShaderDescription[] Load()
-        {
-            return new[] {
-                //new ShaderDescription() { Shader = new SpritePS()},
-                //new ShaderDescription() { Shader = new SpriteVS()},
-                new ShaderDescription() { Shader= new PhongVS()},
-                new ShaderDescription() { Shader= new PhongShadowsVS()},
-                new ShaderDescription() { Shader= new PhongPS()},
-                new ShaderDescription() { Shader= new PhongShadowsPS()},
-                new ShaderDescription() { Shader= new PhongDiffuseMapPS()},
-            };
-        }
+        //public ShaderDescription[] Load()
+        //{
+        //    return new[] {
+        //        //new ShaderDescription() { Shader = new SpritePS()},
+        //        //new ShaderDescription() { Shader = new SpriteVS()},
+        //        new ShaderDescription() { Shader= new PhongVS()},
+        //        new ShaderDescription() { Shader= new PhongShadowsVS()},
+        //        new ShaderDescription() { Shader= new PhongCubeMapVS()},
+        //        new ShaderDescription() { Shader= new PhongPS()},
+        //        new ShaderDescription() { Shader= new PhongShadowsPS()},
+        //        new ShaderDescription() { Shader= new PhongDiffuseMapPS()},
+        //        new ShaderDescription() { Shader= new PhongCubeMapPS()},
+
+        //    };
+        //}
 
         public static void Serialize<T>(string fullPath, T shaderData, System.Type[] derivedTypes = null)
         {
@@ -36,7 +40,7 @@ namespace ShaderGenerator.Data
             }
             catch (SerializationException e)
             {
-                LogEvent.Tool.Error(e.Message);
+                Log.Daedalus.Error(e.Message);
                 throw;
             }
             finally
@@ -56,7 +60,7 @@ namespace ShaderGenerator.Data
             }
             catch (SerializationException e)
             {
-                LogEvent.Tool.Error(e.Message);
+                Log.Daedalus.Error(e.Message);
                 throw;
             }
             finally

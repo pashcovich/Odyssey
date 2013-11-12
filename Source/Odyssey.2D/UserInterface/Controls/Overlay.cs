@@ -67,7 +67,7 @@ namespace Odyssey.UserInterface.Controls
         /// Initializes a new instance of the <see cref="Overlay"/> class.
         /// </summary>
         protected Overlay()
-            : base(ControlTag, "Empty")
+            : base("Empty")
         {
             keyBindings = new SortedDictionary<Key, KeyBinding>();
             IsInside = true;
@@ -145,6 +145,7 @@ namespace Odyssey.UserInterface.Controls
                 uiElement.Arrange();
 
             Initialize(directX);
+            DesignMode = false;
 
         }
 

@@ -3,7 +3,7 @@ using Odyssey.Engine;
 using Odyssey.Graphics.Materials;
 using Odyssey.Graphics.Rendering;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System.Runtime.Serialization;
@@ -19,6 +19,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
         public PhongShadowsVS()
         {
             Name = "PhongShadowsVS";
+            KeyPart = new TechniqueKey(vs: VertexShaderFlags.Position | VertexShaderFlags.Normal | VertexShaderFlags.TextureUV);
             Clear();
             PhongVSOutputNode oldOutput = (PhongVSOutputNode)Result;
             InputStruct = Struct.VertexPositionNormalTexture;
@@ -39,7 +40,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
                 Position = oldOutput.Position,
                 Normal = oldOutput.Normal,
                 WorldPosition = oldOutput.WorldPosition,
-                TextureUV = oldOutput.TextureUV,
+                Texture = oldOutput.Texture,
                 ShadowProjection = mShadow,
                 Output = OutputStruct
             };

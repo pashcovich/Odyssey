@@ -54,7 +54,26 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
 
         public string Name { get { return ShaderDescriptionModel.Name; } }
         public string SourceCode { get { return ShaderDescriptionModel.SourceCode; } }
-        public FeatureLevel FeatureLevel { get { return ShaderDescriptionModel.FeatureLevel; } }
+        public FeatureLevel FeatureLevel
+        {
+            get { return ShaderDescriptionModel.FeatureLevel; }
+            set
+            {
+                ShaderDescriptionModel.FeatureLevel = value;
+                RaisePropertyChanged("FeatureLevel");
+            }
+        }
+
+        public ShaderModel ShaderModel
+        {
+            get { return Shader.FromFeatureLevel(ShaderDescriptionModel.FeatureLevel); }
+            set
+            {
+                ShaderDescriptionModel.FeatureLevel = Shader.FromShaderModel(value, Type);
+                RaisePropertyChanged("ShaderModel");
+            }
+        }
+
         public ObservableCollection<TechniqueMappingViewModel> Techniques
         {
             get { return techniques; }
@@ -66,7 +85,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
         }
         public ShaderType Type { get { return ShaderDescriptionModel.Type; } }
 
-        internal System.Enum KeyPart { get; set; }
+        internal TechniqueKey KeyPart { get { return ShaderDescriptionModel.KeyPart; } }
 
         public System.Windows.Input.ICommand ViewCodeCommand
         {
@@ -108,20 +127,6 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             return techniques.Any(tm => tm.Name == techniqueName);
         }
 
-        internal void UpdateKeyPart()
-        {
-            switch (Type)
-            {
-                case ShaderType.Vertex:
-                    KeyPart = GetVertexShaderFeature(this);
-                    break;
-
-                case ShaderType.Pixel:
-                    KeyPart = GetPixelShaderFeature(this);
-                    break;
-            }
-
-        }
 
         void AddUnassignedTechnique()
         {
@@ -148,6 +153,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             PixelShaderFlags features = psAttributes.Aggregate((a, b) => a | b);
             return features;
         }
+
 
     }
 }

@@ -243,7 +243,9 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Occurs when the <see cref="DesignMode"/> property value changes.
         /// </summary>
-        public event EventHandler DesignModeChanged;
+        public event EventHandler<ControlEventArgs> DesignModeChanged;
+
+        public event EventHandler<ControlEventArgs> Initialized;
 
         /// <summary>
         /// Occurs when the control receives focus..
@@ -324,10 +326,16 @@ namespace Odyssey.UserInterface
         /// </summary>
         /// <param name="e">The <see cref="Engine.EventArgs"/> instance containing the event
         /// data.</param>
-        protected virtual void OnDesignModeChanged(EventArgs e)
+        protected virtual void OnDesignModeChanged(ControlEventArgs e)
         {
             if (DesignModeChanged != null)
                 DesignModeChanged(this, e);
+        }
+
+        protected virtual void OnInitialized(ControlEventArgs e)
+        {
+            if (Initialized != null)
+                Initialized(this, e);
         }
 
         /// <summary>

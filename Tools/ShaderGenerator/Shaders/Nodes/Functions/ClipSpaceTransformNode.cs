@@ -1,5 +1,6 @@
 ﻿using Odyssey.Graphics.Materials;
 using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
 {
+    [YamlMapping(typeof(YamlClipSpaceTransformNode))]
     public class ClipSpaceTransformNode : NodeBase
     {
         IVariable output;
@@ -66,5 +68,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
         {
             return clipSpaceMethod.Call((Vector)Position.Output, (Vector)InstancePosition, (Vector)Size, (Vector)ScreenSize);
         }
+
     }
 }

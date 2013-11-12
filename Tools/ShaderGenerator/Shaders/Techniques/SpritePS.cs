@@ -2,7 +2,7 @@
 using Odyssey.Graphics.Materials;
 using Odyssey.Graphics.Rendering;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System.Runtime.Serialization;
@@ -18,6 +18,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
         {
             Name = "SpritePS";
             Type = ShaderType.Pixel;
+            KeyPart = new TechniqueKey(ps: PixelShaderFlags.Diffuse | PixelShaderFlags.DiffuseMap);
             FeatureLevel = Odyssey.Graphics.Materials.FeatureLevel.PS_4_0_Level_9_1;
             EnableSeparators = true;
             var inputStruct = SpriteVS.VSOut;
@@ -38,20 +39,15 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
 
             TextureSampleNode nTexSample = new TextureSampleNode
             {
-                Coordinates = new ConstantNode { Value = InputStruct[Param.SemanticVariables.TextureUV]} ,
+                Coordinates = new ConstantNode { Value = InputStruct[Param.SemanticVariables.Texture]} ,
                 Texture = tDiffuse,
                 Sampler = sDiffuse,
-            };
-
-            ColorConstantNode nColorConst = new ColorConstantNode()
-            {
-                Color = material[Param.Material.Diffuse],
             };
 
             MultiplyNode nMultiply = new MultiplyNode()
             {
                 Input1 = nTexSample,
-                Input2 = nColorConst,
+                Input2 = new ConstantNode{ Value = material[Param.Material.Diffuse]},
                 Output = new Vector { Name = "cFinal", Type = Shaders.Type.Float4 }
             };
 

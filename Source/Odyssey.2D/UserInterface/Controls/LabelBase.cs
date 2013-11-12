@@ -31,36 +31,36 @@ namespace Odyssey.UserInterface.Controls
         }
 
         public LabelBase()
-            : base(ControlTag + ++count, "Empty")
+            : base("Empty")
         {
             CanRaiseEvents = false;
         }
 
 
 
-        void UpdateLayoutRectangle(RectangleF parentRectangle)
-        {
-            layoutRectangle = new RectangleF(parentRectangle.X + Position.X, parentRectangle.Y + Position.Y,
-                parentRectangle.Width - Position.X, parentRectangle.Height - Position.Y);
-        }
+        //void UpdateLayoutRectangle(RectangleF parentRectangle)
+        //{
+        //    layoutRectangle = new RectangleF(parentRectangle.X + Position.X, parentRectangle.Y + Position.Y,
+        //        parentRectangle.Width - Position.X, parentRectangle.Height - Position.Y);
+        //}
 
-        protected override void OnParentChanged(EventArgs e)
-        {
-            base.OnParentChanged(e);
-            UpdateLayoutRectangle((RectangleF)Parent);
-        }
+        //protected override void OnParentChanged(EventArgs e)
+        //{
+        //    base.OnParentChanged(e);
+        //    UpdateLayoutRectangle((RectangleF)Parent);
+        //}
 
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
-            UpdateLayoutRectangle((RectangleF)Parent);
-        }
+        //protected override void OnSizeChanged(EventArgs e)
+        //{
+        //    base.OnSizeChanged(e);
+        //    UpdateLayoutRectangle((RectangleF)Parent);
+        //}
 
-        protected override void OnPositionChanged(EventArgs e)
-        {
-            base.OnPositionChanged(e);
-            UpdateLayoutRectangle((RectangleF)Parent);
-        }
+        //protected override void OnPositionChanged(EventArgs e)
+        //{
+        //    base.OnPositionChanged(e);
+        //    UpdateLayoutRectangle((RectangleF)Parent);
+        //}
 
 
 

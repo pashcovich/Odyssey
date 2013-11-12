@@ -14,7 +14,7 @@ namespace Odyssey.UserInterface.Controls
         private static int count;
 
         protected ButtonBase()
-            : base(ControlTag + ++count, ControlTag)
+            : base(ControlTag)
         {
         }
 

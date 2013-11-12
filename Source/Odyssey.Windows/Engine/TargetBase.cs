@@ -32,8 +32,6 @@ namespace Odyssey.Platforms.Windows
             }
         }
 
-
-
         /// <summary>
         /// Gets the bounds of the control linked to this render target
         /// </summary>

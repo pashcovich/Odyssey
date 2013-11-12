@@ -1,11 +1,13 @@
 ﻿using Odyssey.Graphics.Materials;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants
+namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
 {
+    [YamlMapping(typeof(YamlConstantNode))]
     public class ConstantNode : NodeBase
     {
         private IVariable value;
@@ -74,5 +76,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants
         {
             return Value.FullName;
         }
+
     }
 }

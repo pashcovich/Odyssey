@@ -1,5 +1,6 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Graphics.Materials;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using ShaderGenerator.Data;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders
 {
-    public class Matrix : Variable
+    [YamlMapping(typeof(YamlMatrix))]
+    public partial class Matrix : Variable
     {
 
         #region Matrices
@@ -33,7 +35,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.Projection, ShaderReference = new ShaderReference(EngineReference.MatrixProjection) }; }
         }
         #endregion
-
 
         public static Matrix LightView
         {

@@ -1,4 +1,5 @@
 ﻿using Odyssey.Graphics.Materials;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -7,6 +8,7 @@ using System.Text;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
 {
+    [YamlMapping(typeof(YamlMultiplyNode))]
     public class MultiplyNode : NodeBase
     {
         [SupportedType(Type.Float)]
@@ -61,6 +63,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
         {
             return string.Format("{0} * {1}", Input1.Reference, Input2.Reference);
         }
+
 
     }
 }

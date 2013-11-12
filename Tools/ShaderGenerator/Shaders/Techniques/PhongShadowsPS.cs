@@ -3,7 +3,7 @@ using Odyssey.Graphics.Materials;
 using Odyssey.Graphics.Rendering;
 using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
@@ -22,6 +22,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
         {
             Name = "PhongShadowsPS";
             FeatureLevel = Graphics.Materials.FeatureLevel.PS_5_0;
+            KeyPart = new TechniqueKey(ps: PixelShaderFlags.Diffuse | PixelShaderFlags.Specular | PixelShaderFlags.Shadows | PixelShaderFlags.ShadowMap, sm: FromFeatureLevel(FeatureLevel));
             Clear();
             PhongLightingNode nPhong = (PhongLightingNode)((PSOutputNode)Result).FinalColor;
             var inputStruct = PhongShadowsVS.VSOut;

@@ -29,7 +29,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render(Engine.IDirectXTarget target)
         {
-            target.Direct2D.Context.DrawText(Text, textFormat, (RectangleF)Parent, textBrush);
+            target.Direct2D.Context.DrawText(Text, textFormat, BoundingRectangle, textBrush);
         }
     }
 }

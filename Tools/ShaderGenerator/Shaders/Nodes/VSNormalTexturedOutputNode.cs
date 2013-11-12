@@ -1,5 +1,6 @@
 ﻿using Odyssey.Content.Shaders;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,11 @@ using System.Text;
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
 {
     [DataContract]
-    public abstract class VSOutputNode : VSOutputNodeBase
+    public class VSNormalTexturedOutputNode : VSTexturedOutputNode
     {
         [DataMember]
         [SupportedType(Type.Float3)]
         public INode Normal { get; set; }
-
-        [DataMember]
-        [SupportedType(Type.Float2)]
-        public INode TextureUV { get; set; }
 
         public override IEnumerable<INode> DescendantNodes
         {
@@ -28,10 +25,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
 
                 yield return Normal;
                 foreach (var node in Normal.DescendantNodes)
-                    yield return node;
-
-                yield return TextureUV;
-                foreach (var node in TextureUV.DescendantNodes)
                     yield return node;
             }
         }

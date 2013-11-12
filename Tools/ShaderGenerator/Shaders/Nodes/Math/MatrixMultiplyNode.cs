@@ -1,5 +1,6 @@
 ﻿using Odyssey.Graphics.Materials;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -8,6 +9,7 @@ using System.Text;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
 {
+    [YamlMapping(typeof(YamlMatrixMultiplyNode))]
     public class MatrixMultiplyNode : NodeBase
     {
         IVariable output;
@@ -43,8 +45,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
                     string id = string.Empty;
                     Type type = MultiplyResultType(Input1.Output.Type, Input2.Output.Type);
 
-                    string name1 = Input1.Output.Name.Substring(1, Input1.Output.Name.Length-1);
-                    string name2 = Input2.Output.Name.Substring(1, Input2.Output.Name.Length-1);
+                    string name1 = Char.IsLower(Input1.Output.Name[0]) ? Input1.Output.Name.Substring(1, Input1.Output.Name.Length-1) : Input1.Output.Name;
+                    string name2 = Char.IsLower(Input2.Output.Name[0]) ? Input2.Output.Name.Substring(1, Input2.Output.Name.Length-1) : Input2.Output.Name;
 
                     Output = Variable.InitVariable(string.Format("{0}{1}{2}", Variable.GetPrefix(type), name1, name2), type);
                 }

@@ -1,6 +1,7 @@
 ﻿using Odyssey.Content.Shaders;
 using Odyssey.Engine;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,14 @@ using System.Text;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
 {
+    [YamlMapping(typeof(YamlVSTexturedOutputNode))]
     [DataContract]
     public class VSTexturedOutputNode : VSOutputNodeBase
     {
         [DataMember]
         [SupportedType(Type.Float2)]
-        public INode TextureUV { get; set; }
+        [SupportedType(Type.Float3)]
+        public INode Texture { get; set; }
 
         public override IEnumerable<INode> DescendantNodes
         {
@@ -23,8 +26,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
                 foreach (var node in base.DescendantNodes)
                     yield return node;
 
-                yield return TextureUV;
-                foreach (var node in TextureUV.DescendantNodes)
+                yield return Texture;
+                foreach (var node in Texture.DescendantNodes)
                     yield return node;
             }
         }
@@ -35,10 +38,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(string.Format("\t{0} {1};", vsOutput.CustomType, vsOutput.Name));
             sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Position].FullName, Position.Reference));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.TextureUV].FullName, TextureUV.Reference));
+            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Texture].FullName, Texture.Reference));
             sb.AppendLine(string.Format("\treturn {0};", vsOutput.Name));
 
             return sb.ToString();
         }
+
     }
 }

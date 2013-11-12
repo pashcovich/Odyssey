@@ -1,4 +1,5 @@
 ﻿using Odyssey.Graphics.Materials;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
 {
+    [YamlMapping(typeof(YamlSubtractionNode))]
     public class SubtractionNode : NodeBase
     {
         IVariable output;
@@ -84,5 +86,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
         {
             return string.Format("{0} - {1}", Input1.Reference, Input2.Reference);
         }
+
     }
 }

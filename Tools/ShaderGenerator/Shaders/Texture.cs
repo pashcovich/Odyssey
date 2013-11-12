@@ -1,5 +1,6 @@
 ﻿using Odyssey.Tools.ShaderGenerator.Shaders;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -10,11 +11,14 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders
 {
+    [YamlMapping(typeof(YamlTexture))]
     [DataContract]
     public partial class Texture : Variable
     {
         [DataMember]
         [SupportedType(Type.Texture2D)]
+        [SupportedType(Type.Texture3D)]
+        [SupportedType(Type.TextureCube)]
         public override Type Type
         {
             get
@@ -32,7 +36,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public Texture()
         {
-            Index = -1;
         }
+
     }
 }

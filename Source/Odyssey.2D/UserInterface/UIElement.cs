@@ -2,6 +2,7 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using System;
+using System.Collections.Generic;
 
 namespace Odyssey.UserInterface
 {
@@ -11,6 +12,8 @@ namespace Odyssey.UserInterface
     /// </summary>
     public abstract partial class UIElement : Component, IUIElement, IComparable<UIElement>
     {
+        protected static Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
+
         #region Private fields
 
         private RectangleF boundingRectangle;
@@ -38,9 +41,13 @@ namespace Odyssey.UserInterface
         /// <param name="id">The id.</param>
         /// <remarks>
         /// </remarks>
-        protected UIElement(string id)
+        protected UIElement()
         {
-            Id = id;
+            string type = GetType().Name;
+            if (!TypeCounter.ContainsKey(type))
+                TypeCounter.Add(type, 0);
+
+            Id = string.Format("{0}{1}", type, TypeCounter[type]);
         }
 
         #endregion Constructors

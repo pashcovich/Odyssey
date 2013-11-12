@@ -1,11 +1,14 @@
 ﻿using Odyssey.Graphics.Materials;
 using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
 {
+    [YamlMapping(typeof(YamlPhongLightingNode))]
     [DataContract]
     public class PhongLightingNode : NodeBase
     {
@@ -45,7 +48,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
 
         [DataMember]
         [SupportedType(Type.Float4)]
-        [VertexShader(VertexShaderFlags.Shadows)]
+        [VertexShader(VertexShaderFlags.ShadowProjection)]
         [PixelShader(PixelShaderFlags.Shadows | PixelShaderFlags.ShadowMap)]
         public TextureSampleNode ShadowMapSamplerNode { get; set; }
 
@@ -68,6 +71,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
         public bool DiffuseMap { get; set; }
         [DataMember]
         public bool Shadows { get; set; }
+        [DataMember]
+        public bool CubeMap { get; set; }
 
         [SupportedType(Type.Float4)]
         public override IVariable Output
@@ -143,6 +148,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
                 Specular = Specular,
                 DiffuseMap = DiffuseMap,
                 Shadows = Shadows,
+                CubeMap = CubeMap
             };
 
             if (Shadows)
@@ -177,5 +183,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
                 return phongMethod.Call((Struct)Light.Output, (Struct)Material.Output, (Vector)ViewDirection.Output, (Vector)LightDirection.Output, (Vector)Normal.Output);
 
         }
+
     }
 }

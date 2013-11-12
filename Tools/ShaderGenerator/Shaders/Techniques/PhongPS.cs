@@ -3,7 +3,7 @@ using Odyssey.Graphics.Materials;
 using Odyssey.Graphics.Rendering;
 using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Constants;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
 using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
@@ -20,6 +20,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
         {
             Name = "PhongPS";
             Type = ShaderType.Pixel;
+            KeyPart = new TechniqueKey(ps: PixelShaderFlags.Diffuse | PixelShaderFlags.Specular);
             FeatureLevel = Odyssey.Graphics.Materials.FeatureLevel.PS_4_0_Level_9_1;
             EnableSeparators = true;
             var input = PhongVS.VSOut;
@@ -31,7 +32,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             ConstantBuffer cbFrame= CBFrame;
 
             Struct pointLight = (Struct)cbStatic[Param.Struct.PointLight];
-            Struct material = (Struct)cbStatic[Param.Struct.Material];
+            Struct material = (Struct)cbFrame[Param.Struct.Material];
 
             Add(cbStatic);
             Add(cbFrame);
@@ -85,7 +86,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
                     UpdateFrequency = UpdateFrequency.Static,
                 };
 
-                cbStatic.Add(Struct.Material);
                 cbStatic.Add(Struct.PointLight0);
                 return cbStatic;
             }
@@ -100,7 +100,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
                     Name = Param.ConstantBuffer.PerFrame,
                     UpdateFrequency = UpdateFrequency.PerFrame,
                 };
-
+                cbFrame.Add(Struct.Material);
                 cbFrame.Add(Vector.CameraPosition);
                 return cbFrame;
             }
@@ -122,7 +122,35 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             Sampler sDiffuseSampler = Sampler.MinMagMipLinearWrap;
             nPhong.DiffuseMapSamplerNode = new TextureSampleNode
             {
-                Coordinates = new ConstantNode { Value = InputStruct[Param.SemanticVariables.TextureUV] },
+                Coordinates = new ConstantNode { Value = InputStruct[Param.SemanticVariables.Texture] },
+                Texture = tDiffuse,
+                Sampler = sDiffuseSampler
+            };
+            Add(tDiffuse);
+            Add(sDiffuseSampler);
+        }
+    }
+
+    public class PhongCubeMapPS : PhongPS
+    {
+        public PhongCubeMapPS()
+        {
+            Name = "PhongCubeMapPS";
+            KeyPart =  new TechniqueKey(ps: PixelShaderFlags.Diffuse | PixelShaderFlags.CubeMap | PixelShaderFlags.CubeMap);
+
+            var input = PhongCubeMapVS.VSOut;
+            input.Name = "input";
+            InputStruct = input;
+
+            PhongLightingNode nPhong = (PhongLightingNode)((PSOutputNode)Result).FinalColor;
+            nPhong.DiffuseMap = true;
+            nPhong.CubeMap = true;
+
+            Texture tDiffuse = Texture.CubeMap;
+            Sampler sDiffuseSampler = Sampler.MinMagMipLinearWrap;
+            nPhong.DiffuseMapSamplerNode = new TextureSampleNode
+            {
+                Coordinates = new ConstantNode { Value = InputStruct[Param.SemanticVariables.Texture] },
                 Texture = tDiffuse,
                 Sampler = sDiffuseSampler
             };

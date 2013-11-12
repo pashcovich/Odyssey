@@ -22,7 +22,5 @@ namespace Odyssey.Geometry
         PositionTextureUV = Position | TextureUV,
         PositionColor4 = Position | Color4,
         TexturedMesh = Position | TextureUV | Normal | Tangent | BiNormal,
-        PositionTextureUVW = Position | TextureUVW,
-        
     }
 }

@@ -12,7 +12,7 @@ namespace Odyssey.UserInterface.Controls
         public override void Initialize(Engine.IDirectXProvider directX)
         {
             base.Initialize(directX);
-            if (string.Equals(ControlDescriptionClass, "Empty"))
+            if (string.Equals(ControlDescriptionClass, Control.EmptyStyle))
                 return;
 
             Rectangle rEnabled = ToDispose(new Rectangle()

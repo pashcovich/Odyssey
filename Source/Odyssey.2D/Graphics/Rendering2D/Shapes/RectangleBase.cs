@@ -10,9 +10,8 @@ namespace Odyssey.Graphics.Rendering2D.Shapes
     public abstract class RectangleBase : ShapeBase
     {
         const string id = "Rectangle";
-        static int count; 
 
-        protected RectangleBase() : base(id + ++count) { }
+        protected RectangleBase() : base() { }
 
         public override bool Contains(Vector2 cursorLocation)
         {

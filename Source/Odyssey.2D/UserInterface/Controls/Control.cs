@@ -15,12 +15,12 @@ namespace Odyssey.UserInterface.Controls
 {
     public abstract class Control : UIElement, IControl
     {
+        public const string EmptyStyle = "Empty";
         private ControlDescription description;
         private Size size;
         private TextDescription textDescription;
 
-        protected Control(string id, string descriptionClass)
-            : base(id)
+        protected Control(string descriptionClass)
         {
             ApplyControlDescription(StyleManager.GetControlDescription(descriptionClass));
             ShapeMap = new ShapeMap(Description);
@@ -178,10 +178,19 @@ namespace Odyssey.UserInterface.Controls
             textDescription = StyleManager.GetTextDescription(description.TextStyleClass);
         }
 
+        protected override void OnDesignModeChanged(ControlEventArgs e)
+        {
+            base.OnDesignModeChanged(e);
+            if (ActiveStyle == null)
+                return;
+
+            foreach (UIElement element in ActiveStyle)
+                element.DesignMode = e.Control.DesignMode;
+        }
+
         #endregion Protected methods
 
-        public abstract void Initialize(IDirectXProvider directX);
-
         public abstract void Render(IDirectXTarget target);
+
     }
 }

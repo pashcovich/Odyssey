@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.Serialization;
 using Odyssey.Tools.ShaderGenerator.Properties;
+using Odyssey.Graphics.Materials;
 
 namespace Odyssey.Tools.ShaderGenerator
 {
@@ -22,91 +23,98 @@ namespace Odyssey.Tools.ShaderGenerator
         public IEnumerable<ErrorModel> CompilationErrors { get { return errorList; } }
 
         public ShaderCompiler()
-        {
-            errorList = new List<ErrorModel>();
-        }
+        {}
 
-        bool Compile(IShaderViewModel shader, out CompilationResult result)
+        CompilationResult Compile(IShaderViewModel shader, out List<ErrorModel> errors)
         {
-            result = null;
+            CompilationResult result = null;
+            errorList = new List<ErrorModel>();
             try
             {
                 IncludeHandler includeHandler = new IncludeHandler();
                 result = ShaderBytecode.Compile(shader.SourceCode, shader.Name, shader.FeatureLevel.ToString().ToLowerInvariant(),
-                    ShaderFlags.Debug, EffectFlags.None, null, includeHandler);
+                    FromShaderConfiguration(), EffectFlags.None, null, includeHandler);
                 includeHandler.Dispose();
                 
                 // In case compilation information could be needed - i.e. number of instructions
                 //using (ShaderReflection sReflection = new ShaderReflection(result.Bytecode))
-                //    LogEvent.Tool.Info(sReflection.ToString());
-
-                return true;
+                //    Log.Daedalus.Info(sReflection.ToString());
+                errors = null;
+                return result;
             }
             catch (InvalidOperationException exIO)
             {
-                LogEvent.Tool.Error(exIO.ToString());
+                Log.Daedalus.Error(exIO.ToString());
                 errorList.Add(new ErrorModel(shader.Name, exIO.Message, false));
-                return false;
+                errors = errorList;
+                return null;
             }
             catch (CompilationException exComp)
             {
-                LogEvent.Tool.Error(exComp.ToString());
-                string[] errors = exComp.Message.Split('\n');
-                foreach (string error in errors)
+                Log.Daedalus.Error(exComp.ToString());
+                string[] errorMessages = exComp.Message.Split('\n');
+                foreach (string error in errorMessages)
                 {
                     if (!string.IsNullOrEmpty(error))
                         errorList.Add(new ErrorModel(shader.Name, error));
                 }
-                return false;
+                errors = errorList;
+                return null;
             }
         }
 
         public bool CompileShader(string techniqueName, ShaderDescriptionViewModel vmShader,out ShaderObject shaderObject, out IEnumerable<ErrorViewModel> errors)
         {
-            List<ErrorViewModel> errorList = new List<ErrorViewModel>();
-
-            CompilationResult compilationResult;
-            errors = null;
-            bool result = Compile(vmShader, out compilationResult);
-            vmShader.CompilationStatus = result == true ? CompilationStatus.Successful : CompilationStatus.Failed;
+            List<ErrorModel> errorList;
+            CompilationResult compilationResult = Compile(vmShader, out errorList);
+            bool result = compilationResult != null && !compilationResult.HasErrors;
+            vmShader.CompilationStatus = result ? CompilationStatus.Successful : CompilationStatus.Failed;
             if (!result)
             {
-                foreach (ErrorModel error in CompilationErrors)
-                    errorList.Add(new ErrorViewModel { ErrorModel = error });
-                errors = errorList;
+                errors = errorList.Select(e => new ErrorViewModel { ErrorModel = e });
                 shaderObject = null;
             }
             else
             {
-                
                 var references = vmShader.ShaderDescriptionModel.Shader.References;
                 var textureReferences = vmShader.ShaderDescriptionModel.Shader.TextureReferences;
                 var samplerReferences = vmShader.ShaderDescriptionModel.Shader.SamplerReferences;
                 shaderObject = new ShaderObject(vmShader.Name, vmShader.Type, vmShader.FeatureLevel,
                     compilationResult.Bytecode, references, textureReferences, samplerReferences);
+                errors = null;
             }
-
             return result;
         }
 
         public bool CompileShader(ShaderCodeViewModel vmShader, out IEnumerable<ErrorViewModel> errors)
         {
-            List<ErrorViewModel> errorList = new List<ErrorViewModel>();
-            
-            CompilationResult compilationResult;
-            errors = null;
-            bool result = Compile(vmShader, out compilationResult);
-            vmShader.CompilationStatus = result == true ? CompilationStatus.Successful : CompilationStatus.Failed;
+            List<ErrorModel> errorList;
+            CompilationResult compilationResult = Compile(vmShader, out errorList);
+            bool result = compilationResult != null && !compilationResult.HasErrors;
+            vmShader.CompilationStatus = result ? CompilationStatus.Successful : CompilationStatus.Failed;
             if (!result)
-            {
-                foreach (ErrorModel error in CompilationErrors)
-                    errorList.Add(new ErrorViewModel { ErrorModel = error });
-                errors = errorList;
-            }
+                errors = errorList.Select(e => new ErrorViewModel { ErrorModel = e });
             else
-                compilationResult.Bytecode.Save(Path.Combine(Settings.Default.OutputPath,vmShader.Name));
+            {
+                compilationResult.Bytecode.Save(Path.Combine(Settings.Default.OutputPath, string.Format("{0}.fxo", vmShader.Name)));
+                errors = null;
+            }
 
             return result;
+        }
+
+        static ShaderFlags FromShaderConfiguration()
+        {
+            ShaderConfiguration configuration = Settings.Default.DefaultShaderConfiguration;
+            switch (configuration)
+            {
+                case ShaderConfiguration.Debug:
+                    return ShaderFlags.Debug;
+
+                default:
+                case ShaderConfiguration.Release:
+                    return ShaderFlags.None;
+            }
         }
 
     }

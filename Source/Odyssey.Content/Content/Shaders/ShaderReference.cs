@@ -15,11 +15,14 @@ namespace ShaderGenerator.Data
         [DataMember]
         public object Value { get; private set; }
 
-        protected ShaderReference(ReferenceType type, object value)
+        protected internal ShaderReference(ReferenceType type, object value, int index = 0)
         {
             Type = type;
             Value = value;
         }
+
+        public ShaderReference()
+        {}
 
         public ShaderReference(EngineReference reference)
             : this(ReferenceType.Engine, reference)

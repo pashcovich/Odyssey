@@ -27,6 +27,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
         public CollectionViewSource VertexShaderView { get; set; }
         public CollectionViewSource PixelShaderView { get; set; }
         public TechniqueKey Key { get; private set; }
+        public string Name { get; set; }
 
         public string SearchFilter
         {

@@ -7,12 +7,29 @@
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
                     xmlns:controls="clr-namespace:Odyssey.Tools.ShaderGenerator.View.Controls"
-                    xmlns:Odyssey="clr-namespace:Odyssey.Graphics.Materials;assembly=Odyssey.Common" xmlns:View="clr-namespace:Odyssey.Tools.ShaderGenerator.View">
+                    xmlns:View="clr-namespace:Odyssey.Tools.ShaderGenerator.View"
+                    xmlns:om="clr-namespace:Odyssey.Graphics.Materials;assembly=Odyssey.Common"
+                    xmlns:or="clr-namespace:Odyssey.Graphics.Rendering;assembly=Odyssey.Common">
     <vc:TechniqueTagConverter x:Key="techniqueTagConverter"/>
+    <vc:CompilationStatusToBrushConverter x:Key="compilationStatusConverter" Uncompiled="{StaticResource bUncompiled}"
+                Failed="{StaticResource bFailure}" Successful="{StaticResource bSuccess}"/>
+    <vc:ShaderModelConverter x:Key="ShaderModelConverter"/>
+    <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="ShaderModelValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="om:ShaderModel" />
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="ShaderTypeValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="or:ShaderType" />
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    
 
     <!-- *********************************  Technique Style  ********************************* -->
     <DataTemplate DataType="{x:Type vm:TechniqueMappingViewModel}">
-    <Border x:Name="Root" Background="{Binding Index, Converter={StaticResource techniqueTagConverter}}" CornerRadius="8" BorderBrush="{DynamicResource ListBoxItemBorderBrush}" BorderThickness="1"  Margin="4">
+    <Border x:Name="Root" Background="{Binding Index, Converter={StaticResource techniqueTagConverter}}" CornerRadius="8" 
+            BorderBrush="{DynamicResource ListBoxItemBorderBrush}" BorderThickness="1"  Margin="4" ToolTip="{Binding ToolTip}">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseEnter">
                 <ei:ChangePropertyAction TargetName="Cancel" PropertyName="Visibility" Value="Visible"/>
@@ -76,6 +93,76 @@
                 </Button>
             </StackPanel>
         </Border>
+    </DataTemplate>
+
+    <!-- *********************************  ShaderDescription Style  ********************************* -->
+    <DataTemplate DataType="{x:Type vm:ShaderDescriptionViewModel}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <ItemsControl ItemsSource="{Binding Techniques}" ItemTemplate="{StaticResource BriefTechniqueMapping}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <TextBlock Text="{Binding Type}" Grid.Column="1" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Name}" Grid.Column="2" VerticalAlignment="Center"/>
+            <ComboBox ItemsSource="{Binding Source= {StaticResource ShaderModelValues}}" SelectedItem="{Binding ShaderModel}" Grid.Column="3" VerticalAlignment="Center">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource ShaderModelConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Ellipse Width="24" Height="24" Fill="{Binding CompilationStatus, Converter={StaticResource compilationStatusConverter}}" Grid.Column="4" VerticalAlignment="Center"/>
+            <Button Content="View" Command="{Binding ViewCodeCommand}" CommandParameter="{Binding}" Grid.Column="5" />
+        </Grid>
+    </DataTemplate>
+
+    <!-- *********************************  ShaderCode Style  ********************************* -->
+    <DataTemplate DataType="{x:Type vm:ShaderCodeViewModel}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <ItemsControl ItemsSource="{Binding Techniques}" ItemTemplate="{StaticResource BriefTechniqueMapping}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <ComboBox ItemsSource="{Binding Source={StaticResource ShaderTypeValues}}" SelectedItem="{Binding Type}" Grid.Column="1" Margin="0,0,12,0"/>
+            <TextBox Text="{Binding Name}" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,12,0" ToolTip="Type entrypoint name here"/>
+            <ComboBox ItemsSource="{Binding Source= {StaticResource ShaderModelValues}}" SelectedItem="{Binding ShaderModel}" Grid.Column="3" VerticalAlignment="Center">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource ShaderModelConverter}}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Ellipse Width="24" Height="24" Fill="{Binding CompilationStatus, Converter={StaticResource compilationStatusConverter}}" Grid.Column="4" VerticalAlignment="Center"/>
+            <Button Content="View" Command="{Binding ViewCodeCommand}" CommandParameter="{Binding}" Grid.Column="5" />
+        </Grid>
     </DataTemplate>
 
     <!-- *********************************  ExpandableFlagBox Style  ********************************* -->

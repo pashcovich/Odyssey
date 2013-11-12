@@ -27,8 +27,8 @@ namespace Odyssey.UserInterface.Controls
         //    }
         //}
 
-        protected ContainerControl(string id, string controlDescriptionClass)
-            : base(id, controlDescriptionClass)
+        protected ContainerControl(string controlDescriptionClass)
+            : base(controlDescriptionClass)
         {
             PrivateControlCollection = new ControlCollection(this);
             IsFocusable = false;

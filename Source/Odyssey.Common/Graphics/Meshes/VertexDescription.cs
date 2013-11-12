@@ -47,6 +47,9 @@ namespace Odyssey.Graphics.Meshes
                 case VertexFormat.TextureUV:
                     return new InputElement("TEXCOORD", index, SharpDX.DXGI.Format.R32G32_Float, InputElement.AppendAligned, slot);
 
+                case VertexFormat.TextureUVW:
+                    return new InputElement("TEXCOORD", index, SharpDX.DXGI.Format.R32G32B32_Float, InputElement.AppendAligned, slot);
+
                 case VertexFormat.Color4:
                     return new InputElement("COLOR", index, SharpDX.DXGI.Format.R32G32B32A32_Float, offset, slot);
 
@@ -65,6 +68,7 @@ namespace Odyssey.Graphics.Meshes
                 VertexFormat.Tangent,
                 VertexFormat.BiNormal,
                 VertexFormat.TextureUV,
+                VertexFormat.TextureUVW,
                 VertexFormat.Color4,
             };
 

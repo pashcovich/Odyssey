@@ -1,4 +1,5 @@
 ﻿using Odyssey.Content.Shaders;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
 {
+    [YamlMapping(typeof(YamlStruct))]
     [DataContract]
     public partial class Struct : Variable, IStruct
     {
@@ -22,7 +24,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
         {
             Type = Shaders.Type.Struct;
             variables = new Dictionary<string, Variable>();
-            Index = Counter;
         }
 
         public int VariableCount { get { return variables.Count; } }
@@ -69,7 +70,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
             Contract.Requires<ArgumentException>(!Contains(variable));
             variable.Owner = this;
             
-            if (variable.Semantic != Shaders.Semantic.Null)
+            if (variable.Semantic != Shaders.Semantic.None)
             {
                 var semanticVars = variables.Where(kvp => kvp.Value.Semantic == variable.Semantic);
                 variable.Index = semanticVars.Count();
@@ -84,7 +85,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
 
         public bool Contains(Semantic semantic)
         {
-            Contract.Requires<ArgumentException>(semantic != Semantic.Null);
+            Contract.Requires<ArgumentException>(semantic != Semantic.None);
             foreach (var kvp in variables)
             {
                 Variable v = kvp.Value;
@@ -104,5 +105,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
         {
             return Definition;
         }
+
     }
 }

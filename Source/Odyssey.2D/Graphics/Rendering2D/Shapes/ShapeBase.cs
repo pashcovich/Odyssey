@@ -8,22 +8,20 @@ namespace Odyssey.Graphics.Rendering2D.Shapes
 {
     public abstract class ShapeBase : UIElement, IShape
     {
-        public ShapeBase(string id)
-            : base(id)
+        public ShapeBase()
         { }
 
-        public IGradient Fill { get; set; }
+        public IGradient FillShader { get; set; }
         RectangleF IShape.BoundingRectangle
         {
             get { return BoundingRectangle; }
             set { BoundingRectangle = value; }
         }
-        public IGradient Stroke { get; set; }
-
-        public abstract void Initialize(IDirectXProvider directX);
+        public IGradient StrokeShader { get; set; }
 
         public abstract void Render(IDirectXTarget target);
 
         public abstract void UpdateExtents(RectangleF polygon);
+       
     }
 }

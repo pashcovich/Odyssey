@@ -69,7 +69,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public static Vector TextureUV
         {
-            get { return new Vector() { Type = Type.Float2, Name = Param.SemanticVariables.TextureUV, Semantic = Semantic.Texcoord}; }
+            get { return new Vector() { Type = Type.Float2, Name = Param.SemanticVariables.Texture, Semantic = Semantic.Texcoord}; }
+        }
+
+        public static Vector TextureUVW
+        {
+            get { return new Vector() { Type = Type.Float3, Name = Param.SemanticVariables.Texture, Semantic = Semantic.Texcoord }; }
         }
 
         public static Vector ViewDirection

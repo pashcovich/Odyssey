@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-using Odyssey.Content.Shaders;
+﻿using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using ShaderGenerator.Data;
+using System.Collections.Generic;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders
 {
@@ -14,14 +11,16 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         string FullName { get; }
         string Definition { get; }
         string Comments { get; }
-        IEnumerable<KeyValuePair<string, object>> Markup { get; }
+        IEnumerable<KeyValuePair<string, string>> Markup { get; }
         Type Type { get; }
-        int Index { get; set; }
-        IStruct Owner { get; }
-        ShaderReference ShaderReference {get;}
+        Semantic Semantic { get; }
+        int? Index { get; set; }
+        IStruct Owner { get; set; }
+        ShaderReference ShaderReference { get; }
 
-        T GetMarkupValue<T>(string key);
+        string GetMarkupValue(string key);
+        bool HasMarkup { get; }
         bool ContainsMarkup(string key);
-        void SetMarkup<T>(string key, T value);
+        void SetMarkup(string key, string value);
     }
 }

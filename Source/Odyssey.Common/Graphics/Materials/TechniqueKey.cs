@@ -14,7 +14,7 @@ namespace Odyssey.Graphics.Materials
         [DataMember]
         public PixelShaderFlags PixelShader { get; private set; }
 
-        public TechniqueKey(VertexShaderFlags vs = VertexShaderFlags.None, PixelShaderFlags ps = PixelShaderFlags.None, ShaderModel sm = ShaderModel.SM20_level_9_1)
+        public TechniqueKey(VertexShaderFlags vs = VertexShaderFlags.None, PixelShaderFlags ps = PixelShaderFlags.None, ShaderModel sm = ShaderModel.SM_4_0_Level_9_1)
             : this()
         {
             VertexShader = vs;

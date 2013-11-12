@@ -31,6 +31,7 @@
     <Compile Include="Engine\InitializeDirectXEventArgs.cs" />
     <Compile Include="Engine\IOdysseyTarget.cs" />
     <Compile Include="Engine\ISettings.cs" />
+    <Compile Include="Engine\StereoParameters.cs" />
     <Compile Include="Engine\TargetBase.cs" />
     <Compile Include="Geometry\Extensions.cs" />
     <Compile Include="Geometry\MathHelper.cs" />

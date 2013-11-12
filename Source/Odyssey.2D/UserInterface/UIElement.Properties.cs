@@ -78,7 +78,7 @@ namespace Odyssey.UserInterface
                 if (designMode != value)
                 {
                     designMode = value;
-                    OnDesignModeChanged(EventArgs.Empty);
+                    OnDesignModeChanged(new ControlEventArgs(this));
 
                     IContainer container = this as IContainer;
                     if (container != null)
@@ -238,6 +238,29 @@ namespace Odyssey.UserInterface
             }
         }
         public float Width { get; set; }
+
+        public RectangleF BoundingRectangle
+        {
+            get
+            {
+                return boundingRectangle;
+            }
+            set
+            {
+                RectangleF oldValue = boundingRectangle;
+                if (boundingRectangle != value)
+                    boundingRectangle = value;
+                else
+                    return;
+
+                if (oldValue.X != boundingRectangle.X || oldValue.Y != boundingRectangle.Y)
+                    OnPositionChanged(EventArgs.Empty);
+
+                if (oldValue.Width != boundingRectangle.Width || oldValue.Height != boundingRectangle.Height)
+                    OnSizeChanged(EventArgs.Empty);
+            }
+        }
+
         internal Vector3 AbsoluteOrthoPosition { get; set; }
         /// <summary>
         /// Returns true if the control is being updated (ie, it is in the updateQueue collection),
@@ -297,27 +320,7 @@ namespace Odyssey.UserInterface
             }
         }
 
-        internal protected RectangleF BoundingRectangle
-        {
-            get
-            {
-                return boundingRectangle;
-            }
-            set
-            {
-                RectangleF oldValue = boundingRectangle;
-                if (boundingRectangle != value)
-                    boundingRectangle = value;
-                else
-                    return;
-
-                if (oldValue.X != boundingRectangle.X || oldValue.Y != boundingRectangle.Y)
-                    OnPositionChanged(EventArgs.Empty);
-
-                if (oldValue.Width != boundingRectangle.Width || oldValue.Height != boundingRectangle.Height)
-                    OnSizeChanged(EventArgs.Empty);
-            }
-        }
+       
 
         #endregion Protected properties
     }

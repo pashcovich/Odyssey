@@ -160,7 +160,13 @@ $RECYCLE.BIN/
 /Source/Odyssey/
 /Source/Odyssey.Interaction/
 /Source/Odyssey.Geometry/
+/Source/Odyssey.GeometryOld/
+/Source/Odyssey.Windows*
 /Source/Odyssey.Windows.Network/
 /Source/Odyssey.Windows8.Network/
 /Samples/WP8
+/Libraries
+/Pictures
+/Tools/Daedalus.Tests
+/ShaderGenSetup
 OdysseyDesktop.sln

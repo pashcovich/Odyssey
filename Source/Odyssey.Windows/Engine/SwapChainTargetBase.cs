@@ -229,6 +229,14 @@ namespace Odyssey.Platforms.Windows
         /// <returns>An instance of swap chain</returns>
         protected abstract SharpDX.DXGI.SwapChain1 CreateSwapChain(SharpDX.DXGI.Factory2 factory, SharpDX.Direct3D11.Device1 device, SharpDX.DXGI.SwapChainDescription1 desc);
 
+
+        protected override void OnSizeChanged(RenderEventArgs e)
+        {
+            base.OnSizeChanged(e);
+            SwapChain.ResizeBuffers(2, DeviceManager.Settings.ScreenWidth,
+                        DeviceManager.Settings.ScreenHeight, SwapChain.Description1.Format, SwapChain.Description1.Flags);
+        }
+
         /// <summary>
         /// Creates the swap chain description.
         /// </summary>

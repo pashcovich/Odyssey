@@ -1,5 +1,6 @@
 ﻿using Odyssey.Content.Shaders;
 using Odyssey.Graphics.Materials;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
 using ShaderGenerator.Data;
 using System;
 using System.Collections;
@@ -11,6 +12,7 @@ using System.Text;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
 {
+    [YamlMapping(typeof(YamlConstantBuffer))]
     [DataContract]
     public partial class ConstantBuffer : Struct
     {
@@ -60,6 +62,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
                 return sb.ToString();
             }
         }
-        
+
     }
 }

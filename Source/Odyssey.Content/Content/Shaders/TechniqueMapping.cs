@@ -20,7 +20,7 @@ namespace Odyssey.Content.Shaders
         public TechniqueKey Key { get; internal set; }
 
         [DataMember]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         public IEnumerable<ShaderObject> Shaders { get { return techniqueMap.Values; } }
 
@@ -62,6 +62,7 @@ namespace Odyssey.Content.Shaders
             }
             return false;
         }
+
 
         public ShaderObject this[ShaderType type]
         {

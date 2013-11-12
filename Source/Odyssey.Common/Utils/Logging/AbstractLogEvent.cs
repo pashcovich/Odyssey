@@ -56,10 +56,10 @@ namespace Odyssey.Utils.Logging
 
         public override string ToString()
         {
-            return string.Format("[{0}] {1} ({2}) {3}",
+            return string.Format("[{0}] ({1}) {2}: {3}",
                 TimeStamp.ToString("HH:mm:ss"),
-                string.Format("{0}:", Level),
                 Source,
+                Level,
                 Args.Length == 0 ? Message : string.Format(Message, Args));
         }
     }

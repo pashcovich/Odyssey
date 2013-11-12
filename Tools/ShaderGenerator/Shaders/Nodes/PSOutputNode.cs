@@ -1,6 +1,8 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Graphics.Materials;
 using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Tools.ShaderGenerator.Shaders.Yaml;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -10,6 +12,7 @@ using System.Text;
 
 namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
 {
+    [YamlMapping(typeof(YamlPSOutputNode))]
     [DataContract]
     public class PSOutputNode : NodeBase
     {
@@ -52,5 +55,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
         {
             return string.Empty;
         }
+
     }
 }

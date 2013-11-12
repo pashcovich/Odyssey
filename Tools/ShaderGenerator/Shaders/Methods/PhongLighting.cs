@@ -17,6 +17,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
 
         public bool Specular { get; internal set; }
         public bool DiffuseMap { get; internal set; }
+        public bool CubeMap { get; internal set; }
         public bool Shadows { get; internal set; }
 
         public PhongLighting()
@@ -40,7 +41,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
                         Mapper.Map(Type.Float3), Vectors.vNormal);
 
                 if (DiffuseMap)
-                    signature += string.Format(", {0} {1}", Mapper.Map(Type.Float2), Vectors.vDiffuseMapCoordinates);
+                    signature += string.Format(", {0} {1}", CubeMap ? Mapper.Map(Type.Float3): Mapper.Map(Type.Float2), Vectors.vDiffuseMapCoordinates);
                 else if (Shadows)
                     signature += string.Format(", {0} {1}", Mapper.Map(Type.Float4), Vectors.vShadowProjection);
 
@@ -128,7 +129,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
             Contract.Requires<ArgumentException>(viewDirection.Type == Type.Float3);
             Contract.Requires<ArgumentException>(lightDirection.Type == Type.Float3);
             Contract.Requires<ArgumentException>(normal.Type == Type.Float3);
-            Contract.Requires<ArgumentException>(diffuseMapCoordinates != null ? diffuseMapCoordinates.Type == Type.Float2 : true);
+            Contract.Requires<ArgumentException>(diffuseMapCoordinates != null ? diffuseMapCoordinates.Type == Type.Float2 || diffuseMapCoordinates.Type == Type.Float3 : true);
 
             List<string> arguments = new List<string>() { light.FullName, material.FullName, viewDirection.FullName, lightDirection.FullName, normal.FullName, diffuseMapCoordinates.FullName };
 

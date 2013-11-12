@@ -43,7 +43,7 @@ namespace Odyssey.Graphics.Rendering.Management
         public PrimitiveTopology PrimitiveTopology { get; internal set; }
         public RenderingOrderType RenderingOrderType { get; internal set; }
         public Format IndexFormat { get; internal set; }
-        public VertexFormat VertexFormat { get; internal set; }
+        public VertexFormat VertexFormat { get; set; }
         public InstanceSemantic InstanceSemantics { get; internal set; }
         public BlendStateDescription BlendState { get; internal set; }
         public RasterizerStateDescription RasterizerState { get; internal set; }

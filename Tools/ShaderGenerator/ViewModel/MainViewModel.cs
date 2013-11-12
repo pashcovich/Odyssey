@@ -30,14 +30,16 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
         CompilationViewModel vmCompilation;
         ObservableCollection<ButtonViewModel> commands;
 
-
         public ObservableCollection<ButtonViewModel> Commands
         {
             get { return commands; }
         }
 
-        public string ShaderCollectionName { get { return vmCompilation.ShaderCollection.Name; }
-            set {
+        public string ShaderCollectionName
+        {
+            get { return vmCompilation.ShaderCollection.Name; }
+            set
+            {
                 vmCompilation.ShaderCollection.Name = value;
                 RaisePropertyChanged("ShaderCollectionName");
             }
@@ -102,13 +104,20 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                     Label = "Open",
                     Tooltip = "Open shader graph", 
                     Content = (UIElement)Application.Current.FindResource("iOpen"),
-                    Command = new RelayCommand(() => IsShaderGraphMode = vmCompilation.Open())
+                    Command = new RelayCommand(() => {if (vmCompilation.Open()) IsShaderGraphMode = true;})
                 },
                 new ButtonViewModel{ 
                     Label = "Import",
                     Tooltip = "Import HLSL source code", 
                     Content = (UIElement)Application.Current.FindResource("iImport"),
                     Command = new RelayCommand(LaunchImport)
+                },
+                new ButtonViewModel
+                {
+                    Label = "Save",
+                    Tooltip = "Save shader graph",
+                    Content = (UIElement)Application.Current.FindResource("iSave"),
+                    Command = SaveCommand                  
                 },
                 compileVM,
                 new ButtonViewModel{ 
@@ -117,7 +126,15 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                     Content = (UIElement)Application.Current.FindResource("iNewTechnique"),
                     Command = new RelayCommand(() => vmCompilation.CreateTechnique(), () => IsShaderGraphMode)
                 },
-
+                new ButtonViewModel{ 
+                    Label = "Settings",
+                    Tooltip = "Open Settings", 
+                    Content = (UIElement)Application.Current.FindResource("iSettings"),
+                    Command = new RelayCommand(() => {
+                        Settings settings = new Settings();
+                        settings.ShowDialog();
+                        })
+                },
             };
             
             ////if (IsInDesignMode)
@@ -134,7 +151,8 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
 
         void LaunchImport()
         {
-            IsShaderGraphMode = !vmCompilation.Import();
+            if (vmCompilation.Import())
+                IsShaderGraphMode = false;
             compileVM.Command = IsShaderGraphMode ? CompileShaderGraphCommand : CompileShaderCodeCommand;
             ((RelayCommand)compileVM.Command).RaiseCanExecuteChanged();
         }

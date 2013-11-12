@@ -70,19 +70,19 @@ namespace Odyssey.Content
 
         public object ReadContent(string resourceName, Stream stream)
         {
-            Image image = Image.Load(stream);
+            Image image = Image.Load(stream); 
             Texture2DDescription desc = new Texture2DDescription()
             {
                 Width = image.Description.Width,
                 Height = image.Description.Height,
-                ArraySize = 1,
+                ArraySize = image.Description.ArraySize,
                 BindFlags = SharpDX.Direct3D11.BindFlags.ShaderResource,
-                Usage = SharpDX.Direct3D11.ResourceUsage.Default,
+                Usage = SharpDX.Direct3D11.ResourceUsage.Default, 
                 CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.None,
-                Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm,
+                Format = image.Description.Format,
                 MipLevels = 1,
-                OptionFlags = SharpDX.Direct3D11.ResourceOptionFlags.None,
-                SampleDescription = new SampleDescription(1, 0)
+                OptionFlags = image.Description.ArraySize == 6 ? ResourceOptionFlags.TextureCube : ResourceOptionFlags.None,
+                SampleDescription = new SampleDescription(1, 0),
             };
             SharpDX.Direct3D11.Texture2D texture2D = new SharpDX.Direct3D11.Texture2D(device, desc, image.ToDataBox());
             return texture2D;

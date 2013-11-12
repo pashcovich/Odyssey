@@ -15,6 +15,8 @@ namespace Odyssey.Engine
         Matrix OrthoProjection { get; }
         Matrix Rotation { get; }
         Matrix Projection { get; }
+        Matrix LeftProjection { get; }
+        Matrix RightProjection{ get; }
         Matrix View { get; }
         Vector3 ViewVector { get; }
         Vector3 Position { get; }
@@ -25,6 +27,7 @@ namespace Odyssey.Engine
         float FarClip { get; }
         float MovementSpeed { get; set; }
         float RotationSpeed { get; set; }
+        StereoParameters Parameters { get; set; }
  
         void Reset();
         void LookAt(Vector3 to, Vector3 from);
@@ -32,6 +35,10 @@ namespace Odyssey.Engine
         void Move(float distance);
         void Strafe(float distance);
         void Rotate(float angle, Vector3 axis);
+
+        void BuildStereoMatrices();
+        void EnableLeftStereoProjection();
+        void EnableRightStereoProjection();
 
     }
 }

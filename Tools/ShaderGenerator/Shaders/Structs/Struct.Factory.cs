@@ -43,6 +43,22 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
             }
         }
 
+        public static Struct VertexPositionNormalTextureUVW
+        {
+            get
+            {
+                Struct vpt = new Struct()
+                {
+                    Name = "input",
+                    CustomType = CustomType.VSIn,
+                };
+                vpt.Add(Vector.ObjectPosition);
+                vpt.Add(Vector.Normal);
+                vpt.Add(Vector.TextureUVW);
+                return vpt;
+            }
+        }
+
         public static Struct VertexPositionTextureOut
         {
             get
