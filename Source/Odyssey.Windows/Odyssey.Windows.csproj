@@ -44,17 +44,6 @@
     <None Include="old\FormTarget.cs" />
     <Compile Include="Interaction\DesktopKeyboardPlatform.cs" />
     <Compile Include="Interaction\DesktopPointerPlatform.cs" />
-    <Compile Include="Interaction\Multitouch\GestureHandler.cs" />
-    <Compile Include="Interaction\Multitouch\Handler.cs" />
-    <Compile Include="Interaction\Multitouch\Manipulation\ManipulationInertiaProcessor.cs" />
-    <Compile Include="Interaction\Multitouch\Interop\ManipulationInterop.cs" />
-    <Compile Include="Interaction\Multitouch\Manipulation\ManipulationProcessor.cs" />
-    <Compile Include="Interaction\Multitouch\TouchHandler.cs" />
-    <Compile Include="Interaction\Multitouch\Interop\User32.cs" />
-    <Compile Include="Interaction\Multitouch\Win32HwndWrapper.cs" />
-    <Compile Include="Interaction\Multitouch\WindowsForms\WinFormsControlWrapper.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="old\SwapChainTargetBase.cs" />
     <None Include="old\TargetBase.cs" />

@@ -25,10 +25,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <EmbeddedResource Include="Properties\Errors.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="SharpDX">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>
@@ -130,7 +126,6 @@
     <Compile Include="Interaction\IInteractiveItemsProvider.cs" />
     <Compile Include="Network\PacketEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Errors.Designer.cs" />
     <Compile Include="Talos\IComponent.cs" />
     <Compile Include="Talos\IEntity.cs" />
     <Compile Include="Talos\IMessage.cs" />

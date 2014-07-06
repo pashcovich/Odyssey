@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿#region Using Directives
+
+using System.Collections.Generic;
+
+#endregion Using Directives
 
 namespace Odyssey.Interaction
 {

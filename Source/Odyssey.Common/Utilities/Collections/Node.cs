@@ -6,49 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using ErrorCode = Odyssey.Properties.Errors;
 
 #endregion Using directives
 
 namespace Odyssey.Utilities.Collections
 {
-    public class NodeEventArgs : EventArgs
-    {
-        private readonly int index;
-        private readonly int level;
-        private readonly INode node;
-
-        public NodeEventArgs(INode node)
-        {
-            Contract.Requires(node != null);
-            index = node.Index;
-            level = node.Level;
-            this.node = node;
-        }
-
-        /// <summary>
-        ///   Gets or sets the label for this node
-        /// </summary>
-        /// <value>
-        ///   A <see cref = "string" /> that contains the label of the node.
-        /// </value>
-
-        public int Index
-        {
-            get { return index; }
-        }
-
-        public int Level
-        {
-            get { return level; }
-        }
-
-        public INode Node
-        {
-            get { return node; }
-        }
-    }
-
     [DebuggerDisplay("{GetType().Name} = {ToString()}")]
     public abstract class Node : INode, IEnumerable<INode>
     {
@@ -72,17 +34,11 @@ namespace Odyssey.Utilities.Collections
 
         #region Events
 
-        public event NodeEventHandler ParentChanged;
-
         public event NodeEventHandler ChildAdded;
 
         public event NodeEventHandler ChildRemoved;
 
-        protected virtual void OnParentChanged(object sender, NodeEventArgs e)
-        {
-            if (ParentChanged != null)
-                ParentChanged(this, e);
-        }
+        public event NodeEventHandler ParentChanged;
 
         protected virtual void OnChildAdded(object sender, NodeEventArgs e)
         {
@@ -96,13 +52,15 @@ namespace Odyssey.Utilities.Collections
                 ChildRemoved(this, e);
         }
 
+        protected virtual void OnParentChanged(object sender, NodeEventArgs e)
+        {
+            if (ParentChanged != null)
+                ParentChanged(this, e);
+        }
+
         #endregion Events
 
         #region Properties
-
-        public string Label { get; set; }
-
-        public bool IsLeaf { get; set; }
 
         public IEnumerable<INode> Children
         {
@@ -117,6 +75,11 @@ namespace Odyssey.Utilities.Collections
             }
         }
 
+        public int ChildrenCount
+        {
+            get { return Children.Count(); }
+        }
+
         public bool HasChildNodes
         {
             get { return lastChild != null; }
@@ -127,19 +90,13 @@ namespace Odyssey.Utilities.Collections
             get { return nextSibling != null; }
         }
 
-        public int ChildrenCount
-        {
-            get { return Children.Count(); }
-        }
+        public bool IsLeaf { get; set; }
+
+        public string Label { get; set; }
 
         #endregion Properties
 
         #region Protected INode Properties
-
-        protected INode ParentNode
-        {
-            get { return parent; }
-        }
 
         protected INode FirstChildNode
         {
@@ -156,6 +113,11 @@ namespace Odyssey.Utilities.Collections
             get { return nextSibling; }
         }
 
+        protected INode ParentNode
+        {
+            get { return parent; }
+        }
+
         protected INode PreviousSiblingNode
         {
             get { return previousSibling; }
@@ -167,10 +129,10 @@ namespace Odyssey.Utilities.Collections
 
         protected virtual void OnAppendChild(INode newChild)
         {
-            Contract.Requires<InvalidOperationException>(IsLeaf != true, ErrorCode.ERR_Node_IsLeaf);
-            Contract.Requires<ArgumentNullException>(newChild != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
-            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
+            Contract.Requires<InvalidOperationException>(IsLeaf != true, "Cannot perform operation on a leaf node");
+            Contract.Requires<ArgumentNullException>(newChild != null, "Node is null");
+            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), "Cannot perform operation on an ancestor");
+            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), "Cannot perform operation on an ancestor");
 
             if (!HasChildNodes)
             {
@@ -184,10 +146,87 @@ namespace Odyssey.Utilities.Collections
             }
         }
 
+        protected virtual void OnInsertAfter(INode newChild, INode refNode)
+        {
+            Contract.Requires<InvalidOperationException>(IsLeaf != true, "Cannot perform operation on a leaf node");
+            Contract.Requires<ArgumentNullException>(newChild != null, "Node is null");
+            Contract.Requires<ArgumentNullException>(refNode != null, "Node is null");
+            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), "Cannot perform operation on an ancestor");
+            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), "Cannot perform operation on an ancestor");
+
+            if (refNode == lastChild)
+            {
+                newChild.NextSibling = null;
+                lastChild = newChild;
+            }
+            else
+            {
+                INode nextNode = refNode.NextSibling;
+                nextNode.PreviousSibling = newChild;
+                newChild.NextSibling = nextNode;
+            }
+
+            refNode.NextSibling = newChild;
+            newChild.PreviousSibling = refNode;
+
+            UpdateIndicesForward(newChild, refNode.Index + 1);
+
+            newChild.Parent = this;
+            OnChildAdded(this, new NodeEventArgs(newChild));
+        }
+
+        protected virtual void OnInsertBefore(INode newChild, INode refNode)
+        {
+            Contract.Requires<InvalidOperationException>(IsLeaf != true, "Cannot perform operation on a leaf node");
+            Contract.Requires<ArgumentNullException>(newChild != null, "Node is null");
+            Contract.Requires<ArgumentNullException>(refNode != null, "Node is null");
+            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), "Cannot perform operation on an ancestor");
+            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), "Cannot perform operation on an ancestor");
+
+            if (refNode == firstChild)
+            {
+                newChild.PreviousSibling = null;
+                firstChild = refNode;
+            }
+            else
+            {
+                INode previousNode = refNode.PreviousSibling;
+                newChild.PreviousSibling = previousNode;
+                previousNode.NextSibling = newChild;
+            }
+
+            newChild.NextSibling = refNode;
+            refNode.PreviousSibling = newChild;
+
+            if (refNode == firstChild)
+                firstChild = newChild;
+
+            UpdateIndicesForward(newChild, refNode.Index);
+
+            newChild.Parent = this;
+
+            OnChildAdded(this, new NodeEventArgs(newChild));
+        }
+
+        protected virtual void OnPrependChild(INode newChild)
+        {
+            Contract.Requires<InvalidOperationException>(IsLeaf != true, "Cannot perform operation on a leaf node");
+            Contract.Requires<ArgumentNullException>(newChild != null, "Node is null");
+
+            if (!HasChildNodes)
+            {
+                firstChild = lastChild = newChild;
+                newChild.Parent = this;
+                OnChildAdded(this, new NodeEventArgs(newChild));
+            }
+            else
+                OnInsertBefore(newChild, firstChild);
+        }
+
         protected virtual void OnRemoveChild(INode oldChild)
         {
-            Contract.Requires<ArgumentNullException>(oldChild != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<ArgumentException>(!IsNodeChildOf(oldChild, this), ErrorCode.ERR_Node_NotChild);
+            Contract.Requires<ArgumentNullException>(oldChild != null, "Node is null");
+            Contract.Requires<ArgumentException>(!IsNodeChildOf(oldChild, this), "Node is not a child");
 
             if (firstChild == oldChild)
             {
@@ -222,10 +261,10 @@ namespace Odyssey.Utilities.Collections
         protected virtual void OnReplaceChild(INode newChild, INode oldChild)
         {
             Contract.Requires(HasChildNodes);
-            Contract.Requires<ArgumentNullException>(newChild != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<ArgumentNullException>(oldChild != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
-            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
+            Contract.Requires<ArgumentNullException>(newChild != null, "Node is null");
+            Contract.Requires<ArgumentNullException>(oldChild != null, "Node is null");
+            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), "Cannot perform operation on an ancestor");
+            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), "Cannot perform operation on an ancestor");
 
             if (firstChild == oldChild)
             {
@@ -269,86 +308,14 @@ namespace Odyssey.Utilities.Collections
             OnChildAdded(this, new NodeEventArgs(newChild));
         }
 
-        protected virtual void OnInsertBefore(INode newChild, INode refNode)
-        {
-            Contract.Requires<InvalidOperationException>(IsLeaf != true, ErrorCode.ERR_Node_IsLeaf);
-            Contract.Requires<ArgumentNullException>(newChild != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<ArgumentNullException>(refNode != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
-            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
-
-            if (refNode == firstChild)
-            {
-                newChild.PreviousSibling = null;
-                firstChild = refNode;
-            }
-            else
-            {
-                INode previousNode = refNode.PreviousSibling;
-                newChild.PreviousSibling = previousNode;
-                previousNode.NextSibling = newChild;
-            }
-
-            newChild.NextSibling = refNode;
-            refNode.PreviousSibling = newChild;
-
-            if (refNode == firstChild)
-                firstChild = newChild;
-
-            UpdateIndicesForward(newChild, refNode.Index);
-
-            newChild.Parent = this;
-
-            OnChildAdded(this, new NodeEventArgs(newChild));
-        }
-
-        protected virtual void OnInsertAfter(INode newChild, INode refNode)
-        {
-            Contract.Requires<InvalidOperationException>(IsLeaf != true, ErrorCode.ERR_Node_IsLeaf);
-            Contract.Requires<ArgumentNullException>(newChild != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<ArgumentNullException>(refNode != null, ErrorCode.ERR_Node_IsNull);
-            Contract.Requires<InvalidOperationException>(!IsNodeAncestorOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
-            Contract.Requires<InvalidOperationException>(!IsNodeChildOf(newChild, this), ErrorCode.ERR_Node_IsAncestor);
-
-            if (refNode == lastChild)
-            {
-                newChild.NextSibling = null;
-                lastChild = newChild;
-            }
-            else
-            {
-                INode nextNode = refNode.NextSibling;
-                nextNode.PreviousSibling = newChild;
-                newChild.NextSibling = nextNode;
-            }
-
-            refNode.NextSibling = newChild;
-            newChild.PreviousSibling = refNode;
-
-            UpdateIndicesForward(newChild, refNode.Index + 1);
-
-            newChild.Parent = this;
-            OnChildAdded(this, new NodeEventArgs(newChild));
-        }
-
-        protected virtual void OnPrependChild(INode newChild)
-        {
-            Contract.Requires<InvalidOperationException>(IsLeaf != true, ErrorCode.ERR_Node_IsLeaf);
-            Contract.Requires<ArgumentNullException>(newChild != null, ErrorCode.ERR_Node_IsNull);
-
-            if (!HasChildNodes)
-            {
-                firstChild = lastChild = newChild;
-                newChild.Parent = this;
-                OnChildAdded(this, new NodeEventArgs(newChild));
-            }
-            else
-                OnInsertBefore(newChild, firstChild);
-        }
-
         #endregion Protected INode Methods
 
         #region Methods
+
+        public bool Contains(INode child)
+        {
+            return Children.Any(node => node == child);
+        }
 
         /// <summary>
         ///   Removes all children from this node.
@@ -358,19 +325,12 @@ namespace Odyssey.Utilities.Collections
             firstChild = lastChild = null;
         }
 
-        public bool Contains(INode child)
-        {
-            return Children.Any(node => node == child);
-        }
-
         public override string ToString()
         {
             return string.Format("Level {0} - Index {1}", level, index);
         }
 
         #endregion Methods
-
-
 
         #region IEnumerable<INode> Members
 
@@ -388,10 +348,32 @@ namespace Odyssey.Utilities.Collections
 
         #region INode Members
 
+        public INode FirstChild
+        {
+            get { return firstChild; }
+        }
+
         public int Index
         {
             get { return index; }
             set { index = value; }
+        }
+
+        public INode LastChild
+        {
+            get { return lastChild; }
+        }
+
+        public int Level
+        {
+            get { return level; }
+            set { level = value; }
+        }
+
+        public INode NextSibling
+        {
+            get { return nextSibling; }
+            set { nextSibling = value; }
         }
 
         public INode Parent
@@ -409,32 +391,10 @@ namespace Odyssey.Utilities.Collections
             }
         }
 
-        public int Level
-        {
-            get { return level; }
-            set { level = value; }
-        }
-
         public INode PreviousSibling
         {
             get { return previousSibling; }
             set { previousSibling = value; }
-        }
-
-        public INode NextSibling
-        {
-            get { return nextSibling; }
-            set { nextSibling = value; }
-        }
-
-        public INode FirstChild
-        {
-            get { return firstChild; }
-        }
-
-        public INode LastChild
-        {
-            get { return lastChild; }
         }
 
         public void AppendChild(INode newNode)
@@ -442,14 +402,19 @@ namespace Odyssey.Utilities.Collections
             OnAppendChild(newNode);
         }
 
+        public void InsertAfter(INode newChild, INode refNode)
+        {
+            OnInsertAfter(newChild, refNode);
+        }
+
         public void InsertBefore(INode newChild, INode refNode)
         {
             OnInsertBefore(newChild, refNode);
         }
 
-        public void InsertAfter(INode newChild, INode refNode)
+        public void PrependChild(INode newChild)
         {
-            OnInsertAfter(newChild, refNode);
+            OnPrependChild(newChild);
         }
 
         public void RemoveChild(INode oldChild)
@@ -462,29 +427,9 @@ namespace Odyssey.Utilities.Collections
             OnReplaceChild(newChild, oldChild);
         }
 
-        public void PrependChild(INode newChild)
-        {
-            OnPrependChild(newChild);
-        }
-
         #endregion INode Members
 
-
         #region SceneStatic Methods
-
-        /// <summary>
-        ///   Checks whether the node is a child of the specified parent node.
-        /// </summary>
-        /// <param name = "childNode">The child node.</param>
-        /// <param name = "parentNode">The parent node.</param>
-        /// <returns><c>True</c> if childNode is a child of parentNode. <c>False</c> otherwise.</returns>
-        [Pure]
-        public static bool IsNodeChildOf(INode childNode, INode parentNode)
-        {
-            Contract.Requires<NullReferenceException>(parentNode != null);
-
-            return parentNode.Children.Any(node => node == childNode);
-        }
 
         /// <summary>
         ///   Checks whether the node is a parent of the specified node or whether the two nodes are
@@ -512,17 +457,18 @@ namespace Odyssey.Utilities.Collections
             return false;
         }
 
-        internal static void UpdateIndicesForward(INode headNode, int startIndex)
+        /// <summary>
+        ///   Checks whether the node is a child of the specified parent node.
+        /// </summary>
+        /// <param name = "childNode">The child node.</param>
+        /// <param name = "parentNode">The parent node.</param>
+        /// <returns><c>True</c> if childNode is a child of parentNode. <c>False</c> otherwise.</returns>
+        [Pure]
+        public static bool IsNodeChildOf(INode childNode, INode parentNode)
         {
-            Contract.Requires<NullReferenceException>(headNode != null);
-            INode node = headNode;
-            int i = startIndex;
-            while (node != null)
-            {
-                node.Index = i;
-                node = node.NextSibling;
-                i++;
-            }
+            Contract.Requires<NullReferenceException>(parentNode != null);
+
+            return parentNode.Children.Any(node => node == childNode);
         }
 
         internal static void UpdateIndicesBackward(INode headNode, int startIndex)
@@ -538,21 +484,22 @@ namespace Odyssey.Utilities.Collections
             }
         }
 
+        internal static void UpdateIndicesForward(INode headNode, int startIndex)
+        {
+            Contract.Requires<NullReferenceException>(headNode != null);
+            INode node = headNode;
+            int i = startIndex;
+            while (node != null)
+            {
+                node.Index = i;
+                node = node.NextSibling;
+                i++;
+            }
+        }
+
         #endregion SceneStatic Methods
 
         #region Visit algorithms
-
-        public static IEnumerable<INode> PreOrderVisit(INode headNode)
-        {
-            yield return headNode;
-
-            if (headNode.HasChildNodes)
-                foreach (INode node in PreOrderVisit(headNode.FirstChild))
-                    yield return node;
-            if (headNode.HasNextSibling)
-                foreach (INode node in PreOrderVisit(headNode.NextSibling))
-                    yield return node;
-        }
 
         public static IEnumerable<INode> PostOrderVisit(INode headNode)
         {
@@ -573,8 +520,55 @@ namespace Odyssey.Utilities.Collections
             yield return headNode;
         }
 
+        public static IEnumerable<INode> PreOrderVisit(INode headNode)
+        {
+            yield return headNode;
+
+            if (headNode.HasChildNodes)
+                foreach (INode node in PreOrderVisit(headNode.FirstChild))
+                    yield return node;
+            if (headNode.HasNextSibling)
+                foreach (INode node in PreOrderVisit(headNode.NextSibling))
+                    yield return node;
+        }
+
         #endregion Visit algorithms
+    }
 
+    public class NodeEventArgs : EventArgs
+    {
+        private readonly int index;
+        private readonly int level;
+        private readonly INode node;
 
+        public NodeEventArgs(INode node)
+        {
+            Contract.Requires(node != null);
+            index = node.Index;
+            level = node.Level;
+            this.node = node;
+        }
+
+        /// <summary>
+        ///   Gets or sets the label for this node
+        /// </summary>
+        /// <value>
+        ///   A <see cref = "string" /> that contains the label of the node.
+        /// </value>
+
+        public int Index
+        {
+            get { return index; }
+        }
+
+        public int Level
+        {
+            get { return level; }
+        }
+
+        public INode Node
+        {
+            get { return node; }
+        }
     }
 }
