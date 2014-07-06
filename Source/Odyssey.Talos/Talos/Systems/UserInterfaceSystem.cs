@@ -1,0 +1,69 @@
+﻿using Odyssey.Engine;
+using Odyssey.Talos.Components;
+using Odyssey.Talos.Messages;
+using Odyssey.UserInterface.Controls;
+using SharpYaml.Serialization;
+
+namespace Odyssey.Talos.Systems
+{
+    [YamlTag("UserInterfaceSystem")]
+    public class UserInterfaceSystem : UpdateableSystemBase, IRenderableSystem
+    {
+        private readonly ComponentType tUserInterface;
+
+        protected OverlayBase Overlay { get; private set; }
+
+        public UserInterfaceSystem()
+            : base(Aspect.All(typeof(UserInterfaceComponent)))
+        {
+            tUserInterface = ComponentTypeManager.GetType<UserInterfaceComponent>();
+        }
+
+        public override void Start()
+        {
+            Messenger.Register<EntityChangeMessage>(this);
+        }
+
+        public override void Stop()
+        {
+            Messenger.Unregister<EntityChangeMessage>(this);
+        }
+
+        public bool BeginRender()
+        {
+            return true;
+        }
+
+        public void Render(ITimeService time)
+        {
+            foreach (IEntity entity in Entities)
+            {
+                var cUserInterface = entity.GetComponent<UserInterfaceComponent>(tUserInterface.KeyPart);
+                cUserInterface.Overlay.Display();
+            }
+        }
+
+        public override void BeforeUpdate()
+        {
+            while (MessageQueue.HasItems<EntityChangeMessage>())
+            {
+                var mEntityChange = MessageQueue.Dequeue<EntityChangeMessage>();
+                if (mEntityChange.Action == ChangeType.Added)
+                {
+                    var cUserInterface = mEntityChange.Source.GetComponent<UserInterfaceComponent>(tUserInterface.KeyPart);
+                    cUserInterface.Initialize();
+                    Overlay = cUserInterface.Overlay;
+                }
+            }
+        }
+
+        public override void Process(ITimeService time)
+        {
+            foreach (IEntity entity in Entities)
+            {
+                var cUserInterface = entity.GetComponent<UserInterfaceComponent>(tUserInterface.KeyPart);
+                cUserInterface.UserInterfaceState.Update();
+            }
+        }
+    }
+}

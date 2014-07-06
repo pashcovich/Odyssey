@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpDX;
 
 namespace Odyssey.Geometry
 {
@@ -105,7 +101,7 @@ namespace Odyssey.Geometry
         {
             if (Math.Abs(value) < EpsilonD)
                 return true;
-            else return false;
+            return false;
         }
 
         public static bool ScalarNearEqual(float s1, float s2, float tolerance = Epsilon)

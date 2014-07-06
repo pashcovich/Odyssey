@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Odyssey.Graphics.Rendering2D.Graphics2D
+namespace Odyssey.Graphics
 {
     [Flags]
     public enum Borders

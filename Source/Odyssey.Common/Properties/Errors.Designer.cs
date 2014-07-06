@@ -9,7 +9,6 @@
 //------------------------------------------------------------------------------
 
 namespace Odyssey.Properties {
-    using System;
     using System.Reflection;
     
     

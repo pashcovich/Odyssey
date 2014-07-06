@@ -1,0 +1,119 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<AvailableItemName Include="OdysseyModel"></AvailableItemName>
+    <AvailableItemName Include="OdysseyModelToBarycentric"></AvailableItemName>
+	</ItemGroup>
+		<PropertyGroup>
+		<RootNamespace>Odyssey</RootNamespace>
+				<SharpDXSdkBinDir>C:\Program Files\Dev\SharpDX\Bin</SharpDXSdkBinDir>
+		<SharpDXDirectXVersion>DirectX11_2</SharpDXDirectXVersion>
+		<OdysseyEngine>1</OdysseyEngine>
+		</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+		<Platform>AnyCpu</Platform>
+		<SharpDXPlatform>net40</SharpDXPlatform>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<DefineConstants>TRACE;DEBUG;DIRECTX11_1;</DefineConstants>
+		<OutputPath>bin\Debug</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug'">
+		<Platform>AnyCpu</Platform>
+		<SharpDXPlatform>winrt</SharpDXPlatform>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1;</DefineConstants>
+		<OutputPath>bin\Debug\$(SharpDXPlatform)</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Win8CodeAnalysis'">
+		<OutputPath>bin\Debug\$(SharpDXPlatform)</OutputPath>
+		<RunCodeAnalysis>true</RunCodeAnalysis>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Platform>AnyCpu</Platform>
+		<SharpDXPlatform>winrt</SharpDXPlatform>
+		<DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win7Debug' Or '$(Configuration)' == 'WP8Debug' " >
+		<CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+		<CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+		<CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>
+		<CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+		<CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+		<CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+		<CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+		<CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+		<CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+		<CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+		<CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+		<CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+		<CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
+		<CodeContractsInferRequires>False</CodeContractsInferRequires>
+		<CodeContractsInferEnsures>False</CodeContractsInferEnsures>
+		<CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
+		<CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
+		<CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
+		<CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
+		<CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+		<CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+		<CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+		<CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+		<CodeContractsCustomRewriterAssembly />
+		<CodeContractsCustomRewriterClass />
+		<CodeContractsLibPaths />
+		<CodeContractsExtraRewriteOptions />
+		<CodeContractsExtraAnalysisOptions />
+		<CodeContractsSQLServerOption />
+		<CodeContractsBaseLineFile />
+		<CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+		<CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
+		<CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+		<CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
+		<CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+	</PropertyGroup>
+	<UsingTask TaskName="Odyssey.Tools.CompilerTask.CompilerDependencyTask" AssemblyFile="$(SolutionDir)\Source\Tools\Odyssey.Tools.CompilerTask\bin\Debug\Odyssey.Tools.CompilerTask.dll"/>
+	<UsingTask TaskName="Odyssey.Tools.CompilerTask.ModelConverterTask" AssemblyFile="$(SolutionDir)\Source\Tools\Odyssey.Tools.CompilerTask\bin\Debug\Odyssey.Tools.CompilerTask.dll"/>
+
+	<PropertyGroup>
+		<BuildDependsOn>OdysseyCompileTarget;$(BuildDependsOn);</BuildDependsOn>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<AssignTargetPathsDependsOn>
+			$(AssignTargetPathsDependsOn);
+			OdysseyTaskListTarget;
+		</AssignTargetPathsDependsOn>
+	</PropertyGroup>
+	
+	<Target Name="OdysseyTaskListTarget">
+		<Message Text="Compiling content list" Importance="High"/>
+		<CompilerDependencyTask
+				ProjectDirectory="$(ProjectDir)"
+				IntermediateDirectory="$(IntermediateOutputPath)"
+				Files="@(OdysseyModel);"
+				RootNamespace="$(RootNamespace)">
+			<Output TaskParameter="ContentFiles" ItemName="OdContent"/>
+		</CompilerDependencyTask>
+			<ItemGroup>
+				<!--List Of fxo compiled file-->
+				<Content Include="@(OdContent)" KeepMetadata="Link;CopyToOutputDirectory"/>
+			</ItemGroup>
+	</Target>
+
+	<!-- Target used to compile content (Font/Fx files...)  BeforeTargets="BeforeBuild" Condition="'@(OdysseyModel)' != ''"-->
+	<Target Name="OdysseyCompileTarget">
+		<Message Text="Compiling resources" Importance="High"/>
+		<ModelConverterTask 
+				ProjectDirectory="$(ProjectDir)"
+				IntermediateDirectory="$(IntermediateOutputPath)"
+        ExcludeElements="BiTangent"
+				Files="@(OdysseyModel)"/>
+    <ModelConverterTask
+				ProjectDirectory="$(ProjectDir)"
+				IntermediateDirectory="$(IntermediateOutputPath)"
+        ModelOperations ="CalculateBarycentricCoordinates"
+				Files="@(OdysseyModelToBarycentric)"/>
+	</Target>
+</Project>

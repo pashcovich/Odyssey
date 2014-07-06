@@ -1,12 +1,7 @@
 ﻿using Odyssey.Graphics.Materials;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Odyssey.Content.Shaders
+namespace Odyssey.Graphics.Materials
 {
     [DataContract]
     public class TextureDescription
@@ -20,9 +15,9 @@ namespace Odyssey.Content.Shaders
         [DataMember]
         public TextureReference Texture { get; private set; }
         [DataMember]
-        public UpdateFrequency UpdateFrequency { get; private set; }
+        public UpdateType UpdateFrequency { get; private set; }
 
-        public TextureDescription(int index, string resourceKey, TextureReference texture, int samplerIndex, UpdateFrequency frequency = UpdateFrequency.Static)
+        public TextureDescription(int index, string resourceKey, TextureReference texture, int samplerIndex, UpdateType frequency = UpdateType.Scene)
         {
             Index = index;
             Key = resourceKey;

@@ -1,9 +1,15 @@
-﻿using System.Reflection;
+﻿#region Using Directives
+
+using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+#endregion Using Directives
 
 // General Information about an assembly is controlled through the following set of attributes.
 // Change these attribute values to modify the information associated with an assembly.
+
 [assembly: AssemblyTitle("Odyssey.Common")]
 [assembly: AssemblyDescription("Common classes for the Odyssey Engine.")]
 [assembly: AssemblyCompany("Avengers Utd - http://www.avengersutd.com/")]
@@ -16,7 +22,15 @@ using System.Runtime.CompilerServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers by using the '*'
 // as shown below: [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.1.*")]
-[assembly: InternalsVisibleTo("Odyssey")]
+[assembly: AssemblyVersion("0.2.*")]
+[assembly: InternalsVisibleTo("Odyssey.2D")]
+[assembly: InternalsVisibleTo("Odyssey.Engine")]
 [assembly: InternalsVisibleTo("Odyssey.Content")]
+[assembly: InternalsVisibleTo("Odyssey.Talos")]
+[assembly: InternalsVisibleTo("Odyssey.Renderer")]
+[assembly: InternalsVisibleTo("Odyssey.Renderer2D")]
 [assembly: InternalsVisibleTo("ShaderGenerator")]
+[assembly: InternalsVisibleTo("Odyssey.Engine.Tests")]
+[assembly: InternalsVisibleTo("Odyssey.Windows")]
+[assembly: InternalsVisibleTo("Odyssey.Windows.WPF")]
+[assembly: ComVisible(false)]

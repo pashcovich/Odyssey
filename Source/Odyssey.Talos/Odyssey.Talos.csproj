@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{7E2BC73B-CB14-4D62-89AE-A0EB5A1EAF93}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Odyssey</RootNamespace>
+    <AssemblyName>Odyssey.Talos</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8CodeAnalysis|AnyCPU'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
+      <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
+      <Name>Odyssey.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Interaction\Odyssey.Interaction.csproj">
+      <Project>{7740a46f-0809-49d2-bd34-71f6d8b6d2cc}</Project>
+      <Name>Odyssey.Interaction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Renderer2D\Odyssey.Renderer2D.csproj">
+      <Project>{8cc127c8-19f0-42df-8454-129b3566ef54}</Project>
+      <Name>Odyssey.Renderer2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Renderer\Odyssey.Renderer.csproj">
+      <Project>{018ff216-7048-4b2f-a193-d2f8b20fb03d}</Project>
+      <Name>Odyssey.Renderer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Content\SceneReader.cs" />
+    <Compile Include="Talos\Components\BloomComponent.cs" />
+    <Compile Include="Talos\Components\BlurComponent.cs" />
+    <Compile Include="Talos\Components\CameraStateComponent.cs" />
+    <Compile Include="Talos\Components\GlowComponent.cs" />
+    <Compile Include="Talos\Components\ITechniqueComponent.cs" />
+    <Compile Include="Talos\Components\NormalMappingComponent.cs" />
+    <Compile Include="Talos\Components\DiffuseMappingComponent.cs" />
+    <Compile Include="Talos\Components\IContentComponent.cs" />
+    <Compile Include="Talos\Components\ITextureResource.cs" />
+    <Compile Include="Talos\Components\OptionalComponentAttribute.cs" />
+    <Compile Include="Talos\Components\OrbitBehaviourComponent.cs" />
+    <Compile Include="Talos\Components\PostProcessComponent.Bloom.cs" />
+    <Compile Include="Talos\Components\PostProcessComponent.Glow.cs" />
+    <Compile Include="Talos\Components\PostProcessComponent.cs" />
+    <Compile Include="Talos\Components\RequiredComponentAttribute.cs" />
+    <Compile Include="Talos\Components\SpriteComponent.cs" />
+    <Compile Include="Talos\Components\TagComponent.cs" />
+    <Compile Include="Talos\Components\TargetComponent.cs" />
+    <Compile Include="Talos\Initializers\ApplicationInitializer.cs" />
+    <Compile Include="Talos\Initializers\IInitializer.cs" />
+    <Compile Include="Talos\Initializers\InitializerParameters.cs" />
+    <Compile Include="Talos\Maps\SystemEventArgs.cs" />
+    <Compile Include="Talos\Messages\CameraMessage.cs" />
+    <Compile Include="Talos\Messages\LightMessage.cs" />
+    <Compile Include="Talos\Nodes\LightCollection.cs" />
+    <Compile Include="Talos\Nodes\CameraCollection.cs" />
+    <Compile Include="Talos\Nodes\ICollectionService.cs" />
+    <Compile Include="Talos\Serialization\SceneProxy.cs" />
+    <Compile Include="Talos\Serialization\YamlSerializer.cs" />
+    <Compile Include="Talos\Systems\InitializationSystem.cs" />
+    <Compile Include="Talos\Systems\IRenderableSystem.cs" />
+    <Compile Include="Talos\Components\UserInterfaceComponent.cs" />
+    <Compile Include="Talos\Initializers\CameraInitializer.cs" />
+    <Compile Include="Talos\Initializers\EntityInitializer.cs" />
+    <Compile Include="Talos\Initializers\Initializer.cs" />
+    <Compile Include="Talos\Initializers\LightInitializer.cs" />
+    <Compile Include="Talos\Initializers\MaterialInitializer.cs" />
+    <Compile Include="Talos\Initializers\ShaderInitializer.cs" />
+    <Compile Include="Talos\Components\CameraComponent.cs" />
+    <Compile Include="Talos\Components\Component.cs" />
+    <Compile Include="Talos\Components\ComponentType.cs" />
+    <Compile Include="Talos\Components\ComponentTypeManager.cs" />
+    <Compile Include="Talos\Components\ContentComponent.cs" />
+    <Compile Include="Talos\Components\LightComponent.cs" />
+    <Compile Include="Talos\Components\MaterialComponent.cs" />
+    <Compile Include="Talos\Components\ModelComponent.cs" />
+    <Compile Include="Talos\Components\PointLightComponent.cs" />
+    <Compile Include="Talos\Components\PositionComponent.cs" />
+    <Compile Include="Talos\Components\RotationComponent.cs" />
+    <Compile Include="Talos\Components\ScalingComponent.cs" />
+    <Compile Include="Talos\Components\ShaderComponent.cs" />
+    <Compile Include="Talos\Components\ParentComponent.cs" />
+    <Compile Include="Talos\Components\TransformComponent.cs" />
+    <Compile Include="Talos\Components\UpdateComponent.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Talos\Maps\EntityEventArgs.cs" />
+    <Compile Include="Talos\Maps\EntityMap.cs" />
+    <Compile Include="Talos\Maps\Maps.cs" />
+    <Compile Include="Talos\Maps\SystemMap.cs" />
+    <Compile Include="Talos\Maps\EntityChangedEventArgs.cs" />
+    <Compile Include="Talos\Messages\EntityChangeMessage.cs" />
+    <Compile Include="Talos\Messages\EntityMessage.cs" />
+    <Compile Include="Talos\Messages\Enums.cs" />
+    <Compile Include="Talos\Messages\Message.cs" />
+    <Compile Include="Talos\Messages\MessageEventArgs.cs" />
+    <Compile Include="Talos\Messages\MessageQueue.cs" />
+    <Compile Include="Talos\Messages\Messenger.cs" />
+    <Compile Include="Talos\Messages\OptimizationCompleteMessage.cs" />
+    <Compile Include="Talos\Messages\PropertyChangeMessage.cs" />
+    <Compile Include="Talos\Messages\ContentLoadedMessage.cs" />
+    <Compile Include="Talos\Nodes\CameraNode.cs" />
+    <Compile Include="Talos\Nodes\LightNode.cs" />
+    <Compile Include="Talos\Nodes\OrthographicCameraNode.cs" />
+    <Compile Include="Talos\Nodes\PerspectiveCameraNode.cs" />
+    <Compile Include="Talos\Nodes\PointLightNode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Talos\Systems\Aspect.cs" />
+    <Compile Include="Talos\Systems\CameraSystem.cs" />
+    <Compile Include="Talos\Systems\IUpdateableSystem.cs" />
+    <Compile Include="Talos\Systems\OrbitSystem.cs" />
+    <Compile Include="Talos\Systems\OptimizationSystem.cs" />
+    <Compile Include="Talos\Systems\ContentLoadingSystem.cs" />
+    <Compile Include="Talos\Systems\ISystem.cs" />
+    <Compile Include="Talos\Systems\LightSystem.cs" />
+    <Compile Include="Talos\Systems\PerspectiveCameraSystem.cs" />
+    <Compile Include="Talos\Systems\PointLightSystem.cs" />
+    <Compile Include="Talos\Systems\PositionSystem.cs" />
+    <Compile Include="Talos\Systems\PostProcessingSystem.cs" />
+    <Compile Include="Talos\Systems\RenderSystem.cs" />
+    <Compile Include="Talos\Systems\RotationSystem.cs" />
+    <Compile Include="Talos\Systems\SystemBase.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="Talos\Systems\UpdateableSystemBase.cs" />
+    <Compile Include="Talos\Systems\UserInterfaceSystem.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

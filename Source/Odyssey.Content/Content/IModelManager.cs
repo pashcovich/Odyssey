@@ -9,6 +9,6 @@ namespace Odyssey.Content
 {
     public interface IModelManager
     {
-        IGeometry LoadModel(string filename);
+        IMesh LoadModel(string filename);
     }
 }

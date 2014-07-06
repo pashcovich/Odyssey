@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Odyssey.Engine
 {
-    public class FpsTimer
+    public class FpsTimer : IFpsTimerService
     {
-        Stopwatch clock;
+        readonly Stopwatch clock;
         double totalTime;
         long frameCount;
         double measuredFPS;
@@ -22,8 +17,8 @@ namespace Odyssey.Engine
 
         public double MeasuredFPS { get { return measuredFPS; } }
 
-        public double FrameTime { get { return timeElapsed; } }
-        public float FrameTimeFloat { get { return (float)timeElapsed; } }
+        public double FrameTimeDouble { get { return timeElapsed; } }
+        public float FrameTime { get { return (float)timeElapsed; } }
 
         public FpsTimer()
         {
@@ -33,11 +28,11 @@ namespace Odyssey.Engine
         public void Measure()
         {
             frameCount++;
-            timeElapsed = (double)clock.ElapsedTicks / Stopwatch.Frequency; ;
+            timeElapsed = (double)clock.ElapsedTicks / Stopwatch.Frequency; 
             totalTime += timeElapsed;
             if (totalTime >= 1.0f)
             {
-                measuredFPS = (double)frameCount / totalTime;
+                measuredFPS = frameCount / totalTime;
                 frameCount = 0;
                 totalTime = 0.0;
             }

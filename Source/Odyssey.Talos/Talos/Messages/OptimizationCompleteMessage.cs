@@ -1,0 +1,17 @@
+﻿using System.Collections.Generic;
+using Odyssey.Graphics.Organization.Commands;
+
+namespace Odyssey.Talos.Messages
+{
+    public class OptimizationCompleteMessage : Message
+    {
+        private readonly LinkedList<Command> commands;
+        public LinkedList<Command> Commands { get { return commands; } }
+
+        public OptimizationCompleteMessage(LinkedList<Command> commands, bool isSynchronous = false)
+            : base(isSynchronous)
+        {
+            this.commands = commands;
+        }
+    }
+}

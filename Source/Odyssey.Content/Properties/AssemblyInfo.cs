@@ -19,3 +19,4 @@ using System.Runtime.InteropServices;
 // as shown below: [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.1.*")]
 [assembly: InternalsVisibleTo("ShaderGenerator")]
+[assembly: ComVisible(false)]

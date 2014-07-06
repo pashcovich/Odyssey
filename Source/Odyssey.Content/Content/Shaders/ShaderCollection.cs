@@ -1,6 +1,6 @@
 ﻿using Odyssey.Graphics.Materials;
 using Odyssey.Graphics.Rendering;
-using Odyssey.Utils.Logging;
+using Odyssey.Utilities.Logging;
 using SharpDX.IO;
 using System;
 using System.Collections.Generic;
@@ -13,8 +13,7 @@ namespace Odyssey.Content.Shaders
     [DataContract]
     public class ShaderCollection:IEnumerable<TechniqueMapping>
     {
-        [DataMember]
-        Dictionary<string, TechniqueMapping> techniques;
+        [DataMember] readonly Dictionary<string, TechniqueMapping> techniques;
 
         [DataMember]
         public string Name { get; internal set; }
@@ -27,22 +26,22 @@ namespace Odyssey.Content.Shaders
 
         public void Add(TechniqueMapping technique)
         {
-            Contract.Requires<ArgumentException>(!Contains(technique.Name));
             techniques.Add(technique.Name, technique);
         }
 
-        public void Add(string techniqueName, ShaderObject shaderObject)
+        public void Add(string techniqueName, ShaderDescription shaderObject)
         {
-            Contract.Requires<ArgumentException>(Contains(techniqueName));
             TechniqueMapping tMapping = techniques[techniqueName];
             tMapping.Set(shaderObject);
         }
 
+        [Pure]
         public bool Contains(string techniqueName)
         {
             return techniques.ContainsKey(techniqueName);
         }
 
+        [Pure]
         public bool Contains(TechniqueKey key)
         {
             return techniques.Values.Any(t => t.Key == key);
@@ -69,10 +68,10 @@ namespace Odyssey.Content.Shaders
         {
             NativeFileStream fs = new NativeFileStream(string.Format("{0}\\{1}.ofx", path, name),
                 NativeFileMode.Open, NativeFileAccess.Read);
-            ShaderCollection shaderCollection = null;
+            ShaderCollection shaderCollection;
             try
             {
-                DataContractSerializer dcs = new DataContractSerializer(typeof(ShaderObject));
+                DataContractSerializer dcs = new DataContractSerializer(typeof(ShaderDescription));
                 shaderCollection = (ShaderCollection)dcs.ReadObject(fs);
             }
             catch (SerializationException e)

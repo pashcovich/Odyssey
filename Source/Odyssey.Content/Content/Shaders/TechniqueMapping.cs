@@ -2,19 +2,21 @@
 using Odyssey.Graphics.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Content.Shaders
+namespace Odyssey.Graphics.Materials
 {
     [DataContract]
+    [DebuggerDisplay("{Name}")]
     public class TechniqueMapping
     {
         [DataMember]
-        Dictionary<ShaderType, ShaderObject> techniqueMap;
+        Dictionary<ShaderType, ShaderDescription> techniqueMap;
 
         [DataMember]
         public TechniqueKey Key { get; internal set; }
@@ -22,23 +24,21 @@ namespace Odyssey.Content.Shaders
         [DataMember]
         public string Name { get; set; }
 
-        public IEnumerable<ShaderObject> Shaders { get { return techniqueMap.Values; } }
+        public IEnumerable<ShaderDescription> Shaders { get { return techniqueMap.Values; } }
 
         public TechniqueMapping(string name)
         {
-            techniqueMap = new Dictionary<ShaderType, ShaderObject>();
+            techniqueMap = new Dictionary<ShaderType, ShaderDescription>();
             Name = name;
         }
 
-        public void Set(ShaderObject shader)
+        public void Set(ShaderDescription shader)
         {
-            Contract.Requires<ArgumentNullException>(shader != null);
             techniqueMap[shader.ShaderType] = shader;
         }
 
         public void Remove(ShaderType shaderType)
         {
-            Contract.Requires<ArgumentException>(Contains(shaderType));
             techniqueMap.Remove(shaderType);
         }
 
@@ -52,7 +52,7 @@ namespace Odyssey.Content.Shaders
             return techniqueMap.Values.Count(s => s.Name == shaderName) > 0;
         }
 
-        public bool TryGetValue(ShaderType type, out ShaderObject shader)
+        public bool TryGetValue(ShaderType type, out ShaderDescription shader)
         {
             shader = null; 
             if (techniqueMap.ContainsKey(type))
@@ -63,14 +63,20 @@ namespace Odyssey.Content.Shaders
             return false;
         }
 
+        public bool Validate()
+        {
+            return Shaders.Aggregate(true, (current, shaderDesc) => current & shaderDesc.Validate());
+        }
 
-        public ShaderObject this[ShaderType type]
+
+        public ShaderDescription this[ShaderType type]
         {
             get
             {
-                Contract.Requires<KeyNotFoundException>(Contains(type));
                 return techniqueMap[type];
             }
         }
+
+        
     }
 }

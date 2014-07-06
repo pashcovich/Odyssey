@@ -1,18 +1,19 @@
 ﻿using Odyssey.Content.Shaders;
-using Odyssey.Utils.Logging;
+using Odyssey.Utilities.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDX.Toolkit.Graphics;
 
 namespace Odyssey.Content
 {
     [SupportedType(typeof(ShaderCollection))]
     public class EffectReader : IResourceReader
     {
-        public object ReadContent(string resourceName, System.IO.Stream stream)
+        public object ReadContent(IAssetProvider assetManager, string resourceName, System.IO.Stream stream)
         {
             ShaderCollection shaderCollection = null;
             try

@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8CC127C8-19F0-42DF-8454-129B3566EF54}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Odyssey</RootNamespace>
+    <AssemblyName>Odyssey.Renderer2D</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Content\ControlDefinitionsReader.cs" />
+    <Compile Include="Content\TextDefinitionsReader.cs" />
+    <Compile Include="Devices\Enums.cs" />
+    <Compile Include="Devices\Key.cs" />
+    <Compile Include="Devices\PointerDevice.cs" />
+    <Compile Include="Devices\PointerPoint.cs" />
+    <Compile Include="Devices\PointerProperties.cs" />
+    <Compile Include="Engine\BackBufferSurface.cs" />
+    <Compile Include="Engine\Bitmap.cs" />
+    <Compile Include="Engine\BitmapTarget.cs" />
+    <Compile Include="Engine\Direct2DResource.cs" />
+    <Compile Include="Engine\Direct2DDevice.cs" />
+    <Compile Include="Engine\Direct2DSurface.cs" />
+    <Compile Include="Engine\IDirect2DService.cs" />
+    <Compile Include="Graphics\CutCornerRectangle.cs" />
+    <Compile Include="Graphics\CutCornerRectangleBase.cs" />
+    <Compile Include="Graphics\CutCornerRectangleOutline.cs" />
+    <Compile Include="Graphics\DiagonalCutCornerRectangle.cs" />
+    <Compile Include="Graphics\Effects\StereoEffect.cs" />
+    <Compile Include="Graphics\Ellipse.cs" />
+    <Compile Include="Graphics\EllipseBase.cs" />
+    <Compile Include="Graphics\FpsRenderer.cs" />
+    <Compile Include="Graphics\Hexagon.cs" />
+    <Compile Include="Graphics\IShape.cs" />
+    <Compile Include="Graphics\IShapeD2D.cs" />
+    <Compile Include="Graphics\PolygonBase.cs" />
+    <Compile Include="Graphics\Rectangle.cs" />
+    <Compile Include="Graphics\RectangleBase.cs" />
+    <Compile Include="Graphics\Renderer.cs" />
+    <None Include="Graphics\StereoRenderer.cs" />
+    <Compile Include="Graphics\ShapeBase.cs" />
+    <Compile Include="Graphics\ShapeInitializer.cs" />
+    <Compile Include="Graphics\Shapes\Brush.cs" />
+    <Compile Include="Graphics\Shapes\FigureBegin.cs" />
+    <Compile Include="Graphics\Shapes\FigureEnd.cs" />
+    <Compile Include="Graphics\Shapes\FillMode.cs" />
+    <Compile Include="Graphics\Shapes\Geometry.cs" />
+    <Compile Include="Graphics\Shapes\GeometryGroup.cs" />
+    <Compile Include="Graphics\Shapes\GeometrySink.cs" />
+    <Compile Include="Graphics\Shapes\PathGeometryBase.cs" />
+    <Compile Include="Graphics\Shapes\PolygonGeometry.cs" />
+    <Compile Include="Graphics\Shapes\PolyLine.cs" />
+    <Compile Include="Graphics\Shapes\SolidBrush.cs" />
+    <Compile Include="Interaction\PointerService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Style\Exensions.cs" />
+    <Compile Include="UserInterface\Controls\Button.cs" />
+    <Compile Include="UserInterface\Controls\ButtonBase.cs" />
+    <Compile Include="UserInterface\Controls\ContainerControl.cs" />
+    <Compile Include="UserInterface\Controls\Control.cs" />
+    <Compile Include="UserInterface\Controls\ControlCollection.cs" />
+    <Compile Include="UserInterface\Controls\ControlEventArgs.cs" />
+    <Compile Include="UserInterface\Controls\Enums.cs" />
+    <Compile Include="UserInterface\Controls\FpsCounter.cs" />
+    <Compile Include="UserInterface\Controls\IContainer.cs" />
+    <Compile Include="UserInterface\Controls\IControl.cs" />
+    <Compile Include="UserInterface\Controls\InteractionPanel.cs" />
+    <Compile Include="UserInterface\Controls\ItemsControl.cs" />
+    <Compile Include="UserInterface\Controls\Label.cs" />
+    <Compile Include="UserInterface\Controls\LabelBase.cs" />
+    <Compile Include="UserInterface\Controls\ListBox.cs" />
+    <Compile Include="UserInterface\Controls\ListBoxBase.cs" />
+    <Compile Include="UserInterface\Controls\Overlay.cs" />
+    <Compile Include="UserInterface\Controls\OverlayBase.cs" />
+    <Compile Include="UserInterface\Controls\OverlayDescription.cs" />
+    <Compile Include="UserInterface\Controls\Panel.cs" />
+    <Compile Include="UserInterface\Controls\PanelBase.cs" />
+    <Compile Include="UserInterface\Controls\StackPanel.cs" />
+    <Compile Include="UserInterface\Controls\StackPanelBase.cs" />
+    <Compile Include="UserInterface\Data\DataTemplate.cs" />
+    <Compile Include="UserInterface\Data\Binding.cs" />
+    <Compile Include="UserInterface\Data\BindingExpression.cs" />
+    <Compile Include="UserInterface\Data\BindingValueChangedEventArgs.cs" />
+    <Compile Include="UserInterface\Data\UpdateSourceTrigger.cs" />
+    <Compile Include="UserInterface\IUIElement.cs" />
+    <Compile Include="UserInterface\IUserInterfaceState.cs" />
+    <Compile Include="UserInterface\Style\BorderShader.cs" />
+    <Compile Include="UserInterface\Style\ControlDescription.cs" />
+    <Compile Include="UserInterface\Style\Depth.cs" />
+    <Compile Include="UserInterface\Style\Enums.cs" />
+    <Compile Include="UserInterface\Style\GradientStop.cs" />
+    <Compile Include="UserInterface\Style\IGradient.cs" />
+    <Compile Include="UserInterface\Style\IStyleService.cs" />
+    <Compile Include="UserInterface\Style\Layout.cs" />
+    <Compile Include="UserInterface\Style\LinearGradient.cs" />
+    <Compile Include="UserInterface\Style\ShapeMap.cs" />
+    <Compile Include="UserInterface\Style\StyleManager.cs" />
+    <Compile Include="UserInterface\Style\TextDescription.cs" />
+    <Compile Include="UserInterface\Style\TextEnums.cs" />
+    <Compile Include="UserInterface\Style\Thickness.cs" />
+    <Compile Include="UserInterface\TreeTraversal.cs" />
+    <Compile Include="UserInterface\UIElement.cs" />
+    <Compile Include="UserInterface\UIElement.Events.cs" />
+    <Compile Include="UserInterface\UIElement.Methods.cs" />
+    <Compile Include="UserInterface\UIElement.Properties.cs" />
+    <Compile Include="UserInterface\UserInterfaceManager.cs" />
+    <Compile Include="UserInterface\Xml\UIParser.cs" />
+    <Compile Include="UserInterface\Xml\XmlBasicControls.cs" />
+    <Compile Include="UserInterface\Xml\XmlBorderGradient.cs" />
+    <Compile Include="UserInterface\Xml\XmlColor.cs" />
+    <Compile Include="UserInterface\Xml\XmlCommon.cs" />
+    <Compile Include="UserInterface\Xml\XmlContainers.cs" />
+    <Compile Include="UserInterface\Xml\XmlControlDescription.cs" />
+    <Compile Include="UserInterface\Xml\XmlGradient.cs" />
+    <Compile Include="UserInterface\Xml\XmlTextDescription.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
+      <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
+      <Name>Odyssey.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Geometry\Odyssey.Geometry.csproj">
+      <Project>{ff735354-ff98-4b1e-9560-ac65d028fdf8}</Project>
+      <Name>Odyssey.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Interaction\Odyssey.Interaction.csproj">
+      <Project>{7740a46f-0809-49d2-bd34-71f6d8b6d2cc}</Project>
+      <Name>Odyssey.Interaction</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

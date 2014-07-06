@@ -1,62 +1,80 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <ProjectGuid>{E503A265-F72B-472E-A702-5B4011D8F1D1}</ProjectGuid>
-  </PropertyGroup>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(SolutionDir)\Odyssey.PreSettings.targets" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{E503A265-F72B-472E-A702-5B4011D8F1D1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Odyssey.Content</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8CodeAnalysis|AnyCPU'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Content\EffectReader.cs" />
-    <Compile Include="Content\Mesh.cs" />
-    <Compile Include="Content\Shaders\ConstantBufferDescription.cs" />
-    <Compile Include="Content\Shaders\SamplerStateDescription.cs" />
-    <Compile Include="Content\Shaders\ShaderFeature.cs" />
-    <Compile Include="Content\Shaders\TechniqueMapping.cs" />
-    <Compile Include="Content\Shaders\ShaderObject.cs" />
-    <Compile Include="Content\Shaders\ShaderCollection.cs" />
-    <Compile Include="Content\Shaders\ShaderReference.cs" />
-    <Compile Include="Content\Shaders\TextureDescription.cs" />
-    <Compile Include="Content\SupportedTypeAttribute.cs" />
+    <Compile Include="ModelReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Content\ModelReader.cs" />
-    <Compile Include="Content\TextureReader.cs" />
-    <Compile Include="Content\ContentManager.cs" />
-    <Compile Include="Content\FileSystemResourceResolver.cs" />
-    <Compile Include="Content\IModelManager.cs" />
-    <Compile Include="Content\IResourceReader.cs" />
-    <Compile Include="Content\IResourceResolver.cs" />
+    <Compile Include="TextureWriter.cs" />
+    <Compile Include="TkMeshPart.cs" />
+    <Compile Include="TkModel.cs" />
+    <Compile Include="ToolkitDeviceProvider.cs" />
   </ItemGroup>
+  <!--ItemGroup Condition="'$(Configuration)' == 'Win7Debug'">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup-->
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Toolkit">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Toolkit.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Toolkit.Game">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Toolkit.Game.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Toolkit.Game.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Toolkit.Graphics">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Toolkit.Graphics.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Toolkit.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpYaml.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Odyssey.2D\Odyssey.2D.csproj">
+      <Project>{b948170f-4bc3-4d84-b2f3-f369b3a82b5b}</Project>
+      <Name>Odyssey.2D</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
-      <Project>{c7ce7794-eafe-49e0-ba0a-bc2cb3f65b28}</Project>
+      <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
       <Name>Odyssey.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Condition="'$(Configuration)' == 'Win7Debug'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,8 +1,5 @@
-﻿using Odyssey.Collections;
-using Odyssey.Engine;
-using Odyssey.Graphics.Effects;
-using Odyssey.Graphics.Meshes;
-using Odyssey.Utils.Logging;
+﻿using Odyssey.Utilities.Collections;
+using Odyssey.Utilities.Logging;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
@@ -10,29 +7,44 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using SharpDX.Collections;
+using SharpDX;
+using SharpDX.IO;
+using SharpYaml.Serialization;
 
 namespace Odyssey.Content
 {
-    public class ContentManager
+    public class ContentManager : IAssetProvider
     {
-        List<IResourceResolver> resolvers;
-        List<IResourceReader> readers;
-        Cache<string, CacheNode<object>> cachedAssets;
-        SortedDictionary<string, object> managedAssets;
+        Application application;
+        readonly Dictionary<string, string> assetReferences;
+        readonly Cache<string, CacheNode<object>> cachedAssets;
+        readonly SortedDictionary<string, object> managedAssets;
 
-        public List<IResourceReader> Readers { get { return readers; } }
-        public List<IResourceResolver> Resolvers { get { return resolvers; } }
+        public IServiceRegistry Services { get {return application.Services;}}
+
+        public ObservableCollection<IResourceReader> Readers { get; private set; }
+        public ObservableCollection<IResourceResolver> Resolvers { get; private set; }
 
         public ContentManager()
         {
             cachedAssets = new Cache<string, CacheNode<object>>(40 * 1024 * 1024);
             managedAssets = new SortedDictionary<string, object>();
-            resolvers = new List<IResourceResolver>();
-            readers = new List<IResourceReader>();
+            Resolvers = new ObservableCollection<IResourceResolver>();
+            Readers = new ObservableCollection<IResourceReader>();
+            assetReferences = new Dictionary<string, string>();
+
+            // Init ContentManager
+            Resolvers.Add(new FileSystemResourceResolver(Global.Assets));
+            Readers.Add(new TextureReader());
+            Readers.Add(new EffectReader());
+            Readers.Add(new OmdReader());
+            Readers.Add(new ControlDefinitionsReader());
+            Readers.Add(new TextDefinitionsReader());
+
         }
 
+        [Pure]
         public bool Contains(string assetName)
         {
             return cachedAssets.ContainsKey(assetName) || managedAssets.ContainsKey(assetName);
@@ -40,19 +52,30 @@ namespace Odyssey.Content
 
         public void Store<T>(string fileName, string assetName)
         {
-            Contract.Requires(!Contains(assetName));
-
             Stream stream = FindStream(fileName);
             if (stream == null)
                 throw new Exception();
 
             object asset = LoadAsset<T>(fileName, stream);
             Store(assetName, asset);
+            assetReferences.Add(assetName, fileName);
+        }
+
+        internal void Store(AssetIdentifier assetIdentifier)
+        {
+            Stream stream = FindStream(assetIdentifier.Path);
+            if (stream == null)
+                throw new Exception();
+
+            Type type = ContentMapper.Map(assetIdentifier.Type);
+            object asset = LoadAsset(assetIdentifier.Path, stream, type);
+            Store(assetIdentifier.Name, asset);
+            assetReferences.Add(assetIdentifier.Name, assetIdentifier.Path);
         }
 
         public T Get<T>(string assetName)
         {
-            object asset = null;
+            object asset;
 
             if (TryGetAsset(assetName, out asset))
                 return (T)asset;
@@ -65,7 +88,12 @@ namespace Odyssey.Content
             Store(assetName, asset);
 
             return (T)asset;
-            
+        }
+
+        public IEnumerable<T> SelectAssets<T>()
+        {
+            return (from cacheNode in cachedAssets.GetValues().OfType<CacheNode<T>>()
+                    select cacheNode.Object);
         }
 
         public bool TryGetAsset(string assetName, out object asset)
@@ -83,7 +111,7 @@ namespace Odyssey.Content
         public void Store<T>(string assetName, T asset)
         {
             if (IsUnmanagedAsset(asset.GetType()))
-                StoreUnmanaged(asset, assetName);
+                StoreUnmanaged(assetName, asset);
             else
                 StoreManaged(assetName, asset);
         }
@@ -94,9 +122,9 @@ namespace Odyssey.Content
             managedAssets.Add(assetName, asset);
         }
 
-        void StoreUnmanaged(object asset, string assetName)
+        void StoreUnmanaged(string assetName, object asset)
         {
-            Contract.Requires<InvalidOperationException>(!cachedAssets.ContainsKey(assetName));
+            Contract.Requires<InvalidOperationException>(Contains(assetName));
             int size=FindSize(asset);
             cachedAssets.Add(assetName, new CacheNode<object>(size, asset));
             LogEvent.Io.Info(string.Format("Loaded {0} into cache.\n{1:f2} kB used; {2:f2} kB free.", assetName, 
@@ -104,7 +132,7 @@ namespace Odyssey.Content
         }
 
 
-        int FindSize(object asset)
+        static int FindSize(object asset)
         {
             Contract.Requires<InvalidOperationException>(IsUnmanagedAsset(asset.GetType()), "FindSize called on managed asset.");
 
@@ -127,29 +155,33 @@ namespace Odyssey.Content
             throw new NotImplementedException("Loading a " + asset.GetType().Name + " is not implemented.");
         }
 
+        [Pure]
         static bool IsUnmanagedAsset(Type type)
         {
             var types = type.GetTypeInfo().ImplementedInterfaces;
             return types.Contains(typeof(IDisposable));
-            //return type.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IDisposable));
         }
 
 
         object LoadAsset<T>(string filename, Stream stream)
         {
-            object result = null;
+            return LoadAsset(filename, stream, typeof (T));
+        }
+
+        object LoadAsset(string filename, Stream stream, Type assetType)
+        {
             IResourceReader resourceReader = null;
 
-            foreach (IResourceReader rReader in readers)
+            foreach (IResourceReader rReader in from rReader in Readers 
+                let attributes = rReader.GetType().GetTypeInfo().GetCustomAttributes<SupportedTypeAttribute>() 
+                where attributes.Any(a => a.SupportedType == assetType) select rReader)
             {
-                var attributes = CustomAttributeExtensions.GetCustomAttributes<SupportedTypeAttribute>(rReader.GetType().GetTypeInfo());
-                if (attributes.Any(a => a.SupportedType == typeof(T)))
-                    resourceReader = rReader;
+                resourceReader = rReader;
             }
             if (resourceReader == null)
-                throw new NotSupportedException(string.Format("Type {0} is not supported.", typeof(T).Name));
+                throw new NotSupportedException(string.Format("Type {0} is not supported.", assetType.Name));
 
-            result = resourceReader.ReadContent(filename, stream);
+            object result = resourceReader.ReadContent(this, filename, stream);
             stream.Dispose();
             return result;
         }
@@ -158,9 +190,9 @@ namespace Odyssey.Content
         {
             Stream stream = null;
             List<IResourceResolver> lResolvers;
-            lock (resolvers)
+            lock (Resolvers)
             {
-                lResolvers = new List<IResourceResolver>(resolvers);
+                lResolvers = new List<IResourceResolver>(Resolvers);
             }
 
             if (lResolvers.Count == 0)
@@ -175,13 +207,11 @@ namespace Odyssey.Content
             return stream;
         }
 
-        public void Dispose()
+        public void Unload()
         {
-            foreach (IResourceReader reader in readers)
+            foreach (IDisposable disposable in Readers.OfType<IDisposable>())
             {
-                IDisposable disposable = reader as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
+                disposable.Dispose();
             }
 
             if (!cachedAssets.IsEmpty)
@@ -189,6 +219,34 @@ namespace Odyssey.Content
                 {
                     ((IDisposable)node.Object).Dispose();
                 }
+
+            SharpDX.Toolkit.Graphics.GraphicsAdapter.Dispose();
+        }
+
+        public void InitializeApplication(Application application)
+        {
+            this.application = application;
+            Services.AddService(typeof(IAssetProvider), this);
+
+#if DEBUG
+            Services.AddService(typeof(SharpDX.Toolkit.Graphics.IGraphicsDeviceService), new ToolkitDeviceProvider());
+            Readers.Add(new ModelReader());
+#endif
+        }
+
+        public void LoadAssetList(string assetListFile)
+        {
+            var serializer = new SharpYaml.Serialization.Serializer();
+            serializer.Settings.RegisterTagMapping("Asset", typeof(AssetIdentifier));
+            serializer.Settings.RegisterTagMapping("Assets", typeof(AssetIdentifier[]));
+            AssetIdentifier[] assetList;
+            using (var nativeStream = new NativeFileStream(assetListFile, NativeFileMode.Open, NativeFileAccess.Read))
+                assetList = serializer.Deserialize<AssetIdentifier[]>(nativeStream);
+
+            foreach (AssetIdentifier assetIdentifier in assetList)
+            {
+                Store(assetIdentifier);
+            }
         }
     }
 }

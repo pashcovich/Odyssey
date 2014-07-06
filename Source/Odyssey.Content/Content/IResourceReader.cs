@@ -5,6 +5,6 @@ namespace Odyssey.Content
 {
     public interface IResourceReader
     {
-        object ReadContent(string resourceName, Stream stream);
+        object ReadContent(IAssetProvider assetManager, string resourceName, Stream stream);
     }
 }

@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{7740A46F-0809-49D2-BD34-71F6D8B6D2CC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Odyssey.Interaction</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8CodeAnalysis|AnyCPU'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="old\CameraTouchBehaviour.cs" />
+    <Compile Include="Interaction\ButtonState.cs" />
+    <Compile Include="Interaction\ButtonStateFlags.cs" />
+    <Compile Include="Interaction\Enums.cs" />
+    <None Include="old\IInputController.cs" />
+    <None Include="old\IInteractive3DModel.cs" />
+    <None Include="old\IMouseBehaviour.cs" />
+    <None Include="old\IKeyboardBehaviour.cs">
+      <SubType>Code</SubType>
+    </None>
+    <Compile Include="Interaction\IKeyboardService.cs" />
+    <Compile Include="Interaction\IPointerService.cs" />
+    <None Include="old\KeyboardBehaviour.cs">
+      <SubType>Code</SubType>
+    </None>
+    <None Include="old\ITouchBehaviour.cs" />
+    <Compile Include="Interaction\Binding.cs" />
+    <Compile Include="Interaction\KeyboardManager.cs" />
+    <Compile Include="Interaction\KeyboardPlatform.cs" />
+    <Compile Include="Interaction\KeyboardState.cs" />
+    <Compile Include="Interaction\KeyEventArgs.cs" />
+    <Compile Include="Interaction\KeyModifiers.cs" />
+    <None Include="Interaction\MousePlatform.cs" />
+    <Compile Include="Interaction\Keys.cs" />
+    <Compile Include="Interaction\PointerDeviceType.cs" />
+    <Compile Include="Interaction\PointerEventArgs.cs" />
+    <Compile Include="Interaction\PointerEventType.cs" />
+    <Compile Include="Interaction\PointerManager.cs" />
+    <Compile Include="Interaction\PointerPlatform.cs" />
+    <Compile Include="Interaction\PointerPoint.cs" />
+    <Compile Include="Interaction\PointerState.cs" />
+    <Compile Include="Interaction\PointerUpdateKind.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <!--ItemGroup Condition="'$(Configuration)' == 'Win7Debug'">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+  </ItemGroup-->
+  <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Condition="'$(Configuration)' == 'Win7Debug'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

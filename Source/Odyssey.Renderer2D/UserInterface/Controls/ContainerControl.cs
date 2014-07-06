@@ -1,0 +1,183 @@
+#region Using Directives
+
+using SharpDX;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+
+#endregion Using Directives
+
+namespace Odyssey.UserInterface.Controls
+{
+    public abstract class ContainerControl : Control, IContainer
+    {
+        #region Properties
+
+        protected ContainerControl(string controlDescriptionClass)
+            : base(controlDescriptionClass)
+        {
+            Controls = new ControlCollection(this);
+            IsFocusable = false;
+        }
+
+        /// <summary>
+        /// Returns the publicly available collection of child controls.
+        /// </summary>
+        public virtual ControlCollection Controls { get; private set; }
+
+        #endregion Properties
+
+        #region IContainer Members
+
+        /// <summary>
+        /// Occurs when a new control is added to the <see cref="ControlCollection"/>.
+        /// </summary>
+        public event EventHandler<ControlEventArgs> ControlAdded;
+
+        void IContainer.Arrange()
+        {
+            Arrange();
+        }
+
+        /// <summary>
+        /// Raises the <see cref="ControlAdded"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="ControlEventArgs"/> instance
+        /// containing the event data.</param>
+        protected internal virtual void OnControlAdded(ControlEventArgs e)
+        {
+            RaiseEvent(ControlAdded, this, e);
+        }
+
+        protected abstract void Arrange();
+
+        #endregion IContainer Members
+
+        public override UIElement Parent
+        {
+            get
+            {
+                return base.Parent;
+            }
+            internal set
+            {
+                if (base.Parent == value) return;
+
+                base.Parent = value;
+                foreach (UIElement control in TreeTraversal.PreOrderControlVisit(this))
+                    control.Parent = this;
+            }
+        }
+
+        public void Add(UIElement control)
+        {
+            control.Parent = this;
+            Controls.Add(ToDispose(control));
+            OnControlAdded(new ControlEventArgs(control));
+        }
+
+        public virtual void AddRange(IEnumerable<UIElement> controls)
+        {
+            foreach (UIElement ctl in controls)
+                Add(ctl);
+        }
+
+        /// <summary>
+        /// Determines whether the <b>ContainerControl</b> contains the specified Key.
+        /// </summary>
+        /// <param name="control">The control to locate in the control collection.</param>
+        /// <returns><b>True</b> if it the collection contains that element ,<b>false</b>
+        /// otherwise.</returns>
+        /// <remarks>
+        /// The control passed as parameter does not have to be a top level child, but this method
+        /// will also return true if the specified <see cref="UIElement"/> belongs to the tree
+        /// formed by the ContainerControl's children.
+        /// </remarks>
+        public bool ContainsControl(UIElement control)
+        {
+            Contract.Requires<ArgumentNullException>(control != null, "control is null");
+
+            return Controls.Contains(control);
+        }
+
+        public UIElement Find(string id)
+        {
+            foreach (UIElement ctl in TreeTraversal.PreOrderControlVisit(this))
+            {
+                if (ctl.Name == id)
+                    return ctl;
+                else
+                    continue;
+            }
+            return null;
+        }
+
+        public UIElement Find(Vector2 cursorLocation)
+        {
+            return TreeTraversal.PostOrderControlInteractionVisit(this)
+                .Reverse()
+                .FirstOrDefault(control => control.Contains(cursorLocation));
+        }
+
+        public void Insert(int index, UIElement control)
+        {
+            Controls.Insert(index, control);
+        }
+
+        public void Remove(UIElement control)
+        {
+            Controls.Remove(control);
+        }
+
+        public override void Render()
+        {
+            foreach (var control in Controls.Where(control => control.IsVisible))
+                control.Render();
+        }
+
+        internal override UIElement Copy()
+        {
+            UIElement copy = base.Copy();
+            IContainer containerCopy = (IContainer)copy;
+            foreach (UIElement child in Controls)
+                containerCopy.Controls.Add(child.Copy());
+
+            return copy;
+        }
+
+        protected internal override void Layout()
+        {
+            base.Layout();
+            foreach (UIElement ctl in Controls)
+            {
+                ctl.Layout();
+            }
+
+            Arrange();
+        }
+
+        protected override void OnInitializing(ControlEventArgs e)
+        {
+            base.OnInitializing(e);
+            foreach (UIElement element in Controls)
+            {
+                element.Initialize();
+            }
+        }
+
+        #region Debug
+
+        internal static void Debug(IEnumerable<UIElement> iterator)
+        {
+            System.Diagnostics.Debug.WriteLine("---------");
+            foreach (UIElement ctl in iterator)
+            {
+                System.Diagnostics.Debug.WriteLine(ctl.Name);
+            }
+            System.Diagnostics.Debug.WriteLine("---------");
+        }
+
+        #endregion Debug
+    }
+}

@@ -1,66 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX.Toolkit;
 using SharpDX.Toolkit.Content;
 using SharpDX.Toolkit.Graphics;
 using Odyssey.Graphics.Meshes;
 using Odyssey.Geometry;
 using System.Diagnostics.Contracts;
-using SharpDX.Direct3D11;
 using SharpDX;
-using Odyssey.Engine;
 using SharpDX.DXGI;
 
 
 namespace Odyssey.Content
 {
-    [SupportedType(typeof(Mesh))]
-    public class ModelReader : Component,IResourceReader, IDeviceDependentComponent
+    [SupportedType(typeof(TkModel))]
+    public class ModelReader : Component,IResourceReader
     {
-        static IDirect3DProvider direct3D;
-        static GraphicsDevice graphicsDevice;
 
-
-        public static Mesh ConvertToOdysseyModel(SharpDX.Toolkit.Graphics.Model model)
+        public static TkModel ConvertToOdysseyModel(string assetName, SharpDX.Toolkit.Graphics.Model model)
         {
-            Contract.Requires(model.Meshes.Count == 1);
-            //Contract.Requires(model.Meshes[0].MeshParts.Count == 1);
+            Contract.Requires<InvalidOperationException>(model.Meshes.Count >= 1);
 
-            VertexFormat vertexFormat = VertexFormat.Unknown;
-            var modelVB = model.Meshes[0].MeshParts[0].VertexBuffer;
-            foreach (var ve in modelVB.Resource.Layout.BufferLayouts[0].VertexElements)
+            List<TkMeshPart> meshParts = new List<TkMeshPart>();
+            
+            foreach (var mesh in model.Meshes)
             {
-                string semantic = (string)ve.SemanticName;
-                if (string.Equals(semantic, "SV_POSITION"))
-                        vertexFormat |= VertexFormat.Position;
-                else if (semantic.StartsWith("NORMAL"))
-                    vertexFormat |= VertexFormat.Normal;
-                else if (semantic.StartsWith("TEXCOORD"))
-                    vertexFormat |= VertexFormat.TextureUV;
-                else if (semantic.StartsWith("TANGENT"))
-                    vertexFormat |= VertexFormat.Tangent;
-                else if (semantic.StartsWith("BITANGENT"))
-                    vertexFormat |= VertexFormat.Bitangent;
+                foreach (var meshPart in mesh.MeshParts)
+                {
+                    VertexDescription vertexDescription = ConvertVertexElements(meshPart.VertexBuffer.Resource.Layout.BufferLayouts[0].VertexElements);
+                    TkMeshPart tkMeshPart = new TkMeshPart(name: meshPart.Name,
+                        vertexFormat: vertexDescription.Format,
+                        vertexSize: vertexDescription.Stride,
+                        indexFormat: meshPart.IndexBuffer.Resource.ElementSize == 2 ? Format.R16_UInt : Format.R32_UInt,
+                        vertexBuffer: meshPart.VertexBuffer.Resource.Buffer,
+                        indexBuffer: meshPart.IndexBuffer.Resource);
+                    meshParts.Add(tkMeshPart);
+                }
             }
-            var modelIB = model.Meshes[0].MeshParts[0].IndexBuffer;
-            Format indexFormat = modelIB.Resource.ElementSize == 2 ? Format.R16_UInt : Format.R32_UInt;
 
-            return new Content.Mesh(
-                vertexFormat: vertexFormat,
-                indexFormat: indexFormat,
-                vertexBuffer: modelVB.Resource.Buffer,
-                indexBuffer: modelIB.Resource
-                );
+            return new TkModel(model.Name, meshParts);
         }
 
-        public object ReadContent(string resourceName, Stream stream)
+        public object ReadContent(IAssetProvider assetManager, string resourceName, Stream stream)
         {
-            SharpDX.Toolkit.Graphics.ModelReader modelReader = new SharpDX.Toolkit.Graphics.ModelReader(graphicsDevice, stream,
+            var service = assetManager.Services.GetService<SharpDX.Toolkit.Graphics.IGraphicsDeviceService>();
+            SharpDX.Toolkit.Graphics.ModelReader modelReader = new SharpDX.Toolkit.Graphics.ModelReader(service.GraphicsDevice, stream,
                  name =>
                  {
                      try
@@ -78,23 +61,48 @@ namespace Odyssey.Content
                      return null;
                  });
             var model = modelReader.ReadModel();
-            var odyssseyModel = ConvertToOdysseyModel(model);
+            var odyssseyModel = ConvertToOdysseyModel(resourceName, model);
             model.Dispose();
             modelReader.Dispose();
 
             return odyssseyModel; 
         }
 
-        public void Initialize(InitializeDirectXEventArgs e)
-        {
-            direct3D = e.DirectX.Direct3D;
-            graphicsDevice = ToDispose(GraphicsDevice.New(direct3D.Device));
-        }
 
-        protected override void Dispose(bool disposeManagedResources)
+        public static VertexDescription ConvertVertexElements(ReadOnlyArray<VertexElement> vertexElements)
         {
-            base.Dispose(disposeManagedResources);
-            GraphicsAdapter.Dispose();
-        } 
+            VertexFormat vertexFormat = VertexFormat.Unknown;
+            int vertexSize = 0;
+            foreach (var ve in vertexElements)
+            {
+                string semantic = (string)ve.SemanticName;
+                if (string.Equals(semantic, "SV_POSITION"))
+                {
+                    vertexFormat |= VertexFormat.Position;
+                    vertexSize += 12;
+                }
+                else if (semantic.StartsWith("NORMAL"))
+                {
+                    vertexFormat |= VertexFormat.Normal;
+                    vertexSize += 12;
+                }
+                else if (semantic.StartsWith("TEXCOORD"))
+                {
+                    vertexFormat |= VertexFormat.TextureUV;
+                    vertexSize += 8;
+                }
+                else if (semantic.StartsWith("TANGENT"))
+                {
+                    vertexFormat |= VertexFormat.Tangent;
+                    vertexSize += 12;
+                }
+                else if (semantic.StartsWith("BITANGENT"))
+                {
+                    vertexFormat |= VertexFormat.Bitangent;
+                    vertexSize += 12;
+                }
+            }
+            return new VertexDescription(vertexFormat, vertexSize);
+        }
     }
 }

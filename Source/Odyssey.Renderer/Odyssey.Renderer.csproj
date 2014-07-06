@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{018FF216-7048-4B2F-A193-D2F8B20FB03D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Odyssey.Renderer</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8CodeAnalysis|AnyCPU'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
+      <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
+      <Name>Odyssey.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Geometry\Odyssey.Geometry.csproj">
+      <Project>{ff735354-ff98-4b1e-9560-ac65d028fdf8}</Project>
+      <Name>Odyssey.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Renderer2D\Odyssey.Renderer2D.csproj">
+      <Project>{8cc127c8-19f0-42df-8454-129b3566ef54}</Project>
+      <Name>Odyssey.Renderer2D</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="Content\AssetOperation.cs" />
+    <Compile Include="Content\AssetType.cs" />
+    <Compile Include="Content\EffectReader.cs" />
+    <Compile Include="Content\ImageContentReader.cs" />
+    <Compile Include="Content\ModelContentReader.cs" />
+    <Compile Include="Content\ModelReader.cs" />
+    <Compile Include="Content\PropertyCollection.cs" />
+    <Compile Include="Content\ResourceReaderBase.cs" />
+    <Compile Include="Content\Serializer.cs" />
+    <Compile Include="Engine\ApplicationPlatform.cs" />
+    <Compile Include="Engine\ClearOptions.cs" />
+    <Compile Include="Engine\RenderTargetGraphicsPresenter.cs" />
+    <Compile Include="Graphics\Buffer.Constant.cs" />
+    <Compile Include="Graphics\DepthStencilViewSelector.cs" />
+    <Compile Include="Graphics\MeshHeader.cs" />
+    <Compile Include="Graphics\Models\BufferCollection.cs" />
+    <Compile Include="Graphics\Models\CylinderMesh.cs" />
+    <Compile Include="Graphics\Models\GeoSphere.cs" />
+    <Compile Include="Graphics\Models\IModelMesh.cs" />
+    <Compile Include="Graphics\Models\IPrimitiveGenerator.cs" />
+    <Compile Include="Graphics\Models\Model.cs" />
+    <Compile Include="Graphics\Models\ModelAnalyser.cs" />
+    <Compile Include="Graphics\Models\ModelBufferRange.cs" />
+    <Compile Include="Graphics\Models\ModelData.cs" />
+    <Compile Include="Graphics\Models\ModelData.IndexBuffer.cs" />
+    <Compile Include="Graphics\Models\ModelData.Mesh.cs" />
+    <Compile Include="Graphics\Models\ModelData.MeshPart.cs" />
+    <Compile Include="Graphics\Models\ModelData.VertexBuffer.cs" />
+    <Compile Include="Graphics\Models\ModelEditor.cs" />
+    <Compile Include="Graphics\Models\ModelMesh.cs" />
+    <Compile Include="Graphics\Models\ModelMeshCollection.cs" />
+    <Compile Include="Graphics\Models\ModelMeshPart.cs" />
+    <Compile Include="Graphics\Models\ModelMeshPartCollection.cs" />
+    <Compile Include="Graphics\Models\ModelOperations.cs" />
+    <Compile Include="Graphics\Models\PointCloud.cs" />
+    <Compile Include="Graphics\Models\TeapotMesh.cs" />
+    <Compile Include="Graphics\Models\VertexBufferBinding.cs" />
+    <Compile Include="Graphics\Models\VertexBufferBindingCollection.cs" />
+    <Compile Include="Graphics\Organization\Commands\IPostProcessCommand.cs" />
+    <Compile Include="Graphics\PostProcessing\Blur.cs" />
+    <Compile Include="Graphics\Shaders\ConstantBufferIndex.cs" />
+    <Compile Include="Graphics\Shaders\EffectPool.cs" />
+    <Compile Include="Graphics\Shaders\Float2ArrayParameter.cs" />
+    <Compile Include="Graphics\Shaders\Float4ArrayParameter.cs" />
+    <Compile Include="Graphics\Shaders\Float2Parameter.cs" />
+    <Compile Include="Graphics\Shaders\Float3Parameter.cs" />
+    <Compile Include="Graphics\Shaders\Float4Parameter.cs" />
+    <Compile Include="Graphics\Shaders\FloatArrayParameter.cs" />
+    <Compile Include="Graphics\Shaders\FloatArrayParameterBase.cs" />
+    <Compile Include="Graphics\Shaders\FloatParameter.cs" />
+    <Compile Include="Graphics\Shaders\MatrixParameter.cs" />
+    <Compile Include="Graphics\Shaders\Parameter.cs" />
+    <Compile Include="Graphics\BlendState.cs" />
+    <Compile Include="Graphics\Buffer.cs" />
+    <Compile Include="Graphics\Buffer.Index.cs" />
+    <Compile Include="Graphics\Buffer.Vertex.cs" />
+    <Compile Include="Graphics\BufferBase.cs" />
+    <Compile Include="Graphics\BufferFlags.cs" />
+    <Compile Include="Graphics\DepthStencilState.cs" />
+    <Compile Include="Graphics\Models\BoxCubeMapMesh.cs" />
+    <Compile Include="Graphics\Models\CubeMesh.cs" />
+    <Compile Include="Graphics\Models\GeometricPrimitive.cs" />
+    <Compile Include="Graphics\Models\QuadMesh.cs" />
+    <Compile Include="Graphics\Models\SkyBoxMesh.cs" />
+    <Compile Include="Graphics\Models\SphereMesh.cs" />
+    <Compile Include="Graphics\SamplerState.cs" />
+    <Compile Include="Graphics\SamplerStateCollection.cs" />
+    <Compile Include="Graphics\SetDataOptions.cs" />
+    <Compile Include="Graphics\Shaders\IndexedCollection.cs" />
+    <Compile Include="Graphics\Shaders\PixelShader.cs" />
+    <Compile Include="Graphics\PostProcessing\PostProcessAction.cs" />
+    <Compile Include="Graphics\Shaders\TextureMapping.cs" />
+    <Compile Include="Graphics\Shaders\Shader.cs" />
+    <Compile Include="Graphics\Shaders\VertexShader.cs" />
+    <Compile Include="Graphics\DDS.cs" />
+    <Compile Include="Graphics\DDSFlags.cs" />
+    <Compile Include="Graphics\DDSHelper.cs" />
+    <Compile Include="Graphics\DepthStencilBuffer.cs" />
+    <Compile Include="Graphics\GraphicsResource.cs" />
+    <Compile Include="Graphics\Image.cs" />
+    <Compile Include="Graphics\ImageDescription.cs" />
+    <Compile Include="Graphics\ImageFileType.cs" />
+    <Compile Include="Graphics\MipMapCount.cs" />
+    <Compile Include="Graphics\MipMapDescription.cs" />
+    <Compile Include="Graphics\PixelBuffer.cs" />
+    <Compile Include="Graphics\PixelBufferArray.cs" />
+    <Compile Include="Graphics\PrimitiveType.cs" />
+    <Compile Include="Graphics\RasterizerState.cs" />
+    <Compile Include="Graphics\RenderTarget1D.cs" />
+    <Compile Include="Graphics\RenderTarget2D.cs" />
+    <Compile Include="Graphics\RenderTarget3D.cs" />
+    <Compile Include="Graphics\RenderTargetCube.cs" />
+    <Compile Include="Graphics\RenderTargetViewSelector.cs" />
+    <Compile Include="Graphics\ShaderReference.cs" />
+    <Compile Include="Graphics\ShaderResourceViewSelector.cs" />
+    <Compile Include="Graphics\Shaders\ConstantBuffer.cs" />
+    <Compile Include="Graphics\Shaders\ConstantBufferDescription.cs" />
+    <Compile Include="Graphics\Shaders\Effect.cs" />
+    <Compile Include="Graphics\Shaders\IParameter.cs" />
+    <Compile Include="Graphics\Shaders\SamplerStateDescription.cs" />
+    <Compile Include="Graphics\Shaders\ShaderCollection.cs" />
+    <Compile Include="Graphics\Shaders\ShaderData.cs" />
+    <Compile Include="Graphics\Shaders\ShaderDescription.cs" />
+    <Compile Include="Graphics\Shaders\Technique.cs" />
+    <Compile Include="Graphics\Shaders\TechniqueKey.cs" />
+    <Compile Include="Graphics\Shaders\TechniqueMapping.cs" />
+    <Compile Include="Graphics\Shaders\TextureDescription.cs" />
+    <Compile Include="Graphics\StateCollectionBase.cs" />
+    <Compile Include="Graphics\StateViewer.cs" />
+    <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Graphics\Texture1D.cs" />
+    <Compile Include="Graphics\Texture1DBase.cs" />
+    <Compile Include="Graphics\Texture2D.cs" />
+    <Compile Include="Graphics\Texture2DBase.cs" />
+    <Compile Include="Graphics\Texture3D.cs" />
+    <Compile Include="Graphics\Texture3DBase.cs" />
+    <Compile Include="Graphics\TextureCube.cs" />
+    <Compile Include="Graphics\TextureDescription.cs" />
+    <Compile Include="Graphics\TextureDimension.cs" />
+    <Compile Include="Graphics\TextureFlags.cs" />
+    <Compile Include="Graphics\TextureView.cs" />
+    <Compile Include="Graphics\UnorderedAccessViewSelector.cs" />
+    <Compile Include="Graphics\VertexBufferLayout.cs" />
+    <Compile Include="Graphics\VertexElement.cs" />
+    <Compile Include="Graphics\VertexElementAttribute.cs" />
+    <Compile Include="Graphics\VertexInputLayout.cs" />
+    <Compile Include="Graphics\VertexPositionNormalTextureBarycentricEdge.cs" />
+    <Compile Include="Graphics\VertexPositionNormalTextureBarycentric.cs" />
+    <Compile Include="Graphics\VertexPositionNormalTexture .cs" />
+    <Compile Include="Graphics\VertexPositionNormalTextureCube.cs" />
+    <Compile Include="Graphics\VertexPositionNormalTextureTangent.cs" />
+    <Compile Include="Graphics\ViewType.cs" />
+    <Compile Include="Graphics\WICFlags.cs" />
+    <Compile Include="Graphics\WICHelper.cs" />
+    <Compile Include="Graphics\Organization\Commands\DepthStencilStateChangeCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\BlendStateChangeCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\Command.cs" />
+    <Compile Include="Graphics\Organization\Commands\CommandManager.cs" />
+    <Compile Include="Graphics\Organization\Commands\EffectRenderCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\IEffectRenderCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\InstancingRenderCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\PostProcessCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\RenderToTextureCommandBase.cs" />
+    <Compile Include="Graphics\Organization\Commands\RasterizerStateChangeCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\RenderCommand.cs" />
+    <Compile Include="Graphics\Organization\Commands\RenderMapper.cs" />
+    <Compile Include="Content\TextureContentReader.cs" />
+    <Compile Include="Engine\DirectXDeviceManager.cs" />
+    <Compile Include="Engine\GraphicsPresenter.cs" />
+    <Compile Include="Engine\IDirectXDeviceFactory.cs" />
+    <Compile Include="Engine\IOdysseyDeviceService.cs" />
+    <Compile Include="Engine\SwapChainGraphicsPresenter.cs" />
+    <Compile Include="Graphics\Organization\Commands\RenderSceneToTextureCommand.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Engine\DirectXDevice.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Graphics\Buffer.Typed.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

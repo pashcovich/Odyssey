@@ -1,126 +1,156 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <ProjectGuid>{C7CE7794-EAFE-49E0-BA0A-BC2CB3F65B28}</ProjectGuid>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WP8Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win7Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Win7Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ODYSSEY_ENGINE;DIRECTX11_1</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(SolutionDir)\Odyssey.PreSettings.targets" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <ProjectGuid>{26FD6C22-2141-4994-85CB-5A730C910AA2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Odyssey.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8CodeAnalysis|AnyCPU'">
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Content\IByteSize.cs" />
-    <Compile Include="DeviceSettings.cs" />
-    <Compile Include="Engine\IDeviceDependentComponent.cs" />
-    <Compile Include="Engine\IValidable.cs" />
-    <Compile Include="Engine\Param.cs" />
-    <Compile Include="Engine\RenderEventArgs.cs" />
-    <Compile Include="Engine\Error.cs" />
-    <Compile Include="Engine\FpsTimer.cs" />
-    <Compile Include="Engine\ICameraProvider.cs" />
-    <Compile Include="Engine\IDevice.cs" />
-    <Compile Include="Engine\InitializeDirectXEventArgs.cs" />
-    <Compile Include="Engine\IOdysseyTarget.cs" />
-    <Compile Include="Engine\ISettings.cs" />
-    <Compile Include="Engine\StereoParameters.cs" />
-    <Compile Include="Engine\TargetBase.cs" />
-    <Compile Include="Geometry\Extensions.cs" />
-    <Compile Include="Geometry\MathHelper.cs" />
-    <Compile Include="Global.cs" />
-    <Compile Include="Graphics\Effects\IEffect.cs" />
-    <Compile Include="Graphics\Effects\IParameter.cs" />
-    <Compile Include="Graphics\Effects\ParamHandles.cs" />
-    <Compile Include="Engine\DeviceManager.cs" />
-    <Compile Include="Engine\ICamera.cs" />
-    <Compile Include="Engine\ITarget.cs" />
-    <Compile Include="Graphics\Enums.cs" />
-    <Compile Include="Graphics\IConstantBuffer.cs" />
-    <Compile Include="Graphics\IRenderer.cs" />
-    <Compile Include="Graphics\Materials\IResourceData.cs" />
-    <Compile Include="Graphics\Materials\ReferenceEnums.cs" />
-    <Compile Include="Graphics\Materials\TechniqueKey.cs" />
-    <Compile Include="Graphics\Meshes\ColoredVertex.cs" />
-    <Compile Include="Graphics\IInstance.cs" />
-    <Compile Include="Graphics\IRenderable.cs" />
-    <Compile Include="Graphics\Meshes\ShaderData.cs" />
-    <Compile Include="Graphics\Rendering\Enums.cs" />
-    <Compile Include="Graphics\Rendering\ICommand.cs" />
-    <Compile Include="Graphics\Rendering\IScene.cs" />
-    <Compile Include="Graphics\Rendering\ISceneItemsProvider.cs" />
-    <Compile Include="Graphics\Rendering\Lights\Enums.cs" />
-    <Compile Include="Graphics\Rendering\Lights\ILight.cs" />
-    <Compile Include="Graphics\Rendering\Management\Enums.cs" />
-    <Compile Include="Graphics\Rendering\Management\ISceneTree.cs" />
-    <Compile Include="Graphics\Rendering\Management\RenderableCollectionDescription.cs" />
-    <Compile Include="Graphics\Rendering\Management\SceneNode.cs" />
-    <Compile Include="Graphics\Rendering\Management\ShadowMappingDescription.cs" />
-    <Compile Include="Graphics\Rendering\SceneStateEventArgs.cs" />
-    <Compile Include="Interaction\IInteractive3D.cs" />
-    <Compile Include="Interaction\IInteractiveItemsProvider.cs" />
-    <Compile Include="Network\PacketEventArgs.cs" />
-    <Compile Include="Properties\Info.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Info.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Errors.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Errors.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Geometry\Enums.cs" />
-    <Compile Include="Graphics\Meshes\IGeometry.cs" />
-    <Compile Include="Graphics\Meshes\IVertex.cs" />
-    <Compile Include="Graphics\Meshes\VertexDescription.cs" />
-    <Compile Include="Graphics\Materials\Enums.cs" />
-    <Compile Include="Graphics\Materials\IMaterial.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserInterface\Size.cs" />
-    <Compile Include="Utils\Collections\Cache.cs" />
-    <Compile Include="Utils\Collections\GenericNode.cs" />
-    <Compile Include="Utils\Collections\INode.cs" />
-    <Compile Include="Utils\Collections\Node.cs" />
-    <Compile Include="Utils\Logging\AbstractLogEvent.cs" />
-    <Compile Include="Utils\Logging\LogEvent.cs" />
-    <Compile Include="Utils\Logging\TraceData.cs" />
-    <Compile Include="Utils\Text\Text.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Info.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Info.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Errors.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <EmbeddedResource Include="Properties\Errors.resx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>$(SharpDXSdkBinDir)\DirectX11_1-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win8Release' Or '$(Configuration)' == 'Win7Debug' ">
-    <Reference Include="SharpDX.Direct2D1">
-      <HintPath>C:\Program Files (x86)\Dev\SharpDX-2.5.0\Bin\DirectX11_1-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
-    </Reference>
+  <ItemGroup>
+    <Compile Include="Content\AssetIdentifier.cs" />
+    <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="Content\ContentReaderAttribute.cs" />
+    <Compile Include="Content\ContentReaderParameters.cs" />
+    <Compile Include="Content\FileSystemResourceResolver.cs" />
+    <Compile Include="Content\IAssetProvider.cs" />
+    <Compile Include="Content\IByteSize.cs" />
+    <Compile Include="Content\IContentReader.cs" />
+    <Compile Include="Content\IResourceResolver.cs" />
+    <Compile Include="Content\PropertyKey.cs" />
+    <Compile Include="Engine\ApplicationTime.cs" />
+    <Compile Include="Engine\IDirect2DDevice.cs" />
+    <Compile Include="Engine\IDirectXDeviceService.cs" />
+    <Compile Include="Engine\ISwapChainPresenterService.cs" />
+    <Compile Include="Engine\ITimeService.cs" />
+    <Compile Include="Engine\IWindowService.cs" />
+    <Compile Include="Engine\SimpleDeviceManager.cs" />
+    <Compile Include="Graphics\Effects\Enums.cs" />
+    <Compile Include="Graphics\Effects\IMaterial.cs" />
+    <Compile Include="Graphics\Effects\MaterialBuffer.cs" />
+    <Compile Include="Graphics\Effects\ReferenceEnums.cs" />
+    <Compile Include="Graphics\Interop.cs" />
+    <Compile Include="Graphics\Meshes\Enums.cs" />
+    <Compile Include="Graphics\Models\ModelOperation.cs" />
+    <Compile Include="Graphics\PixelFormat.cs" />
+    <Compile Include="Engine\PresentationInterval.cs" />
+    <Compile Include="Graphics\IInitializable.cs" />
+    <Compile Include="Graphics\ReadOnlyArray.cs" />
+    <Compile Include="Graphics\Organization\IRenderCommand.cs" />
+    <Compile Include="old\DeviceSettings.cs" />
+    <Compile Include="Engine\ApplicationContext.cs" />
+    <Compile Include="Engine\ApplicationContextType.cs" />
+    <Compile Include="Engine\ApplicationGraphicsParameters.cs" />
+    <Compile Include="Engine\ApplicationWindow.cs" />
+    <Compile Include="Engine\DeviceFeatures.cs" />
+    <Compile Include="Engine\DeviceInformation.cs" />
+    <None Include="old\DeviceManager.cs" />
+    <Compile Include="Engine\DeviceStatus.cs" />
+    <Compile Include="Engine\DisplayMode.cs" />
+    <Compile Include="Engine\FpsTimer.cs" />
+    <Compile Include="Engine\GraphicsAdapter.cs" />
+    <Compile Include="Engine\GraphicsOutput.cs" />
+    <Compile Include="Engine\IApplicationPlatform.cs" />
+    <Compile Include="Engine\ICamera.cs" />
+    <Compile Include="Engine\IDevice.cs" />
+    <Compile Include="old\IDeviceDependentComponent.cs" />
+    <Compile Include="Engine\IDirectXDeviceManager.cs" />
+    <Compile Include="Engine\IDirectXDeviceSettings.cs" />
+    <Compile Include="Engine\IFpsTimer.cs" />
+    <Compile Include="Engine\InitializeDeviceEventArgs.cs" />
+    <Compile Include="Engine\InitializeDirectXEventArgs.cs" />
+    <Compile Include="old\ISettings.cs" />
+    <Compile Include="Engine\IValidable.cs" />
+    <Compile Include="Engine\Param.cs" />
+    <Compile Include="Engine\PresentationParameters.cs" />
+    <Compile Include="Engine\ServiceRegistry.cs" />
+    <Compile Include="Engine\StereoParameters.cs" />
+    <None Include="old\TargetBase.cs" />
+    <Compile Include="Geometry\Extensions.cs" />
+    <Compile Include="Geometry\MathHelper.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="Graphics\DepthFormat.cs" />
+    <Compile Include="Graphics\DisplayOrientation.cs" />
+    <Compile Include="Graphics\Enums.cs" />
+    <None Include="old\IInstance.cs" />
+    <None Include="old\IRenderable.cs" />
+    <Compile Include="Graphics\IRenderable.cs" />
+    <Compile Include="Graphics\IRenderer.cs" />
+    <None Include="old\IMaterial.cs" />
+    <Compile Include="Graphics\MSAALevel.cs" />
+    <Compile Include="Graphics\Organization\Enums.cs" />
+    <Compile Include="Graphics\Organization\ICommand.cs" />
+    <None Include="old\IScene.cs" />
+    <None Include="old\ISceneItemsProvider.cs" />
+    <None Include="old\Lights\Enums.cs" />
+    <None Include="old\Lights\ILight.cs" />
+    <None Include="old\ISceneTree.cs" />
+    <None Include="old\RenderableCollectionDescription.cs" />
+    <None Include="old\ShadowMappingDescription.cs" />
+    <None Include="old\SceneStateEventArgs.cs" />
+    <Compile Include="Interaction\IInteractive3D.cs" />
+    <Compile Include="Interaction\IInteractiveItemsProvider.cs" />
+    <Compile Include="Network\PacketEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Errors.Designer.cs" />
+    <Compile Include="Talos\IComponent.cs" />
+    <Compile Include="Talos\IEntity.cs" />
+    <Compile Include="Talos\IMessage.cs" />
+    <Compile Include="Talos\IScene.cs" />
+    <Compile Include="Utilities\Collections\Cache.cs" />
+    <Compile Include="Utilities\Collections\CollectionMap.cs" />
+    <None Include="Utilities\Collections\GenericNode.cs" />
+    <Compile Include="Utilities\Collections\INode.cs" />
+    <Compile Include="Utilities\Collections\Node.cs" />
+    <Compile Include="Utilities\Collections\QueueMap.cs" />
+    <Compile Include="Utilities\EnumExtensions.cs" />
+    <Compile Include="Utilities\Logging\AbstractLogEvent.cs" />
+    <Compile Include="Utilities\Logging\LogEvent.cs" />
+    <Compile Include="Utilities\Logging\TraceData.cs" />
+    <Compile Include="Utilities\Reflection\ReflectionHelper.cs" />
+    <Compile Include="Utilities\Text\Text.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -156,17 +156,17 @@ $RECYCLE.BIN/
 
 # experimental projects
 /Apps/
+/Game/
 /packages/
 /Source/Odyssey/
-/Source/Odyssey.Interaction/
-/Source/Odyssey.Geometry/
 /Source/Odyssey.GeometryOld/
-/Source/Odyssey.Windows*
 /Source/Odyssey.Windows.Network/
 /Source/Odyssey.Windows8.Network/
-/Samples/WP8
-/Libraries
+/Source/Tools
+/Samples/
+/Libraries/Assimp
 /Pictures
 /Tools/Daedalus.Tests
+/Tests
 /ShaderGenSetup
-OdysseyDesktop.sln
+Odyssey.sln
