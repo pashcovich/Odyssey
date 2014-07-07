@@ -2,8 +2,6 @@
 {
     public interface IRenderable : IInitializable
     {
-        
         void Render();
-
     }
 }

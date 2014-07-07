@@ -45,17 +45,4 @@ namespace Odyssey.Engine
         SharpDX.Direct3D11.DeviceContext Context { get; }
 #endif
     }
-
-    public interface IDirectXProvider
-    {
-#if !WP8
-
-        IDirect2DProvider Direct2D { get; }
-
-        IDirectWriteProvider DirectWrite { get; }
-
-#endif
-
-        IDirect3DProvider Direct3D { get; }
-    }
 }

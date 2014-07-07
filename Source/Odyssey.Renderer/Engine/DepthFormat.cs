@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Graphics
+﻿namespace Odyssey.Engine
 {
     /// <summary>
     /// Defines the format of data in a depth-stencil buffer.

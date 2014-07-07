@@ -19,7 +19,7 @@ namespace Odyssey.Graphics
          private TextureView[] readOnlyViews;
 
         /// <summary>
-        /// Gets the <see cref="Graphics.DepthFormat"/> of this depth stencil buffer.
+        /// Gets the <see cref="Engine.DepthFormat"/> of this depth stencil buffer.
         /// </summary>
         public readonly DepthFormat DepthFormat;
 

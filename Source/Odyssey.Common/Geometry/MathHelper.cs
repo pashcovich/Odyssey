@@ -2,7 +2,7 @@
 
 namespace Odyssey.Geometry
 {
-    public class MathHelper
+    public static class MathHelper
     {
         /// <summary>
         /// A value specifying the approximation of π which is 180 degrees.

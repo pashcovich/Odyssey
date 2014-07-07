@@ -36,15 +36,6 @@ namespace Odyssey.Graphics.Organization
         DepthWriteDisabled
     }
 
-    public enum RenderingOrderType
-    {
-        OpaqueGeometry,
-        AdditiveBlendingGeometry,
-        SubtractiveBlendingGeometry,
-        First,
-        Last
-    }
-
     [Flags]
     public enum InstanceSemantic
     {

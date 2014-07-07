@@ -54,14 +54,12 @@
     <Compile Include="Graphics\Effects\StereoEffect.cs" />
     <Compile Include="Graphics\Ellipse.cs" />
     <Compile Include="Graphics\EllipseBase.cs" />
-    <Compile Include="Graphics\FpsRenderer.cs" />
     <Compile Include="Graphics\Hexagon.cs" />
     <Compile Include="Graphics\IShape.cs" />
     <Compile Include="Graphics\IShapeD2D.cs" />
     <Compile Include="Graphics\PolygonBase.cs" />
     <Compile Include="Graphics\Rectangle.cs" />
     <Compile Include="Graphics\RectangleBase.cs" />
-    <Compile Include="Graphics\Renderer.cs" />
     <None Include="Graphics\StereoRenderer.cs" />
     <Compile Include="Graphics\ShapeBase.cs" />
     <Compile Include="Graphics\ShapeInitializer.cs" />

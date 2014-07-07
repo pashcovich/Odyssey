@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Odyssey.Engine
 {
-    internal abstract class ApplicationPlatform : DisposeBase, IDirectXDeviceFactory, IApplicationPlatform
+    internal abstract class ApplicationPlatform : DisposeBase, IDirectXDeviceFactory
     {
         private readonly Application application;
         private readonly IServiceRegistry services;

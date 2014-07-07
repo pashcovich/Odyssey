@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Odyssey.Graphics.Rendering2D;
 
 namespace Odyssey.UserInterface.Controls
 {

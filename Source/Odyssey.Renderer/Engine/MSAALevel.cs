@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Graphics
+﻿namespace Odyssey.Engine
 {
     /// <summary>
     /// Multisample count level.

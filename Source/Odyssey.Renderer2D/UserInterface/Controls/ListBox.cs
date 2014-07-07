@@ -2,7 +2,6 @@
 using Odyssey.Graphics;
 using System;
 using System.Linq;
-using Odyssey.Graphics.Rendering2D;
 
 namespace Odyssey.UserInterface.Controls
 {

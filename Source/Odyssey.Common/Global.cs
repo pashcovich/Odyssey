@@ -19,12 +19,12 @@
         /// <summary>
         /// Default width for the back buffer.
         /// </summary>
-        public static readonly int DefaultBackBufferWidth = 1280;
+        public const int DefaultBackBufferWidth = 1280;
 
         /// <summary>
         /// Default height for the back buffer.
         /// </summary>
-        public static readonly int DefaultBackBufferHeight = 720;
+        public const int DefaultBackBufferHeight = 720;
 
         public static string RootPath { get; set; }
     }

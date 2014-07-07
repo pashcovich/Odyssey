@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Utilities.Collections
 {
     /// <summary>
     /// Exposes an array as readonly with readonly elements with support for improved performance for equality.
