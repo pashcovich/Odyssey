@@ -12,11 +12,48 @@
     <FileAlignment>512</FileAlignment>
     <SharpDXPlatform>net40</SharpDXPlatform>
     <TargetFrameworkProfile />
+    <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'net45|AnyCPU'">
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
+    <CodeContractsInferRequires>False</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
+    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
+    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsSQLServerOption />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+    <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>DoNotBuild</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
@@ -29,7 +66,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
@@ -39,24 +75,17 @@
     <Compile Include="Engine\DesktopApplicationContext.cs" />
     <Compile Include="Engine\DesktopApplicationPlatform.cs" />
     <Compile Include="Engine\DesktopPresenter.cs" />
-    <Compile Include="Engine\DestkopApplicationWindow.cs" />
-    <Compile Include="UserInterface\DesktopUserInterfaceManager.cs" />
-    <None Include="old\FormTarget.cs" />
-    <Compile Include="Interaction\DesktopKeyboardPlatform.cs" />
-    <Compile Include="Interaction\DesktopPointerPlatform.cs" />
+    <Compile Include="Engine\DesktopApplicationWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="old\SwapChainTargetBase.cs" />
-    <None Include="old\TargetBase.cs" />
-    <None Include="old\WindowsForms.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
       <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
       <Name>Odyssey.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Odyssey.Interaction\Odyssey.Interaction.csproj">
-      <Project>{7740a46f-0809-49d2-bd34-71f6d8b6d2cc}</Project>
-      <Name>Odyssey.Interaction</Name>
+    <ProjectReference Include="..\Odyssey.Interaction.Windows\Odyssey.Interaction.Windows.csproj">
+      <Project>{b29d8717-5f6b-4ee8-a395-9edfc2880dfb}</Project>
+      <Name>Odyssey.Interaction.Windows</Name>
     </ProjectReference>
     <ProjectReference Include="..\Odyssey.Renderer2D\Odyssey.Renderer2D.csproj">
       <Project>{8cc127c8-19f0-42df-8454-129b3566ef54}</Project>

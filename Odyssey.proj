@@ -5,7 +5,7 @@
 	</ItemGroup>
 		<PropertyGroup>
 		<RootNamespace>Odyssey</RootNamespace>
-				<SharpDXSdkBinDir>C:\Program Files\Dev\SharpDX\Bin</SharpDXSdkBinDir>
+		<SharpDXSdkBinDir>C:\Program Files\Dev\SharpDX\Bin</SharpDXSdkBinDir>
 		<SharpDXDirectXVersion>DirectX11_2</SharpDXDirectXVersion>
 		<OdysseyEngine>1</OdysseyEngine>
 		</PropertyGroup>
@@ -17,6 +17,15 @@
 		<Optimize>false</Optimize>
 		<DefineConstants>TRACE;DEBUG;DIRECTX11_1;</DefineConstants>
 		<OutputPath>bin\Debug</OutputPath>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'net45'">
+		<Platform>AnyCpu</Platform>
+		<SharpDXPlatform>net40</SharpDXPlatform>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<DefineConstants>TRACE;DEBUG;DIRECTX11_1;</DefineConstants>
+		<OutputPath>bin\Debug\net45</OutputPath>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Win8Debug'">
 		<Platform>AnyCpu</Platform>
@@ -36,7 +45,7 @@
 		<SharpDXPlatform>winrt</SharpDXPlatform>
 		<DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'Win7Debug' Or '$(Configuration)' == 'WP8Debug' " >
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'net45'" >
 		<CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
 		<CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
 		<CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>

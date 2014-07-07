@@ -2561,6 +2561,12 @@
             <exception cref="T:System.ArgumentNullException">type</exception>
             <exception cref="T:SharpYaml.YamlException">Failed to get ObjectDescriptor for type [{0}]. The member [{1}] cannot be registered as a member with the same name is already registered [{2}].DoFormat(type.FullName, member, existingMember)</exception>
         </member>
+        <member name="M:SharpYaml.Serialization.Descriptors.ObjectDescriptor.Initialize">
+            <summary>
+            Initializes this instance.
+            </summary>
+            <exception cref="T:SharpYaml.YamlException">Failed to get ObjectDescriptor for type [{0}]. The member [{1}] cannot be registered as a member with the same name is already registered [{2}].DoFormat(type.FullName, member, existingMember)</exception>
+        </member>
         <member name="M:SharpYaml.Serialization.Descriptors.ObjectDescriptor.SortMembers(System.Collections.Generic.IComparer{System.Object})">
             <summary>
             Sorts the members of this instance with the specified instance.
@@ -2628,6 +2634,9 @@
             </summary>
             <param name="type">The type.</param>
             <returns><c>true</c> if the specified type is collection; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:SharpYaml.Serialization.Descriptors.CollectionDescriptor.PrepareMember(SharpYaml.Serialization.Descriptors.MemberDescriptorBase)">
+            <inheritdoc/>
         </member>
         <member name="P:SharpYaml.Serialization.Descriptors.CollectionDescriptor.ElementType">
             <summary>

@@ -1,7 +1,6 @@
 ﻿using SharpDX.Windows;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,7 +26,8 @@ namespace Odyssey.Engine
         /// <param name="control">The control.</param>
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
-        public DesktopApplicationContext(Control control = null, int requestedWidth = 0, int requestedHeight = 0) : base(ApplicationContextType.Desktop, control ?? CreateDefaultControl())
+        public DesktopApplicationContext(Control control = null, int requestedWidth = 0, int requestedHeight = 0)
+            : base(ApplicationContextType.Desktop, control ?? CreateDefaultControl())
         {
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
@@ -42,11 +42,6 @@ namespace Odyssey.Engine
             }
         }
 
-        private static object CreateDefaultControl()
-        {
-            return new RenderForm("Odyssey Application") { AllowUserResizing = false };
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DesktopApplicationContext" /> class.
         /// </summary>
@@ -54,7 +49,7 @@ namespace Odyssey.Engine
         /// <param name="requestedWidth">Width of the requested.</param>
         /// <param name="requestedHeight">Height of the requested.</param>
         public DesktopApplicationContext(IntPtr windowHandle, int requestedWidth = 0, int requestedHeight = 0)
-            : base(ApplicationContextType.Desktop,  System.Windows.Forms.Control.FromHandle(windowHandle))
+            : base(ApplicationContextType.Desktop, System.Windows.Forms.Control.FromHandle(windowHandle))
         {
             RequestedWidth = requestedWidth;
             RequestedHeight = requestedHeight;
@@ -79,6 +74,11 @@ namespace Odyssey.Engine
         public static implicit operator DesktopApplicationContext(Control control)
         {
             return new DesktopApplicationContext(control);
+        }
+
+        private static object CreateDefaultControl()
+        {
+            return new RenderForm("Odyssey Application") { AllowUserResizing = false };
         }
     }
 }

@@ -14,36 +14,21 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8CodeAnalysis|AnyCPU'">
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="old\CameraTouchBehaviour.cs" />
     <Compile Include="Interaction\ButtonState.cs" />
     <Compile Include="Interaction\ButtonStateFlags.cs" />
     <Compile Include="Interaction\Enums.cs" />
-    <None Include="old\IInputController.cs" />
-    <None Include="old\IInteractive3DModel.cs" />
-    <None Include="old\IMouseBehaviour.cs" />
-    <None Include="old\IKeyboardBehaviour.cs">
-      <SubType>Code</SubType>
-    </None>
     <Compile Include="Interaction\IKeyboardService.cs" />
     <Compile Include="Interaction\IPointerService.cs" />
-    <None Include="old\KeyboardBehaviour.cs">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="old\ITouchBehaviour.cs" />
     <Compile Include="Interaction\Binding.cs" />
     <Compile Include="Interaction\KeyboardManager.cs" />
     <Compile Include="Interaction\KeyboardPlatform.cs" />
     <Compile Include="Interaction\KeyboardState.cs" />
     <Compile Include="Interaction\KeyEventArgs.cs" />
     <Compile Include="Interaction\KeyModifiers.cs" />
-    <None Include="Interaction\MousePlatform.cs" />
     <Compile Include="Interaction\Keys.cs" />
     <Compile Include="Interaction\PointerDeviceType.cs" />
     <Compile Include="Interaction\PointerEventArgs.cs" />
@@ -65,9 +50,6 @@
   <ItemGroup>
     <Reference Include="SharpDX">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpYaml">
-      <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

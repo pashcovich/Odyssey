@@ -25,3 +25,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Odyssey.Windows")]
 [assembly: InternalsVisibleTo("Odyssey.Windows8")]
 [assembly: InternalsVisibleTo("Odyssey.Renderer2D")]
+[assembly: InternalsVisibleTo("Odyssey.Interaction.Windows")]

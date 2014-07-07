@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Interaction
 {
@@ -25,13 +21,6 @@ namespace Odyssey.Interaction
             this.manager = manager;
         }
 
-        public void Initialize(object nativeWindow)
-        {
-            Contract.Requires<ArgumentNullException>(nativeWindow != null, "nativeWindow");
-            BindWindow(nativeWindow);
-            manager.Associate(this);
-        }
-
         /// <summary>
         /// Raised when a key down.
         /// </summary>
@@ -41,6 +30,13 @@ namespace Odyssey.Interaction
         /// Raised when a key is up.
         /// </summary>
         internal event EventHandler<KeyEventArgs> KeyUp;
+
+        public void Initialize(object nativeWindow)
+        {
+            Contract.Requires<ArgumentNullException>(nativeWindow != null, "nativeWindow");
+            BindWindow(nativeWindow);
+            manager.Associate(this);
+        }
 
         /// <summary>
         /// Derived classes should implement platform-specific event bindings in this method

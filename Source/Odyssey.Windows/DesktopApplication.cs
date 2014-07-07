@@ -12,12 +12,12 @@ namespace Odyssey
 {
     public class DesktopApplication : Application
     {
-        public DesktopApplication()
-            : base(typeof (DesktopApplicationPlatform))
+        protected DesktopApplication()
+            : base(typeof(DesktopApplicationPlatform))
         {
         }
 
-        public static KeyValuePair<Type, Type>[] RequiredServices
+        public static IEnumerable<KeyValuePair<Type, Type>> RequiredServices
         {
             get
             {
