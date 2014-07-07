@@ -1,10 +1,8 @@
-﻿using Odyssey.Engine;
-using Odyssey.Talos;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Odyssey.Engine;
 using SharpDX;
-using IComponent = Odyssey.Talos.IComponent;
 
-namespace Odyssey
+namespace Odyssey.Talos
 {
     public interface IScene
     {

@@ -5,10 +5,12 @@ using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
+using Odyssey.Talos;
 using Odyssey.Utilities.Reflection;
 using SharpDX;
 using System;
 using System.Diagnostics.Contracts;
+using SharpDX.DirectWrite;
 
 #endregion Using Directives
 
@@ -37,17 +39,19 @@ namespace Odyssey
         private bool suppressDraw;
         private TimeSpan totalTime;
 
-        internal Application(Type platformType)
+        internal Application()
         {
-            Contract.Requires<ArgumentException>(ReflectionHelper.IsTypeDerived(platformType, typeof(ApplicationPlatform)),
-                "platformType must be derived from ApplicationPlatform.");
+            var platformTypeAttribute = ReflectionHelper.GetAttribute<PlatformTypeAttribute>(GetType());
+            if (!ReflectionHelper.IsTypeDerived(platformTypeAttribute.PlatformType, typeof (ApplicationPlatform)))
+                throw new InvalidOperationException("PlatformType must be derived from ApplicationPlatform.");
+
             services = new ServiceRegistry();
             appTime = new ApplicationTime();
             totalTime = new TimeSpan();
             timer = new TimerTick();
             IsFixedTimeStep = true;
             maximumElapsedTime = TimeSpan.FromMilliseconds(500.0);
-            TargetElapsedTime = TimeSpan.FromTicks(10000000 / 60); // target elapsed time is by default 60Hz
+            TargetElapsedTime = TimeSpan.FromTicks(10000000/60); // target elapsed time is by default 60Hz
             lastUpdateCount = new int[4];
             nextLastUpdateCountIndex = 0;
 
@@ -55,15 +59,22 @@ namespace Odyssey
             // Example for a moving average of 4:
             // updateCountAverageSlowLimit = (2 * 2 + (4 - 2)) / 4 = 1.5f
             const int BadUpdateCountTime = 2; // number of bad frame (a bad frame is a frame that has at least 2 updates)
-            var maxLastCount = 2 * Math.Min(BadUpdateCountTime, lastUpdateCount.Length);
-            updateCountAverageSlowLimit = (float)(maxLastCount + (lastUpdateCount.Length - maxLastCount)) / lastUpdateCount.Length;
+            var maxLastCount = 2*Math.Min(BadUpdateCountTime, lastUpdateCount.Length);
+            updateCountAverageSlowLimit = (float) (maxLastCount + (lastUpdateCount.Length - maxLastCount))/lastUpdateCount.Length;
 
-            services.AddService(typeof(IWindowService), this);
-            services.AddService(typeof(ITimeService), appTime);
+            services.AddService(typeof (IWindowService), this);
+            services.AddService(typeof (ITimeService), appTime);
             contentManager = new ContentManager(services);
 
+            var additionalServices = ReflectionHelper.GetAttributes<RequiredServiceAttribute>(GetType());
+            foreach (var requiredService in additionalServices)
+            {
+                var service = Activator.CreateInstance(requiredService.ClassType, services);
+                services.AddService(requiredService.ServiceType, service);
+            }
+        
             // Setup Platform
-            applicationPlatform = (ApplicationPlatform)Activator.CreateInstance(platformType, this);
+            applicationPlatform = (ApplicationPlatform)Activator.CreateInstance(platformTypeAttribute.PlatformType, this);
             applicationPlatform.Activated += ApplicationPlatformActivated;
             applicationPlatform.Deactivated += ApplicationPlatformDeactivated;
             applicationPlatform.Exiting += ApplicationPlatform_Exiting;
@@ -405,7 +416,6 @@ namespace Odyssey
 
         protected virtual void Initialize()
         {
-            Contract.Requires<InvalidOperationException>(Scene != null, "No scene defined.");
             SetupGraphicsDeviceEvents();
 
             contentManager.AddMapping(AssetType.Model.ToString(), typeof(Model));

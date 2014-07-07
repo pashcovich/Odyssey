@@ -28,4 +28,4 @@ using System.Runtime.CompilerServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.2.1.*")]
 [assembly: InternalsVisibleTo("Odyssey.Windows")]
-[assembly: InternalsVisibleTo("Odyssey.Renderer2D.Windows")]
+[assembly: InternalsVisibleTo("Odyssey.Interaction.Windows")]

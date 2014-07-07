@@ -55,6 +55,13 @@ namespace Odyssey.Utilities.Reflection
             return typeInfo.GetCustomAttributes<TAttribute>();
         }
 
+        public static TAttribute GetAttribute<TAttribute>(Type sourceType)
+            where TAttribute : Attribute
+        {
+            TypeInfo typeInfo = sourceType.GetTypeInfo();
+            return typeInfo.GetCustomAttribute<TAttribute>();
+        }
+
         public static IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type type)
         {
             TypeInfo baseTypeInfo = type.GetTypeInfo();
@@ -64,7 +71,7 @@ namespace Odyssey.Utilities.Reflection
 
             return types;
         }
-
+           
         [Pure]
         public static bool IsTypeDerived(Type derivedType, Type baseType)
         {

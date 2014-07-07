@@ -69,7 +69,7 @@ namespace Odyssey.Engine
         /// </summary>
         /// <param name="application">The Application.</param>
         /// <exception cref="System.ArgumentNullException">The Application instance cannot be null.</exception>
-        public DirectXDeviceManager(Application application, IEnumerable<KeyValuePair<Type, Type>> additionalServices = null)
+        public DirectXDeviceManager(Application application)
         {
             this.application = application;
             if (this.application == null)
@@ -116,14 +116,7 @@ namespace Odyssey.Engine
                 throw new InvalidOperationException("IDirectXDeviceFactory is not registered as a service");
             }
 
-            if (additionalServices != null)
-            {
-                foreach (var kvp in additionalServices)
-                {
-                    var service = Activator.CreateInstance(kvp.Value, application.Services);
-                    application.Services.AddService(kvp.Key, service);
-                }
-            }
+            
 
             application.WindowCreated += ApplicationOnWindowCreated;
         }

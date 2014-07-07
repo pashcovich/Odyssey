@@ -32,9 +32,9 @@ namespace Odyssey.Graphics.Shaders
 
         public Technique(DirectXDevice device, ShaderCollection shaderCollection, IAssetProvider assetProvider)
         {
-            Contract.Requires<ArgumentNullException>(shaderCollection != null);
-            Contract.Requires<ArgumentNullException>(assetProvider != null);
-            Contract.Requires<ArgumentException>(shaderCollection.Contains(DefaultTechnique));
+            Contract.Requires<ArgumentNullException>(shaderCollection != null, "shaderCollection");
+            Contract.Requires<ArgumentNullException>(assetProvider != null, "assetProvider");
+            Contract.Requires<ArgumentException>(shaderCollection.Contains(DefaultTechnique), "Default technique not found");
             this.device = device;
             this.shaderCollection = shaderCollection;
             content = assetProvider;

@@ -45,7 +45,7 @@
 		<SharpDXPlatform>winrt</SharpDXPlatform>
 		<DefineConstants>TRACE;DEBUG;WIN8METRO;W8CORE;ODYSSEY_ENGINE;DIRECTX11_1;DIRECTX11_2</DefineConstants>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'net45'" >
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' Or '$(Configuration)' == 'Win8Debug' Or '$(Configuration)' == 'net45'">
 		<CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
 		<CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
 		<CodeContractsRuntimeOnlyPublicSurface>True</CodeContractsRuntimeOnlyPublicSurface>

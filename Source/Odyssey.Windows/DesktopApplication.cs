@@ -10,23 +10,15 @@ using System.Collections.Generic;
 
 namespace Odyssey
 {
+    [RequiredService(typeof(IUserInterfaceState), typeof(DesktopUserInterfaceManager))]
+    [RequiredService( typeof(IStyleService),typeof(StyleManager))]
+    [PlatformType(typeof(DesktopApplicationPlatform))]
     public class DesktopApplication : Application
     {
         protected DesktopApplication()
-            : base(typeof(DesktopApplicationPlatform))
+            : base()
         {
         }
 
-        public static IEnumerable<KeyValuePair<Type, Type>> RequiredServices
-        {
-            get
-            {
-                return new[]
-                {
-                    new KeyValuePair<Type, Type>(typeof (IUserInterfaceState), typeof (DesktopUserInterfaceManager)),
-                    new KeyValuePair<Type, Type>(typeof (IStyleService), typeof (StyleManager)),
-                };
-            }
-        }
     }
 }

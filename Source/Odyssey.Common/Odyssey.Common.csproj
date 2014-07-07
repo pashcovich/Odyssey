@@ -58,6 +58,8 @@
     <Compile Include="Engine\ISwapChainPresenterService.cs" />
     <Compile Include="Engine\ITimeService.cs" />
     <Compile Include="Engine\IWindowService.cs" />
+    <Compile Include="Engine\PlatformTypeAttribute.cs" />
+    <Compile Include="Engine\RequiredServiceAttribute.cs" />
     <Compile Include="Engine\SimpleDeviceManager.cs" />
     <Compile Include="Graphics\Effects\Enums.cs" />
     <Compile Include="Graphics\Effects\IMaterial.cs" />
