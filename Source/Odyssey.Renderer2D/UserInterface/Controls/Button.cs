@@ -9,10 +9,6 @@ namespace Odyssey.UserInterface.Controls
 {
     public class Button : ButtonBase
     {
-        public Button()
-        {
-            Label = ToDispose(new Label());
-        }
 
         public override bool Contains(Vector2 cursorLocation)
         {

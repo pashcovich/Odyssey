@@ -17,7 +17,7 @@ namespace Odyssey.UserInterface.Controls
         Brush sceneColorBrush;
         private readonly FpsTimer timer;
 
-        public FpsCounter() : base("Label")
+        public FpsCounter() 
         {
             timer = new FpsTimer();
         }

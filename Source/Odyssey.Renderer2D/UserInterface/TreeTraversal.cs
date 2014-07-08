@@ -7,62 +7,49 @@ namespace Odyssey.UserInterface
 {
     public static class TreeTraversal
     {
-        public static IEnumerable<UIElement> PostOrderControlInteractionVisit(IContainer container)
+        public static IEnumerable<UIElement> PostOrderInteractionVisit(UIElement root)
         {
-            foreach (UIElement ctl in container.Controls.InteractionEnabledControls)
-            {
-                IContainer containerControl = ctl as IContainer;
-                if (containerControl != null && !containerControl.Controls.IsEmpty)
-                    foreach (UIElement ctlChild in PostOrderControlInteractionVisit(containerControl))
+            IContainer containerControl = root as IContainer;
+            if (containerControl != null)
+                foreach (UIElement control in containerControl.Controls.InteractionEnabledControls)
+                    foreach (UIElement ctlChild in PostOrderInteractionVisit(control))
                         yield return ctlChild;
-                yield return ctl;
+            else
+            {
+                var contentControl = root as IContentControl;
+                if (contentControl != null)
+                    yield return contentControl.Content;
             }
+            yield return root;
         }
 
-        public static IEnumerable<UIElement> PreOrderControlVisit(UIElement root)
+        public static IEnumerable<UIElement> PreOrderVisit(UIElement root)
         {
             yield return root;
             IContainer containerControl = root as IContainer;
-            if (containerControl == null)
-                yield break;
-            foreach (UIElement ctl in containerControl.Controls)
+            if (containerControl != null)
+                foreach (UIElement control in containerControl.Controls)
+                    foreach (UIElement ctlChild in PreOrderVisit(control))
+                        yield return ctlChild;
+            else
             {
-                foreach (UIElement ctlChild in PreOrderControlVisit(ctl))
-                {
-                    yield return ctlChild;
-                }
+                var contentControl = root as IContentControl;
+                if (contentControl != null)
+                    yield return contentControl.Content;
             }
 
         }
 
-        public static IEnumerable<UIElement> PreOrderHiddenControlsVisit(IContainer container)
+        internal static IEnumerable<UIElement> PreOrderContainerVisit(UIElement root)
         {
-            foreach (UIElement ctl in container.Controls)
-            {
-                if (!ctl.IsVisible) yield return ctl;
-
-                IContainer containerControl = ctl as IContainer;
-                if (containerControl == null || containerControl.Controls.IsEmpty) continue;
-
-                foreach (UIElement ctlChild in PreOrderHiddenControlsVisit(containerControl))
-                    yield return ctlChild;
-            }
+            yield return root;
+            IContainer containerControl = root as IContainer;
+            if (containerControl != null)
+                foreach (UIElement control in containerControl.Controls)
+                    foreach (UIElement ctlChild in PreOrderVisit(control))
+                        yield return ctlChild;
         }
 
-        public static IEnumerable<UIElement> PreOrderVisibleControlsVisit(IContainer container)
-        {
-            foreach (UIElement ctl in
-                container.Controls.Where(ctl => ctl.IsVisible))
-            {
-                yield return ctl;
-                IContainer containerControl = ctl as IContainer;
 
-                if (containerControl == null || containerControl.Controls.IsEmpty) continue;
-
-                foreach (UIElement ctlChild in
-                    PreOrderVisibleControlsVisit(containerControl).Where(ctlChild => ctlChild.IsVisible))
-                    yield return ctlChild;
-            }
-        }
     }
 }

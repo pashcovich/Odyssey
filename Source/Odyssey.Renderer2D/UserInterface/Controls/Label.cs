@@ -22,11 +22,6 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        public Label(string textDefinitionClass)
-            : base(textDefinitionClass)
-        {
-        }
-
         protected TextFormat TextFormat
         {
             get { return textFormat; }

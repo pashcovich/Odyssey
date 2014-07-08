@@ -83,13 +83,6 @@ namespace Odyssey.UserInterface
                 {
                     designMode = value;
                     OnDesignModeChanged(new ControlEventArgs(this));
-
-                    IContainer container = this as IContainer;
-                    if (container != null)
-                    {
-                        foreach (UIElement childControl in container.Controls)
-                            childControl.DesignMode = value;
-                    }
                 }
             }
         }
@@ -139,13 +132,23 @@ namespace Odyssey.UserInterface
         public Thickness Margin { get; set; }
 
         /// <summary>
-        /// Gets or sets the height and width of the control.
+        /// Gets the height and width of the control.
         /// </summary>
         /// <value>The <see cref = "SharpDX.Size2">Size</see> that represents the height and
         /// width of the control in pixels.</value>
         public Size2F Size
         {
             get { return new Size2F(Width, Height); }
+        }
+
+        public string Name
+        {
+            get { return base.Name; }
+            set
+            {
+                base.Name = value;
+                
+            }
         }
 
         public float Width

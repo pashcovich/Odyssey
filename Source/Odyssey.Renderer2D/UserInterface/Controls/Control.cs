@@ -119,7 +119,8 @@ namespace Odyssey.UserInterface.Controls
                     return;
 
                 textDescriptionClass = value;
-                ApplyTextDescription();
+                if (!DesignMode)
+                    ApplyTextDescription();
             }
         }
 

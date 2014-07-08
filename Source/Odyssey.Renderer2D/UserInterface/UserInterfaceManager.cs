@@ -120,7 +120,7 @@ namespace Odyssey.UserInterface
         protected void ProcessPointerMovement(PointerEventArgs e)
         {
             //Proceeds with the rest
-            foreach (UIElement control in TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay))
+            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(CurrentOverlay))
             {
                 e.Handled = control.ProcessPointerMovement(e);
                 if (e.Handled)
@@ -138,7 +138,7 @@ namespace Odyssey.UserInterface
         protected void ProcessPointerPress(PointerEventArgs e)
         {
             //Proceeds with the rest
-            foreach (UIElement control in TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay))
+            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(CurrentOverlay))
             {
                 e.Handled = control.ProcessPointerPressed(e);
                 if (e.Handled)
@@ -155,7 +155,7 @@ namespace Odyssey.UserInterface
         protected void ProcessPointerRelease(PointerEventArgs e)
         {
             //Proceeds with the rest
-            foreach (UIElement control in TreeTraversal.PostOrderControlInteractionVisit(CurrentOverlay))
+            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(CurrentOverlay))
             {
                 e.Handled = control.ProcessPointerRelease(e);
                 if (e.Handled)

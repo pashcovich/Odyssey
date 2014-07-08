@@ -80,12 +80,14 @@
     <Compile Include="UserInterface\Controls\Button.cs" />
     <Compile Include="UserInterface\Controls\ButtonBase.cs" />
     <Compile Include="UserInterface\Controls\ContainerControl.cs" />
+    <Compile Include="UserInterface\Controls\ContentControl.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\ControlCollection.cs" />
     <Compile Include="UserInterface\Controls\ControlEventArgs.cs" />
     <Compile Include="UserInterface\Controls\Enums.cs" />
     <Compile Include="UserInterface\Controls\FpsCounter.cs" />
     <Compile Include="UserInterface\Controls\IContainer.cs" />
+    <Compile Include="UserInterface\Controls\IContentControl.cs" />
     <Compile Include="UserInterface\Controls\IControl.cs" />
     <Compile Include="UserInterface\Controls\InteractionPanel.cs" />
     <Compile Include="UserInterface\Controls\ItemsControl.cs" />

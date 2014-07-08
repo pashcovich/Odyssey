@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class ButtonBase : Control
+    public abstract class ButtonBase : ContentControl
     {
         protected const string ControlTag = "Button";
 
@@ -22,31 +22,14 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        public override UIElement Parent
+        protected override void OnInitializing(ControlEventArgs e)
         {
-            get { return base.Parent; }
-            internal set
+            base.OnInitializing(e);
+            if (Content == null)
             {
-                base.Parent = value;
-                Label.Parent = value;
+                Content = new Label() {Text = Name};
+                Content.Initialize();
             }
-        }
-
-        public string Text
-        {
-            get { return Label.Text; }
-            set
-            {
-                if (!string.Equals(Label.Text, value))
-                    Label.Text = value;
-            }
-        }
-
-        protected LabelBase Label { get; set; }
-
-        public override void Render()
-        {
-            Label.Render();
         }
 
         protected internal override void OnPointerExited(PointerEventArgs e)
@@ -55,33 +38,13 @@ namespace Odyssey.UserInterface.Controls
             ActiveStyle = ShapeMap.GetShapes(ControlStatus.Enabled).ToArray();
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            Label.Parent = this;
-
-            base.OnInitializing(e);
-            Label.Initialize();
-        }
-
-        protected override void OnLayoutUpdated(EventArgs e)
-        {
-            base.OnLayoutUpdated(e);
-            Label.Width = Width;
-            Label.Height = Height;
-            Label.Layout();
-        }
-
+        
         protected override void OnPointerEnter(PointerEventArgs e)
         {
             base.OnPointerEnter(e);
             ActiveStyle = ShapeMap.GetShapes(ControlStatus.Highlighted).ToArray();
         }
 
-        protected override void OnTextDefinitionChanged(EventArgs e)
-        {
-            base.OnTextDefinitionChanged(e);
-            if (!string.Equals(Label.TextDescriptionClass, TextDescriptionClass))
-                Label.TextDescriptionClass = TextDescriptionClass;
-        }
+        
     }
 }

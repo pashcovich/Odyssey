@@ -52,16 +52,22 @@ namespace Odyssey.UserInterface.Controls
             Vector2 position = TopLeftPosition;
             foreach (var item in ItemsSource)
             {
-                foreach (UIElement element in TreeTraversal.PreOrderControlVisit(DataTemplate.VisualTree))
+                UIElement previousElement = this;
+                foreach (UIElement element in TreeTraversal.PreOrderVisit(DataTemplate.VisualTree))
                 {
                     UIElement newItem = element.Copy();
-                    Children.Add(ToDispose(newItem));
+                    var contentControlParent = element.Parent as ContentControl;
+                    if (contentControlParent != null)
+                        ((ContentControl) previousElement).Content = newItem;
+                    else
+                        Children.Add(ToDispose(newItem));
                     newItem.DataContext = item;
                     foreach (var kvp in DataTemplate.Bindings.Where(kvp => newItem.Name == kvp.Value.TargetElement))
                     {
                         newItem.SetBinding(kvp.Value, kvp.Key);
                     }
                     newItem.Initialize();
+                    previousElement = newItem;
                 }
 
                 //TODO Implement Binding

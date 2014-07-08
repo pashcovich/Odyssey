@@ -22,7 +22,7 @@ namespace Odyssey.UserInterface.Controls
                 for (int i = 0; i < Count; i++)
                 {
                     UIElement control = this[i];
-                    if (control.IsVisible && control.IsEnabled)
+                    if (control.IsVisible && control.IsEnabled && control.CanRaiseEvents)
                         yield return control;
                     else continue;
                 }

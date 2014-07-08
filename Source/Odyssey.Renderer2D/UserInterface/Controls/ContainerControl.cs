@@ -40,6 +40,20 @@ namespace Odyssey.UserInterface.Controls
             Arrange();
         }
 
+        public override bool DesignMode
+        {
+            get
+            {
+                return base.DesignMode;
+            }
+            protected internal set
+            {
+                base.DesignMode = value;
+                foreach (UIElement childControl in Controls)
+                    childControl.DesignMode = value;
+            }
+        }
+
         /// <summary>
         /// Raises the <see cref="ControlAdded"/> event.
         /// </summary>
@@ -65,7 +79,7 @@ namespace Odyssey.UserInterface.Controls
                 if (base.Parent == value) return;
 
                 base.Parent = value;
-                foreach (UIElement control in TreeTraversal.PreOrderControlVisit(this))
+                foreach (UIElement control in Controls)
                     control.Parent = this;
             }
         }
@@ -103,7 +117,7 @@ namespace Odyssey.UserInterface.Controls
 
         public UIElement Find(string id)
         {
-            foreach (UIElement ctl in TreeTraversal.PreOrderControlVisit(this))
+            foreach (UIElement ctl in TreeTraversal.PreOrderVisit(this).Skip(1))
             {
                 if (ctl.Name == id)
                     return ctl;
@@ -115,7 +129,7 @@ namespace Odyssey.UserInterface.Controls
 
         public UIElement Find(Vector2 cursorLocation)
         {
-            return TreeTraversal.PostOrderControlInteractionVisit(this)
+            return TreeTraversal.PostOrderInteractionVisit(this)
                 .Reverse()
                 .FirstOrDefault(control => control.Contains(cursorLocation));
         }
