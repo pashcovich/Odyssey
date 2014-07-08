@@ -1,0 +1,588 @@
+﻿using System.Security.Cryptography;
+using Odyssey.Engine;
+using Odyssey.Graphics;
+using Odyssey.Graphics.Effects;
+using Odyssey.Graphics.Shaders;
+using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
+using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Utilities;
+using Odyssey.Utilities.Logging;
+using SharpDX.Direct3D11;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text;
+using SharpDX.Serialization;
+using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using SamplerStateDescription = Odyssey.Graphics.Shaders.SamplerStateDescription;
+using TextureDescription = Odyssey.Graphics.Shaders.TextureDescription;
+
+namespace Odyssey.Tools.ShaderGenerator.Shaders
+{
+    [DataContract(IsReference = true)]
+    [KnownType("KnownTypes")]
+    public class Shader : IDataSerializable, IContainer
+    {
+        string sourceCode;
+        int cbCount;
+        int customTypeCount;
+        int samplerCount;
+        int textureCount;
+        private int constantsCount;
+        [DataMember]
+        VariableCollection variables;
+        Dictionary<int, ConstantBufferDescription> cbReferences;
+        Dictionary<int, TextureDescription> textureReferences;
+        Dictionary<int, SamplerStateDescription> samplerReferences;
+        Dictionary<string, string> metaData;
+        private bool enableSeparators;
+        private string name;
+        private FeatureLevel featureLevel;
+        private IStruct inputStruct;
+        private IStruct outputStruct;
+        private INode result;
+        private ShaderType type;
+        private TechniqueKey keyPart;
+
+        public Shader()
+        {
+            NodeBase.NodeCounter.Clear();
+            variables = new VariableCollection() { Owner = this };
+        }
+
+        #region Properties
+
+        public string SourceCode
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(sourceCode))
+                    Build();
+                return sourceCode;
+            }
+        }
+
+        public IEnumerable<ConstantBuffer> ConstantBuffers
+        {
+            get
+            {
+                return (from kvp in variables
+                    where kvp.Value.Type == Shaders.Type.ConstantBuffer
+                    select kvp.Value).Cast<ConstantBuffer>();
+            }
+        }
+
+        public IEnumerable<Struct> CustomTypes
+        {
+            get
+            {
+                return (from kvp in variables
+                    where kvp.Value.Type == Shaders.Type.Struct
+                    let varStruct = (Struct) kvp.Value
+                    where varStruct.CustomType != CustomType.None
+                    select varStruct);
+            }
+        }
+
+        public IEnumerable<Variable> MiscVariables
+        {
+            get
+            {
+                Type[] valueTypes =
+                {
+                    Shaders.Type.Float, Shaders.Type.Float2, Shaders.Type.Float3, Shaders.Type.Float4,
+                    Shaders.Type.Matrix, Shaders.Type.Float3x3, Shaders.Type.Float4x4, Shaders.Type.FloatArray
+                };
+                return from kvp in variables
+                    where valueTypes.Contains(kvp.Value.Type)
+                    select (Variable)kvp.Value;
+                ;
+            }
+        }
+
+        public IEnumerable<IVariable> Variables
+        {
+            get { return variables.Values; }
+        }
+
+        [DataMember]
+        public bool EnableSeparators
+        {
+            get { return enableSeparators; }
+            set { enableSeparators = value; }
+        }
+
+        [DataMember]
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        [DataMember]
+        public FeatureLevel FeatureLevel
+        {
+            get { return featureLevel; }
+            set { featureLevel = value; }
+        }
+
+        [DataMember]
+        public IStruct InputStruct
+        {
+            get { return inputStruct; }
+            set { inputStruct = value; }
+        }
+
+        [DataMember]
+        public IStruct OutputStruct
+        {
+            get { return outputStruct; }
+            set { outputStruct = value; }
+        }
+
+        [DataMember]
+        public INode Result
+        {
+            get { return result; }
+            set { result = value; }
+        }
+
+        [DataMember]
+        public ShaderType Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
+        [DataMember]
+        public TechniqueKey KeyPart
+        {
+            get { return keyPart; }
+            set { keyPart = value; }
+        }
+
+        public IEnumerable<Sampler> Samplers
+        {
+            get { return variables.Values.OfType<Sampler>(); }
+        }
+
+        public IEnumerable<ConstantBufferDescription> References
+        {
+            get { return cbReferences.Values; }
+        }
+
+        public string Signature
+        {
+            get
+            {
+                Contract.Requires<InvalidOperationException>(InputStruct.CustomType != CustomType.None);
+                return string.Format("{0} {1}({2} {3}) {4}", OutputStruct.CustomType, Name, InputStruct.CustomType,
+                    InputStruct.Name,
+                    Type == ShaderType.Pixel ? ": " + Param.SemanticVariables.SVTarget : string.Empty);
+            }
+        }
+
+        public string Disclaimer
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(string.Format("// {0}", Name));
+                sb.AppendLine(string.Format("// {0} Shader ({1})", Type, FeatureLevel.ToString().ToLowerInvariant()));
+                sb.AppendLine("//");
+                sb.AppendLine(string.Format("// Built with Odyssey Shader Generator v{0}",
+                    Assembly.GetExecutingAssembly().GetName().Version));
+                sb.AppendLine(string.Format("// {0:dd/MM/yyyy H:mm:ss }", DateTime.Now));
+
+                return sb.ToString();
+            }
+        }
+
+        public IEnumerable<Variable> Textures
+        {
+            get
+            {
+                return (from kvp in variables
+                    where kvp.Value.Type == Shaders.Type.Texture2D ||
+                          kvp.Value.Type == Shaders.Type.Texture3D ||
+                          kvp.Value.Type == Shaders.Type.TextureCube
+                    select kvp.Value).Cast<Variable>();
+            }
+        }
+
+        public IEnumerable<TextureDescription> TextureReferences
+        {
+            get { return textureReferences.Values; }
+        }
+
+        public IEnumerable<SamplerStateDescription> SamplerReferences
+        {
+            get { return samplerReferences.Values; }
+        }
+
+        #endregion
+
+        public void Add(IVariable variable)
+        {
+            Contract.Requires<ArgumentException>(variable != null);
+
+            IStruct varStruct = variable as IStruct;
+            switch (variable.Type)
+            {
+                case Shaders.Type.ConstantBuffer:
+                    variable.Index = cbCount++;
+                    break;
+
+                case Shaders.Type.Texture2D:
+                case Shaders.Type.Texture3D:
+                case Shaders.Type.TextureCube:
+                    variable.Index = textureCount++;
+                    break;
+
+                case Shaders.Type.Sampler:
+                case Shaders.Type.SamplerComparisonState:
+                    variable.Index = samplerCount++;
+                    break;
+
+                case Shaders.Type.Struct:
+                    variable.Index = customTypeCount++;
+                    break;
+
+                case Shaders.Type.Matrix:
+                case Shaders.Type.Vector:
+                case Shaders.Type.FloatArray:
+                case Shaders.Type.Float:
+                case Shaders.Type.Float2:
+                case Shaders.Type.Float3:
+                case Shaders.Type.Float4:
+                    variable.Index = constantsCount++;
+                    break;
+            }
+                
+            if (variables.All(kvp => kvp.Value.Name != variable.Name))
+                variables.Add(Variable.GetRegister(variable), variable);
+
+            if (varStruct == null)
+                return;
+
+            var childStructs = from vS in varStruct.Variables.OfType<IStruct>()
+                               where vS.CustomType != CustomType.None
+                               select vS;
+
+            foreach (IStruct childStruct in childStructs)
+            {
+                customTypeCount++;
+                Add(childStruct);
+            }
+
+        }
+
+        public void Add(IEnumerable<IVariable> newVariables)
+        {
+            foreach (IVariable variable in newVariables)
+                Add(variable);
+        }
+
+        public TVariable Get<TVariable>(string name)
+            where TVariable : IVariable
+        {
+            Contract.Requires<ArgumentException>(Contains(name), "name");
+            return (TVariable)variables.First(kvp=> string.Equals(kvp.Value.Name, name)).Value;
+        }
+
+        public void Remove(IVariable variable)
+        {
+            Contract.Requires<ArgumentException>(Contains(variable));
+            variables.Remove(Variable.GetRegister(variable));
+        }
+
+        public void Remove(string variableName)
+        {
+            Contract.Requires<ArgumentException>(Contains(variableName));
+            variables.Remove(variables.First(kvp => kvp.Value.Name == variableName).Key);
+        }
+
+        public void Clear()
+        {
+            variables.Clear();
+            cbCount = 0;
+            customTypeCount = 0;
+            textureCount = 0;
+            samplerCount = 0;
+        }
+
+        void CollectReferences()
+        {
+            cbReferences = new Dictionary<int, ConstantBufferDescription>();
+            textureReferences = new Dictionary<int, TextureDescription>();
+            samplerReferences = new Dictionary<int, SamplerStateDescription>();
+            metaData = new Dictionary<string, string>();
+
+            var instanceReferences = (from v in InputStruct.Variables
+                where v.ShaderReference != null
+                group v.ShaderReference by v.GetMarkupValue(Param.Properties.InstanceSlot) into instanceBuffers
+                                      select new { Slot = Int32.Parse(instanceBuffers.Key), References = instanceBuffers}).ToArray();
+
+            foreach (var instanceBuffer in instanceReferences)
+            {
+                cbReferences.Add(cbCount++,
+                    new ConstantBufferDescription("InstanceCB", instanceBuffer.Slot, UpdateType.InstanceFrame, ShaderType.Vertex,
+                        instanceBuffer.References, Enumerable.Empty<KeyValuePair<string, string>>()));
+            }
+
+            foreach (ConstantBuffer cb in ConstantBuffers)
+            {
+                var markupData = from v in cb.Variables
+                                 from markup in v.Markup
+                                 where v.HasMarkup
+                                 select markup;
+
+                foreach (var kvp in markupData)
+                {
+                    if (!metaData.ContainsKey(kvp.Key))
+                        metaData.Add(kvp.Key, kvp.Value);
+                    else if (metaData[kvp.Key] != kvp.Value)
+                        LogEvent.Tool.Error("Conflicting metadata: [{0}] and [{1}]", kvp.Value, metaData[kvp.Key]);
+                }
+
+                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Name, cb.Index.Value, cb.UpdateType, Type, cb.References, metaData);
+                cbReferences.Add(cbCount++, cbReference);     
+                metaData.Clear();      
+            }
+
+            foreach (var texture in Textures.Where(t => t.ShaderReference != null))
+            {
+                TextureReference reference =  (TextureReference)texture.ShaderReference.Value;
+                string key = texture.ContainsMarkup(Texture.Key) ? texture.GetMarkupValue(Texture.Key) : string.Format("{0}.{1}", Name, reference);
+                UpdateType updateType = UpdateType.None;
+                int samplerIndex = 0;
+                if (texture.HasMarkup)
+                {
+                    samplerIndex = int.Parse(texture.GetMarkupValue(Texture.SamplerIndex));
+                    updateType = texture.ContainsMarkup(Texture.UpdateType) ?
+                        ReflectionHelper.ParseEnum<UpdateType>(texture.GetMarkupValue(Texture.UpdateType))
+                        : UpdateType.SceneStatic;
+                }
+                TextureDescription tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, updateType, Type);
+                textureReferences.Add(tDescription.Index, tDescription);
+            }
+            foreach (var sampler in Samplers)
+            {
+                Filter filter = ReflectionHelper.ParseEnum<Filter>(sampler.GetMarkupValue(Sampler.Filter));
+                TextureAddressMode tAddressMode = ReflectionHelper.ParseEnum<TextureAddressMode>(sampler.GetMarkupValue(Sampler.TextureAddressMode));
+                Comparison comparison = ReflectionHelper.ParseEnum<Comparison>(sampler.GetMarkupValue(Sampler.Comparison));
+                var samplerDesc = new SamplerStateDescription
+                {
+                    Index = sampler.Index.Value,
+                    Comparison = comparison,
+                    Filter = filter,
+                    TextureAddressMode = tAddressMode,
+                };
+                samplerReferences.Add(samplerDesc.Index, samplerDesc);
+            }
+        }
+
+        public void Build()
+        {
+            ShaderBuilder sb = new ShaderBuilder(KeyPart);
+            IEnumerable<IMethod> requiredMethods;
+            sb.BuildMethod(Signature, Result, out requiredMethods);
+            CollectReferences();
+
+            sb.Add(Disclaimer);
+            if (EnableSeparators)
+                sb.AddSeparator("Input/Output Structs");
+            sb.Add(InputStruct.Definition);
+            sb.Add(OutputStruct.Definition);
+
+            if (EnableSeparators && constantsCount > 0)
+                sb.AddSeparator("Constants");
+
+            foreach (IVariable variable in MiscVariables)
+                sb.Add(variable.Definition);
+
+            if (EnableSeparators && customTypeCount > 0)
+                sb.AddSeparator("Custom Struct Definitions");
+
+            foreach (IVariable customType in CustomTypes)
+                sb.Add(customType.Definition);
+
+            if (EnableSeparators && cbCount > 0) 
+                sb.AddSeparator("ConstantBuffers");
+
+            foreach (IVariable variable in ConstantBuffers)
+                sb.Add(variable.Definition);
+
+            if (EnableSeparators && textureCount > 0)
+                sb.AddSeparator("Textures");
+
+            foreach (IVariable texture in Textures)
+                sb.Add(texture.Definition);
+
+            if (EnableSeparators && samplerCount > 0)
+                sb.AddSeparator("Samplers");
+
+            foreach (IVariable sampler in Samplers)
+                sb.Add(sampler.Definition);
+
+            var methods = requiredMethods as IMethod[] ?? requiredMethods.ToArray();
+
+            if (EnableSeparators && methods.Length > 0)
+                sb.AddSeparator("Required methods");
+
+            foreach (IMethod method in methods)
+                sb.Add(method.Definition);
+
+            if (EnableSeparators)
+                sb.AddSeparator(string.Format("{0} Shader", Type));
+
+            sb.Add(sb.EntryPoint);
+
+            sourceCode = sb.Output;
+        }
+
+        [Pure]
+        public bool Contains(IVariable variable)
+        {
+            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(variable.Name));
+            return variables.ContainsKey(Variable.GetRegister(variable));
+        }
+
+        [Pure]
+        public bool Contains(string variableName)
+        {
+            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(variableName));
+            return variables.Any(kvp => kvp.Value.Name == variableName);
+        }
+
+        public override string ToString()
+        {
+            return SourceCode;
+        }
+
+        internal static System.Type[] KnownTypes()
+        {
+            return ReflectionHelper.GetDerivedTypes(typeof(Shader)).Concat(ReflectionHelper.GetDerivedTypes(typeof(Variable))).ToArray();
+        }
+
+        internal static ShaderModel FromFeatureLevel(FeatureLevel featureLevel)
+        {
+            string featureLevelValue = featureLevel.ToString();
+
+            string shaderModelValue = "SM" + featureLevelValue.Substring(2, featureLevelValue.Length-2);
+            return (ShaderModel)Enum.Parse(typeof(ShaderModel), shaderModelValue);
+        }
+
+        internal static FeatureLevel FromShaderModel(ShaderModel model, ShaderType type)
+        {
+            string shaderCode = string.Empty;
+            switch (type)
+            {
+                case ShaderType.Pixel:
+                    shaderCode = "PS";
+                    break;
+
+                case ShaderType.Vertex:
+                    shaderCode = "VS";
+                    break;
+            }
+            string shaderModelValue = model.ToString();
+            string featureLevelValue = shaderCode + shaderModelValue.Substring(2, shaderModelValue.Length-2);
+            if (type == ShaderType.Vertex && model == ShaderModel.SM_2_B)
+                featureLevelValue = featureLevelValue.Replace('B','A');
+            return (FeatureLevel)Enum.Parse(typeof(FeatureLevel), featureLevelValue);
+        }
+
+        internal static TechniqueKey GenerateKeyPartRequirements(Shader shader)
+        {
+            var vsAttributes = shader.GetType().GetCustomAttributes<VertexShaderAttribute>();
+            var psAttributes = shader.GetType().GetCustomAttributes<PixelShaderAttribute>();
+
+            VertexShaderFlags vsFlags = VertexShaderFlags.None;
+            PixelShaderFlags psFlags = PixelShaderFlags.None;
+            ShaderModel model = FromFeatureLevel(shader.FeatureLevel);
+
+            foreach (var vsAttribute in vsAttributes)
+                vsFlags |= vsAttribute.Features;
+            foreach (var psAttribute in psAttributes)
+                psFlags |= psAttribute.Features;
+
+            
+            return new TechniqueKey(vsFlags, psFlags, sm: model);
+        }
+
+
+        public static TechniqueKey GenerateKeyPart(Shader shader)
+        {
+            
+            VertexShaderFlags vsFlags = VertexShaderFlags.None;
+            PixelShaderFlags psFlags = PixelShaderFlags.None;
+            ShaderModel model = FromFeatureLevel(shader.FeatureLevel);
+            
+            foreach (var property in shader.Result.DescendantNodes
+                .Select(node => node.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.PropertyType == typeof(INode))).SelectMany(properties => properties))
+            {
+                switch (shader.Type)
+                {
+                    case ShaderType.Vertex:
+                        vsFlags = property.GetCustomAttributes(true)
+                            .OfType<VertexShaderAttribute>()
+                            .Aggregate(vsFlags, (current, vsAttribute) => current | vsAttribute.Features);
+                        break;
+                    case ShaderType.Pixel:
+                        psFlags = property.GetCustomAttributes(true).OfType<PixelShaderAttribute>()
+                            .Aggregate(psFlags, (current, psAttribute) => current | psAttribute.Features);
+                        break;
+                }
+            }
+
+            return new TechniqueKey(vsFlags, psFlags, sm: model);
+        }
+
+
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.BeginChunk("SHAD");
+
+            serializer.BeginChunk("PROP");
+            serializer.Serialize(ref name);
+            serializer.Serialize(ref keyPart);
+            serializer.Serialize(ref enableSeparators);
+            serializer.SerializeEnum(ref featureLevel);
+            serializer.SerializeEnum(ref type);
+            serializer.EndChunk();
+
+            variables.Serialize(serializer);
+
+            Struct sInput = (Struct)inputStruct;
+            Struct sOutput = (Struct)outputStruct;
+            serializer.BeginChunk("STRT");
+            serializer.Serialize(ref sInput);
+            serializer.Serialize(ref sOutput);
+            serializer.EndChunk();
+
+            serializer.BeginChunk("RSLT");
+    
+            if (serializer.Mode == SerializerMode.Write)
+                NodeBase.WriteNode(serializer, Result);
+            else
+                Result = NodeBase.ReadNode(serializer);
+            serializer.EndChunk();
+
+            serializer.EndChunk();
+
+            if (serializer.Mode == SerializerMode.Read)
+            {
+                InputStruct = sInput;
+                OutputStruct = sOutput;
+            }
+
+        }
+    }
+}

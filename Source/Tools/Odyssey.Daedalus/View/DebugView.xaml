@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="Odyssey.Tools.ShaderGenerator.View.DebugView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vc="clr-namespace:Odyssey.Tools.ShaderGenerator.View.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="192" d:DesignWidth="600"
+             x:Name="Root">
+    <UserControl.Resources>
+        <vc:LineColumnValueConverter x:Key="lineColumnConverter"/>
+        <vc:CategoryToIconConverter x:Key="categoryConverter"/>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <Binding Mode="OneWay" NotifyOnTargetUpdated="True" NotifyOnSourceUpdated="True" Path="Debug" Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+    <Expander Header="Build Output" DockPanel.Dock="Bottom" IsExpanded="{Binding HasErrors, Mode=OneWay,NotifyOnSourceUpdated=True}">
+        <Grid MinHeight="128">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <TextBlock Text="effect" FontSize="16" FontStyle="Italic" Foreground="Silver" Margin="96 0 0 0" Width="128"/>
+                <TextBlock Text="Description" FontSize="16" FontStyle="Italic" Foreground="Silver" Width="92"/>
+            </StackPanel>
+            <ListBox ItemsSource="{Binding Errors}" Grid.Row="1">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32"/>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition Width="128"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="28"/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{Binding Category, Converter= {StaticResource categoryConverter}}" Grid.Column="0" Width="24" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource lineColumnConverter}" >
+                                        <Binding Path="Line" />
+                                        <Binding Path="Column" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock Text="{Binding Description}" Grid.Column="3" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Shader}" Grid.Column="2" VerticalAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Expander>
+</UserControl>

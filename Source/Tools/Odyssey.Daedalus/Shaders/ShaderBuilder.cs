@@ -1,0 +1,110 @@
+﻿using System.Linq;
+using Odyssey.Graphics.Shaders;
+using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
+using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Odyssey.Tools.ShaderGenerator.Shaders
+{
+    public class ShaderBuilder
+    {
+        const string separator = "//------------------------------------------------------------------------------\n";
+        readonly List<string> stringList;
+        readonly List<INode> parsedNodes;
+
+        int tabLength;
+        string tabSpaces;
+        private int currentIndentation;
+        readonly TechniqueKey key;
+
+        public int IndentSpaces
+        {
+            get { return tabLength; }
+            set
+            {
+                if (tabLength == value)
+                    return;
+
+                tabLength = value;
+                tabSpaces = new String(' ', tabLength);
+
+            }
+        }
+
+        public string EntryPoint {get; private set;}
+        public string Output { get { return Flatten(stringList); } }
+
+        public ShaderBuilder(TechniqueKey key)
+        {
+            this.key = key;
+            stringList = new List<string>();
+            parsedNodes = new List<INode>();
+            IndentSpaces = 4;
+            currentIndentation = 1;
+        }
+
+        public void AddSeparator(string label)
+        {
+            stringList.Add(separator);
+            stringList.Add(string.Format("// {0}\n", label));
+            stringList.Add(separator);
+        }
+
+        public void Add(string data = "\n")
+        {
+            stringList.Add(data);
+            stringList.Add("\n");
+        }
+
+        public void BuildMethod(string signature, INode node, out IEnumerable<IMethod> requiredMethods)
+        {
+            parsedNodes.Clear();
+
+            List<string> slMethod = new List<string>();
+            List<IMethod> methods = new List<IMethod>();
+            slMethod.Add(signature);
+            slMethod.Add("\n{\n"); 
+            Build(node, slMethod,methods);
+            slMethod.Add("}");
+
+            EntryPoint = Flatten(slMethod);
+            requiredMethods = methods;
+        }
+
+        string Flatten(IEnumerable<string> strings)
+        {
+            StringBuilder sb = new StringBuilder();
+                foreach (string line in strings)
+                    sb.Append(line.Replace("\t", tabSpaces));
+                return sb.ToString();
+        }
+
+        void Build(INode node, List<string> slMethod, List<IMethod> methods)
+        {
+            if (!parsedNodes.Contains(node))
+                node.Validate(key);
+
+            var nodeMethods = node.RequiredMethods.ToArray();
+            if (nodeMethods.Any())
+            {
+                var newMethods = nodeMethods.Except(methods);
+                methods.AddRange(newMethods);
+            }
+
+            foreach (INode nextNode in node.DescendantNodes.Where(nextNode => !parsedNodes.Contains(nextNode)))
+            {
+                Build(nextNode, slMethod, methods);
+                parsedNodes.Add(nextNode);
+            }
+
+            if (node.IsVerbose)
+            {
+                slMethod.Add(node.Operation(ref currentIndentation));
+            }
+
+        }
+
+    }
+}

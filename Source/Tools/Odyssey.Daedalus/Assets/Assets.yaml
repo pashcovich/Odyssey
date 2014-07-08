@@ -1,0 +1,7 @@
+!Assets
+- name: DefaultTheme
+  path: Default.ocd
+  type: ControlDefinitions
+- name: DefaultText
+  path: Default.otd
+  type: TextDefinitions

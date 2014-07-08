@@ -162,9 +162,8 @@ $RECYCLE.BIN/
 /Source/Odyssey.GeometryOld/
 /Source/Odyssey.Windows.Network/
 /Source/Odyssey.Windows8.Network/
-/Source/Tools
 /Samples/
-/Libraries/Assimp
+/Libraries
 /Pictures
 /Tools/Daedalus.Tests
 /Tests

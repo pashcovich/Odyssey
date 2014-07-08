@@ -1,0 +1,445 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AECE17C4-C423-45EE-93F8-A888C6BDA617}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Odyssey.Tools.ShaderGenerator</RootNamespace>
+    <AssemblyName>ShaderGenerator</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>5FB3F660D1FFE2C8B0BFBA1A1682ED6212604EDD</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ShaderGenerator_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility" />
+    <Reference Include="ColorCode, Version=1.0.1.62759, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\ColorCode.1.0.1\lib\ColorCode.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras.WPF45, Version=4.3.31.28649, Culture=neutral, PublicKeyToken=0e27b6f8be9b2ef7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\MvvmLightLibs.4.3.31.1\lib\net45\GalaSoft.MvvmLight.Extras.WPF45.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.WPF45, Version=4.3.31.28649, Culture=neutral, PublicKeyToken=eabbf6a5f5af5004, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\MvvmLightLibs.4.3.31.1\lib\net45\GalaSoft.MvvmLight.WPF45.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="SharpDX">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MvvmLightLibs.4.3.31.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Data\FeatureLevelProvider.cs" />
+    <Compile Include="Data\ResourceManager.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Viewer\DirectXThread.cs" />
+    <Compile Include="Serialization\ShaderGraphSerializer.cs" />
+    <Compile Include="Serialization\TechniqueDescription.cs" />
+    <Compile Include="Viewer\DirectXViewer.cs" />
+    <Compile Include="Shaders\FloatArray.Factory.cs" />
+    <Compile Include="Shaders\IContainer.cs" />
+    <Compile Include="Shaders\IgnoreValidationAttribute.cs" />
+    <Compile Include="Shaders\ISwizzle.cs" />
+    <Compile Include="Shaders\IValueVariable.cs" />
+    <Compile Include="Shaders\Methods\AdjustSaturation.cs" />
+    <Compile Include="Shaders\Methods\IntrinsicFunction.cs" />
+    <Compile Include="Shaders\Methods\NormalMappingMethod.cs" />
+    <Compile Include="Shaders\Methods\MethodSignature.cs" />
+    <Compile Include="Shaders\Nodes\Functions\FunctionNode.cs" />
+    <Compile Include="Shaders\Nodes\Functions\NormalMappingNode.cs" />
+    <Compile Include="Shaders\Nodes\Functions\BinaryFunctionNode.cs" />
+    <Compile Include="Shaders\Nodes\Functions\TrinaryFunctionNode.cs" />
+    <Compile Include="Shaders\Nodes\Functions\UnaryFunctionNode.cs" />
+    <Compile Include="Shaders\Methods\HLSLIntrinsics.cs" />
+    <Compile Include="Shaders\Nodes\Math\InvertNode.cs" />
+    <Compile Include="Shaders\Nodes\Math\DivisionNode.cs" />
+    <Compile Include="Shaders\Nodes\Math\MathNodeBase.cs" />
+    <Compile Include="Shaders\Nodes\Math\ScalarNode.cs" />
+    <Compile Include="Shaders\Nodes\Math\AdditionNode.cs" />
+    <Compile Include="Shaders\Nodes\NodeIdentifier.cs" />
+    <Compile Include="Shaders\Nodes\Operators\ArrayNode.cs" />
+    <Compile Include="Shaders\Nodes\Operators\DeclarationNode.cs" />
+    <Compile Include="Shaders\Nodes\Operators\ForBlock.cs" />
+    <Compile Include="Shaders\Nodes\Operators\MultipleInputsNodeBase.cs" />
+    <Compile Include="Shaders\Nodes\Operators\SwizzleNode.cs" />
+    <Compile Include="Shaders\Nodes\VSNormalTexturedOutputNode.cs" />
+    <Compile Include="Shaders\Nodes\CustomOutputNode.cs" />
+    <Compile Include="Shaders\Techniques\BloomCombinePS.cs" />
+    <Compile Include="Shaders\Techniques\BloomExtractPS.cs" />
+    <Compile Include="Shaders\Techniques\FullScreenQuadPS.cs" />
+    <Compile Include="Shaders\Techniques\FullScreenQuadVS.cs" />
+    <Compile Include="Shaders\Techniques\GaussianBlurPS.cs" />
+    <Compile Include="Shaders\Techniques\GlowPS.cs" />
+    <Compile Include="Shaders\Techniques\KinectDepthPS.cs" />
+    <Compile Include="Shaders\Techniques\NormalMappingPS.cs" />
+    <Compile Include="Shaders\Techniques\NormalMappingVS.cs" />
+    <Compile Include="Shaders\Techniques\SkyboxPS.cs" />
+    <Compile Include="Shaders\Techniques\SkyboxVS.cs" />
+    <Compile Include="Shaders\Techniques\WireframePS.cs" />
+    <Compile Include="Shaders\Techniques\WireframeVS.cs" />
+    <Compile Include="Shaders\VariableCollection.cs" />
+    <Compile Include="Shaders\FloatArray.cs" />
+    <Compile Include="Utilities\EnumExtensions.cs" />
+    <Compile Include="Utilities\ReflectionHelper.cs" />
+    <Compile Include="Shaders\Methods\TexOffset.cs" />
+    <Compile Include="Shaders\Nodes\Operators\ReferenceNode.cs" />
+    <Compile Include="Shaders\Sampler.cs" />
+    <Compile Include="Shaders\Texture.cs" />
+    <Compile Include="Shaders\Methods\MethodBase.cs" />
+    <Compile Include="Shaders\Methods\MethodReference.cs" />
+    <Compile Include="Shaders\Methods\MethodVariables.cs" />
+    <Compile Include="Shaders\Methods\PCFShadows.cs" />
+    <Compile Include="Shaders\Techniques\PhongShadowsPS.cs" />
+    <Compile Include="Shaders\Techniques\PhongShadowsVS.cs" />
+    <Compile Include="Shaders\Vector.cs" />
+    <Compile Include="Model\CompilationResultModel.cs" />
+    <Compile Include="Model\Enums.cs" />
+    <Compile Include="Model\ErrorModel.cs" />
+    <Compile Include="ShaderCompiler.cs" />
+    <Compile Include="Daedalus.cs" />
+    <Compile Include="Shaders\Binding.cs" />
+    <Compile Include="Shaders\Float.cs" />
+    <Compile Include="Shaders\Matrix.cs" />
+    <Compile Include="Shaders\Methods\ClipSpaceTransform.cs" />
+    <Compile Include="Shaders\Nodes\VSTexturedOutputNode.cs" />
+    <Compile Include="Shaders\Nodes\Functions\ClipSpaceTransformNode.cs" />
+    <Compile Include="Shaders\PixelShaderAttribute.cs" />
+    <Compile Include="Shaders\Techniques\SpriteVS.cs" />
+    <Compile Include="Shaders\VertexShaderAttribute.cs" />
+    <Compile Include="Shaders\Methods\IMethod.cs" />
+    <Compile Include="Shaders\Methods\PhongLighting.cs" />
+    <Compile Include="Shaders\Nodes\Functions\PhongLightingNode.cs" />
+    <Compile Include="Shaders\Nodes\Math\SubtractionNode.cs" />
+    <Compile Include="Shaders\Nodes\VSNormalTexturedTangentOutputNode.cs" />
+    <Compile Include="Shaders\ReferenceAttribute.cs" />
+    <Compile Include="Shaders\Nodes\Operators\CastNode.cs" />
+    <Compile Include="Shaders\Nodes\Math\MatrixMultiplyNode.cs" />
+    <Compile Include="Shaders\Nodes\PhongVSOutputNode.cs" />
+    <Compile Include="Shaders\Nodes\VSOutputNodeBase.cs" />
+    <Compile Include="Shaders\Nodes\PSOutputNode.cs" />
+    <Compile Include="Shaders\Sampler.Factory.cs" />
+    <Compile Include="Shaders\IVariable.cs" />
+    <Compile Include="Shaders\ShaderBuilder.cs" />
+    <Compile Include="Shaders\Structs\ConstantBuffer.cs" />
+    <Compile Include="Shaders\Structs\Struct.cs" />
+    <Compile Include="Shaders\Techniques\PhongPS.cs" />
+    <Compile Include="Shaders\Techniques\PhongVS.cs" />
+    <Compile Include="Shaders\Texture.Factory.cs" />
+    <Compile Include="Shaders\EnumSemantics.cs" />
+    <Compile Include="Shaders\EnumTypes.cs" />
+    <Compile Include="Shaders\Variable.cs" />
+    <Compile Include="Shaders\Nodes\INode.cs" />
+    <Compile Include="Shaders\Nodes\Math\MultiplyNode.cs" />
+    <Compile Include="Shaders\Nodes\SupportedTypeAttribute.cs" />
+    <Compile Include="Shaders\Nodes\Operators\TextureSampleNode.cs" />
+    <Compile Include="Shaders\Structs\ConstantBuffer.Factory.cs" />
+    <Compile Include="Shaders\Structs\IStruct.cs" />
+    <Compile Include="Shaders\Nodes\NodeBase.cs" />
+    <Compile Include="Shaders\Shader.cs" />
+    <Compile Include="Shaders\Mapper.cs" />
+    <Compile Include="Shaders\Structs\Struct.Factory.cs" />
+    <Compile Include="Shaders\Techniques\SpritePS.cs" />
+    <Compile Include="Shaders\Vector.Factory.cs" />
+    <Compile Include="Viewer\ViewerOverlay.cs" />
+    <Compile Include="ViewModel\ButtonViewModel.cs" />
+    <Compile Include="ViewModel\CommandViewModel.cs" />
+    <Compile Include="ViewModel\CompilationResultViewModel.cs" />
+    <Compile Include="ViewModel\CompilationViewModel.cs" />
+    <Compile Include="ViewModel\IShaderViewModel.cs" />
+    <Compile Include="ViewModel\Messages\ShaderCollectionMesage.cs" />
+    <Compile Include="ViewModel\Messages\ViewerMessage.cs" />
+    <Compile Include="ViewModel\PreviewViewModel.cs" />
+    <Compile Include="ViewModel\ShaderDescriptionViewModel.cs" />
+    <Compile Include="ViewModel\CreateTechniqueViewModel.cs" />
+    <Compile Include="ViewModel\DebugViewModel.cs" />
+    <Compile Include="ViewModel\ErrorViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\Messages\TechniqueMessage.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="ViewModel\ShaderAttributeViewModel.cs" />
+    <Compile Include="ViewModel\ShaderCodeViewModel.cs" />
+    <Compile Include="ViewModel\TechniqueMappingViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\BrowserBehavior.cs" />
+    <Compile Include="View\Controls\FolderBrowserDialog.cs" />
+    <Compile Include="View\Controls\Interop\Comguids.cs" />
+    <Compile Include="View\Controls\Interop\Errorhelper.cs" />
+    <Compile Include="View\Controls\Interop\Helpers.cs" />
+    <Compile Include="View\Controls\Interop\NativeMethods.cs" />
+    <Compile Include="View\Controls\Interop\NativeDialogShowState.cs" />
+    <Compile Include="View\Controls\Interop\ShellComInterfaces.cs" />
+    <Compile Include="View\Controls\Interop\ShellWrapperDefinitions.cs" />
+    <Compile Include="View\Controls\WaitCursor.cs" />
+    <Compile Include="View\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="View\Converters\CategoryToIconConverter.cs" />
+    <Compile Include="View\Converters\CompilationStatusToBrushConverter.cs" />
+    <Compile Include="View\Converters\ShaderModelConverter.cs" />
+    <Compile Include="View\Converters\LineColumnValueConverter.cs" />
+    <Compile Include="View\Converters\TechniqueTagConverter.cs" />
+    <Compile Include="View\CreateTechniqueView.xaml.cs">
+      <DependentUpon>CreateTechniqueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CustomDialog.xaml.cs">
+      <DependentUpon>CustomDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\DebugView.xaml.cs">
+      <DependentUpon>DebugView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\ImageButton.cs" />
+    <Compile Include="Viewer\DirectXWindow.xaml.cs">
+      <DependentUpon>DirectXWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\InputBindingsManager.cs" />
+    <Compile Include="View\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SourceView.xaml.cs">
+      <DependentUpon>SourceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TechniquePanelView.xaml.cs">
+      <DependentUpon>TechniquePanelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\WatermarkAdorner.cs" />
+    <Compile Include="View\Controls\WatermarkService.cs" />
+    <Page Include="Resources\Icons\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icons\Cubes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Theme\MetroDark.MSControls.Core.Implicit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Theme\Styles.Extra.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Theme\Styles.Shared.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Theme\Styles.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Theme\Theme.Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Brushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CompilationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\Converters\BoolToBrushConverter.cs" />
+    <Compile Include="View\CompilationView.xaml.cs">
+      <DependentUpon>CompilationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="View\CreateTechniqueView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CustomDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DebugView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Viewer\DirectXWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SourceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TechniquePanelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\ShaderDescription.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Content Include="Assets\Assets.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Default.ocd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Default.otd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\GPLv3.rtf" />
+    <None Include="ShaderGenerator_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Odyssey.Common\Odyssey.Common.csproj">
+      <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
+      <Name>Odyssey.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Odyssey.Interaction\Odyssey.Interaction.csproj">
+      <Project>{7740A46F-0809-49D2-BD34-71F6D8B6D2CC}</Project>
+      <Name>Odyssey.Interaction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Odyssey.Renderer2D\Odyssey.Renderer2D.csproj">
+      <Project>{8cc127c8-19f0-42df-8454-129b3566ef54}</Project>
+      <Name>Odyssey.Renderer2D</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Odyssey.Renderer\Odyssey.Renderer.csproj">
+      <Project>{018ff216-7048-4b2f-a193-d2f8b20fb03d}</Project>
+      <Name>Odyssey.Renderer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Odyssey.Talos\Odyssey.Talos.csproj">
+      <Project>{7e2bc73b-cb14-4d62-89ae-a0eb5a1eaf93}</Project>
+      <Name>Odyssey.Talos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Odyssey.Windows.WPF\Odyssey.Windows.WPF.csproj">
+      <Project>{3bc0070f-f405-4a11-ad8a-03fe7508b3b0}</Project>
+      <Name>Odyssey.Windows.WPF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\AppIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\AppIcon64.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
