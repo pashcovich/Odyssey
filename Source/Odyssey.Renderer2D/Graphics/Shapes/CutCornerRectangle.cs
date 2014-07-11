@@ -1,26 +1,42 @@
-﻿using Odyssey.Graphics.Shapes;
-using Odyssey.UserInterface.Controls;
-using Odyssey.UserInterface.Style;
-using SharpDX;
-using SharpDX.Direct2D1;
-using Brush = Odyssey.Graphics.Shapes.Brush;
-using FigureBegin = Odyssey.Graphics.Shapes.FigureBegin;
-using FigureEnd = Odyssey.Graphics.Shapes.FigureEnd;
+﻿#region License
 
-namespace Odyssey.Graphics
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
+
+using Odyssey.UserInterface.Controls;
+using SharpDX;
+
+#endregion Using Directives
+
+namespace Odyssey.Graphics.Shapes
 {
-    public class CutCornerRectangle : CutCornerRectangleBase, IShapeD2D
+    public class CutCornerRectangle : CutCornerRectangleBase
     {
         private PolyLine shape;
         private Matrix3x2 transform;
 
-        public Brush Fill { get; set; }
+        protected PolyLine Shape
+        {
+            get { return shape; }
+            set { shape = value; }
+        }
 
-        public Brush Stroke { get; set; }
-
-        protected PolyLine Shape { get { return shape; } set { shape = value; } }
-
-        protected Matrix3x2 Transform { get { return transform; } }
+        protected Matrix3x2 Transform
+        {
+            get { return transform; }
+        }
 
         public override void Render()
         {
@@ -51,7 +67,7 @@ namespace Odyssey.Graphics
 
             shape = ToDispose(PolyLine.New(Device, points, FigureBegin.Filled, FigureEnd.Closed));
 
-            var initializer = new ShapeInitializer<CutCornerRectangle>(Device);
+            var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);
             foreach (var resource in initializer.CreatedResources)
                 ToDispose(resource);

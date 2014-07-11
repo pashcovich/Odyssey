@@ -23,6 +23,20 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
+        public override bool DesignMode
+        {
+            get
+            {
+                return base.DesignMode;
+            }
+            protected internal set
+            {
+                base.DesignMode = value;
+                if (Content != null)
+                    Content.DesignMode = value;
+            }
+        }
+
         public override UIElement Parent
         {
             get { return base.Parent; }
@@ -34,20 +48,6 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        public override bool DesignMode
-        {
-            get
-            {
-                return base.DesignMode;
-            }
-            protected internal set
-            {
-                base.DesignMode = value;
-                if (Content!= null)
-                    Content.DesignMode = value;
-            }
-        }
-
         public override void Render()
         {
             content.Render();
@@ -56,7 +56,7 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            if (Content!= null)
+            if (Content != null)
                 Content.Initialize();
         }
 
@@ -73,6 +73,5 @@ namespace Odyssey.UserInterface.Controls
             Content.Width = Width;
             Content.Height = Height;
         }
-
     }
 }

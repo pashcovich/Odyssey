@@ -12,7 +12,7 @@ namespace Odyssey.Graphics.Shapes
     {
         private readonly Color4 color;
 
-        internal SolidBrush(Direct2DDevice device, Color4 color, SolidColorBrush brush)
+        private SolidBrush(Direct2DDevice device, Color4 color, SolidColorBrush brush)
             : base(device, brush)
         {
             this.color = color;

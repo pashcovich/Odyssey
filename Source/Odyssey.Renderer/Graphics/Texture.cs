@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Odyssey.Content;
+﻿using Odyssey.Content;
 using Odyssey.Engine;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.IO;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using DeviceChild = SharpDX.Direct3D11.DeviceChild;
 using MapFlags = SharpDX.Direct3D11.MapFlags;
 
@@ -15,30 +15,13 @@ namespace Odyssey.Graphics
     /// <summary>
     /// Base class for texture resources.
     /// </summary>
-    [ContentReader(typeof (TextureContentReader))]
+    [ContentReader(typeof(TextureContentReader))]
     public abstract class Texture : GraphicsResource, IComparable<Texture>
     {
-        private long textureId;
-
         /// <summary>
         /// Common description for this texture.
         /// </summary>
         public readonly TextureDescription Description;
-
-        /// <summary>
-        /// Gets the selector for a <see cref="ShaderResourceView"/>
-        /// </summary>
-        public readonly ShaderResourceViewSelector ShaderResourceView;
-
-        /// <summary>
-        /// Gets the selector for a <see cref="RenderTargetView"/>
-        /// </summary>
-        public readonly RenderTargetViewSelector RenderTargetView;
-
-        /// <summary>
-        /// Gets the selector for a <see cref="UnorderedAccessView"/>
-        /// </summary>
-        public readonly UnorderedAccessViewSelector UnorderedAccessView;
 
         /// <summary>
         /// Gets a boolean indicating whether this <see cref="Texture"/> is a using a block compress format (BC1, BC2, BC3, BC4, BC5, BC6H, BC7).
@@ -46,59 +29,53 @@ namespace Odyssey.Graphics
         public readonly bool IsBlockCompressed;
 
         /// <summary>
-        /// The width stride in bytes (number of bytes per row).
+        /// Gets the selector for a <see cref="RenderTargetView"/>
         /// </summary>
-        internal readonly int RowStride;
+        public readonly RenderTargetViewSelector RenderTargetView;
+
+        /// <summary>
+        /// Gets the selector for a <see cref="ShaderResourceView"/>
+        /// </summary>
+        public readonly ShaderResourceViewSelector ShaderResourceView;
+
+        /// <summary>
+        /// Gets the selector for a <see cref="UnorderedAccessView"/>
+        /// </summary>
+        public readonly UnorderedAccessViewSelector UnorderedAccessView;
 
         /// <summary>
         /// The depth stride in bytes (number of bytes per depth slice).
         /// </summary>
         internal readonly int DepthStride;
 
+        /// <summary>
+        /// The width stride in bytes (number of bytes per row).
+        /// </summary>
+        internal readonly int RowStride;
+
         internal TextureView defaultShaderResourceView;
-        internal Dictionary<TextureViewKey, TextureView> shaderResourceViews;
         internal TextureView[] renderTargetViews;
+        internal Dictionary<TextureViewKey, TextureView> shaderResourceViews;
         internal UnorderedAccessView[] unorderedAccessViews;
         private readonly MipMapDescription[] mipmapDescriptions;
+        private long textureId;
 
         protected Texture(DirectXDevice device, TextureDescription description)
             : base(device)
         {
             Description = description;
             IsBlockCompressed = FormatHelper.IsCompressed(description.Format);
-            RowStride = Description.Width*((PixelFormat) Description.Format).SizeInBytes;
-            DepthStride = RowStride*Description.Height;
+            RowStride = Description.Width * ((PixelFormat)Description.Format).SizeInBytes;
+            DepthStride = RowStride * Description.Height;
             ShaderResourceView = new ShaderResourceViewSelector(this);
             RenderTargetView = new RenderTargetViewSelector(this);
             UnorderedAccessView = new UnorderedAccessViewSelector(this);
             mipmapDescriptions = Image.CalculateMipMapDescription(description);
         }
 
-        /// <summary>	
-        /// <dd> <p>Texture width (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture1DSize"/> (16384). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>	
-        /// </summary>	
-        /// <remarks>
-        /// This field is valid for all textures: <see cref="Texture1D"/>, <see cref="Texture2D"/>, <see cref="Texture3D"/> and <see cref="TextureCube"/>.
-        /// </remarks>
-        public int Width
-        {
-            get { return Description.Width; }
-        }
-
-        /// <summary>	
-        /// <dd> <p>Texture height (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture3DSize"/> (2048). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>	
-        /// </summary>	
-        /// <remarks>
-        /// This field is only valid for <see cref="Texture2D"/>, <see cref="Texture3D"/> and <see cref="TextureCube"/>.
-        /// </remarks>
-        public int Height
-        {
-            get { return Description.Height; }
-        }
-
-        /// <summary>	
-        /// <dd> <p>Texture depth (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture3DSize"/> (2048). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>	
-        /// </summary>	
+        /// <summary>
+        /// <dd> <p>Texture depth (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture3DSize"/> (2048). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>
+        /// </summary>
         /// <remarks>
         /// This field is only valid for <see cref="Texture3D"/>.
         /// </remarks>
@@ -116,57 +93,26 @@ namespace Odyssey.Graphics
             get { return Description.Format; }
         }
 
-        protected override void Initialize(DeviceChild resource)
-        {
-            // Be sure that we are storing only the main device (which contains the immediate context).
-            base.Initialize(resource);
-            InitializeViews();
-            // Gets a Texture ID
-            textureId = resource.NativePointer.ToInt64();
-        }
-        
         /// <summary>
-        /// Initializes the views provided by this texture.
+        /// <dd> <p>Texture height (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture3DSize"/> (2048). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>
         /// </summary>
-        protected abstract void InitializeViews();
-
-        /// <summary>
-        /// Gets the mipmap description of this instance for the specified mipmap level.
-        /// </summary>
-        /// <param name="mipmap">The mipmap.</param>
-        /// <returns>A description of a particular mipmap for this texture.</returns>
-        public MipMapDescription GetMipMapDescription(int mipmap)
+        /// <remarks>
+        /// This field is only valid for <see cref="Texture2D"/>, <see cref="Texture3D"/> and <see cref="TextureCube"/>.
+        /// </remarks>
+        public int Height
         {
-            return mipmapDescriptions[mipmap];
+            get { return Description.Height; }
         }
 
         /// <summary>
-        /// Generates the mip maps for this texture. See remarks.
+        /// <dd> <p>Texture width (in texels). The  range is from 1 to <see cref="SharpDX.Direct3D11.Resource.MaximumTexture1DSize"/> (16384). However, the range is actually constrained by the feature level at which you create the rendering device. For more information about restrictions, see Remarks.</p> </dd>
         /// </summary>
-        /// <exception cref="System.NotSupportedException">Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1</exception>
-        /// <remarks>This method is only working for texture that are RenderTarget and ShaderResource and with MipLevels &gt; 1</remarks>
-        public void GenerateMipMaps()
+        /// <remarks>
+        /// This field is valid for all textures: <see cref="Texture1D"/>, <see cref="Texture2D"/>, <see cref="Texture3D"/> and <see cref="TextureCube"/>.
+        /// </remarks>
+        public int Width
         {
-            GenerateMipMaps(Device);
-        }
-
-        /// <summary>
-        /// Generates the mip maps for this texture. See remarks.
-        /// </summary>
-        /// <param name="device">The device.</param>
-        /// <exception cref="System.NotSupportedException">Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1</exception>
-        /// <remarks>This method is only working for texture that are RenderTarget and ShaderResource and with MipLevels &gt; 1</remarks>
-        public void GenerateMipMaps(DirectXDevice device)
-        {
-            // If the texture is a RenderTarget + ShaderResource + MipLevels > 1, then allow for GenerateMipMaps method
-            if ((Description.BindFlags & BindFlags.RenderTarget) == 0 ||
-                (Description.BindFlags & BindFlags.ShaderResource) == 0 || Description.MipLevels == 1)
-            {
-                throw new NotSupportedException(
-                    "Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1");
-            }
-
-            ((DeviceContext) device).GenerateMips(this);
+            get { return Description.Width; }
         }
 
         /// <summary>
@@ -261,33 +207,133 @@ namespace Odyssey.Graphics
         }
 
         /// <summary>
-        /// Gets the absolute sub-resource index from the array and mip slice.
+        /// ShaderResourceView casting operator.
         /// </summary>
-        /// <param name="arraySlice">The array slice index.</param>
-        /// <param name="mipSlice">The mip slice index.</param>
-        /// <returns>A value equals to arraySlice * Description.MipLevels + mipSlice.</returns>
-        public int GetSubResourceIndex(int arraySlice, int mipSlice)
+        /// <param name="from">Source for the.</param>
+        public static implicit operator ShaderResourceView(Texture from)
         {
-            return arraySlice*Description.MipLevels + mipSlice;
+            return @from == null ? null : from.defaultShaderResourceView;
         }
 
         /// <summary>
-        /// Calculates the expected width of a texture using a specified type.
+        /// UnorderedAccessView casting operator.
         /// </summary>
-        /// <typeparam name="TData">The type of the T pixel data.</typeparam>
-        /// <returns>The expected width</returns>
-        /// <exception cref="System.ArgumentException">If the size is invalid</exception>
-        public int CalculateWidth<TData>(int mipLevel = 0) where TData : struct
+        /// <param name="from">Source for the.</param>
+        public static implicit operator UnorderedAccessView(Texture from)
         {
-            var widthOnMip = CalculateMipSize((int) Description.Width, mipLevel);
-            var rowStride = widthOnMip*((PixelFormat) Description.Format).SizeInBytes;
+            return @from == null ? null : @from.unorderedAccessViews != null ? @from.unorderedAccessViews[0] : null;
+        }
 
-            var dataStrideInBytes = SharpDX.Utilities.SizeOf<TData>()*widthOnMip;
-            var width = ((double) rowStride/dataStrideInBytes)*widthOnMip;
-            if (Math.Abs(width - (int) width) > Double.Epsilon)
-                throw new ArgumentException("sizeof(TData) / sizeof(Format) * Width is not an integer");
+        /// <summary>
+        /// Loads a texture from a stream.
+        /// </summary>
+        /// <param name="device">The <see cref="DirectXDevice"/>.</param>
+        /// <param name="stream">The stream to load the texture from.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <returns>A texture</returns>
+        public static Texture Load(DirectXDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource,
+            ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            var image = Image.Load(stream);
+            if (image == null)
+            {
+                return null;
+            }
 
-            return (int) width;
+            try
+            {
+                switch (image.Description.Dimension)
+                {
+                    case TextureDimension.Texture1D:
+                        return Texture1D.New(device, image, flags, usage);
+
+                    case TextureDimension.Texture2D:
+                        return Texture2D.New(device, image, flags, usage);
+
+                    case TextureDimension.Texture3D:
+                        return Texture3D.New(device, image, flags, usage);
+
+                    case TextureDimension.TextureCube:
+                        return TextureCube.New(device, image, flags, usage);
+                }
+            }
+            finally
+            {
+                image.Dispose();
+            }
+
+            throw new InvalidOperationException("Dimension not supported");
+        }
+
+        /// <summary>
+        /// Loads a texture from a file.
+        /// </summary>
+        /// <param name="device">Specify the <see cref="DirectXDevice"/> used to load and create a texture from a file.</param>
+        /// <param name="filePath">The file to load the texture from.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <returns>A texture</returns>
+        public static Texture Load(DirectXDevice device, string filePath,
+            TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
+        {
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
+                return Load(device, stream, flags, usage);
+        }
+
+        /// <summary>
+        /// Creates a new texture with the specified generic texture description.
+        /// </summary>
+        /// <param name="DirectXDevice">The graphics device.</param>
+        /// <param name="description">The description.</param>
+        /// <returns>A Texture instance, either a RenderTarget or DepthStencilBuffer or Texture, depending on Binding flags.</returns>
+        public static Texture New(DirectXDevice DirectXDevice, TextureDescription description)
+        {
+            if (DirectXDevice == null)
+            {
+                throw new ArgumentNullException("DirectXDevice");
+            }
+
+            if ((description.BindFlags & BindFlags.RenderTarget) != 0)
+            {
+                switch (description.Dimension)
+                {
+                    case TextureDimension.Texture1D:
+                        return RenderTarget1D.New(DirectXDevice, description);
+
+                    case TextureDimension.Texture2D:
+                        return RenderTarget2D.New(DirectXDevice, description);
+
+                    case TextureDimension.Texture3D:
+                        return RenderTarget3D.New(DirectXDevice, description);
+
+                    case TextureDimension.TextureCube:
+                        return RenderTargetCube.New(DirectXDevice, description);
+                }
+            }
+            else if ((description.BindFlags & BindFlags.DepthStencil) != 0)
+            {
+                return DepthStencilBuffer.New(DirectXDevice, description);
+            }
+            else
+            {
+                switch (description.Dimension)
+                {
+                    case TextureDimension.Texture1D:
+                        return Texture1D.New(DirectXDevice, description);
+
+                    case TextureDimension.Texture2D:
+                        return Texture2D.New(DirectXDevice, description);
+
+                    case TextureDimension.Texture3D:
+                        return Texture3D.New(DirectXDevice, description);
+
+                    case TextureDimension.TextureCube:
+                        return TextureCube.New(DirectXDevice, description);
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -299,8 +345,27 @@ namespace Odyssey.Graphics
         /// <remarks>This method is used to allocated a texture data buffer to hold pixel data: var textureData = new T[ texture.CalculatePixelCount&lt;T&gt;() ] ;.</remarks>
         public int CalculatePixelDataCount<TData>(int mipLevel = 0) where TData : struct
         {
-            return CalculateWidth<TData>(mipLevel)*CalculateMipSize(Description.Height, mipLevel)*
+            return CalculateWidth<TData>(mipLevel) * CalculateMipSize(Description.Height, mipLevel) *
                    CalculateMipSize(Description.Depth, mipLevel);
+        }
+
+        /// <summary>
+        /// Calculates the expected width of a texture using a specified type.
+        /// </summary>
+        /// <typeparam name="TData">The type of the T pixel data.</typeparam>
+        /// <returns>The expected width</returns>
+        /// <exception cref="System.ArgumentException">If the size is invalid</exception>
+        public int CalculateWidth<TData>(int mipLevel = 0) where TData : struct
+        {
+            var widthOnMip = CalculateMipSize((int)Description.Width, mipLevel);
+            var rowStride = widthOnMip * ((PixelFormat)Description.Format).SizeInBytes;
+
+            var dataStrideInBytes = SharpDX.Utilities.SizeOf<TData>() * widthOnMip;
+            var width = ((double)rowStride / dataStrideInBytes) * widthOnMip;
+            if (Math.Abs(width - (int)width) > Double.Epsilon)
+                throw new ArgumentException("sizeof(TData) / sizeof(Format) * Width is not an integer");
+
+            return (int)width;
         }
 
         /// <summary>
@@ -325,61 +390,42 @@ namespace Odyssey.Graphics
         /// </returns>
         public T Clone<T>() where T : Texture
         {
-            return (T) Clone();
+            return (T)Clone();
         }
 
-
-
+        public int CompareTo(Texture obj)
+        {
+            return textureId.CompareTo(obj.textureId);
+        }
 
         /// <summary>
-        /// Creates a new texture with the specified generic texture description.
+        /// Generates the mip maps for this texture. See remarks.
         /// </summary>
-        /// <param name="DirectXDevice">The graphics device.</param>
-        /// <param name="description">The description.</param>
-        /// <returns>A Texture instance, either a RenderTarget or DepthStencilBuffer or Texture, depending on Binding flags.</returns>
-        public static Texture New(DirectXDevice DirectXDevice, TextureDescription description)
+        /// <exception cref="System.NotSupportedException">Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1</exception>
+        /// <remarks>This method is only working for texture that are RenderTarget and ShaderResource and with MipLevels &gt; 1</remarks>
+        public void GenerateMipMaps()
         {
-            if (DirectXDevice == null)
-            {
-                throw new ArgumentNullException("DirectXDevice");
-            }
-
-            if ((description.BindFlags & BindFlags.RenderTarget) != 0)
-            {
-                switch (description.Dimension)
-                {
-                    case TextureDimension.Texture1D:
-                        return RenderTarget1D.New(DirectXDevice, description);
-                    case TextureDimension.Texture2D:
-                        return RenderTarget2D.New(DirectXDevice, description);
-                    case TextureDimension.Texture3D:
-                        return RenderTarget3D.New(DirectXDevice, description);
-                    case TextureDimension.TextureCube:
-                        return RenderTargetCube.New(DirectXDevice, description);
-                }
-            }
-            else if ((description.BindFlags & BindFlags.DepthStencil) != 0)
-            {
-                return DepthStencilBuffer.New(DirectXDevice, description);
-            }
-            else
-            {
-                switch (description.Dimension)
-                {
-                    case TextureDimension.Texture1D:
-                        return Texture1D.New(DirectXDevice, description);
-                    case TextureDimension.Texture2D:
-                        return Texture2D.New(DirectXDevice, description);
-                    case TextureDimension.Texture3D:
-                        return Texture3D.New(DirectXDevice, description);
-                    case TextureDimension.TextureCube:
-                        return TextureCube.New(DirectXDevice, description);
-                }
-            }
-
-            return null;
+            GenerateMipMaps(Device);
         }
 
+        /// <summary>
+        /// Generates the mip maps for this texture. See remarks.
+        /// </summary>
+        /// <param name="device">The device.</param>
+        /// <exception cref="System.NotSupportedException">Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1</exception>
+        /// <remarks>This method is only working for texture that are RenderTarget and ShaderResource and with MipLevels &gt; 1</remarks>
+        public void GenerateMipMaps(DirectXDevice device)
+        {
+            // If the texture is a RenderTarget + ShaderResource + MipLevels > 1, then allow for GenerateMipMaps method
+            if ((Description.BindFlags & BindFlags.RenderTarget) == 0 ||
+                (Description.BindFlags & BindFlags.ShaderResource) == 0 || Description.MipLevels == 1)
+            {
+                throw new NotSupportedException(
+                    "Cannot generate mipmaps for this texture (Must be RenderTarget and ShaderResource and MipLevels > 1");
+            }
+
+            ((DeviceContext)device).GenerateMips(this);
+        }
 
         /// <summary>
         /// Copies the content of this texture from GPU memory to a pointer on CPU memory using a specific staging resource.
@@ -451,8 +497,8 @@ namespace Odyssey.Graphics
             else
             {
                 // Otherwise, the long way by copying each scanline
-                var sourcePerDepthPtr = (byte*) box.DataPointer;
-                var destPtr = (byte*) toData.Pointer;
+                var sourcePerDepthPtr = (byte*)box.DataPointer;
+                var destPtr = (byte*)toData.Pointer;
 
                 // Iterate on all depths
                 for (int j = 0; j < depth; j++)
@@ -476,6 +522,123 @@ namespace Odyssey.Graphics
         }
 
         /// <summary>
+        /// Gets the GPU content of this texture as an <see cref="Image"/> on the CPU.
+        /// </summary>
+        public Image GetDataAsImage()
+        {
+            using (var stagingTexture = ToStaging())
+                return GetDataAsImage(stagingTexture);
+        }
+
+        /// <summary>
+        /// Gets the GPU content of this texture to an <see cref="Image"/> on the CPU.
+        /// </summary>
+        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
+        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
+        public Image GetDataAsImage(Texture stagingTexture)
+        {
+            if (stagingTexture.Description.Usage != ResourceUsage.Staging)
+                throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging",
+                    "stagingTexture");
+
+            var image = Image.New(stagingTexture.Description);
+            try
+            {
+                for (int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
+                {
+                    for (int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
+                    {
+                        var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
+                        GetData(stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride),
+                            arrayIndex, mipLevel);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // If there was an exception, free the allocated image to avoid any memory leak.
+                image.Dispose();
+                throw;
+            }
+            return image;
+        }
+
+        /// <summary>
+        /// Gets the mipmap description of this instance for the specified mipmap level.
+        /// </summary>
+        /// <param name="mipmap">The mipmap.</param>
+        /// <returns>A description of a particular mipmap for this texture.</returns>
+        public MipMapDescription GetMipMapDescription(int mipmap)
+        {
+            return mipmapDescriptions[mipmap];
+        }
+
+        /// <summary>
+        /// Gets the absolute sub-resource index from the array and mip slice.
+        /// </summary>
+        /// <param name="arraySlice">The array slice index.</param>
+        /// <param name="mipSlice">The mip slice index.</param>
+        /// <returns>A value equals to arraySlice * Description.MipLevels + mipSlice.</returns>
+        public int GetSubResourceIndex(int arraySlice, int mipSlice)
+        {
+            return arraySlice * Description.MipLevels + mipSlice;
+        }
+
+        /// <summary>
+        /// Saves this texture to a stream with a specified format.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        public void Save(Stream stream, ImageFileType fileType)
+        {
+            using (var staging = ToStaging())
+            {
+                Save(stream, staging, fileType);
+            }
+        }
+
+        /// <summary>
+        /// Saves this texture to a stream with a specified format.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
+        public void Save(Stream stream, Texture stagingTexture, ImageFileType fileType)
+        {
+            using (var image = GetDataAsImage(stagingTexture))
+                image.Save(stream, fileType);
+        }
+
+        /// <summary>
+        /// Saves this texture to a file with a specified format.
+        /// </summary>
+        /// <param name="filePath">The file path to save the texture to.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        public void Save(string filePath, ImageFileType fileType)
+        {
+            using (var staging = ToStaging())
+            {
+                Save(filePath, staging, fileType);
+            }
+        }
+
+        /// <summary>
+        /// Saves this texture to a stream with a specified format.
+        /// </summary>
+        /// <param name="filePath">The file path to save the texture to.</param>
+        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
+        /// <param name="fileType">Type of the image file.</param>
+        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
+        public void Save(string filePath, Texture stagingTexture, ImageFileType fileType)
+        {
+            using (
+                var stream = new NativeFileStream(filePath, NativeFileMode.Create, NativeFileAccess.Write,
+                    NativeFileShare.Write))
+                Save(stream, stagingTexture, fileType);
+        }
+
+        /// <summary>
         /// Copies the content an data on CPU memory to this texture into GPU memory using the specified <see cref="DirectXDevice"/> (The graphics device could be deferred).
         /// </summary>
         /// <param name="fromData">The data to copy from.</param>
@@ -483,9 +646,9 @@ namespace Odyssey.Graphics
         /// <param name="mipSlice">The mip slice index.</param>
         /// <param name="region">Destination region</param>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
-        /// <msdn-id>ff476457</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>
         /// This method is only working on the main graphics device. Use method with explicit graphics device to set data on a deferred context.
         /// See also unmanaged documentation about Map/UnMap for usage and restrictions.
@@ -504,16 +667,16 @@ namespace Odyssey.Graphics
         /// <param name="mipSlice">The mip slice index.</param>
         /// <param name="region">Destination region</param>
         /// <exception cref="System.ArgumentException">When strides is different from optimal strides, and TData is not the same size as the pixel format, or Width * Height != toData.Length</exception>
-        /// <msdn-id>ff476457</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
         public unsafe void SetData(DirectXDevice device, DataPointer fromData, int arraySlice = 0, int mipSlice = 0,
             ResourceRegion? region = null)
         {
-            var deviceContext = (DeviceContext) device;
+            var deviceContext = (DeviceContext)device;
 
             if (region.HasValue && Description.Usage != ResourceUsage.Default)
                 throw new ArgumentException("Region is only supported for textures with ResourceUsage.Default");
@@ -550,7 +713,7 @@ namespace Odyssey.Graphics
             }
 
             // Size per pixel
-            var sizePerElement = (int) FormatHelper.SizeOfInBytes(Description.Format);
+            var sizePerElement = (int)FormatHelper.SizeOfInBytes(Description.Format);
 
             // Calculate depth stride based on mipmap level
             int rowStride;
@@ -563,7 +726,7 @@ namespace Odyssey.Graphics
                 out height);
 
             // Size Of actual texture data
-            int sizeOfTextureData = textureDepthStride*depth;
+            int sizeOfTextureData = textureDepthStride * depth;
 
             // Check size validity of data to copy to
             if (fromData.Size != sizeOfTextureData)
@@ -624,8 +787,8 @@ namespace Odyssey.Graphics
                     else
                     {
                         // Otherwise, the long way by copying each scanline
-                        var destPerDepthPtr = (byte*) box.DataPointer;
-                        var sourcePtr = (byte*) fromData.Pointer;
+                        var destPerDepthPtr = (byte*)box.DataPointer;
+                        var sourcePtr = (byte*)fromData.Pointer;
 
                         // Iterate on all depths
                         for (int j = 0; j < depth; j++)
@@ -634,13 +797,12 @@ namespace Odyssey.Graphics
                             // Iterate on each line
                             for (int i = 0; i < height; i++)
                             {
-                                SharpDX.Utilities.CopyMemory((IntPtr) destPtr, (IntPtr) sourcePtr, rowStride);
+                                SharpDX.Utilities.CopyMemory((IntPtr)destPtr, (IntPtr)sourcePtr, rowStride);
                                 destPtr += box.RowPitch;
                                 sourcePtr += rowStride;
                             }
                             destPerDepthPtr += box.SlicePitch;
                         }
-
                     }
                 }
                 finally
@@ -654,9 +816,9 @@ namespace Odyssey.Graphics
         /// Copies the content of an image to this texture.
         /// </summary>
         /// <param name="image">The source image to copy from.</param>
-        /// <msdn-id>ff476457</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
@@ -671,9 +833,9 @@ namespace Odyssey.Graphics
         /// <param name="DirectXDevice">The <see cref="DirectXDevice"/>.</param>
         /// <param name="image">The source image to copy from.</param>
         /// <exception cref="System.ArgumentException">Image is not same dimension and/or format than this texture</exception>
-        /// <msdn-id>ff476457</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>	
-        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
+        /// <msdn-id>ff476457</msdn-id>
+        /// <unmanaged>HRESULT ID3D11DeviceContext::Map([In] ID3D11Resource* pResource,[In] unsigned int Subresource,[In] D3D11_MAP MapType,[In] D3D11_MAP_FLAG MapFlags,[Out] D3D11_MAPPED_SUBRESOURCE* pMappedResource)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         /// <remarks>
         /// See unmanaged documentation for usage and restrictions.
         /// </remarks>
@@ -703,12 +865,66 @@ namespace Odyssey.Graphics
             }
         }
 
-
         /// <summary>
         /// Return an equivalent staging texture CPU read-writable from this instance.
         /// </summary>
         /// <returns></returns>
         public abstract Texture ToStaging();
+
+        /// <summary>
+        /// Calculates the mip map count from a requested level.
+        /// </summary>
+        /// <param name="requestedLevel">The requested level.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="depth">The depth.</param>
+        /// <returns>The resulting mipmap count (clamp to [1, maxMipMapCount] for this texture)</returns>
+        internal static int CalculateMipMapCount(MipMapCount requestedLevel, int width, int height = 0, int depth = 0)
+        {
+            int size = Math.Max(Math.Max(width, height), depth);
+            int maxMipMap = 1 + (int)Math.Log(size, 2);
+
+            return requestedLevel == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
+        }
+
+        internal static TextureDescription CreateTextureDescriptionFromImage(Image image, TextureFlags flags,
+            ResourceUsage usage)
+        {
+            var desc = (TextureDescription)image.Description;
+            desc.BindFlags = BindFlags.ShaderResource;
+            desc.Usage = usage;
+            if ((flags & TextureFlags.UnorderedAccess) != 0)
+                desc.Usage = ResourceUsage.Default;
+
+            desc.BindFlags = GetBindFlagsFromTextureFlags(flags);
+
+            desc.CpuAccessFlags = GetCpuAccessFlagsFromUsage(usage);
+            return desc;
+        }
+
+        internal static BindFlags GetBindFlagsFromTextureFlags(TextureFlags flags)
+        {
+            var bindFlags = BindFlags.None;
+            if ((flags & TextureFlags.ShaderResource) != 0)
+                bindFlags |= BindFlags.ShaderResource;
+
+            if ((flags & TextureFlags.UnorderedAccess) != 0)
+                bindFlags |= BindFlags.UnorderedAccess;
+
+            if ((flags & TextureFlags.RenderTarget) != 0)
+                bindFlags |= BindFlags.RenderTarget;
+
+            return bindFlags;
+        }
+
+        /// <summary>
+        /// Gets a specific <see cref="RenderTargetView" /> from this texture.
+        /// </summary>
+        /// <param name="viewType">Type of the view slice.</param>
+        /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
+        /// <param name="mipMapSlice">The mip map slice index.</param>
+        /// <returns>An <see cref="RenderTargetView" /></returns>
+        internal abstract TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice);
 
         /// <summary>
         /// Gets a specific <see cref="ShaderResourceView" /> from this texture.
@@ -722,15 +938,6 @@ namespace Odyssey.Graphics
             int mipIndex);
 
         /// <summary>
-        /// Gets a specific <see cref="RenderTargetView" /> from this texture.
-        /// </summary>
-        /// <param name="viewType">Type of the view slice.</param>
-        /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
-        /// <param name="mipMapSlice">The mip map slice index.</param>
-        /// <returns>An <see cref="RenderTargetView" /></returns>
-        internal abstract TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice);
-
-        /// <summary>
         /// Gets a specific <see cref="UnorderedAccessView"/> from this texture.
         /// </summary>
         /// <param name="arrayOrDepthSlice">The texture array slice index.</param>
@@ -738,220 +945,16 @@ namespace Odyssey.Graphics
         /// <returns>An <see cref="UnorderedAccessView"/></returns>
         internal abstract UnorderedAccessView GetUnorderedAccessView(int arrayOrDepthSlice, int mipMapSlice);
 
-        /// <summary>
-        /// ShaderResourceView casting operator.
-        /// </summary>
-        /// <param name="from">Source for the.</param>
-        public static implicit operator ShaderResourceView(Texture from)
+        internal int GetViewCount()
         {
-            return @from == null ? null : from.defaultShaderResourceView;
+            int arrayOrDepthSize = Description.Depth > 1 ? Description.Depth : Description.ArraySize;
+            return GetViewIndex((ViewType)4, arrayOrDepthSize, Description.MipLevels);
         }
 
-        /// <summary>
-        /// UnorderedAccessView casting operator.
-        /// </summary>
-        /// <param name="from">Source for the.</param>
-        public static implicit operator UnorderedAccessView(Texture from)
+        internal int GetViewIndex(ViewType viewType, int arrayOrDepthIndex, int mipIndex)
         {
-            return @from == null ? null : @from.unorderedAccessViews != null ? @from.unorderedAccessViews[0] : null;
-        }
-
-        /// <summary>
-        /// Loads a texture from a stream.
-        /// </summary>
-        /// <param name="device">The <see cref="DirectXDevice"/>.</param>
-        /// <param name="stream">The stream to load the texture from.</param>
-        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
-        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
-        /// <returns>A texture</returns>
-        public static Texture Load(DirectXDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource,
-            ResourceUsage usage = ResourceUsage.Immutable)
-        {
-            var image = Image.Load(stream);
-            if (image == null)
-            {
-                return null;
-            }
-
-            try
-            {
-                switch (image.Description.Dimension)
-                {
-                    case TextureDimension.Texture1D:
-                        return Texture1D.New(device, image, flags, usage);
-                    case TextureDimension.Texture2D:
-                        return Texture2D.New(device, image, flags, usage);
-                    case TextureDimension.Texture3D:
-                        return Texture3D.New(device, image, flags, usage);
-                    case TextureDimension.TextureCube:
-                        return TextureCube.New(device, image, flags, usage);
-                }
-            }
-            finally
-            {
-                image.Dispose();
-            }
-
-            throw new InvalidOperationException("Dimension not supported");
-        }
-
-        /// <summary>
-        /// Loads a texture from a file.
-        /// </summary>
-        /// <param name="device">Specify the <see cref="DirectXDevice"/> used to load and create a texture from a file.</param>
-        /// <param name="filePath">The file to load the texture from.</param>
-        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
-        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
-        /// <returns>A texture</returns>
-        public static Texture Load(DirectXDevice device, string filePath,
-            TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
-        {
-            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(device, stream, flags, usage);
-        }
-
-        /// <summary>
-        /// Saves this texture to a stream with a specified format.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="fileType">Type of the image file.</param>
-        public void Save(Stream stream, ImageFileType fileType)
-        {
-            using (var staging = ToStaging())
-            {
-                Save(stream, staging, fileType);
-            }
-        }
-
-        /// <summary>
-        /// Gets the GPU content of this texture as an <see cref="Image"/> on the CPU.
-        /// </summary>
-        public Image GetDataAsImage()
-        {
-            using (var stagingTexture = ToStaging())
-                return GetDataAsImage(stagingTexture);
-        }
-
-        /// <summary>
-        /// Gets the GPU content of this texture to an <see cref="Image"/> on the CPU.
-        /// </summary>
-        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
-        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
-        public Image GetDataAsImage(Texture stagingTexture)
-        {
-            if (stagingTexture.Description.Usage != ResourceUsage.Staging)
-                throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging",
-                    "stagingTexture");
-
-            var image = Image.New(stagingTexture.Description);
-            try
-            {
-                for (int arrayIndex = 0; arrayIndex < image.Description.ArraySize; arrayIndex++)
-                {
-                    for (int mipLevel = 0; mipLevel < image.Description.MipLevels; mipLevel++)
-                    {
-                        var pixelBuffer = image.PixelBuffer[arrayIndex, mipLevel];
-                        GetData(stagingTexture, new DataPointer(pixelBuffer.DataPointer, pixelBuffer.BufferStride),
-                            arrayIndex, mipLevel);
-                    }
-                }
-
-            }
-            catch (Exception)
-            {
-                // If there was an exception, free the allocated image to avoid any memory leak.
-                image.Dispose();
-                throw;
-            }
-            return image;
-        }
-
-        /// <summary>
-        /// Saves this texture to a stream with a specified format.
-        /// </summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
-        /// <param name="fileType">Type of the image file.</param>
-        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
-        public void Save(Stream stream, Texture stagingTexture, ImageFileType fileType)
-        {
-            using (var image = GetDataAsImage(stagingTexture))
-                image.Save(stream, fileType);
-        }
-
-        /// <summary>
-        /// Saves this texture to a file with a specified format.
-        /// </summary>
-        /// <param name="filePath">The file path to save the texture to.</param>
-        /// <param name="fileType">Type of the image file.</param>
-        public void Save(string filePath, ImageFileType fileType)
-        {
-            using (var staging = ToStaging())
-            {
-                Save(filePath, staging, fileType);
-            }
-        }
-
-        /// <summary>
-        /// Saves this texture to a stream with a specified format.
-        /// </summary>
-        /// <param name="filePath">The file path to save the texture to.</param>
-        /// <param name="stagingTexture">The staging texture used to temporary transfer the image from the GPU to CPU.</param>
-        /// <param name="fileType">Type of the image file.</param>
-        /// <exception cref="ArgumentException">If stagingTexture is not a staging texture.</exception>
-        public void Save(string filePath, Texture stagingTexture, ImageFileType fileType)
-        {
-            using (
-                var stream = new NativeFileStream(filePath, NativeFileMode.Create, NativeFileAccess.Write,
-                    NativeFileShare.Write))
-                Save(stream, stagingTexture, fileType);
-        }
-
-        /// <summary>
-        /// Calculates the mip map count from a requested level.
-        /// </summary>
-        /// <param name="requestedLevel">The requested level.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="depth">The depth.</param>
-        /// <returns>The resulting mipmap count (clamp to [1, maxMipMapCount] for this texture)</returns>
-        internal static int CalculateMipMapCount(MipMapCount requestedLevel, int width, int height = 0, int depth = 0)
-        {
-            int size = Math.Max(Math.Max(width, height), depth);
-            int maxMipMap = 1 + (int) Math.Log(size, 2);
-
-            return requestedLevel == 0 ? maxMipMap : Math.Min(requestedLevel, maxMipMap);
-        }
-
-        protected static DataBox GetDataBox<T>(Format format, int width, int height, int depth, T[] textureData,
-            IntPtr fixedPointer) where T : struct
-        {
-            // Check that the textureData size is correct
-            if (textureData == null) throw new ArgumentNullException("textureData");
-            int rowPitch;
-            int slicePitch;
-            int widthCount;
-            int heightCount;
-            Image.ComputePitch(format, width, height, out rowPitch, out slicePitch, out widthCount, out heightCount);
-            if (SharpDX.Utilities.SizeOf(textureData) != (slicePitch*depth))
-                throw new ArgumentException("Invalid size for TextureData");
-
-            return new DataBox(fixedPointer, rowPitch, slicePitch);
-        }
-
-        internal static TextureDescription CreateTextureDescriptionFromImage(Image image, TextureFlags flags,
-            ResourceUsage usage)
-        {
-            var desc = (TextureDescription) image.Description;
-            desc.BindFlags = BindFlags.ShaderResource;
-            desc.Usage = usage;
-            if ((flags & TextureFlags.UnorderedAccess) != 0)
-                desc.Usage = ResourceUsage.Default;
-
-            desc.BindFlags = GetBindFlagsFromTextureFlags(flags);
-
-            desc.CpuAccessFlags = GetCpuAccessFlagsFromUsage(usage);
-            return desc;
+            int arrayOrDepthSize = Description.Depth > 1 ? Description.Depth : Description.ArraySize;
+            return (((int)viewType) * arrayOrDepthSize + arrayOrDepthIndex) * Description.MipLevels + mipIndex;
         }
 
         internal void GetViewSliceBounds(ViewType viewType, ref int arrayOrDepthIndex, ref int mipIndex,
@@ -967,18 +970,22 @@ namespace Odyssey.Graphics
                     arrayOrDepthCount = arrayOrDepthSize;
                     mipCount = Description.MipLevels;
                     break;
+
                 case ViewType.Single:
                     arrayOrDepthCount = 1;
                     mipCount = 1;
                     break;
+
                 case ViewType.MipBand:
                     arrayOrDepthCount = arrayOrDepthSize - arrayOrDepthIndex;
                     mipCount = 1;
                     break;
+
                 case ViewType.ArrayBand:
                     arrayOrDepthCount = 1;
                     mipCount = Description.MipLevels - mipIndex;
                     break;
+
                 default:
                     arrayOrDepthCount = 0;
                     mipCount = 0;
@@ -986,17 +993,35 @@ namespace Odyssey.Graphics
             }
         }
 
-        internal int GetViewCount()
+        protected static DataBox GetDataBox<T>(Format format, int width, int height, int depth, T[] textureData,
+            IntPtr fixedPointer) where T : struct
         {
-            int arrayOrDepthSize = Description.Depth > 1 ? Description.Depth : Description.ArraySize;
-            return GetViewIndex((ViewType) 4, arrayOrDepthSize, Description.MipLevels);
+            // Check that the textureData size is correct
+            if (textureData == null) throw new ArgumentNullException("textureData");
+            int rowPitch;
+            int slicePitch;
+            int widthCount;
+            int heightCount;
+            Image.ComputePitch(format, width, height, out rowPitch, out slicePitch, out widthCount, out heightCount);
+            if (SharpDX.Utilities.SizeOf(textureData) != (slicePitch * depth))
+                throw new ArgumentException("Invalid size for TextureData");
+
+            return new DataBox(fixedPointer, rowPitch, slicePitch);
         }
 
-        internal int GetViewIndex(ViewType viewType, int arrayOrDepthIndex, int mipIndex)
+        protected override void Initialize(DeviceChild resource)
         {
-            int arrayOrDepthSize = Description.Depth > 1 ? Description.Depth : Description.ArraySize;
-            return (((int) viewType)*arrayOrDepthSize + arrayOrDepthIndex)*Description.MipLevels + mipIndex;
+            // Be sure that we are storing only the main device (which contains the immediate context).
+            base.Initialize(resource);
+            InitializeViews();
+            // Gets a Texture ID
+            textureId = resource.NativePointer.ToInt64();
         }
+
+        /// <summary>
+        /// Initializes the views provided by this texture.
+        /// </summary>
+        protected abstract void InitializeViews();
 
         /// <summary>
         /// Called when name changed for this component.
@@ -1047,11 +1072,6 @@ namespace Odyssey.Graphics
                     }
                 }
             }
-        }
-
-        private static bool IsPow2(int x)
-        {
-            return ((x != 0) && (x & (x - 1)) == 0);
         }
 
         private static int CountMips(int width)
@@ -1108,28 +1128,21 @@ namespace Odyssey.Graphics
             return mipLevels;
         }
 
-        public int CompareTo(Texture obj)
+        private static bool IsPow2(int x)
         {
-            return textureId.CompareTo(obj.textureId);
-        }
-
-        internal static BindFlags GetBindFlagsFromTextureFlags(TextureFlags flags)
-        {
-            var bindFlags = BindFlags.None;
-            if ((flags & TextureFlags.ShaderResource) != 0)
-                bindFlags |= BindFlags.ShaderResource;
-
-            if ((flags & TextureFlags.UnorderedAccess) != 0)
-                bindFlags |= BindFlags.UnorderedAccess;
-
-            if ((flags & TextureFlags.RenderTarget) != 0)
-                bindFlags |= BindFlags.RenderTarget;
-
-            return bindFlags;
+            return ((x != 0) && (x & (x - 1)) == 0);
         }
 
         internal struct TextureViewKey : IEquatable<TextureViewKey>
         {
+            public readonly int ArrayOrDepthSlice;
+
+            public readonly int MipIndex;
+
+            public readonly Format ViewFormat;
+
+            public readonly ViewType ViewType;
+
             public TextureViewKey(Format viewFormat, ViewType viewType, int arrayOrDepthSlice, int mipIndex)
             {
                 ViewFormat = viewFormat;
@@ -1138,13 +1151,15 @@ namespace Odyssey.Graphics
                 MipIndex = mipIndex;
             }
 
-            public readonly Format ViewFormat;
+            public static bool operator !=(TextureViewKey left, TextureViewKey right)
+            {
+                return !left.Equals(right);
+            }
 
-            public readonly ViewType ViewType;
-
-            public readonly int ArrayOrDepthSlice;
-
-            public readonly int MipIndex;
+            public static bool operator ==(TextureViewKey left, TextureViewKey right)
+            {
+                return left.Equals(right);
+            }
 
             public bool Equals(TextureViewKey other)
             {
@@ -1155,29 +1170,19 @@ namespace Odyssey.Graphics
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
-                return obj is TextureViewKey && Equals((TextureViewKey) obj);
+                return obj is TextureViewKey && Equals((TextureViewKey)obj);
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    var hashCode = (int) ViewFormat;
-                    hashCode = (hashCode*397) ^ (int) ViewType;
-                    hashCode = (hashCode*397) ^ ArrayOrDepthSlice;
-                    hashCode = (hashCode*397) ^ MipIndex;
+                    var hashCode = (int)ViewFormat;
+                    hashCode = (hashCode * 397) ^ (int)ViewType;
+                    hashCode = (hashCode * 397) ^ ArrayOrDepthSlice;
+                    hashCode = (hashCode * 397) ^ MipIndex;
                     return hashCode;
                 }
-            }
-
-            public static bool operator ==(TextureViewKey left, TextureViewKey right)
-            {
-                return left.Equals(right);
-            }
-
-            public static bool operator !=(TextureViewKey left, TextureViewKey right)
-            {
-                return !left.Equals(right);
             }
         }
     }

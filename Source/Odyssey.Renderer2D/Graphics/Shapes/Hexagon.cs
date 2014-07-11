@@ -1,19 +1,15 @@
-﻿using System;
-using Odyssey.Graphics.Shapes;
+﻿using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Controls;
-using Brush = Odyssey.Graphics.Shapes.Brush;
-
+using System;
 
 namespace Odyssey.Graphics
 {
-    public class Hexagon : PolygonBase, IShapeD2D
+    public class Hexagon : PolygonBase
     {
+        private const int Sides = 6;
         private PolygonGeometry polygonGeometry;
 
-        public Brush Fill { get; set; }
-        public Brush Stroke { get; set; }
-
-        protected const int Sides = 6;
+        protected override Geometry.Primitives.Polygon Polygon { get; set; }
 
         public override void Render()
         {
@@ -24,19 +20,13 @@ namespace Odyssey.Graphics
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            polygonGeometry = ToDispose(PolygonGeometry.New(Device, BoundingRectangle.Center, BoundingRectangle.Width/2, Sides,
+            polygonGeometry = ToDispose(PolygonGeometry.New(Device, BoundingRectangle.Center, BoundingRectangle.Width / 2, Sides,
                 FigureBegin.Filled));
 
-            var initializer = new ShapeInitializer<Hexagon>(Device);
+            var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);
             foreach (var resource in initializer.CreatedResources)
                 ToDispose(resource);
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
-            Polygon = Geometry.Primitives.Polygon.New(BoundingRectangle.Center, BoundingRectangle.Width, Sides);
         }
 
         protected override void OnPositionChanged(EventArgs e)
@@ -45,6 +35,10 @@ namespace Odyssey.Graphics
             Polygon = Geometry.Primitives.Polygon.New(BoundingRectangle.Center, BoundingRectangle.Width, Sides);
         }
 
-        protected override Geometry.Primitives.Polygon Polygon { get; set; }
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            Polygon = Geometry.Primitives.Polygon.New(BoundingRectangle.Center, BoundingRectangle.Width, Sides);
+        }
     }
 }

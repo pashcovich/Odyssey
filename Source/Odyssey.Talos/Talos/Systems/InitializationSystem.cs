@@ -1,33 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Initializers;
 using Odyssey.Talos.Messages;
+using System;
+using System.Linq;
 
 namespace Odyssey.Talos.Systems
 {
     public class InitializationSystem : UpdateableSystemBase
     {
-        public InitializationSystem() : base(Aspect.One(typeof (ShaderComponent), typeof(PostProcessComponent)))
+        public InitializationSystem()
+            : base(Aspect.One(typeof(ShaderComponent), typeof(PostProcessComponent)))
         {
-        }
-
-        public override void Start()
-        {
-            Messenger.Register<ContentLoadedMessage<ShaderComponent>>(this);
-            Messenger.Register<ContentLoadedMessage<PostProcessComponent>>(this);
-        }
-
-        public override void Stop()
-        {
-            Messenger.Unregister<ContentLoadedMessage<ShaderComponent>>(this);
-            Messenger.Unregister<ContentLoadedMessage<PostProcessComponent>>(this);
         }
 
         public override void BeforeUpdate()
@@ -41,7 +27,7 @@ namespace Odyssey.Talos.Systems
             }
             while (MessageQueue.HasItems<ContentLoadedMessage<PostProcessComponent>>())
             {
-                var mPostProcess= MessageQueue.Dequeue<ContentLoadedMessage<PostProcessComponent>>();
+                var mPostProcess = MessageQueue.Dequeue<ContentLoadedMessage<PostProcessComponent>>();
                 foreach (var technique in mPostProcess.Content.Techniques)
                     SetupEntity(technique);
             }
@@ -63,7 +49,19 @@ namespace Odyssey.Talos.Systems
             }
         }
 
-        void SetupEntity(Technique technique)
+        public override void Start()
+        {
+            Messenger.Register<ContentLoadedMessage<ShaderComponent>>(this);
+            Messenger.Register<ContentLoadedMessage<PostProcessComponent>>(this);
+        }
+
+        public override void Stop()
+        {
+            Messenger.Unregister<ContentLoadedMessage<ShaderComponent>>(this);
+            Messenger.Unregister<ContentLoadedMessage<PostProcessComponent>>(this);
+        }
+
+        private void SetupEntity(Technique technique)
         {
             Effect effect = technique.Effect;
             var shaderInitializer = new ShaderInitializer(Services, effect, technique.ActiveTechnique);
@@ -73,12 +71,6 @@ namespace Odyssey.Talos.Systems
                 throw new InvalidOperationException(string.Format("[{0}] was not properly initialized.", technique.Name));
 
             effect.AssembleBuffers();
-
-            foreach (Shader s in effect)
-            {
-                s.Apply("Technique", UpdateType.SceneStatic);
-                s.Apply("Technique", UpdateType.InstanceStatic);
-            }
         }
     }
 }

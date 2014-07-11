@@ -29,87 +29,33 @@ namespace Odyssey.Engine
     public class DirectXDevice : Component, IDirect3DProvider
     {
 #if DIRECTX11_1
-        private readonly Device1 device;
-        private readonly DeviceContext1 context;
-
-        internal IntPtr ResetSlotsPointers { get; private set; }
-
-        #region IDirect3DProvider
-
-        DeviceContext1 IDirect3DProvider.Context
-        {
-            get { return context; }
-        }
-
-        Device1 IDirect3DProvider.Device
-        {
-            get { return device; }
-        }
-
-        #endregion IDirect3DProvider
-
-        private PrimitiveTopology PrimitiveType
-        {
-            set { InputAssembler.PrimitiveTopology = value; }
-        }
-
-        public Device1 NativeDevice
-        {
-            get { return device; }
-        }
-
-#else
-        SharpDX.Direct3D11.DeviceContext context;
-        SharpDX.Direct3D11.Device device;
-
-        SharpDX.Direct3D11.DeviceContext IDirect3DProvider.Context
-        {
-            get { return context; }
-        }
-        SharpDX.Direct3D11.Device IDirect3DProvider.Device
-        {
-            get { return device; }
-        }
-#endif
+        internal Effect CurrentEffect;
+        internal InputAssemblerStage InputAssembler;
+        internal OutputMergerStage OutputMerger;
+        internal PixelShaderStage PixelShader;
+        internal RasterizerStage RasterizerStage;
+        internal VertexShaderStage VertexShader;
         private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
+        private readonly DeviceContext1 context;
         private readonly RenderTargetView[] currentRenderTargetViews;
-        private DepthStencilView currentDepthStencilView;
-        private readonly DeviceFeatures features;
-        private readonly ViewportF[] viewports;
-        private RenderTargetView currentRenderTargetView;
-        private int actualRenderTargetViewCount;
-        private readonly bool isDebugMode;
+        private readonly Device1 device;
         private readonly EffectPool effectPool;
 
-        internal OutputMergerStage OutputMerger;
-        internal RasterizerStage RasterizerStage;
-        internal InputAssemblerStage InputAssembler;
-        internal PixelShaderStage PixelShader;
-        internal VertexShaderStage VertexShader;
-        internal Effect CurrentEffect;
-        private int maxSlotCountForVertexBuffer;
+        private readonly DeviceFeatures features;
+
+        private readonly bool isDebugMode;
+
+        private readonly ViewportF[] viewports;
+
+        private int actualRenderTargetViewCount;
+
+        private DepthStencilView currentDepthStencilView;
+
+        private RenderTargetView currentRenderTargetView;
+
         private VertexInputLayout currentVertexInputLayout;
 
-        public GraphicsPresenter Presenter { get; set; }
-
-        public DeviceFeatures Features
-        {
-            get { return features; }
-        }
-
-        public bool IsDebugMode
-        {
-            get { return isDebugMode; }
-        }
-
-        public GraphicsAdapter Adapter { get; private set; }
-
-        public EffectPool EffectPool
-        {
-            get { return effectPool; }
-        }
-
-        public SamplerStateCollection SamplerStates { get; private set; }
+        private int maxSlotCountForVertexBuffer;
 
         protected DirectXDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None,
             params FeatureLevel[] featureLevels)
@@ -174,44 +120,13 @@ namespace Odyssey.Engine
             Initialize();
         }
 
-#if DIRECTX11_1
-
-#endif
+        public GraphicsAdapter Adapter { get; private set; }
 
         /// <summary>
-        /// Initializes this instance.
+        /// Gets or sets a value indicating whether the viewport is automatically calculated and set when a render target is set. Default is true.
         /// </summary>
-        private void Initialize()
-        {
-            // Default null VertexBuffers used to reset
-            if (ResetSlotsPointers == IntPtr.Zero)
-            {
-                // CommonShaderStage.InputResourceSlotCount is the maximum of resources bindable in the whole pipeline
-                ResetSlotsPointers = ToDispose(SharpDX.Utilities.AllocateClearedMemory(SharpDX.Utilities.SizeOf<IntPtr>() *
-                                                                                       CommonShaderStage.InputResourceSlotCount));
-            }
-
-            InputAssembler = context.InputAssembler;
-            VertexShader = context.VertexShader;
-            //DomainShader = context.DomainShader;
-            //HullShader = context.HullShader;
-            //GeometryShader = context.GeometryShader;
-            RasterizerStage = context.Rasterizer;
-            PixelShader = context.PixelShader;
-            OutputMerger = context.OutputMerger;
-            //ComputeShader = context.ComputeShader;
-            //ShaderStages = new CommonShaderStage[]
-            //                   {
-            //                       context.VertexShader,
-            //                       context.HullShader,
-            //                       context.DomainShader,
-            //                       context.GeometryShader,
-            //                       context.PixelShader,
-            //                       context.ComputeShader
-            //                   };
-
-            //Performance = new GraphicsPerformance(this);
-        }
+        /// <value><c>true</c> if the viewport is automatically calculated and set when a render target is set; otherwise, <c>false</c>.</value>
+        public bool AutoViewportFromRenderTargets { get; set; }
 
         /// <summary>
         /// Gets the depth stencil buffer sets by the current <see cref="Presenter" /> setup on this device.
@@ -268,6 +183,28 @@ namespace Odyssey.Engine
             }
         }
 
+        public EffectPool EffectPool
+        {
+            get { return effectPool; }
+        }
+
+        public DeviceFeatures Features
+        {
+            get { return features; }
+        }
+
+        public bool IsDebugMode
+        {
+            get { return isDebugMode; }
+        }
+
+        public Device1 NativeDevice
+        {
+            get { return device; }
+        }
+
+        public GraphicsPresenter Presenter { get; set; }
+
         /// <summary>
         /// Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.
         /// </summary>
@@ -277,11 +214,120 @@ namespace Odyssey.Engine
             get { return Presenter != null ? Presenter.BackBuffer : null; }
         }
 
+        public SamplerStateCollection SamplerStates { get; private set; }
+
         /// <summary>
-        /// Gets or sets a value indicating whether the viewport is automatically calculated and set when a render target is set. Default is true.
+        /// Gets the main viewport.
         /// </summary>
-        /// <value><c>true</c> if the viewport is automatically calculated and set when a render target is set; otherwise, <c>false</c>.</value>
-        public bool AutoViewportFromRenderTargets { get; set; }
+        /// <value>The main viewport.</value>
+        public ViewportF Viewport
+        {
+            get
+            {
+                RasterizerStage.GetViewports(viewports);
+                return viewports[0];
+            }
+
+            set { SetViewport(value); }
+        }
+
+        internal IntPtr ResetSlotsPointers { get; private set; }
+
+        #region IDirect3DProvider
+
+        DeviceContext1 IDirect3DProvider.Context
+        {
+            get { return context; }
+        }
+
+        Device1 IDirect3DProvider.Device
+        {
+            get { return device; }
+        }
+
+        #endregion IDirect3DProvider
+
+        private PrimitiveTopology PrimitiveType
+        {
+            set { InputAssembler.PrimitiveTopology = value; }
+        }
+
+#else
+        SharpDX.Direct3D11.DeviceContext context;
+        SharpDX.Direct3D11.Device device;
+
+        SharpDX.Direct3D11.DeviceContext IDirect3DProvider.Context
+        {
+            get { return context; }
+        }
+        SharpDX.Direct3D11.Device IDirect3DProvider.Device
+        {
+            get { return device; }
+        }
+#endif
+#if DIRECTX11_1
+
+#endif
+
+        public static implicit operator Device(DirectXDevice from)
+        {
+            return @from == null ? null : @from.device;
+        }
+
+        public static implicit operator DeviceContext(DirectXDevice from)
+        {
+            return @from == null ? null : @from.context;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DirectXDevice"/> from an existing <see cref="SharpDX.Direct3D11.Device"/>.
+        /// </summary>
+        /// <param name="existingDevice">An existing device.</param>
+        /// <returns>A new instance of <see cref="DirectXDevice"/>.</returns>
+        public static DirectXDevice New(Device existingDevice)
+        {
+            return new DirectXDevice(existingDevice);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DirectXDevice"/> using <see cref="DriverType.Hardware"/>.
+        /// </summary>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
+        /// <returns>A new instance of <see cref="DirectXDevice"/></returns>
+        public static DirectXDevice New(DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
+        {
+            return New(DriverType.Hardware, flags, featureLevels);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DirectXDevice"/>.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
+        /// <returns>A new instance of <see cref="DirectXDevice"/>.</returns>
+        public static DirectXDevice New(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None,
+            params FeatureLevel[] featureLevels)
+        {
+            if (type == DriverType.Hardware)
+                return new DirectXDevice(GraphicsAdapter.Default, flags, featureLevels);
+
+            return new DirectXDevice(type, flags, featureLevels);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DirectXDevice"/>.
+        /// </summary>
+        /// <param name="adapter">The graphics adapter to use.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="featureLevels">The feature levels.</param>
+        /// <returns>A new instance of <see cref="DirectXDevice"/>.</returns>
+        public static DirectXDevice New(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None,
+            params FeatureLevel[] featureLevels)
+        {
+            return new DirectXDevice(adapter, flags, featureLevels);
+        }
 
         /// <summary>
         /// Clears the default render target and depth stencil buffer attached to the current <see cref="Presenter"/>.
@@ -378,6 +424,20 @@ namespace Odyssey.Engine
         public void Clear(DepthStencilView depthStencilView, DepthStencilClearFlags clearFlags, float depth, byte stencil)
         {
             context.ClearDepthStencilView(depthStencilView, clearFlags, depth, stencil);
+        }
+
+        /// <summary>
+        /// <p>Restore all default settings.</p>
+        /// </summary>
+        /// <remarks>
+        /// <p>This method resets any device context to the default settings. This sets all input/output resource slots, shaders, input layouts, predications, scissor rectangles, depth-stencil state, rasterizer state, blend state, sampler state, and viewports to <strong><c>null</c></strong>. The primitive topology is set to UNDEFINED.</p><p>For a scenario where you would like to clear a list of commands recorded so far, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.FinishCommandListInternal"/></strong> and throw away the resulting <strong><see cref="SharpDX.Direct3D11.CommandList"/></strong>.</p>
+        /// </remarks>
+        /// <msdn-id>ff476389</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::ClearState()</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::ClearState</unmanaged-short>
+        public void ClearState()
+        {
+            context.ClearState();
         }
 
         /// <summary>
@@ -490,104 +550,139 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// <p>Restore all default settings.</p>
+        /// <p>Draw non-indexed, non-instanced primitives.</p>
         /// </summary>
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
+        /// <param name="vertexCount"><dd>  <p>Number of vertices to draw.</p> </dd></param>
+        /// <param name="startVertexLocation"><dd>  <p>Index of the first vertex, which is usually an offset in a vertex buffer; it could also be used as the first vertex id generated for a shader parameter marked with the <strong>SV_TargetId</strong> system-value semantic.</p> </dd></param>
         /// <remarks>
-        /// <p>This method resets any device context to the default settings. This sets all input/output resource slots, shaders, input layouts, predications, scissor rectangles, depth-stencil state, rasterizer state, blend state, sampler state, and viewports to <strong><c>null</c></strong>. The primitive topology is set to UNDEFINED.</p><p>For a scenario where you would like to clear a list of commands recorded so far, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.FinishCommandListInternal"/></strong> and throw away the resulting <strong><see cref="SharpDX.Direct3D11.CommandList"/></strong>.</p>
+        /// <p>A draw API submits work to the rendering pipeline.</p><p>The vertex data for a draw call normally comes from a vertex buffer that is bound to the pipeline. However, you could also provide the vertex data from a shader that has vertex data marked with the <strong>SV_VertexId</strong> system-value semantic.</p>
         /// </remarks>
-        /// <msdn-id>ff476389</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::ClearState()</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::ClearState</unmanaged-short>
-        public void ClearState()
+        /// <msdn-id>ff476407</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::Draw([In] unsigned int VertexCount,[In] unsigned int StartVertexLocation)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Draw</unmanaged-short>
+        public void Draw(PrimitiveType primitiveType, int vertexCount, int startVertexLocation = 0)
         {
-            context.ClearState();
+            PrimitiveType = primitiveType;
+            context.Draw(vertexCount, startVertexLocation);
         }
 
         /// <summary>
-        /// Binds a depth-stencil buffer and a set of render targets to the output-merger stage.
+        /// <p>Draw indexed, non-instanced primitives.</p>
         /// </summary>
-        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
-        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
+        /// <param name="indexCount"><dd>  <p>Number of indices to draw.</p> </dd></param>
+        /// <param name="startIndexLocation"><dd>  <p>The location of the first index read by the GPU from the index buffer.</p> </dd></param>
+        /// <param name="baseVertexLocation"><dd>  <p>A value added to each index before reading a vertex from the vertex buffer.</p> </dd></param>
         /// <remarks>
-        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>
+        /// <p>A draw API submits work to the rendering pipeline.</p><p>If the sum of both indices is negative, the result of the function call is undefined.</p>
         /// </remarks>
-        /// <msdn-id>ff476464</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>
-        public void SetRenderTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
+        /// <msdn-id>ff476409</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::DrawIndexed([In] unsigned int IndexCount,[In] unsigned int StartIndexLocation,[In] int BaseVertexLocation)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::DrawIndexed</unmanaged-short>
+        public void DrawIndexed(PrimitiveType primitiveType, int indexCount, int startIndexLocation = 0,
+            int baseVertexLocation = 0)
         {
-            Contract.Requires<ArgumentNullException>(renderTargetViews != null, "renderTargetViews is null");
-
-            CommonSetRenderTargets(renderTargetViews);
-            currentDepthStencilView = depthStencilView;
-            OutputMerger.SetTargets(depthStencilView, renderTargetViews);
+            PrimitiveType = primitiveType;
+            context.DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
         }
 
         /// <summary>
-        /// Binds a depth-stencil buffer and a single render target to the output-merger stage.
+        /// <p>Draw indexed, instanced primitives.</p>
         /// </summary>
-        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
-        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <param name="primitiveType">Type of the primitive to draw.</param>
+        /// <param name="indexCountPerInstance"><dd>  <p>Number of indices read from the index buffer for each instance.</p> </dd></param>
+        /// <param name="instanceCount"><dd>  <p>Number of instances to draw.</p> </dd></param>
+        /// <param name="startIndexLocation"><dd>  <p>The location of the first index read by the GPU from the index buffer.</p> </dd></param>
+        /// <param name="baseVertexLocation"><dd>  <p>A value added to each index before reading a vertex from the vertex buffer.</p> </dd></param>
+        /// <param name="startInstanceLocation"><dd>  <p>A value added to each index before reading per-instance data from a vertex buffer.</p> </dd></param>
         /// <remarks>
-        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>
+        /// <p>A draw API submits work to the rendering pipeline.</p><p>Instancing may extend performance by reusing the same geometry to draw multiple objects in a scene. One example of instancing could be  to draw the same object with different positions and colors. Indexing requires multiple vertex buffers: at least one for per-vertex data  and a second buffer for per-instance data.</p>
         /// </remarks>
-        /// <msdn-id>ff476464</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>
-        public void SetRenderTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
+        /// <msdn-id>ff476410</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::DrawIndexedInstanced([In] unsigned int IndexCountPerInstance,[In] unsigned int InstanceCount,[In] unsigned int StartIndexLocation,[In] int BaseVertexLocation,[In] unsigned int StartInstanceLocation)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::DrawIndexedInstanced</unmanaged-short>
+        public void DrawIndexedInstanced(PrimitiveType primitiveType, int indexCountPerInstance, int instanceCount,
+            int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
         {
-            CommonSetRenderTargets(renderTargetView);
-            currentDepthStencilView = depthStencilView;
-            OutputMerger.SetTargets(depthStencilView, renderTargetView);
+            PrimitiveType = primitiveType;
+            context.DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation,
+                startInstanceLocation);
         }
 
-        private void CommonSetRenderTargets(RenderTargetView rtv)
+        /// <summary>
+        /// <p>Sends queued-up commands in the command buffer to the graphics processing unit (GPU).</p>
+        /// </summary>
+        /// <remarks>
+        /// <p>Most applications don't need to call this method. If an application calls this method when not necessary, it incurs a performance penalty. Each call to <strong>Flush</strong> incurs a significant amount of overhead.</p><p>When Microsoft Direct3D state-setting, present, or draw commands are called by an application, those commands are queued into an internal command buffer.  <strong>Flush</strong> sends those commands to the GPU for processing. Typically, the Direct3D runtime sends these commands to the GPU automatically whenever the runtime determines that  they need to be sent, such as when the command buffer is full or when an application maps a resource. <strong>Flush</strong> sends the commands manually.</p><p>We recommend that you use <strong>Flush</strong> when the CPU waits for an arbitrary amount of time (such as when  you call the <strong>Sleep</strong> function).</p><p>Because <strong>Flush</strong> operates asynchronously,  it can return either before or after the GPU finishes executing the queued graphics commands. However, the graphics commands eventually always complete. You can call the <strong><see cref="SharpDX.Direct3D11.Device.CreateQuery"/></strong> method with the <strong><see cref="SharpDX.Direct3D11.QueryType.Event"/></strong> value to create an event query; you can then use that event query in a call to the <strong><see cref="SharpDX.Direct3D11.DeviceContext.GetDataInternal"/></strong> method to determine when the GPU is finished processing the graphics commands.
+        /// </p><p>Microsoft Direct3D?11 defers the destruction of objects. Therefore, an application can't rely upon objects immediately being destroyed. By calling <strong>Flush</strong>, you destroy any  objects whose destruction was deferred.  If an application requires synchronous destruction of an object, we recommend that the application release all its references, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.ClearState"/></strong>, and then call <strong>Flush</strong>.</p>Deferred Destruction Issues with Flip Presentation Swap Chains<p>Direct3D?11 defers the destruction of objects like views and resources until it can efficiently destroy them. This deferred destruction can cause problems with flip presentation model swap chains. Flip presentation model swap chains have the <strong>DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL</strong> flag set. When you create a flip presentation model swap chain, you can associate only one swap chain at a time with an <strong><see cref="System.IntPtr"/></strong>, <strong>IWindow</strong>, or composition surface. If an application attempts to destroy a flip presentation model swap chain and replace it with another swap chain, the original swap chain is not destroyed when the application immediately frees all of the original swap chain's references.</p><p>Most applications typically use the <strong><see cref="SharpDX.DXGI.SwapChain.ResizeBuffers"/></strong> method for the majority of scenarios where they replace new swap chain buffers for old swap chain buffers. However, if an application must actually destroy an old swap chain and create a new swap chain, the application must force the destruction of all objects that the application freed. To force the destruction, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.ClearState"/></strong> (or otherwise ensure no views are bound to pipeline state), and then call <strong>Flush</strong> on the immediate context. You must force destruction before you call <strong>IDXGIFactory2::CreateSwapChainForHwnd</strong>, <strong>IDXGIFactory2::CreateSwapChainForImmersiveWindow</strong>, or <strong>IDXGIFactory2::CreateSwapChainForCompositionSurface</strong> again to create a new swap chain.</p>
+        /// </remarks>
+        /// <msdn-id>ff476425</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::Flush()</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::Flush</unmanaged-short>
+        public void Flush()
         {
-            currentRenderTargetViews[0] = rtv;
-            for (int i = 1; i < actualRenderTargetViewCount; i++)
-                currentRenderTargetViews[i] = null;
-            actualRenderTargetViewCount = 1;
-            currentRenderTargetView = rtv;
-
-            // Setup the viewport from the rendertarget view
-            TextureView textureView;
-            if (AutoViewportFromRenderTargets && rtv != null && (textureView = rtv.Tag as TextureView) != null)
-            {
-                SetViewport(new ViewportF(0, 0, textureView.Width, textureView.Height));
-            }
+            context.Flush();
         }
 
-        private void CommonSetRenderTargets(RenderTargetView[] rtvs)
+        /// <summary>
+        /// Gets the viewport.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns>Returns a viewport bound to a specified render target</returns>
+        public ViewportF GetViewport(int index)
         {
-            var rtv0 = rtvs.Length > 0 ? rtvs[0] : null;
-            for (int i = 0; i < rtvs.Length; i++)
-                currentRenderTargetViews[i] = rtvs[i];
-            for (int i = rtvs.Length; i < actualRenderTargetViewCount; i++)
-                currentRenderTargetViews[i] = null;
-            actualRenderTargetViewCount = rtvs.Length;
-            currentRenderTargetView = rtv0;
+            RasterizerStage.GetViewports(viewports);
+            return viewports[index];
+        }
 
-            // Setup the viewport from the rendertarget view
-            TextureView textureView;
-            if (AutoViewportFromRenderTargets && rtv0 != null && (textureView = rtv0.Tag as TextureView) != null)
+        /// <summary>
+        /// Presents the Backbuffer to the screen.
+        /// </summary>
+        /// <remarks>
+        /// This method is only working if a <see cref="GraphicsPresenter"/> is set on this device using <see cref="Presenter"/> property.
+        /// </remarks>
+        /// <msdn-id>bb174576</msdn-id>
+        /// <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>
+        /// <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>
+        public void Present()
+        {
+            if (Presenter != null)
             {
-                SetViewport(new ViewportF(0, 0, textureView.Width, textureView.Height));
+                try
+                {
+                    Presenter.Present();
+                }
+                catch (SharpDXException ex)
+                {
+                    if (ex.ResultCode == ResultCode.DeviceReset || ex.ResultCode == ResultCode.DeviceRemoved)
+                    {
+                        // TODO: Implement device reset / removed
+                    }
+                    throw;
+                }
             }
         }
 
         /// <summary>
-        /// Gets the main viewport.
+        /// Resets all vertex buffers bounded to a slot range. By default, It clears all the bounded buffers. See remarks.
         /// </summary>
-        /// <value>The main viewport.</value>
-        public ViewportF Viewport
+        /// <remarks>
+        /// This is sometimes required to unding explicitly vertex buffers bounding to the input shader assembly, when a
+        /// vertex buffer is used as the output of the pipeline.
+        /// </remarks>
+        /// <msdn-id>ff476456</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>
+        public void ResetVertexBuffers()
         {
-            get
-            {
-                RasterizerStage.GetViewports(viewports);
-                return viewports[0];
-            }
+            if (maxSlotCountForVertexBuffer == 0)
+                return;
 
-            set { SetViewport(value); }
+            InputAssembler.SetVertexBuffers(0, maxSlotCountForVertexBuffer, ResetSlotsPointers, ResetSlotsPointers,
+                ResetSlotsPointers);
+
+            maxSlotCountForVertexBuffer = 0;
         }
 
         /// <summary>
@@ -670,33 +765,25 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// <p>Sends queued-up commands in the command buffer to the graphics processing unit (GPU).</p>
+        /// <p>Bind an index buffer to the input-assembler stage.</p>
         /// </summary>
+        /// <param name="indexBuffer"><dd>  <p>A reference to an <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong> object, that contains indices. The index buffer must have been created with  the <strong><see cref="SharpDX.Direct3D11.BindFlags.IndexBuffer"/></strong> flag.</p> </dd></param>
+        /// <param name="is32Bit">Set to true if indices are 32-bit values (integer size) or false if they are 16-bit values (short size)</param>
+        /// <param name="offset">Offset (in bytes) from the start of the index buffer to the first index to use. Default to 0</param>
         /// <remarks>
-        /// <p>Most applications don't need to call this method. If an application calls this method when not necessary, it incurs a performance penalty. Each call to <strong>Flush</strong> incurs a significant amount of overhead.</p><p>When Microsoft Direct3D state-setting, present, or draw commands are called by an application, those commands are queued into an internal command buffer.  <strong>Flush</strong> sends those commands to the GPU for processing. Typically, the Direct3D runtime sends these commands to the GPU automatically whenever the runtime determines that  they need to be sent, such as when the command buffer is full or when an application maps a resource. <strong>Flush</strong> sends the commands manually.</p><p>We recommend that you use <strong>Flush</strong> when the CPU waits for an arbitrary amount of time (such as when  you call the <strong>Sleep</strong> function).</p><p>Because <strong>Flush</strong> operates asynchronously,  it can return either before or after the GPU finishes executing the queued graphics commands. However, the graphics commands eventually always complete. You can call the <strong><see cref="SharpDX.Direct3D11.Device.CreateQuery"/></strong> method with the <strong><see cref="SharpDX.Direct3D11.QueryType.Event"/></strong> value to create an event query; you can then use that event query in a call to the <strong><see cref="SharpDX.Direct3D11.DeviceContext.GetDataInternal"/></strong> method to determine when the GPU is finished processing the graphics commands.
-        /// </p><p>Microsoft Direct3D?11 defers the destruction of objects. Therefore, an application can't rely upon objects immediately being destroyed. By calling <strong>Flush</strong>, you destroy any  objects whose destruction was deferred.  If an application requires synchronous destruction of an object, we recommend that the application release all its references, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.ClearState"/></strong>, and then call <strong>Flush</strong>.</p>Deferred Destruction Issues with Flip Presentation Swap Chains<p>Direct3D?11 defers the destruction of objects like views and resources until it can efficiently destroy them. This deferred destruction can cause problems with flip presentation model swap chains. Flip presentation model swap chains have the <strong>DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL</strong> flag set. When you create a flip presentation model swap chain, you can associate only one swap chain at a time with an <strong><see cref="System.IntPtr"/></strong>, <strong>IWindow</strong>, or composition surface. If an application attempts to destroy a flip presentation model swap chain and replace it with another swap chain, the original swap chain is not destroyed when the application immediately frees all of the original swap chain's references.</p><p>Most applications typically use the <strong><see cref="SharpDX.DXGI.SwapChain.ResizeBuffers"/></strong> method for the majority of scenarios where they replace new swap chain buffers for old swap chain buffers. However, if an application must actually destroy an old swap chain and create a new swap chain, the application must force the destruction of all objects that the application freed. To force the destruction, call <strong><see cref="SharpDX.Direct3D11.DeviceContext.ClearState"/></strong> (or otherwise ensure no views are bound to pipeline state), and then call <strong>Flush</strong> on the immediate context. You must force destruction before you call <strong>IDXGIFactory2::CreateSwapChainForHwnd</strong>, <strong>IDXGIFactory2::CreateSwapChainForImmersiveWindow</strong>, or <strong>IDXGIFactory2::CreateSwapChainForCompositionSurface</strong> again to create a new swap chain.</p>
+        /// <p>For information about creating index buffers, see How to: Create an Index Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind  <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will  not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.</p>
         /// </remarks>
-        /// <msdn-id>ff476425</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::Flush()</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::Flush</unmanaged-short>
-        public void Flush()
+        /// <msdn-id>ff476453</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::IASetIndexBuffer([In, Optional] ID3D11Buffer* pIndexBuffer,[In] DXGI_FORMAT Format,[In] unsigned int Offset)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::IASetIndexBuffer</unmanaged-short>
+        public void SetIndexBuffer(Buffer indexBuffer, bool is32Bit, int offset = 0)
         {
-            context.Flush();
+            InputAssembler.SetIndexBuffer(indexBuffer, is32Bit ? Format.R32_UInt : Format.R16_UInt, offset);
         }
 
-        public void SetShader(VertexShader shader)
+        public void SetPixelShaderConstantBuffer(int slot, Buffer constantBuffer)
         {
-            VertexShader.Set(shader);
-        }
-
-        public void SetShader(PixelShader shader)
-        {
-            PixelShader.Set(shader);
-        }
-
-        public void SetVertexShaderConstantBuffer(int slot, Buffer constantBuffer)
-        {
-            VertexShader.SetConstantBuffer(slot, constantBuffer);
+            PixelShader.SetConstantBuffer(slot, constantBuffer);
         }
 
         public void SetPixelShaderSampler(int slot, SamplerState samplerState)
@@ -709,11 +796,6 @@ namespace Odyssey.Engine
             PixelShader.SetShaderResource(slot, shaderResourceView);
         }
 
-        public void SetPixelShaderConstantBuffer(int slot, Buffer constantBuffer)
-        {
-            PixelShader.SetConstantBuffer(slot, constantBuffer);
-        }
-
         /// <summary>
         /// <p>Sets the <strong>rasterizer state</strong> for the rasterizer stage of the pipeline.</p>
         /// </summary>
@@ -724,6 +806,44 @@ namespace Odyssey.Engine
         public void SetRasterizerState(RasterizerState rasterizerState)
         {
             RasterizerStage.State = rasterizerState;
+        }
+
+        /// <summary>
+        /// Binds a depth-stencil buffer and a set of render targets to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "renderTargetViews">A set of render target views to bind.</param>
+        /// <remarks>
+        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>
+        /// </remarks>
+        /// <msdn-id>ff476464</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>
+        public void SetRenderTargets(DepthStencilView depthStencilView, params RenderTargetView[] renderTargetViews)
+        {
+            Contract.Requires<ArgumentNullException>(renderTargetViews != null, "renderTargetViews is null");
+
+            CommonSetRenderTargets(renderTargetViews);
+            currentDepthStencilView = depthStencilView;
+            OutputMerger.SetTargets(depthStencilView, renderTargetViews);
+        }
+
+        /// <summary>
+        /// Binds a depth-stencil buffer and a single render target to the output-merger stage.
+        /// </summary>
+        /// <param name = "depthStencilView">A view of the depth-stencil buffer to bind.</param>
+        /// <param name = "renderTargetView">A view of the render target to bind.</param>
+        /// <remarks>
+        /// <p>The maximum number of active render targets a device can have active at any given time is set by a #define in D3D11.h called  D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT. It is invalid to try to set the same subresource to multiple render target slots.  Any render targets not defined by this call are set to <strong><c>null</c></strong>.</p><p>If any subresources are also currently bound for reading in a different stage or writing (perhaps in a different part of the pipeline),  those bind points will be set to <strong><c>null</c></strong>, in order to prevent the same subresource from being read and written simultaneously in a single rendering operation.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10. </p><p>If the render-target views were created from an array resource type, then all of the render-target views must have the same array size.   This restriction also applies to the depth-stencil view, its array size must match that of the render-target views being bound.</p><p>The pixel shader must be able to simultaneously render to at least eight separate render targets. All of these render targets must access the same type of resource: Buffer, Texture1D, Texture1DArray, Texture2D, Texture2DArray, Texture3D, or TextureCube. All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types). If render targets use multisample anti-aliasing, all bound render targets and depth buffer must be the same form of multisample resource (that is, the sample counts must be the same). Each render target can have a different data format. These render target formats are not required to have identical bit-per-element counts.</p><p>Any combination of the eight slots for render targets can have a render target set or not set.</p><p>The same resource view cannot be bound to multiple render target slots simultaneously. However, you can set multiple non-overlapping resource views of a single resource as simultaneous multiple render targets.</p>
+        /// </remarks>
+        /// <msdn-id>ff476464</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::OMSetRenderTargets([In] unsigned int NumViews,[In] const void** ppRenderTargetViews,[In, Optional] ID3D11DepthStencilView* pDepthStencilView)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::OMSetRenderTargets</unmanaged-short>
+        public void SetRenderTargets(DepthStencilView depthStencilView, RenderTargetView renderTargetView)
+        {
+            CommonSetRenderTargets(renderTargetView);
+            currentDepthStencilView = depthStencilView;
+            OutputMerger.SetTargets(depthStencilView, renderTargetView);
         }
 
         /// <summary>
@@ -759,190 +879,14 @@ namespace Odyssey.Engine
             RasterizerStage.SetScissorRectangles(scissorRectangles);
         }
 
-        /// <summary>
-        /// Gets the viewport.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <returns>Returns a viewport bound to a specified render target</returns>
-        public ViewportF GetViewport(int index)
+        public void SetShader(VertexShader shader)
         {
-            RasterizerStage.GetViewports(viewports);
-            return viewports[index];
+            VertexShader.Set(shader);
         }
 
-        /// <summary>
-        /// Binds a single viewport to the rasterizer stage.
-        /// </summary>
-        /// <param name="x">The x coordinate of the viewport.</param>
-        /// <param name="y">The y coordinate of the viewport.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="minZ">The min Z.</param>
-        /// <param name="maxZ">The max Z.</param>
-        /// <remarks>
-        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>
-        /// </remarks>
-        /// <msdn-id>ff476480</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
-        public void SetViewport(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
+        public void SetShader(PixelShader shader)
         {
-            viewports[0] = new ViewportF(x, y, width, height, minZ, maxZ);
-            RasterizerStage.SetViewport(x, y, width, height, minZ, maxZ);
-        }
-
-        /// <summary>
-        /// Binds a single viewport to the rasterizer stage.
-        /// </summary>
-        /// <param name="viewport">The viewport.</param>
-        /// <remarks>
-        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>
-        /// </remarks>
-        /// <msdn-id>ff476480</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
-        public void SetViewport(ViewportF viewport)
-        {
-            viewports[0] = viewport;
-            RasterizerStage.SetViewport(viewport);
-        }
-
-        /// <summary>
-        /// Presents the Backbuffer to the screen.
-        /// </summary>
-        /// <remarks>
-        /// This method is only working if a <see cref="GraphicsPresenter"/> is set on this device using <see cref="Presenter"/> property.
-        /// </remarks>
-        /// <msdn-id>bb174576</msdn-id>
-        /// <unmanaged>HRESULT IDXGISwapChain::Present([In] unsigned int SyncInterval,[In] DXGI_PRESENT_FLAGS Flags)</unmanaged>
-        /// <unmanaged-short>IDXGISwapChain::Present</unmanaged-short>
-        public void Present()
-        {
-            if (Presenter != null)
-            {
-                try
-                {
-                    Presenter.Present();
-                }
-                catch (SharpDXException ex)
-                {
-                    if (ex.ResultCode == ResultCode.DeviceReset || ex.ResultCode == ResultCode.DeviceRemoved)
-                    {
-                        // TODO: Implement device reset / removed
-                    }
-                    throw;
-                }
-            }
-        }
-
-        protected override void Dispose(bool disposeManagedResources)
-        {
-            if (disposeManagedResources)
-            {
-                if (Presenter != null)
-                {
-                    // Invalid for WinRT - throwing a "Value does not fall within the expected range" Exception
-#if !WIN8METRO
-    // Make sure that the Presenter is reverted to window before shutting down
-    // otherwise the Direct3D11.Device will generate an exception on Dispose()
-                    Presenter.IsFullScreen = false;
-#endif
-                    Presenter.Dispose();
-                    Presenter = null;
-                    GraphicsAdapter.Dispose();
-                    WICHelper.Factory.Dispose();
-                }
-            }
-
-            base.Dispose(disposeManagedResources);
-        }
-
-        public static implicit operator Device(DirectXDevice from)
-        {
-            return @from == null ? null : @from.device;
-        }
-
-        public static implicit operator DeviceContext(DirectXDevice from)
-        {
-            return @from == null ? null : @from.context;
-        }
-
-        /// <summary>
-        /// <p>Draw non-indexed, non-instanced primitives.</p>
-        /// </summary>
-        /// <param name="primitiveType">Type of the primitive to draw.</param>
-        /// <param name="vertexCount"><dd>  <p>Number of vertices to draw.</p> </dd></param>
-        /// <param name="startVertexLocation"><dd>  <p>Index of the first vertex, which is usually an offset in a vertex buffer; it could also be used as the first vertex id generated for a shader parameter marked with the <strong>SV_TargetId</strong> system-value semantic.</p> </dd></param>
-        /// <remarks>
-        /// <p>A draw API submits work to the rendering pipeline.</p><p>The vertex data for a draw call normally comes from a vertex buffer that is bound to the pipeline. However, you could also provide the vertex data from a shader that has vertex data marked with the <strong>SV_VertexId</strong> system-value semantic.</p>
-        /// </remarks>
-        /// <msdn-id>ff476407</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::Draw([In] unsigned int VertexCount,[In] unsigned int StartVertexLocation)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::Draw</unmanaged-short>
-        public void Draw(PrimitiveType primitiveType, int vertexCount, int startVertexLocation = 0)
-        {
-            PrimitiveType = primitiveType;
-            context.Draw(vertexCount, startVertexLocation);
-        }
-
-        /// <summary>
-        /// <p>Draw indexed, non-instanced primitives.</p>
-        /// </summary>
-        /// <param name="primitiveType">Type of the primitive to draw.</param>
-        /// <param name="indexCount"><dd>  <p>Number of indices to draw.</p> </dd></param>
-        /// <param name="startIndexLocation"><dd>  <p>The location of the first index read by the GPU from the index buffer.</p> </dd></param>
-        /// <param name="baseVertexLocation"><dd>  <p>A value added to each index before reading a vertex from the vertex buffer.</p> </dd></param>
-        /// <remarks>
-        /// <p>A draw API submits work to the rendering pipeline.</p><p>If the sum of both indices is negative, the result of the function call is undefined.</p>
-        /// </remarks>
-        /// <msdn-id>ff476409</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::DrawIndexed([In] unsigned int IndexCount,[In] unsigned int StartIndexLocation,[In] int BaseVertexLocation)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::DrawIndexed</unmanaged-short>
-        public void DrawIndexed(PrimitiveType primitiveType, int indexCount, int startIndexLocation = 0,
-            int baseVertexLocation = 0)
-        {
-            PrimitiveType = primitiveType;
-            context.DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
-        }
-
-        /// <summary>
-        /// <p>Draw indexed, instanced primitives.</p>
-        /// </summary>
-        /// <param name="primitiveType">Type of the primitive to draw.</param>
-        /// <param name="indexCountPerInstance"><dd>  <p>Number of indices read from the index buffer for each instance.</p> </dd></param>
-        /// <param name="instanceCount"><dd>  <p>Number of instances to draw.</p> </dd></param>
-        /// <param name="startIndexLocation"><dd>  <p>The location of the first index read by the GPU from the index buffer.</p> </dd></param>
-        /// <param name="baseVertexLocation"><dd>  <p>A value added to each index before reading a vertex from the vertex buffer.</p> </dd></param>
-        /// <param name="startInstanceLocation"><dd>  <p>A value added to each index before reading per-instance data from a vertex buffer.</p> </dd></param>
-        /// <remarks>
-        /// <p>A draw API submits work to the rendering pipeline.</p><p>Instancing may extend performance by reusing the same geometry to draw multiple objects in a scene. One example of instancing could be  to draw the same object with different positions and colors. Indexing requires multiple vertex buffers: at least one for per-vertex data  and a second buffer for per-instance data.</p>
-        /// </remarks>
-        /// <msdn-id>ff476410</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::DrawIndexedInstanced([In] unsigned int IndexCountPerInstance,[In] unsigned int InstanceCount,[In] unsigned int StartIndexLocation,[In] int BaseVertexLocation,[In] unsigned int StartInstanceLocation)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::DrawIndexedInstanced</unmanaged-short>
-        public void DrawIndexedInstanced(PrimitiveType primitiveType, int indexCountPerInstance, int instanceCount,
-            int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
-        {
-            PrimitiveType = primitiveType;
-            context.DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation,
-                startInstanceLocation);
-        }
-
-        /// <summary>
-        /// <p>Bind an index buffer to the input-assembler stage.</p>
-        /// </summary>
-        /// <param name="indexBuffer"><dd>  <p>A reference to an <strong><see cref="SharpDX.Direct3D11.Buffer"/></strong> object, that contains indices. The index buffer must have been created with  the <strong><see cref="SharpDX.Direct3D11.BindFlags.IndexBuffer"/></strong> flag.</p> </dd></param>
-        /// <param name="is32Bit">Set to true if indices are 32-bit values (integer size) or false if they are 16-bit values (short size)</param>
-        /// <param name="offset">Offset (in bytes) from the start of the index buffer to the first index to use. Default to 0</param>
-        /// <remarks>
-        /// <p>For information about creating index buffers, see How to: Create an Index Buffer.</p><p>Calling this method using a buffer that is currently bound for writing (i.e. bound to the stream output pipeline stage) will effectively bind  <strong><c>null</c></strong> instead because a buffer cannot be bound as both an input and an output at the same time.</p><p>The debug layer will generate a warning whenever a resource is prevented from being bound simultaneously as an input and an output, but this will  not prevent invalid data from being used by the runtime.</p><p> The method will hold a reference to the interfaces passed in. This differs from the device state behavior in Direct3D 10.</p>
-        /// </remarks>
-        /// <msdn-id>ff476453</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::IASetIndexBuffer([In, Optional] ID3D11Buffer* pIndexBuffer,[In] DXGI_FORMAT Format,[In] unsigned int Offset)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::IASetIndexBuffer</unmanaged-short>
-        public void SetIndexBuffer(Buffer indexBuffer, bool is32Bit, int offset = 0)
-        {
-            InputAssembler.SetIndexBuffer(indexBuffer, is32Bit ? Format.R32_UInt : Format.R16_UInt, offset);
+            PixelShader.Set(shader);
         }
 
         /// <summary>
@@ -1018,27 +962,6 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Resets all vertex buffers bounded to a slot range. By default, It clears all the bounded buffers. See remarks.
-        /// </summary>
-        /// <remarks>
-        /// This is sometimes required to unding explicitly vertex buffers bounding to the input shader assembly, when a
-        /// vertex buffer is used as the output of the pipeline.
-        /// </remarks>
-        /// <msdn-id>ff476456</msdn-id>
-        /// <unmanaged>void ID3D11DeviceContext::IASetVertexBuffers([In] unsigned int StartSlot,[In] unsigned int NumBuffers,[In, Buffer] const void* ppVertexBuffers,[In, Buffer] const void* pStrides,[In, Buffer] const void* pOffsets)</unmanaged>
-        /// <unmanaged-short>ID3D11DeviceContext::IASetVertexBuffers</unmanaged-short>
-        public void ResetVertexBuffers()
-        {
-            if (maxSlotCountForVertexBuffer == 0)
-                return;
-
-            InputAssembler.SetVertexBuffers(0, maxSlotCountForVertexBuffer, ResetSlotsPointers, ResetSlotsPointers,
-                ResetSlotsPointers);
-
-            maxSlotCountForVertexBuffer = 0;
-        }
-
-        /// <summary>
         /// Sets the vertex input layout.
         /// </summary>
         /// <param name="inputLayout">The input layout.</param>
@@ -1051,6 +974,139 @@ namespace Odyssey.Engine
             SetupInputLayout();
         }
 
+        public void SetVertexShaderConstantBuffer(int slot, Buffer constantBuffer)
+        {
+            VertexShader.SetConstantBuffer(slot, constantBuffer);
+        }
+
+        /// <summary>
+        /// Binds a single viewport to the rasterizer stage.
+        /// </summary>
+        /// <param name="x">The x coordinate of the viewport.</param>
+        /// <param name="y">The y coordinate of the viewport.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="minZ">The min Z.</param>
+        /// <param name="maxZ">The max Z.</param>
+        /// <remarks>
+        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>
+        /// </remarks>
+        /// <msdn-id>ff476480</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
+        public void SetViewport(float x, float y, float width, float height, float minZ = 0.0f, float maxZ = 1.0f)
+        {
+            viewports[0] = new ViewportF(x, y, width, height, minZ, maxZ);
+            RasterizerStage.SetViewport(x, y, width, height, minZ, maxZ);
+        }
+
+        /// <summary>
+        /// Binds a single viewport to the rasterizer stage.
+        /// </summary>
+        /// <param name="viewport">The viewport.</param>
+        /// <remarks>
+        /// <p></p><p>All viewports must be set atomically as one operation. Any viewports not defined by the call are disabled.</p><p>Which viewport to use is determined by the SV_ViewportArrayIndex semantic output by a geometry shader; if a geometry shader does not specify the semantic, Direct3D will use the first viewport in the array.</p>
+        /// </remarks>
+        /// <msdn-id>ff476480</msdn-id>
+        /// <unmanaged>void ID3D11DeviceContext::RSSetViewports([In] unsigned int NumViewports,[In, Buffer, Optional] const void* pViewports)</unmanaged>
+        /// <unmanaged-short>ID3D11DeviceContext::RSSetViewports</unmanaged-short>
+        public void SetViewport(ViewportF viewport)
+        {
+            viewports[0] = viewport;
+            RasterizerStage.SetViewport(viewport);
+        }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
+            if (disposeManagedResources)
+            {
+                if (Presenter != null)
+                {
+                    // Invalid for WinRT - throwing a "Value does not fall within the expected range" Exception
+#if !WIN8METRO
+    // Make sure that the Presenter is reverted to window before shutting down
+    // otherwise the Direct3D11.Device will generate an exception on Dispose()
+                    Presenter.IsFullScreen = false;
+#endif
+                    Presenter.Dispose();
+                    Presenter = null;
+                    GraphicsAdapter.Dispose();
+                    WICHelper.Factory.Dispose();
+                }
+            }
+
+            base.Dispose(disposeManagedResources);
+        }
+
+        private void CommonSetRenderTargets(RenderTargetView rtv)
+        {
+            currentRenderTargetViews[0] = rtv;
+            for (int i = 1; i < actualRenderTargetViewCount; i++)
+                currentRenderTargetViews[i] = null;
+            actualRenderTargetViewCount = 1;
+            currentRenderTargetView = rtv;
+
+            // Setup the viewport from the rendertarget view
+            TextureView textureView;
+            if (AutoViewportFromRenderTargets && rtv != null && (textureView = rtv.Tag as TextureView) != null)
+            {
+                SetViewport(new ViewportF(0, 0, textureView.Width, textureView.Height));
+            }
+        }
+
+        private void CommonSetRenderTargets(RenderTargetView[] rtvs)
+        {
+            var rtv0 = rtvs.Length > 0 ? rtvs[0] : null;
+            for (int i = 0; i < rtvs.Length; i++)
+                currentRenderTargetViews[i] = rtvs[i];
+            for (int i = rtvs.Length; i < actualRenderTargetViewCount; i++)
+                currentRenderTargetViews[i] = null;
+            actualRenderTargetViewCount = rtvs.Length;
+            currentRenderTargetView = rtv0;
+
+            // Setup the viewport from the rendertarget view
+            TextureView textureView;
+            if (AutoViewportFromRenderTargets && rtv0 != null && (textureView = rtv0.Tag as TextureView) != null)
+            {
+                SetViewport(new ViewportF(0, 0, textureView.Width, textureView.Height));
+            }
+        }
+
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        private void Initialize()
+        {
+            // Default null VertexBuffers used to reset
+            if (ResetSlotsPointers == IntPtr.Zero)
+            {
+                // CommonShaderStage.InputResourceSlotCount is the maximum of resources bindable in the whole pipeline
+                ResetSlotsPointers = ToDispose(SharpDX.Utilities.AllocateClearedMemory(SharpDX.Utilities.SizeOf<IntPtr>() *
+                                                                                       CommonShaderStage.InputResourceSlotCount));
+            }
+
+            InputAssembler = context.InputAssembler;
+            VertexShader = context.VertexShader;
+            //DomainShader = context.DomainShader;
+            //HullShader = context.HullShader;
+            //GeometryShader = context.GeometryShader;
+            RasterizerStage = context.Rasterizer;
+            PixelShader = context.PixelShader;
+            OutputMerger = context.OutputMerger;
+            //ComputeShader = context.ComputeShader;
+            //ShaderStages = new CommonShaderStage[]
+            //                   {
+            //                       context.VertexShader,
+            //                       context.HullShader,
+            //                       context.DomainShader,
+            //                       context.GeometryShader,
+            //                       context.PixelShader,
+            //                       context.ComputeShader
+            //                   };
+
+            //Performance = new GraphicsPerformance(this);
+        }
+
         private void SetupInputLayout()
         {
             if (CurrentEffect == null)
@@ -1058,56 +1114,6 @@ namespace Odyssey.Engine
 
             var inputLayout = CurrentEffect.InputLayout;
             InputAssembler.InputLayout = inputLayout;
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="DirectXDevice"/> from an existing <see cref="SharpDX.Direct3D11.Device"/>.
-        /// </summary>
-        /// <param name="existingDevice">An existing device.</param>
-        /// <returns>A new instance of <see cref="DirectXDevice"/>.</returns>
-        public static DirectXDevice New(Device existingDevice)
-        {
-            return new DirectXDevice(existingDevice);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="DirectXDevice"/> using <see cref="DriverType.Hardware"/>.
-        /// </summary>
-        /// <param name="flags">The flags.</param>
-        /// <param name="featureLevels">The feature levels.</param>
-        /// <returns>A new instance of <see cref="DirectXDevice"/></returns>
-        public static DirectXDevice New(DeviceCreationFlags flags = DeviceCreationFlags.None, params FeatureLevel[] featureLevels)
-        {
-            return New(DriverType.Hardware, flags, featureLevels);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="DirectXDevice"/>.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="flags">The flags.</param>
-        /// <param name="featureLevels">The feature levels.</param>
-        /// <returns>A new instance of <see cref="DirectXDevice"/>.</returns>
-        public static DirectXDevice New(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None,
-            params FeatureLevel[] featureLevels)
-        {
-            if (type == DriverType.Hardware)
-                return new DirectXDevice(GraphicsAdapter.Default, flags, featureLevels);
-
-            return new DirectXDevice(type, flags, featureLevels);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="DirectXDevice"/>.
-        /// </summary>
-        /// <param name="adapter">The graphics adapter to use.</param>
-        /// <param name="flags">The flags.</param>
-        /// <param name="featureLevels">The feature levels.</param>
-        /// <returns>A new instance of <see cref="DirectXDevice"/>.</returns>
-        public static DirectXDevice New(GraphicsAdapter adapter, DeviceCreationFlags flags = DeviceCreationFlags.None,
-            params FeatureLevel[] featureLevels)
-        {
-            return new DirectXDevice(adapter, flags, featureLevels);
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using Odyssey.Content;
+﻿using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using SharpDX;
+using System;
+using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Odyssey.Graphics.Shaders
 {
@@ -13,22 +12,10 @@ namespace Odyssey.Graphics.Shaders
     {
         public const string DefaultTechnique = "Default";
 
+        private readonly IAssetProvider content;
         private readonly DirectXDevice device;
         private readonly ShaderCollection shaderCollection;
-        private readonly IAssetProvider content;
         private Effect effect;
-
-        internal string ActiveTechniqueId { get { return string.Format("{0}.{1}", Name, ActiveTechnique.Name); } }
-        internal DirectXDevice Device { get { return device; } }
-
-        public TechniqueMapping ActiveTechnique { get; protected set; }
-
-        public Effect Effect { get { return effect; } }
-
-        public bool IsInited { get; private set; }
-
-        protected ShaderCollection ShaderCollection { get { return shaderCollection; } }
-        protected IAssetProvider Content { get { return content; } }
 
         public Technique(DirectXDevice device, ShaderCollection shaderCollection, IAssetProvider assetProvider)
         {
@@ -42,6 +29,20 @@ namespace Odyssey.Graphics.Shaders
             ActiveTechnique = shaderCollection.Get(DefaultTechnique);
             Name = shaderCollection.Name;
         }
+
+        public TechniqueMapping ActiveTechnique { get; protected set; }
+
+        public Effect Effect { get { return effect; } }
+
+        public bool IsInited { get; private set; }
+
+        internal string ActiveTechniqueId { get { return string.Format("{0}.{1}", Name, ActiveTechnique.Name); } }
+
+        internal DirectXDevice Device { get { return device; } }
+
+        protected IAssetProvider Content { get { return content; } }
+
+        protected ShaderCollection ShaderCollection { get { return shaderCollection; } }
 
         public void ActivateTechnique(TechniqueKey key)
         {
@@ -70,7 +71,7 @@ namespace Odyssey.Graphics.Shaders
         public void Initialize()
         {
             effect = ToDispose(new Effect(device, shaderCollection.Name, ActiveTechnique));
-         
+
             IsInited = true;
         }
 

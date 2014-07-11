@@ -1,25 +1,36 @@
-using Odyssey.Engine;
+#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
+
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Reflection;
 using SharpDX;
 using System;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using MouseEventArgs = Odyssey.Interaction.PointerEventArgs;
+
+#endregion Using Directives
 
 namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
         #region Public methods
-
-        public void BringToFront()
-        {
-            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Foreground);
-        }
 
         /// <summary>
         /// Programmatically focuses this <see cref="UIElement"/> object, <b>if</b> it is focusable.
@@ -44,11 +55,6 @@ namespace Odyssey.UserInterface
             OnInitialized(args);
         }
 
-        public void SendToBack()
-        {
-            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Background);
-        }
-
         ///// <summary>
         ///// Returns the window that this control belongs to, if any.
         ///// </summary>
@@ -64,6 +70,16 @@ namespace Odyssey.UserInterface
         public virtual void Unload()
         {
             Dispose();
+        }
+
+        public void BringToFront()
+        {
+            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Foreground);
+        }
+
+        public void SendToBack()
+        {
+            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Background);
         }
 
         #endregion Public methods
@@ -162,7 +178,7 @@ namespace Odyssey.UserInterface
         /// <returns>A new copy of this element.</returns>
         internal virtual UIElement Copy()
         {
-            UIElement newElement = (UIElement)Activator.CreateInstance(GetType());
+            UIElement newElement = (UIElement) Activator.CreateInstance(GetType());
 
             newElement.Name = Name;
             newElement.Width = Width;

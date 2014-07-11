@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.UserInterface;
+﻿using Odyssey.UserInterface;
 using Odyssey.UserInterface.Style;
+using System.Collections.Generic;
 
 namespace Odyssey.Engine
 {
@@ -12,13 +9,14 @@ namespace Odyssey.Engine
     [PlatformType(typeof(DesktopApplicationPlatform))]
     internal class DesktopWpfApplicationPlatform : DesktopApplicationPlatform
     {
-        public DesktopWpfApplicationPlatform(Application application) : base(application)
+        public DesktopWpfApplicationPlatform(Application application)
+            : base(application)
         {
         }
 
         protected override IEnumerable<ApplicationWindow> GetSupportedApplicationWindows()
         {
-            return new ApplicationWindow[] { new DesktopWpfApplicationWindow(),  };
+            return new ApplicationWindow[] { new DesktopWpfApplicationWindow(), };
         }
     }
 }

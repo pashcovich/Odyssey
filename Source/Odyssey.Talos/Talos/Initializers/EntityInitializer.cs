@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using Odyssey.Content;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.PostProcessing;
@@ -11,6 +6,9 @@ using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
 using Odyssey.Utilities.Logging;
 using SharpDX;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ITextureResource = Odyssey.Talos.Components.ITextureResource;
 
 namespace Odyssey.Talos.Initializers
@@ -34,16 +32,18 @@ namespace Odyssey.Talos.Initializers
             kTransform = ComponentTypeManager.GetKeyPart<TransformComponent>();
         }
 
-        protected override bool ValidateConstantBuffer(ConstantBufferDescription cb)
+        public override void Initialize(DirectXDevice device, Effect effect, IEntity source, InitializerParameters parameters)
         {
-            return true;
+            base.Initialize(device, effect, source, parameters);
+            if (!effect.UsesProceduralTextures)
+                InitializeTextures(effect, source, parameters);
         }
 
         public override void SetupInitialization(ShaderInitializer initializer)
         {
             var services = initializer.Services;
             var effect = initializer.Effect;
-            
+
             var scene = services.GetService<IScene>();
 
             var data = from e in scene.Entities
@@ -60,50 +60,25 @@ namespace Odyssey.Talos.Initializers
             }
         }
 
-        public override void Initialize(DirectXDevice device, Effect effect, IEntity source, InitializerParameters parameters)
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
         {
-            base.Initialize(device, effect, source, parameters);
-            if (!effect.UsesProceduralTextures)
-                InitializeTextures(effect, source, parameters);
+            return CreateParameter(entity, parameterIndex, reference, initializerParameters);
         }
 
-        void InitializeTextures(Effect effect, IEntity source, InitializerParameters parameters)
+        protected override bool ValidateConstantBuffer(ConstantBufferDescription cb)
         {
-            var referenceTable = from shaderObject in parameters.Technique.Shaders
-                                 from textures in shaderObject.TextureReferences
-                                 select new { Shader = shaderObject, TextureDesc = textures };
-
-            foreach (var row in referenceTable)
-            {
-                var textureDesc = row.TextureDesc;
-                if (!effect[textureDesc.ShaderType].HasTexture(textureDesc.Index))
-                {
-                    var texture = FindResource(source.Components, row.Shader.Name, row.TextureDesc.Texture);
-                    if (texture == null)
-                    {
-                        LogEvent.Engine.Error("[{0}] is missing a component containing a [{1}] texture and tagged with [{2}].", source.Name,
-                            textureDesc.Texture, row.Shader.Name);
-                        throw new InvalidOperationException("No suitable textures found.");
-                    }
-                    effect[textureDesc.ShaderType].AddTexture(new TextureMapping(texture, textureDesc));
-                }
-            }
+            return true;
         }
 
-        static Texture FindResource(IEnumerable<IComponent> components, string key, TextureReference type)
+        private static Texture FindResource(IEnumerable<IComponent> components, string key, TextureReference type)
         {
             var enumerable = components as IComponent[] ?? components.ToArray();
-            var resource  = enumerable.OfType<ITextureResource>().FirstOrDefault(c => c.AssetName == key);
+            var resource = enumerable.OfType<ITextureResource>().FirstOrDefault(c => c.AssetName == key);
 
             return resource != null ? resource[type] : null;
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
-        {
-           return CreateParameter(entity, parameterIndex, reference, initializerParameters);
-        }
-
-        IEnumerable<IParameter> CreateParameter(IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
+        private IEnumerable<IParameter> CreateParameter(IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
         {
             IDirectXDeviceSettings deviceSettings = initializerParameters.Services.GetService<IDirectXDeviceSettings>();
             var cPosition = entity.GetComponent<PositionComponent>(kPosition);
@@ -112,7 +87,7 @@ namespace Odyssey.Talos.Initializers
             switch (reference)
             {
                 case EngineReference.EntityMatrixWorld:
-                    return new [] {new MatrixParameter(parameterIndex, Param.Matrices.World, () => cTransform.World)};
+                    return new[] { new MatrixParameter(parameterIndex, Param.Matrices.World, () => cTransform.World) };
 
                 case EngineReference.EntityMatrixWorldInverse:
                     return new[]
@@ -135,7 +110,7 @@ namespace Odyssey.Talos.Initializers
                     var cBlur = entity.GetComponent<BlurComponent>();
                     if (isHorizontal)
                     {
-                        texelWidth = 1.0f/ (deviceSettings.PreferredBackBufferWidth *cBlur.DownScale);
+                        texelWidth = 1.0f / (deviceSettings.PreferredBackBufferWidth * cBlur.DownScale);
                         texelHeight = 0;
                     }
                     else
@@ -151,12 +126,12 @@ namespace Odyssey.Talos.Initializers
                     {
                         data[i] = new Vector4(offsets[i].X, offsets[i].Y, weights[i], 0);
                     }
-                    return new[] { new Float4ArrayParameter(parameterIndex, data.Length, Param.Floats.BlurOffsetsAndWeights, () => data)};
-                    //return new IParameter[]
-                    //{
-                    //    new Float2ArrayParameter(parameterIndex, offsets.Length, Param.Floats.BlurOffsets, () => offsets),
-                    //    new FloatArrayParameter(parameterIndex, offsets.Length, Param.Floats.BlurWeights, () => weights),
-                    //};
+                    return new[] { new Float4ArrayParameter(parameterIndex, data.Length, Param.Floats.BlurOffsetsAndWeights, () => data) };
+                //return new IParameter[]
+                //{
+                //    new Float2ArrayParameter(parameterIndex, offsets.Length, Param.Floats.BlurOffsets, () => offsets),
+                //    new FloatArrayParameter(parameterIndex, offsets.Length, Param.Floats.BlurWeights, () => weights),
+                //};
 
                 case EngineReference.EntityBloomThreshold:
                     return new[]
@@ -167,9 +142,8 @@ namespace Odyssey.Talos.Initializers
 
                 case EngineReference.EntityBloomParameters:
                     var cBloom = entity.GetComponent<BloomComponent>();
-                    return new []
+                    return new[]
                     {
-                        
                         new Float4Parameter(parameterIndex, "BloomParameters",
                             () => new Vector4(cBloom.Intensity,cBloom.BaseIntensity,cBloom.Saturation, cBloom.BaseSaturation))
                     };
@@ -197,6 +171,29 @@ namespace Odyssey.Talos.Initializers
 
                 default:
                     throw new ArgumentException(string.Format("EngineReference: {0} not valid.", reference));
+            }
+        }
+
+        private void InitializeTextures(Effect effect, IEntity source, InitializerParameters parameters)
+        {
+            var referenceTable = from shaderObject in parameters.Technique.Shaders
+                                 from textures in shaderObject.TextureReferences
+                                 select new { Shader = shaderObject, TextureDesc = textures };
+
+            foreach (var row in referenceTable)
+            {
+                var textureDesc = row.TextureDesc;
+                if (!effect[textureDesc.ShaderType].HasTexture(textureDesc.Index))
+                {
+                    var texture = FindResource(source.Components, row.Shader.Name, row.TextureDesc.Texture);
+                    if (texture == null)
+                    {
+                        LogEvent.Engine.Error("[{0}] is missing a component containing a [{1}] texture and tagged with [{2}].", source.Name,
+                            textureDesc.Texture, row.Shader.Name);
+                        throw new InvalidOperationException("No suitable textures found.");
+                    }
+                    effect[textureDesc.ShaderType].AddTexture(new TextureMapping(texture, textureDesc));
+                }
             }
         }
     }

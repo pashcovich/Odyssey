@@ -1,34 +1,15 @@
-﻿using System;
+﻿using SharpDX;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using SharpDX;
 
 namespace Odyssey.Graphics.Organization.Commands
 {
     public class CommandManager : Component, IEnumerable<Command>
     {
         private readonly LinkedList<Command> commands;
-        public bool IsInited { get; protected set; }
-
-        public bool IsEmpty
-        {
-            get
-            {
-                return commands.Count == 0;
-            }
-        }
-
-        public LinkedListNode<Command> First
-        {
-            get { return commands.First; }
-        }
-
-        public int Count
-        {
-            get { return commands.Count; }
-        }
 
         public CommandManager(IEnumerable<Command> commands)
         {
@@ -40,18 +21,29 @@ namespace Odyssey.Graphics.Organization.Commands
             this.commands = new LinkedList<Command>();
         }
 
-        public void Initialize()
+        public int Count
         {
-            foreach (Command command in commands.Where(c=> !c.IsInited))
-                command.Initialize();
-
-            IsInited = true;
+            get { return commands.Count; }
         }
 
-        public void Clear()
+        public LinkedListNode<Command> First
         {
-            Unload();
-            commands.Clear();
+            get { return commands.First; }
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return commands.Count == 0;
+            }
+        }
+
+        public bool IsInited { get; protected set; }
+
+        public Command this[int index]
+        {
+            get { return commands.ElementAt(index); }
         }
 
         public void AddBefore(LinkedListNode<Command> node, Command value)
@@ -79,10 +71,10 @@ namespace Odyssey.Graphics.Organization.Commands
                 AddLast(command);
         }
 
-        public void Run()
+        public void Clear()
         {
-            foreach (Command command in commands)
-                command.Execute();
+            Unload();
+            commands.Clear();
         }
 
         public IEnumerator<Command> GetEnumerator()
@@ -95,16 +87,25 @@ namespace Odyssey.Graphics.Organization.Commands
             return GetEnumerator();
         }
 
+        public void Initialize()
+        {
+            foreach (Command command in commands.Where(c => !c.IsInited))
+                command.Initialize();
+
+            IsInited = true;
+        }
+
+        public void Run()
+        {
+            foreach (Command command in commands)
+                command.Execute();
+        }
+
         public void Unload()
         {
             foreach (Command command in commands)
                 command.Unload();
             IsInited = false;
-        }
-
-        public Command this[int index]
-        {
-            get { return commands.ElementAt(index); }
         }
     }
 }

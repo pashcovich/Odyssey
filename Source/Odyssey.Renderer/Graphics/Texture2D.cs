@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.IO;
+using System;
+using System.IO;
 
 namespace Odyssey.Graphics
 {
@@ -12,7 +12,6 @@ namespace Odyssey.Graphics
     /// </summary>
     public class Texture2D : Texture2DBase
     {
-
         internal Texture2D(DirectXDevice device, Texture2DDescription description2D, params DataBox[] dataBoxes)
             : base(device, description2D, dataBoxes)
         {
@@ -23,24 +22,36 @@ namespace Odyssey.Graphics
         {
         }
 
-
-        internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice)
+        /// <summary>
+        /// Loads a 2D texture from a stream.
+        /// </summary>
+        /// <param name="device">The <see cref="DirectXDevice"/>.</param>
+        /// <param name="stream">The stream to load the texture from.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <exception cref="ArgumentException">If the texture is not of type 2D</exception>
+        /// <returns>A texture</returns>
+        public static new Texture2D Load(DirectXDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            throw new NotSupportedException();
+            var texture = Texture.Load(device, stream, flags | TextureFlags.ShaderResource, usage);
+            if (!(texture is Texture2D))
+                throw new ArgumentException(string.Format("Texture is not type of [Texture2D] but [{0}]", texture.GetType().Name));
+            return (Texture2D)texture;
         }
 
         /// <summary>
-        /// Makes a copy of this texture.
+        /// Loads a 2D texture from a stream.
         /// </summary>
-        /// <remarks>
-        /// This method doesn't copy the content of the texture.
-        /// </remarks>
-        /// <returns>
-        /// A copy of this texture.
-        /// </returns>
-        public override Texture Clone()
+        /// <param name="device">The <see cref="DirectXDevice"/>.</param>
+        /// <param name="filePath">The file to load the texture from.</param>
+        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
+        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
+        /// <exception cref="ArgumentException">If the texture is not of type 2D</exception>
+        /// <returns>A texture</returns>
+        public static new Texture2D Load(DirectXDevice device, string filePath, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
         {
-            return new Texture2D(Device, Description);
+            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
+                return Load(device, stream, flags | TextureFlags.ShaderResource, usage);
         }
 
         /// <summary>
@@ -51,9 +62,9 @@ namespace Odyssey.Graphics
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
         /// </returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        /// <msdn-id>ff476521</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static Texture2D New(DirectXDevice device, Texture2DDescription description)
         {
             return new Texture2D(device, description);
@@ -67,9 +78,9 @@ namespace Odyssey.Graphics
         /// <returns>
         /// A new instance of <see cref="Texture2D"/> class.
         /// </returns>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        /// <msdn-id>ff476521</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         public static Texture2D New(DirectXDevice device, SharpDX.Direct3D11.Texture2D texture)
         {
             return new Texture2D(device, texture);
@@ -156,35 +167,22 @@ namespace Odyssey.Graphics
         }
 
         /// <summary>
-        /// Loads a 2D texture from a stream.
+        /// Makes a copy of this texture.
         /// </summary>
-        /// <param name="device">The <see cref="DirectXDevice"/>.</param>
-        /// <param name="stream">The stream to load the texture from.</param>
-        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
-        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
-        /// <exception cref="ArgumentException">If the texture is not of type 2D</exception>
-        /// <returns>A texture</returns>
-        public static new Texture2D Load(DirectXDevice device, Stream stream, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
+        /// <remarks>
+        /// This method doesn't copy the content of the texture.
+        /// </remarks>
+        /// <returns>
+        /// A copy of this texture.
+        /// </returns>
+        public override Texture Clone()
         {
-            var texture = Texture.Load(device, stream, flags | TextureFlags.ShaderResource, usage);
-            if (!(texture is Texture2D))
-                throw new ArgumentException(string.Format("Texture is not type of [Texture2D] but [{0}]", texture.GetType().Name));
-            return (Texture2D)texture;
+            return new Texture2D(Device, Description);
         }
 
-        /// <summary>
-        /// Loads a 2D texture from a stream.
-        /// </summary>
-        /// <param name="device">The <see cref="DirectXDevice"/>.</param>
-        /// <param name="filePath">The file to load the texture from.</param>
-        /// <param name="flags">Sets the texture flags (for unordered access...etc.)</param>
-        /// <param name="usage">Usage of the resource. Default is <see cref="ResourceUsage.Immutable"/> </param>
-        /// <exception cref="ArgumentException">If the texture is not of type 2D</exception>
-        /// <returns>A texture</returns>
-        public static new Texture2D Load(DirectXDevice device, string filePath, TextureFlags flags = TextureFlags.ShaderResource, ResourceUsage usage = ResourceUsage.Immutable)
+        internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipMapSlice)
         {
-            using (var stream = new NativeFileStream(filePath, NativeFileMode.Open, NativeFileAccess.Read))
-                return Load(device, stream, flags | TextureFlags.ShaderResource, usage);
+            throw new NotSupportedException();
         }
     }
 }

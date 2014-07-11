@@ -58,7 +58,7 @@ namespace Odyssey.UserInterface.Controls
                     UIElement newItem = element.Copy();
                     var contentControlParent = element.Parent as ContentControl;
                     if (contentControlParent != null)
-                        ((ContentControl) previousElement).Content = newItem;
+                        ((ContentControl)previousElement).Content = newItem;
                     else
                         Children.Add(ToDispose(newItem));
                     newItem.DataContext = item;

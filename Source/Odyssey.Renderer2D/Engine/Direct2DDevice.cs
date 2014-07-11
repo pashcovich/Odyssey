@@ -7,8 +7,8 @@ using SharpDX.DirectWrite;
 using System;
 using System.Diagnostics.Contracts;
 using Brush = Odyssey.Graphics.Shapes.Brush;
-using Factory = SharpDX.Direct2D1.Factory;
-using Factory1 = SharpDX.DirectWrite.Factory1;
+using D2DFactory = SharpDX.Direct2D1.Factory1;
+using DWFactory = SharpDX.DirectWrite.Factory1;
 using FactoryType = SharpDX.Direct2D1.FactoryType;
 
 #endregion Using Directives
@@ -23,9 +23,9 @@ namespace Odyssey.Engine
         private BackBufferSurface backBuffer;
         private Device device;
         private DeviceContext deviceContext;
-        private Factory1 directWriteFactory;
+        private DWFactory directWriteFactory;
         private IDirect3DProvider dxDeviceCache;
-        private Factory factory;
+        private D2DFactory factory;
         private Direct2DSurface target;
 
         public Direct2DDevice(IServiceRegistry services)
@@ -77,7 +77,7 @@ namespace Odyssey.Engine
         /// <summary>
         /// Gets a reference to the default <see cref="SharpDX.DirectWrite.Factory1" />.
         /// </summary>
-        public Factory1 DirectWriteFactory
+        public DWFactory DirectWriteFactory
         {
             get { return directWriteFactory; }
         }
@@ -110,7 +110,7 @@ namespace Odyssey.Engine
             deviceContext.DrawGeometry(geometry, brush);
         }
 
-        public void DrawRectangle(ShapeBase shape, Brush brush, float strokeWidth = 1.0f)
+        public void DrawRectangle(Shape shape, Brush brush, float strokeWidth = 1.0f)
         {
             deviceContext.DrawRectangle(shape.BoundingRectangle, brush, strokeWidth);
         }
@@ -126,7 +126,7 @@ namespace Odyssey.Engine
             deviceContext.FillGeometry(geometry, brush);
         }
 
-        public void FillRectangle(ShapeBase shape, Brush brush)
+        public void FillRectangle(Shape shape, Brush brush)
         {
             deviceContext.FillRectangle(shape.BoundingRectangle, brush);
         }
@@ -165,15 +165,15 @@ namespace Odyssey.Engine
 
                 using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
                 {
-                    device = ToDispose(new Device(dxgiDevice, new CreationProperties { DebugLevel = debugLevel }));
-                    deviceContext = ToDispose(new DeviceContext(device, DeviceContextOptions.None));
                     factory = ToDispose(new SharpDX.Direct2D1.Factory1(FactoryType.SingleThreaded, debugLevel));
+                    device = ToDispose(new Device(factory, dxgiDevice));
+                    deviceContext = ToDispose(new DeviceContext(device, DeviceContextOptions.None));
                 }
 
                 backBuffer = ToDispose(BackBufferSurface.New(this));
                 backBuffer.Initialize();
 
-                directWriteFactory = ToDispose(new Factory1());
+                directWriteFactory = ToDispose(new DWFactory());
             }
         }
 
@@ -224,18 +224,19 @@ namespace Odyssey.Engine
             RemoveAndDispose(ref directWriteFactory);
             RemoveAndDispose(ref deviceContext);
             RemoveAndDispose(ref device);
+            RemoveAndDispose(ref factory);
         }
 
         #region Operators
 
+        public static implicit operator D2DFactory(Direct2DDevice from)
+        {
+            return from == null ? null : from.factory;
+        }
+
         public static implicit operator DeviceContext(Direct2DDevice from)
         {
             return from == null ? null : from.deviceContext;
-        }
-
-        public static implicit operator Factory(Direct2DDevice from)
-        {
-            return from == null ? null : from.factory;
         }
 
         public static implicit operator SharpDX.Direct3D11.Device(Direct2DDevice from)

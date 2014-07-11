@@ -5,10 +5,17 @@ using System.Linq;
 
 namespace Odyssey.Graphics.Shapes
 {
-    public class PolygonGeometry : PathGeometryBase
+    public class PolygonGeometry : PathGeometry
     {
         private readonly Polygon polygon;
         private readonly int sides;
+
+        private PolygonGeometry(Direct2DDevice device, Polygon polygon)
+            : base(device)
+        {
+            this.polygon = polygon;
+            Initialize(Resource);
+        }
 
         public Vector2 Center
         {
@@ -18,13 +25,6 @@ namespace Odyssey.Graphics.Shapes
         public int Sides
         {
             get { return polygon.Count; }
-        }
-
-        internal PolygonGeometry(Direct2DDevice device, Polygon polygon)
-            : base(device)
-        {
-            this.polygon = polygon;
-            Initialize(Resource);
         }
 
         /// <summary>
@@ -44,7 +44,8 @@ namespace Odyssey.Graphics.Shapes
             var sink = polygonGeometry.DefineFigure();
             sink.BeginFigure(polygon[0], figureBegin);
             sink.AddLines(polygon.Skip(1));
-            sink.CloseFigure(FigureEnd.Closed);
+            sink.EndFigure(FigureEnd.Closed);
+            sink.Close();
             return polygonGeometry;
         }
     }

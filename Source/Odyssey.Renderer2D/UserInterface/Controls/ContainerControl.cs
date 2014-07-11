@@ -35,11 +35,6 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         public event EventHandler<ControlEventArgs> ControlAdded;
 
-        void IContainer.Arrange()
-        {
-            Arrange();
-        }
-
         public override bool DesignMode
         {
             get
@@ -52,6 +47,11 @@ namespace Odyssey.UserInterface.Controls
                 foreach (UIElement childControl in Controls)
                     childControl.DesignMode = value;
             }
+        }
+
+        void IContainer.Arrange()
+        {
+            Arrange();
         }
 
         /// <summary>

@@ -17,31 +17,13 @@ namespace Odyssey
     [ContentReader(typeof(SceneReader))]
     public class Scene : IScene
     {
-        private readonly List<IUpdateableSystem> updateableSystems;
-        private readonly List<IRenderableSystem> renderableSystems;
-        private readonly List<IUpdateableSystem> currentlyUpdatingSystems;
         private readonly List<IRenderableSystem> currentlyRenderingSystems;
-        private readonly Messenger messenger;
+        private readonly List<IUpdateableSystem> currentlyUpdatingSystems;
         private readonly EntityMap entityMap;
+        private readonly Messenger messenger;
+        private readonly List<IRenderableSystem> renderableSystems;
         private readonly SystemMap systemMap;
-
-        public bool IsDesignMode { get; private set; }
-
-        public bool IsFirstUpdateDone { get; private set; }
-
-        internal Messenger Messenger { get { return messenger; } }
-
-        internal EntityMap EntityMap { get { return entityMap; } }
-
-        internal SystemMap SystemMap { get { return systemMap; } }
-
-        public IEnumerable<IEntity> Entities { get { return entityMap.Entities; } }
-
-        public IEnumerable<ISystem> Systems { get { return systemMap.Systems; } }
-
-        public IEnumerable<IComponent> Components { get { return entityMap.Components; } }
-
-        public IServiceRegistry Services { get; private set; }
+        private readonly List<IUpdateableSystem> updateableSystems;
 
         public Scene(IServiceRegistry services)
         {
@@ -72,6 +54,180 @@ namespace Odyssey
         {
             foreach (ISystem system in systems)
                 AddSystem(system);
+        }
+
+        public IEnumerable<IComponent> Components { get { return entityMap.Components; } }
+
+        public IEnumerable<IEntity> Entities { get { return entityMap.Entities; } }
+
+        public bool IsDesignMode { get; private set; }
+
+        public bool IsFirstUpdateDone { get; private set; }
+
+        public IServiceRegistry Services { get; private set; }
+
+        public IEnumerable<ISystem> Systems { get { return systemMap.Systems; } }
+
+        internal EntityMap EntityMap { get { return entityMap; } }
+
+        internal Messenger Messenger { get { return messenger; } }
+
+        internal SystemMap SystemMap { get { return systemMap; } }
+
+        public void AddComponentToEntity(IComponent component, IEntity entity)
+        {
+            entityMap.AddComponentToEntity(component, entity);
+        }
+
+        public void AddEntity(Entity entity)
+        {
+            entity.AssignToScene(this);
+            entityMap.AddEntity(entity);
+        }
+
+        public void AddSystem(ISystem system)
+        {
+            systemMap.AddSystem(system);
+        }
+
+        public void BeginDesign()
+        {
+            IsDesignMode = true;
+        }
+
+        public bool ContainsEntity(IEntity entity)
+        {
+            return entityMap.ContainsEntity(entity);
+        }
+
+        public Entity CreateEntity(string name)
+        {
+            Entity entity = new Entity(name);
+            AddEntity(entity);
+            return entity;
+        }
+
+        public void EndDesign()
+        {
+            IsDesignMode = false;
+            Validate();
+            StartSystems();
+        }
+
+        public bool EntityHasComponent(IEntity entity, long keyPart)
+        {
+            return entityMap.EntityHasComponent(entity, keyPart);
+        }
+
+        public TComponent GetEntityComponent<TComponent>(IEntity entity, long keyPart)
+            where TComponent : IComponent
+        {
+            return entityMap.GetEntityComponent<TComponent>(entity, keyPart);
+        }
+
+        public void RemoveComponentFromEntity(IComponent component, IEntity entity)
+        {
+            entityMap.RemoveComponentFromEntity(component, entity);
+        }
+
+        public void RemoveEntity(Entity entity)
+        {
+            entityMap.RemoveEntity(entity);
+        }
+
+        public void RemoveSystem(ISystem system)
+        {
+            systemMap.RemoveSystem(system);
+        }
+
+        public void Render(ITimeService time)
+        {
+            lock (renderableSystems)
+            {
+                foreach (var renderable in renderableSystems)
+                    currentlyRenderingSystems.Add(renderable);
+            }
+
+            foreach (IRenderableSystem system in currentlyRenderingSystems)
+            {
+                if (!system.IsEnabled)
+                    continue;
+
+                if (system.BeginRender())
+                {
+                    system.Render(time);
+                    //system.EndRender();
+                }
+            }
+
+            currentlyRenderingSystems.Clear();
+        }
+
+        public IEnumerable<TComponent> SelectComponents<TComponent>()
+            where TComponent : IComponent
+        {
+            return entityMap.SelectComponents<TComponent>();
+        }
+
+        public IEntity SelectEntity(long id)
+        {
+            return entityMap.SelectEntity(id);
+        }
+
+        public IEnumerable<IComponent> SelectEntityComponents(IEntity entity)
+        {
+            return entityMap.GetEntityComponents(entity);
+        }
+
+        public void SendMessage<TMessage>(TMessage message) where TMessage : IMessage
+        {
+            Messenger.Send(message);
+        }
+
+        public bool SystemHasEntities(ISystem system)
+        {
+            return systemMap.SystemHasEntities(system);
+        }
+
+        public bool TryGetEntityComponent<TComponent>(IEntity entity, long keyPart, out TComponent component)
+            where TComponent : IComponent
+        {
+            return entityMap.TryGetEntityComponent(entity, keyPart, out component);
+        }
+
+        public void Unload()
+        {
+            entityMap.Unload();
+            systemMap.Unload();
+        }
+
+        public void Update(ITimeService time)
+        {
+            lock (updateableSystems)
+            {
+                foreach (var updateable in updateableSystems)
+                    currentlyUpdatingSystems.Add(updateable);
+            }
+
+            foreach (IUpdateableSystem system in currentlyUpdatingSystems)
+            {
+                system.BeforeUpdate();
+
+                if (!system.IsEnabled)
+                    continue;
+
+                system.Process(time);
+                system.AfterUpdate();
+            }
+
+            currentlyUpdatingSystems.Clear();
+            IsFirstUpdateDone = true;
+        }
+
+        private void StartSystems()
+        {
+            foreach (ISystem system in systemMap.Systems)
+                system.Start();
         }
 
         private void SystemMapOnSystemAdded(object sender, SystemEventArgs args)
@@ -106,24 +262,6 @@ namespace Odyssey
             }
         }
 
-        public void BeginDesign()
-        {
-            IsDesignMode = true;
-        }
-
-        public void EndDesign()
-        {
-            IsDesignMode = false;
-            Validate();
-            StartSystems();
-        }
-
-        private void StartSystems()
-        {
-            foreach (ISystem system in systemMap.Systems)
-                system.Start();
-        }
-
         private void Validate()
         {
             if (entityMap.Count == 0)
@@ -134,144 +272,6 @@ namespace Odyssey
                 LogEvent.Engine.Warning("No light registered to scene");
             if (!entityMap.Validate())
                 throw new InvalidOperationException("Entities are missing required components");
-        }
-
-        public void AddSystem(ISystem system)
-        {
-            systemMap.AddSystem(system);
-        }
-
-        public void RemoveSystem(ISystem system)
-        {
-            systemMap.RemoveSystem(system);
-        }
-
-        public IEntity SelectEntity(long id)
-        {
-            return entityMap.SelectEntity(id);
-        }
-
-        public bool ContainsEntity(IEntity entity)
-        {
-            return entityMap.ContainsEntity(entity);
-        }
-
-        public bool SystemHasEntities(ISystem system)
-        {
-            return systemMap.SystemHasEntities(system);
-        }
-
-        public void Update(ITimeService time)
-        {
-            lock (updateableSystems)
-            {
-                foreach (var updateable in updateableSystems)
-                    currentlyUpdatingSystems.Add(updateable);
-            }
-
-            foreach (IUpdateableSystem system in currentlyUpdatingSystems)
-            {
-                system.BeforeUpdate();
-
-                if (!system.IsEnabled)
-                    continue;
-
-                system.Process(time);
-                system.AfterUpdate();
-            }
-
-            currentlyUpdatingSystems.Clear();
-            IsFirstUpdateDone = true;
-        }
-
-        public void Render(ITimeService time)
-        {
-            lock (renderableSystems)
-            {
-                foreach (var renderable in renderableSystems)
-                    currentlyRenderingSystems.Add(renderable);
-            }
-
-            foreach (IRenderableSystem system in currentlyRenderingSystems)
-            {
-                if (!system.IsEnabled)
-                    continue;
-
-                if (system.BeginRender())
-                {
-                    system.Render(time);
-                    //system.EndRender();
-                }
-            }
-
-            currentlyRenderingSystems.Clear();
-        }
-
-        public void SendMessage<TMessage>(TMessage message) where TMessage : IMessage
-        {
-            Messenger.Send(message);
-        }
-
-        public Entity CreateEntity(string name)
-        {
-            Entity entity = new Entity(name);
-            AddEntity(entity);
-            return entity;
-        }
-
-        public void AddEntity(Entity entity)
-        {
-            entity.AssignToScene(this);
-            entityMap.AddEntity(entity);
-        }
-
-        public void RemoveEntity(Entity entity)
-        {
-            entityMap.RemoveEntity(entity);
-        }
-
-        public void AddComponentToEntity(IComponent component, IEntity entity)
-        {
-            entityMap.AddComponentToEntity(component, entity);
-        }
-
-        public void RemoveComponentFromEntity(IComponent component, IEntity entity)
-        {
-            entityMap.RemoveComponentFromEntity(component, entity);
-        }
-
-        public IEnumerable<IComponent> SelectEntityComponents(IEntity entity)
-        {
-            return entityMap.GetEntityComponents(entity);
-        }
-
-        public IEnumerable<TComponent> SelectComponents<TComponent>()
-            where TComponent : IComponent
-        {
-            return entityMap.SelectComponents<TComponent>();
-        }
-
-        public TComponent GetEntityComponent<TComponent>(IEntity entity, long keyPart)
-            where TComponent : IComponent
-        {
-            return entityMap.GetEntityComponent<TComponent>(entity, keyPart);
-        }
-
-        public bool TryGetEntityComponent<TComponent>(IEntity entity, long keyPart, out TComponent component)
-            where TComponent : IComponent
-        {
-            return entityMap.TryGetEntityComponent(entity, keyPart, out component);
-        }
-
-        public bool EntityHasComponent(IEntity entity, long keyPart)
-        {
-            return entityMap.EntityHasComponent(entity, keyPart);
-        }
-
-        public void Unload()
-        {
-            entityMap.Unload();
-            systemMap.Unload();
         }
     }
 }

@@ -10,13 +10,6 @@ namespace Odyssey.Engine
 {
     public class Direct2DResource : Component
     {
-        /// <summary>
-        /// The attached Direct3D11 resource to this instance.
-        /// </summary>
-        protected Resource Resource { get; set; }
-
-        public Direct2DDevice Device { get; internal set; }
-
         protected Direct2DResource(string name)
             : base(name)
         { }
@@ -34,18 +27,12 @@ namespace Odyssey.Engine
             Device = device;
         }
 
+        public Direct2DDevice Device { get; internal set; }
+
         /// <summary>
-        /// Initializes the specified device local.
+        /// The attached Direct3D11 resource to this instance.
         /// </summary>
-        /// <param name="resource">The resource.</param>
-        protected virtual void Initialize(Resource resource)
-        {
-            Resource = ToDispose(resource);
-            if (resource != null)
-            {
-                resource.Tag = this;
-            }
-        }
+        protected Resource Resource { get; set; }
 
         /// <summary>
         /// Implicit casting operator to <see cref="SharpDX.Direct3D11.Resource"/>
@@ -56,23 +43,9 @@ namespace Odyssey.Engine
             return from == null ? null : from.Resource;
         }
 
-        protected override void Dispose(bool disposeManagedResources)
+        public virtual void Initialize()
         {
-            base.Dispose(disposeManagedResources);
-            if (disposeManagedResources)
-                Resource = null;
-        }
-
-        /// <summary>
-        /// Called when name changed for this component.
-        /// </summary>
-        protected override void OnPropertyChanged(string propertyName)
-        {
-            base.OnPropertyChanged(propertyName);
-            if (propertyName == "Name")
-            {
-                if (Device.IsDebugMode && Resource != null) Resource.Tag = Name;
-            }
+            Initialize(Resource);
         }
 
         protected static void UnPin(GCHandle[] handles)
@@ -87,9 +60,36 @@ namespace Odyssey.Engine
             }
         }
 
-        public virtual void Initialize()
+        protected override void Dispose(bool disposeManagedResources)
         {
-            Initialize(Resource);
+            base.Dispose(disposeManagedResources);
+            if (disposeManagedResources)
+                Resource = null;
+        }
+
+        /// <summary>
+        /// Initializes the specified device local.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        protected virtual void Initialize(Resource resource)
+        {
+            Resource = ToDispose(resource);
+            if (resource != null)
+            {
+                resource.Tag = this;
+            }
+        }
+
+        /// <summary>
+        /// Called when name changed for this component.
+        /// </summary>
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            base.OnPropertyChanged(propertyName);
+            if (propertyName == "Name")
+            {
+                if (Device.IsDebugMode && Resource != null) Resource.Tag = Name;
+            }
         }
     }
 }

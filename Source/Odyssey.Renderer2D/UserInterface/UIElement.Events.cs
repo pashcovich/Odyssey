@@ -1,8 +1,22 @@
+#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
 #region Using Directives
 
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
-using Odyssey.UserInterface.Style;
 using System;
 
 #endregion Using Directives
@@ -239,11 +253,6 @@ namespace Odyssey.UserInterface
         #region Events declaration
 
         /// <summary>
-        /// Occurs when the <see cref="DesignMode"/> property value changes.
-        /// </summary>
-        public event EventHandler<ControlEventArgs> DesignModeChanged;
-
-        /// <summary>
         /// Occurs when the control receives focus..
         /// </summary>
         public event EventHandler<EventArgs> GotFocus;
@@ -252,15 +261,6 @@ namespace Odyssey.UserInterface
         /// Occurs when the <see cref="IsHighlighted"/> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> HighlightedChanged;
-
-        public event EventHandler<ControlEventArgs> Initialized;
-
-        public event EventHandler<ControlEventArgs> Initializing;
-
-        /// <summary>
-        /// Occurs when the control's layout changes.
-        /// </summary>
-        public event EventHandler<EventArgs> LayoutUpdated;
 
         /// <summary>
         /// Occurs when the control loses focus.
@@ -271,11 +271,6 @@ namespace Odyssey.UserInterface
         /// Occurs when the control is moved.
         /// </summary>
         public event EventHandler<EventArgs> Move;
-
-        /// <summary>
-        /// Occurs when the <see cref="Parent"/> property value changes.
-        /// </summary>
-        public event EventHandler<EventArgs> ParentChanged;
 
         /// <summary>
         /// Occurs when the control loses mouse capture.
@@ -292,12 +287,31 @@ namespace Odyssey.UserInterface
         /// </summary>
         public event EventHandler<EventArgs> SizeChanged;
 
-        public event EventHandler<EventArgs> Update;
-
         /// <summary>
         /// Occurs when the <see cref="IsVisible"/> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> VisibleChanged;
+
+        /// <summary>
+        /// Occurs when the <see cref="DesignMode"/> property value changes.
+        /// </summary>
+        public event EventHandler<ControlEventArgs> DesignModeChanged;
+
+        public event EventHandler<ControlEventArgs> Initialized;
+
+        public event EventHandler<ControlEventArgs> Initializing;
+
+        /// <summary>
+        /// Occurs when the control's layout changes.
+        /// </summary>
+        public event EventHandler<EventArgs> LayoutUpdated;
+
+        /// <summary>
+        /// Occurs when the <see cref="Parent"/> property value changes.
+        /// </summary>
+        public event EventHandler<EventArgs> ParentChanged;
+
+        public event EventHandler<EventArgs> Update;
 
         /// <summary>
         /// Occurs when the <see cref="IsSelected"/> property value changes.

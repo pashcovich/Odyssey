@@ -1,21 +1,16 @@
 ﻿using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Controls;
-using Odyssey.UserInterface.Style;
 using SharpDX;
 using System;
 
 namespace Odyssey.Graphics
 {
-    public class CutCornerRectangleOutline : CutCornerRectangleBase, IShapeD2D
+    public class CutCornerRectangleOutline : CutCornerRectangleBase
     {
         private GeometryGroup shape;
         private Matrix3x2 transform;
 
-        public Brush Fill { get; set; }
-
         public float OutlineThickness { get; set; }
-
-        public Brush Stroke { get; set; }
 
         public override void Render()
         {
@@ -63,7 +58,7 @@ namespace Odyssey.Graphics
 
             shape = ToDispose(GeometryGroup.New(Device, FillMode.Alternate, new[] { innerShape, outerShape, }));
 
-            var initializer = new ShapeInitializer<CutCornerRectangleOutline>(Device);
+            var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);
 
             foreach (var resource in initializer.CreatedResources)

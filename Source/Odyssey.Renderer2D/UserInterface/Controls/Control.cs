@@ -1,4 +1,19 @@
-﻿#region Using Directives
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
 
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
@@ -70,23 +85,6 @@ namespace Odyssey.UserInterface.Controls
 
         #region Properties
 
-        /// <summary>
-        /// Gets or sets the <see cref = "Description" /> to use for this control.
-        /// </summary>
-        /// <value>The <see cref = "Description" /> object that contains information on how to style
-        /// the text appearance of this control.</value>
-        public ControlDescription Description
-        {
-            get { return description; }
-            private set
-            {
-                if (description == value) return;
-
-                description = value;
-                OnControlDefinitionChanged(EventArgs.Empty);
-            }
-        }
-
         public string DescriptionClass
         {
             get { return controlDescriptionClass; }
@@ -121,6 +119,23 @@ namespace Odyssey.UserInterface.Controls
                 textDescriptionClass = value;
                 if (!DesignMode)
                     ApplyTextDescription();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref = "Description" /> to use for this control.
+        /// </summary>
+        /// <value>The <see cref = "Description" /> object that contains information on how to style
+        /// the text appearance of this control.</value>
+        public ControlDescription Description
+        {
+            get { return description; }
+            private set
+            {
+                if (description == value) return;
+
+                description = value;
+                OnControlDefinitionChanged(EventArgs.Empty);
             }
         }
 
@@ -182,7 +197,7 @@ namespace Odyssey.UserInterface.Controls
 
         internal override UIElement Copy()
         {
-            Control newControl = (Control)base.Copy();
+            Control newControl = (Control) base.Copy();
             newControl.Description = Description;
             newControl.Padding = Padding;
             newControl.TextDescriptionClass = TextDescriptionClass;

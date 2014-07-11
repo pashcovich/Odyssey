@@ -1,9 +1,23 @@
-﻿#region Using Directives
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
 
 using Odyssey.Engine;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
-using Odyssey.Utilities.Reflection;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -42,20 +56,24 @@ namespace Odyssey.UserInterface
         /// <value>The current <see cref="OverlayBase"/> object.</value>
         public OverlayBase CurrentOverlay { get; set; }
 
+        internal static PointerEventArgs LastPointerEvent { get; private set; }
+
+        internal PointerPlatform PointerPlatform
+        {
+            get { return pointerPlatform; }
+            set { pointerPlatform = value; }
+        }
+
+        protected IServiceRegistry Services
+        {
+            get { return services; }
+        }
+
         public UIElement Entered { get; set; }
 
         public PointerManager PointerManager
         {
             get { return pointerManager; }
-        }
-
-        internal static PointerEventArgs LastPointerEvent { get; private set; }
-
-        internal PointerPlatform PointerPlatform { get { return pointerPlatform; } set { pointerPlatform = value; } }
-
-        protected IServiceRegistry Services
-        {
-            get { return services; }
         }
 
         public virtual void Initialize()

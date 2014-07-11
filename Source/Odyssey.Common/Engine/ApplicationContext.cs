@@ -6,21 +6,22 @@
     public abstract class ApplicationContext
     {
         /// <summary>
-        /// The context type of this instance.
-        /// </summary>
-        public ApplicationContextType ContextType { get { return contextType; } }
-
-        private readonly ApplicationContextType contextType;
-
-        /// <summary>
         /// The native control used.
         /// </summary>
         public readonly object Control;
 
+        private readonly ApplicationContextType contextType;
+
+        protected ApplicationContext(ApplicationContextType type, object control)
+        {
+            Control = control;
+            contextType = type;
+        }
+
         /// <summary>
-        /// The requested width.
+        /// The context type of this instance.
         /// </summary>
-        public int RequestedWidth { get; set; }
+        public ApplicationContextType ContextType { get { return contextType; } }
 
         public float DpiX { get; set; }
 
@@ -31,10 +32,9 @@
         /// </summary>
         public int RequestedHeight { get; set; }
 
-        protected ApplicationContext(ApplicationContextType type, object control)
-        {
-            Control = control;
-            contextType = type;
-        }
+        /// <summary>
+        /// The requested width.
+        /// </summary>
+        public int RequestedWidth { get; set; }
     }
 }

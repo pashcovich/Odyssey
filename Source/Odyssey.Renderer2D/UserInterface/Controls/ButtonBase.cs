@@ -1,7 +1,6 @@
 ﻿#region Using Directives
 
 using Odyssey.Interaction;
-using System;
 using System.Linq;
 
 #endregion Using Directives
@@ -22,29 +21,26 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            base.OnInitializing(e);
-            if (Content == null)
-            {
-                Content = new Label() {Text = Name};
-                Content.Initialize();
-            }
-        }
-
         protected internal override void OnPointerExited(PointerEventArgs e)
         {
             base.OnPointerExited(e);
             ActiveStyle = ShapeMap.GetShapes(ControlStatus.Enabled).ToArray();
         }
 
-        
+        protected override void OnInitializing(ControlEventArgs e)
+        {
+            base.OnInitializing(e);
+            if (Content == null)
+            {
+                Content = new Label() { Text = Name };
+                Content.Initialize();
+            }
+        }
+
         protected override void OnPointerEnter(PointerEventArgs e)
         {
             base.OnPointerEnter(e);
             ActiveStyle = ShapeMap.GetShapes(ControlStatus.Highlighted).ToArray();
         }
-
-        
     }
 }

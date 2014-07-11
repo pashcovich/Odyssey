@@ -1,9 +1,11 @@
 ﻿namespace Odyssey.Engine
 {
-    interface IFpsTimerService
+    internal interface IFpsTimerService
     {
         float FrameTime { get; }
-        void Measure();
+
         double MeasuredFPS { get; }
+
+        void Measure();
     }
 }

@@ -1,8 +1,22 @@
-﻿#region Using Directives
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
 
 using GalaSoft.MvvmLight.Messaging;
 using Odyssey.Engine;
-using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
@@ -10,7 +24,6 @@ using Odyssey.Talos;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Systems;
 using Odyssey.Tools.ShaderGenerator.ViewModel.Messages;
-using Odyssey.UserInterface;
 using SharpDX;
 using SharpDX.Diagnostics;
 using SharpDX.Direct3D11;
@@ -23,9 +36,9 @@ namespace Odyssey.Tools.ShaderGenerator.Viewer
     public class DirectXViewer : DesktopWpfApplication
     {
         private readonly Lazy<VSGraphicsDebugger> vsDebugger;
+        private ShaderComponent cShader;
         private bool captureNextFrame;
         private VSGraphicsDebugger.CaptureToken captureToken;
-        private ShaderComponent cShader;
         private Entity previewModel;
         private Scene scene;
         private ShaderCollection shaderCollection;
@@ -50,7 +63,7 @@ namespace Odyssey.Tools.ShaderGenerator.Viewer
         {
             this.shaderCollection = shaderCollection;
             Content.Store(shaderCollection.Name, shaderCollection);
-            cShader = new ShaderComponent { AssetName = shaderCollection.Name, Key = techniqueKey };
+            cShader = new ShaderComponent {AssetName = shaderCollection.Name, Key = techniqueKey};
             vsFlags = shaderCollection[techniqueKey].Key.VertexShader;
         }
 
@@ -122,28 +135,28 @@ namespace Odyssey.Tools.ShaderGenerator.Viewer
             root.RegisterComponent(new PositionComponent());
 
             Entity camera = scene.CreateEntity("Camera");
-            camera.RegisterComponent(new CameraComponent { Target = new Vector3(0, 0, 0) });
-            camera.RegisterComponent(new PositionComponent { Position = new Vector3(0, 0f, 3f) });
-            camera.RegisterComponent(new UpdateComponent { UpdateFrequency = UpdateFrequency.RealTime });
+            camera.RegisterComponent(new CameraComponent {Target = new Vector3(0, 0, 0)});
+            camera.RegisterComponent(new PositionComponent {Position = new Vector3(0, 0f, 3f)});
+            camera.RegisterComponent(new UpdateComponent {UpdateFrequency = UpdateFrequency.RealTime});
 
             Entity pointLight = scene.CreateEntity("PointLight");
-            pointLight.RegisterComponent(new PointLightComponent { });
-            pointLight.RegisterComponent(new PositionComponent { Position = new Vector3(0, 0f, 3f) });
-            pointLight.RegisterComponent(new UpdateComponent { UpdateFrequency = UpdateFrequency.RealTime });
-            pointLight.RegisterComponent(new ParentComponent() { Entity = root });
+            pointLight.RegisterComponent(new PointLightComponent {});
+            pointLight.RegisterComponent(new PositionComponent {Position = new Vector3(0, 0f, 3f)});
+            pointLight.RegisterComponent(new UpdateComponent {UpdateFrequency = UpdateFrequency.RealTime});
+            pointLight.RegisterComponent(new ParentComponent() {Entity = root});
             pointLight.RegisterComponent(new TransformComponent());
 
             previewModel = scene.CreateEntity("PreviewModel");
             previewModel.RegisterComponent(new PositionComponent());
             previewModel.RegisterComponent(new TransformComponent());
-            previewModel.RegisterComponent(new ModelComponent() { AssetName = cube.Name });
-            previewModel.RegisterComponent(new UpdateComponent() { UpdateFrequency = UpdateFrequency.RealTime });
-            previewModel.RegisterComponent(new MaterialComponent() { Diffuse = Color.Blue });
+            previewModel.RegisterComponent(new ModelComponent() {AssetName = cube.Name});
+            previewModel.RegisterComponent(new UpdateComponent() {UpdateFrequency = UpdateFrequency.RealTime});
+            previewModel.RegisterComponent(new MaterialComponent() {Diffuse = Color.Blue});
             previewModel.RegisterComponent(cShader);
 
             Entity ui = scene.CreateEntity("UI");
-            ui.RegisterComponent(new UserInterfaceComponent { Overlay = ViewerOverlay.CreateOverlay(Services, this) });
-            ui.RegisterComponent(new UpdateComponent() { UpdateFrequency = UpdateFrequency.RealTime });
+            ui.RegisterComponent(new UserInterfaceComponent {Overlay = ViewerOverlay.CreateOverlay(Services, this)});
+            ui.RegisterComponent(new UpdateComponent() {UpdateFrequency = UpdateFrequency.RealTime});
 
             scene.EndDesign();
         }

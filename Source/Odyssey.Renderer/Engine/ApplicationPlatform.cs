@@ -1,6 +1,20 @@
-﻿#region Using Directives
+﻿#region License
 
-using Odyssey.Graphics;
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
+
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
@@ -20,7 +34,7 @@ namespace Odyssey.Engine
         {
             this.application = application;
             services = application.Services;
-            Services.AddService(typeof(IDirectXDeviceFactory), this);
+            Services.AddService(typeof (IDirectXDeviceFactory), this);
         }
 
         #region Events
@@ -82,11 +96,6 @@ namespace Odyssey.Engine
 
         #endregion Events
 
-        protected delegate void AddDeviceToListDelegate(ApplicationGraphicsParameters prefferedParameters,
-            GraphicsAdapter graphicsAdapter,
-            DeviceInformation deviceInfo,
-            List<DeviceInformation> graphicsDeviceInfos);
-
         public abstract string DefaultAppDirectory { get; }
 
         public bool IsBlockingRun
@@ -128,6 +137,20 @@ namespace Odyssey.Engine
             return device;
         }
 
+        public virtual List<DeviceInformation> FindBestDevices(ApplicationGraphicsParameters preferredParameters)
+        {
+            var graphicsDeviceInfos = new List<DeviceInformation>();
+
+            // Iterate on each adapter
+            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
+            {
+                TryFindSupportedFeatureLevel(preferredParameters, graphicsAdapter, graphicsDeviceInfos,
+                    TryAddDeviceWithDisplayMode);
+            }
+
+            return graphicsDeviceInfos;
+        }
+
         public virtual ApplicationWindow CreateWindow(ApplicationContext applicationContext)
         {
             var windows = GetSupportedApplicationWindows();
@@ -154,19 +177,6 @@ namespace Odyssey.Engine
             Idle = null;
             Resume = null;
             Suspend = null;
-        }
-
-        public virtual List<DeviceInformation> FindBestDevices(ApplicationGraphicsParameters preferredParameters)
-        {
-            var graphicsDeviceInfos = new List<DeviceInformation>();
-
-            // Iterate on each adapter
-            foreach (var graphicsAdapter in GraphicsAdapter.Adapters)
-            {
-                TryFindSupportedFeatureLevel(preferredParameters, graphicsAdapter, graphicsDeviceInfos, TryAddDeviceWithDisplayMode);
-            }
-
-            return graphicsDeviceInfos;
         }
 
         public void Run(ApplicationContext applicationContext)
@@ -317,7 +327,8 @@ namespace Odyssey.Engine
                     return MSAALevel.X8;
 
                 default:
-                    throw new ArgumentOutOfRangeException(string.Format("MultiSampleCount of {0} is not supported", multiSampleCount));
+                    throw new ArgumentOutOfRangeException(string.Format("MultiSampleCount of {0} is not supported",
+                        multiSampleCount));
             }
         }
 
@@ -331,7 +342,7 @@ namespace Odyssey.Engine
                 GraphicsProfile = featureLevel,
                 PresentationParameters =
                 {
-                    MultiSampleCount = (MSAALevel)preferredParameters.PreferredMultiSampleCount,
+                    MultiSampleCount = (MSAALevel) preferredParameters.PreferredMultiSampleCount,
                     IsFullScreen = preferredParameters.IsFullScreen,
                     PreferredFullScreenOutputIndex = preferredParameters.PreferredFullScreenOutputIndex,
                     DepthBufferShaderResource = preferredParameters.DepthBufferShaderResource,
@@ -382,5 +393,10 @@ namespace Odyssey.Engine
                 }
             }
         }
+
+        protected delegate void AddDeviceToListDelegate(ApplicationGraphicsParameters prefferedParameters,
+            GraphicsAdapter graphicsAdapter,
+            DeviceInformation deviceInfo,
+            List<DeviceInformation> graphicsDeviceInfos);
     }
 }

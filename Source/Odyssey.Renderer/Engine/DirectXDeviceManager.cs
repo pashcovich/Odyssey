@@ -1,4 +1,19 @@
-﻿#region Using Directives
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
 
 using Odyssey.Graphics;
 using Odyssey.Utilities.Logging;
@@ -103,20 +118,18 @@ namespace Odyssey.Engine
                 FeatureLevel.Level_9_1
             };
             // Register the services to the registry
-            application.Services.AddService(typeof(IDirectXDeviceManager), this);
-            application.Services.AddService(typeof(IDirectXDeviceService), this);
-            application.Services.AddService(typeof(IOdysseyDeviceService), this);
-            application.Services.AddService(typeof(IDirectXDeviceSettings), this);
-            application.Services.AddService(typeof(IDirect2DService), this);
+            application.Services.AddService(typeof (IDirectXDeviceManager), this);
+            application.Services.AddService(typeof (IDirectXDeviceService), this);
+            application.Services.AddService(typeof (IOdysseyDeviceService), this);
+            application.Services.AddService(typeof (IDirectXDeviceSettings), this);
+            application.Services.AddService(typeof (IDirect2DService), this);
             direct2DDevice = new Direct2DDevice(application.Services);
 
-            deviceFactory = (IDirectXDeviceFactory)application.Services.GetService(typeof(IDirectXDeviceFactory));
+            deviceFactory = (IDirectXDeviceFactory) application.Services.GetService(typeof (IDirectXDeviceFactory));
             if (deviceFactory == null)
             {
                 throw new InvalidOperationException("IDirectXDeviceFactory is not registered as a service");
             }
-
-            
 
             application.WindowCreated += ApplicationOnWindowCreated;
         }
@@ -131,15 +144,15 @@ namespace Odyssey.Engine
 
         #region Public Events
 
+        public event EventHandler<EventArgs> DeviceChangeBegin;
+
+        public event EventHandler<EventArgs> DeviceChangeEnd;
+
         public event EventHandler<EventArgs> DeviceCreated;
 
         public event EventHandler<EventArgs> DeviceDisposing;
 
         public event EventHandler<EventArgs> DeviceLost;
-
-        public event EventHandler<EventArgs> DeviceChangeBegin;
-
-        public event EventHandler<EventArgs> DeviceChangeEnd;
 
         IDirect3DProvider IDirectXDeviceService.DirectXDevice
         {
@@ -151,6 +164,28 @@ namespace Odyssey.Engine
         #endregion Public Events
 
         #region Public Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the DepthBuffer should be created with the ShaderResource flag. Default is false.
+        /// </summary>
+        public bool DepthBufferShaderResource
+        {
+            get { return depthBufferShaderResource; }
+            set
+            {
+                if (depthBufferShaderResource != value)
+                {
+                    depthBufferShaderResource = value;
+                    deviceSettingsChanged = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the device creation flags that will be used to create the <see cref="DirectXDevice"/>
+        /// </summary>
+        /// <value>The device creation flags.</value>
+        public DeviceCreationFlags DeviceCreationFlags { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [prefer multi sampling].
@@ -169,12 +204,6 @@ namespace Odyssey.Engine
                 }
             }
         }
-
-        /// <summary>
-        /// Gets or sets the device creation flags that will be used to create the <see cref="DirectXDevice"/>
-        /// </summary>
-        /// <value>The device creation flags.</value>
-        public DeviceCreationFlags DeviceCreationFlags { get; set; }
 
         /// <summary>
         /// Gets or sets the preferred depth stencil format.
@@ -206,22 +235,6 @@ namespace Odyssey.Engine
                 if (preferredFullScreenOutputIndex != value)
                 {
                     preferredFullScreenOutputIndex = value;
-                    deviceSettingsChanged = true;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the DepthBuffer should be created with the ShaderResource flag. Default is false.
-        /// </summary>
-        public bool DepthBufferShaderResource
-        {
-            get { return depthBufferShaderResource; }
-            set
-            {
-                if (depthBufferShaderResource != value)
-                {
-                    depthBufferShaderResource = value;
                     deviceSettingsChanged = true;
                 }
             }
@@ -272,26 +285,6 @@ namespace Odyssey.Engine
             get { return horizontalDpi; }
         }
 
-        public float VerticalDpi
-        {
-            get { return verticalDpi; }
-        }
-
-        /// <summary>
-        /// Gets or sets the list of graphics profile to select from the best feature to the lower feature. See remarks.
-        /// </summary>
-        /// <value>The graphics profile.</value>
-        /// <remarks>
-        /// By default, the PreferredGraphicsProfile is set to { <see cref="FeatureLevel.Level_11_1"/>,
-        /// <see cref="FeatureLevel.Level_11_0"/>,
-        /// <see cref="FeatureLevel.Level_10_1"/>,
-        /// <see cref="FeatureLevel.Level_10_0"/>,
-        /// <see cref="FeatureLevel.Level_9_3"/>,
-        /// <see cref="FeatureLevel.Level_9_2"/>,
-        /// <see cref="FeatureLevel.Level_9_1"/>}
-        /// </remarks>
-        public FeatureLevel[] PreferredGraphicsProfile { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether this instance is full screen.
         /// </summary>
@@ -323,19 +316,6 @@ namespace Odyssey.Engine
                 if (isStereo != value)
                 {
                     isStereo = value;
-                    deviceSettingsChanged = true;
-                }
-            }
-        }
-
-        public int PreferredMultiSampleCount
-        {
-            get { return preferredMultiSampleCount; }
-            set
-            {
-                if (preferredMultiSampleCount != value)
-                {
-                    preferredMultiSampleCount = value;
                     deviceSettingsChanged = true;
                 }
             }
@@ -395,6 +375,39 @@ namespace Odyssey.Engine
                     deviceSettingsChanged = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the list of graphics profile to select from the best feature to the lower feature. See remarks.
+        /// </summary>
+        /// <value>The graphics profile.</value>
+        /// <remarks>
+        /// By default, the PreferredGraphicsProfile is set to { <see cref="FeatureLevel.Level_11_1"/>,
+        /// <see cref="FeatureLevel.Level_11_0"/>,
+        /// <see cref="FeatureLevel.Level_10_1"/>,
+        /// <see cref="FeatureLevel.Level_10_0"/>,
+        /// <see cref="FeatureLevel.Level_9_3"/>,
+        /// <see cref="FeatureLevel.Level_9_2"/>,
+        /// <see cref="FeatureLevel.Level_9_1"/>}
+        /// </remarks>
+        public FeatureLevel[] PreferredGraphicsProfile { get; set; }
+
+        public int PreferredMultiSampleCount
+        {
+            get { return preferredMultiSampleCount; }
+            set
+            {
+                if (preferredMultiSampleCount != value)
+                {
+                    preferredMultiSampleCount = value;
+                    deviceSettingsChanged = true;
+                }
+            }
+        }
+
+        public float VerticalDpi
+        {
+            get { return verticalDpi; }
         }
 
         public DirectXDevice DirectXDevice
@@ -518,15 +531,26 @@ namespace Odyssey.Engine
             return DisplayOrientation.LandscapeLeft;
         }
 
+        /// <summary>
+        /// Determines whether this instance is compatible with the the specified new <see cref="DeviceInformation"/>.
+        /// </summary>
+        /// <param name="newDeviceInfo">The new device info.</param>
+        /// <returns><c>true</c> if this instance this instance is compatible with the the specified new <see cref="DeviceInformation"/>; otherwise, <c>false</c>.</returns>
+        protected virtual bool CanResetDevice(DeviceInformation newDeviceInfo)
+        {
+            // By default, a reset is compatible when we stay under the same graphics profile.
+            return DirectXDevice.Features.Level == newDeviceInfo.GraphicsProfile;
+        }
+
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)
             {
                 if (application != null)
                 {
-                    if (application.Services.GetService(typeof(IOdysseyDeviceService)) == this)
+                    if (application.Services.GetService(typeof (IOdysseyDeviceService)) == this)
                     {
-                        application.Services.RemoveService(typeof(IOdysseyDeviceService));
+                        application.Services.RemoveService(typeof (IOdysseyDeviceService));
                     }
 
                     application.Window.ClientSizeChanged -= Window_ClientSizeChanged;
@@ -537,17 +561,6 @@ namespace Odyssey.Engine
             }
 
             base.Dispose(disposeManagedResources);
-        }
-
-        /// <summary>
-        /// Determines whether this instance is compatible with the the specified new <see cref="DeviceInformation"/>.
-        /// </summary>
-        /// <param name="newDeviceInfo">The new device info.</param>
-        /// <returns><c>true</c> if this instance this instance is compatible with the the specified new <see cref="DeviceInformation"/>; otherwise, <c>false</c>.</returns>
-        protected virtual bool CanResetDevice(DeviceInformation newDeviceInfo)
-        {
-            // By default, a reset is compatible when we stay under the same graphics profile.
-            return DirectXDevice.Features.Level == newDeviceInfo.GraphicsProfile;
         }
 
         /// <summary>
@@ -570,7 +583,7 @@ namespace Odyssey.Engine
                 DepthBufferShaderResource = DepthBufferShaderResource,
                 PreferMultiSampling = PreferMultiSampling,
                 SynchronizeWithVerticalRetrace = SynchronizeWithVerticalRetrace,
-                PreferredGraphicsProfile = (FeatureLevel[])PreferredGraphicsProfile.Clone(),
+                PreferredGraphicsProfile = (FeatureLevel[]) PreferredGraphicsProfile.Clone(),
                 PreferredMultiSampleCount = PreferMultiSampling ? PreferredMultiSampleCount : 1,
             };
 
@@ -595,6 +608,36 @@ namespace Odyssey.Engine
             }
 
             return devices[0];
+        }
+
+        protected virtual void OnDeviceChangeBegin(object sender, EventArgs args)
+        {
+            RaiseEvent(DeviceChangeBegin, sender, args);
+        }
+
+        protected virtual void OnDeviceChangeEnd(object sender, EventArgs args)
+        {
+            RaiseEvent(DeviceChangeEnd, sender, args);
+        }
+
+        protected virtual void OnDeviceCreated(object sender, EventArgs args)
+        {
+            RaiseEvent(DeviceCreated, sender, args);
+        }
+
+        protected virtual void OnDeviceDisposing(object sender, EventArgs args)
+        {
+            RaiseEvent(DeviceDisposing, sender, args);
+        }
+
+        protected virtual void OnDeviceLost(object sender, EventArgs args)
+        {
+            RaiseEvent(DeviceLost, sender, args);
+        }
+
+        protected virtual void OnInitializeDeviceSettings(object sender, InitializeDeviceSettingsEventArgs args)
+        {
+            RaiseEvent(PreparingDeviceSettings, sender, args);
         }
 
         /// <summary>
@@ -645,12 +688,12 @@ namespace Odyssey.Engine
 
                 // Sort by AspectRatio
                 var targetAspectRatio = (PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0)
-                    ? (float)Global.DefaultBackBufferWidth / Global.DefaultBackBufferHeight
-                    : (float)PreferredBackBufferWidth / PreferredBackBufferHeight;
+                    ? (float) Global.DefaultBackBufferWidth/Global.DefaultBackBufferHeight
+                    : (float) PreferredBackBufferWidth/PreferredBackBufferHeight;
                 var leftDiffRatio =
-                    Math.Abs(((float)leftParams.BackBufferWidth / leftParams.BackBufferHeight) - targetAspectRatio);
+                    Math.Abs(((float) leftParams.BackBufferWidth/leftParams.BackBufferHeight) - targetAspectRatio);
                 var rightDiffRatio =
-                    Math.Abs(((float)rightParams.BackBufferWidth / rightParams.BackBufferHeight) - targetAspectRatio);
+                    Math.Abs(((float) rightParams.BackBufferWidth/rightParams.BackBufferHeight) - targetAspectRatio);
                 if (Math.Abs(leftDiffRatio - rightDiffRatio) > 0.2f)
                 {
                     return leftDiffRatio >= rightDiffRatio ? 1 : -1;
@@ -667,26 +710,26 @@ namespace Odyssey.Engine
                         var leftOutput = leftAdapter.GetOutputAt(PreferredFullScreenOutputIndex);
                         var rightOutput = rightAdapter.GetOutputAt(PreferredFullScreenOutputIndex);
 
-                        leftPixelCount = leftOutput.CurrentDisplayMode.Width * leftOutput.CurrentDisplayMode.Height;
-                        rightPixelCount = rightOutput.CurrentDisplayMode.Width * rightOutput.CurrentDisplayMode.Height;
+                        leftPixelCount = leftOutput.CurrentDisplayMode.Width*leftOutput.CurrentDisplayMode.Height;
+                        rightPixelCount = rightOutput.CurrentDisplayMode.Width*rightOutput.CurrentDisplayMode.Height;
                     }
                     else
                     {
-                        leftPixelCount = rightPixelCount = PreferredBackBufferWidth * PreferredBackBufferHeight;
+                        leftPixelCount = rightPixelCount = PreferredBackBufferWidth*PreferredBackBufferHeight;
                     }
                 }
                 else if ((PreferredBackBufferWidth == 0) || (PreferredBackBufferHeight == 0))
                 {
-                    leftPixelCount = rightPixelCount = Global.DefaultBackBufferWidth * Global.DefaultBackBufferHeight;
+                    leftPixelCount = rightPixelCount = Global.DefaultBackBufferWidth*Global.DefaultBackBufferHeight;
                 }
                 else
                 {
-                    leftPixelCount = rightPixelCount = PreferredBackBufferWidth * PreferredBackBufferHeight;
+                    leftPixelCount = rightPixelCount = PreferredBackBufferWidth*PreferredBackBufferHeight;
                 }
 
-                int leftDeltaPixelCount = Math.Abs((leftParams.BackBufferWidth * leftParams.BackBufferHeight) - leftPixelCount);
+                int leftDeltaPixelCount = Math.Abs((leftParams.BackBufferWidth*leftParams.BackBufferHeight) - leftPixelCount);
                 int rightDeltaPixelCount =
-                    Math.Abs((rightParams.BackBufferWidth * rightParams.BackBufferHeight) - rightPixelCount);
+                    Math.Abs((rightParams.BackBufferWidth*rightParams.BackBufferHeight) - rightPixelCount);
                 if (leftDeltaPixelCount != rightDeltaPixelCount)
                 {
                     return leftDeltaPixelCount >= rightDeltaPixelCount ? 1 : -1;
@@ -710,21 +753,6 @@ namespace Odyssey.Engine
             });
         }
 
-        private int CalculateRankForFormat(Format format)
-        {
-            if (format == PreferredBackBufferFormat)
-            {
-                return 0;
-            }
-
-            if (CalculateFormatSize(format) == CalculateFormatSize(PreferredBackBufferFormat))
-            {
-                return 1;
-            }
-
-            return int.MaxValue;
-        }
-
         private int CalculateFormatSize(Format format)
         {
             switch (format)
@@ -744,92 +772,19 @@ namespace Odyssey.Engine
             return 0;
         }
 
-        protected virtual void OnDeviceCreated(object sender, EventArgs args)
+        private int CalculateRankForFormat(Format format)
         {
-            RaiseEvent(DeviceCreated, sender, args);
-        }
-
-        protected virtual void OnDeviceDisposing(object sender, EventArgs args)
-        {
-            RaiseEvent(DeviceDisposing, sender, args);
-        }
-
-        protected virtual void OnDeviceLost(object sender, EventArgs args)
-        {
-            RaiseEvent(DeviceLost, sender, args);
-        }
-
-        protected virtual void OnDeviceChangeBegin(object sender, EventArgs args)
-        {
-            RaiseEvent(DeviceChangeBegin, sender, args);
-        }
-
-        protected virtual void OnDeviceChangeEnd(object sender, EventArgs args)
-        {
-            RaiseEvent(DeviceChangeEnd, sender, args);
-        }
-
-        protected virtual void OnInitializeDeviceSettings(object sender, InitializeDeviceSettingsEventArgs args)
-        {
-            RaiseEvent(PreparingDeviceSettings, sender, args);
-        }
-
-        private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
-            where T : EventArgs
-        {
-            if (handler != null)
-                handler(sender, args);
-        }
-
-        private void Window_ClientSizeChanged(object sender, EventArgs e)
-        {
-            if (!isChangingDevice &&
-                ((application.Window.ClientBounds.Height != 0) || (application.Window.ClientBounds.Width != 0)))
+            if (format == PreferredBackBufferFormat)
             {
-                resizedBackBufferWidth = application.Window.ClientBounds.Width;
-                resizedBackBufferHeight = application.Window.ClientBounds.Height;
-                isBackBufferToResize = true;
-                ChangeOrCreateDevice(false);
+                return 0;
             }
-        }
 
-        private void Window_OrientationChanged(object sender, EventArgs e)
-        {
-            if ((!isChangingDevice &&
-                 ((application.Window.ClientBounds.Height != 0) || (application.Window.ClientBounds.Width != 0))) &&
-                (application.Window.CurrentOrientation != currentWindowOrientation))
+            if (CalculateFormatSize(format) == CalculateFormatSize(PreferredBackBufferFormat))
             {
-                ChangeOrCreateDevice(false);
+                return 1;
             }
-        }
 
-        private void GraphicsDevice_Disposing(object sender, EventArgs e)
-        {
-            // Clears the Device
-            directXDevice = null;
-
-            OnDeviceDisposing(sender, e);
-        }
-
-        private void CreateDevice(DeviceInformation newInfo)
-        {
-            SharpDX.Utilities.Dispose(ref directXDevice);
-
-            newInfo.PresentationParameters.IsFullScreen = isFullScreen;
-            newInfo.PresentationParameters.PresentationInterval = SynchronizeWithVerticalRetrace
-                ? PresentInterval.One
-                : PresentInterval.Immediate;
-            newInfo.DeviceCreationFlags = DeviceCreationFlags;
-
-            OnInitializeDeviceSettings(this, new InitializeDeviceSettingsEventArgs(newInfo));
-
-            // this.ValidateGraphicsDeviceInformation(newInfo);
-            directXDevice = deviceFactory.CreateDevice(newInfo);
-            application.Services.AddService(typeof(DirectXDevice), DirectXDevice);
-
-            DirectXDevice.Disposing += GraphicsDevice_Disposing;
-
-            OnDeviceCreated(this, EventArgs.Empty);
+            return int.MaxValue;
         }
 
         private void ChangeOrCreateDevice(bool forceCreate)
@@ -924,6 +879,64 @@ namespace Odyssey.Engine
 
                 currentWindowOrientation = application.Window.CurrentOrientation;
                 isChangingDevice = false;
+            }
+        }
+
+        private void CreateDevice(DeviceInformation newInfo)
+        {
+            SharpDX.Utilities.Dispose(ref directXDevice);
+
+            newInfo.PresentationParameters.IsFullScreen = isFullScreen;
+            newInfo.PresentationParameters.PresentationInterval = SynchronizeWithVerticalRetrace
+                ? PresentInterval.One
+                : PresentInterval.Immediate;
+            newInfo.DeviceCreationFlags = DeviceCreationFlags;
+
+            OnInitializeDeviceSettings(this, new InitializeDeviceSettingsEventArgs(newInfo));
+
+            // this.ValidateGraphicsDeviceInformation(newInfo);
+            directXDevice = deviceFactory.CreateDevice(newInfo);
+            application.Services.AddService(typeof (DirectXDevice), DirectXDevice);
+
+            DirectXDevice.Disposing += GraphicsDevice_Disposing;
+
+            OnDeviceCreated(this, EventArgs.Empty);
+        }
+
+        private void GraphicsDevice_Disposing(object sender, EventArgs e)
+        {
+            // Clears the Device
+            directXDevice = null;
+
+            OnDeviceDisposing(sender, e);
+        }
+
+        private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
+            where T : EventArgs
+        {
+            if (handler != null)
+                handler(sender, args);
+        }
+
+        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            if (!isChangingDevice &&
+                ((application.Window.ClientBounds.Height != 0) || (application.Window.ClientBounds.Width != 0)))
+            {
+                resizedBackBufferWidth = application.Window.ClientBounds.Width;
+                resizedBackBufferHeight = application.Window.ClientBounds.Height;
+                isBackBufferToResize = true;
+                ChangeOrCreateDevice(false);
+            }
+        }
+
+        private void Window_OrientationChanged(object sender, EventArgs e)
+        {
+            if ((!isChangingDevice &&
+                 ((application.Window.ClientBounds.Height != 0) || (application.Window.ClientBounds.Width != 0))) &&
+                (application.Window.CurrentOrientation != currentWindowOrientation))
+            {
+                ChangeOrCreateDevice(false);
             }
         }
     }

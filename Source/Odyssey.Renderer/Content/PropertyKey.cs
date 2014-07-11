@@ -8,11 +8,11 @@ namespace Odyssey.Content
     /// </summary>
     public class PropertyKey : IEquatable<PropertyKey>
     {
+        private readonly int hashcode;
         private readonly string name;
 
-        private readonly int hashcode;
-
-        public PropertyKey() : this("Undefined")
+        public PropertyKey()
+            : this("Undefined")
         {
         }
 
@@ -38,6 +38,16 @@ namespace Odyssey.Content
             {
                 return name;
             }
+        }
+
+        public static bool operator !=(PropertyKey left, PropertyKey right)
+        {
+            return !Equals(left, right);
+        }
+
+        public static bool operator ==(PropertyKey left, PropertyKey right)
+        {
+            return Equals(left, right);
         }
 
         public bool Equals(PropertyKey other)
@@ -76,21 +86,10 @@ namespace Odyssey.Content
             return hashcode;
         }
 
-        public static bool operator ==(PropertyKey left, PropertyKey right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(PropertyKey left, PropertyKey right)
-        {
-            return !Equals(left, right);
-        }
-
         public override string ToString()
         {
             return string.Format("{0}", name);
         }
-
     }
 
     /// <summary>

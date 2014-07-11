@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System.Collections.Generic;
 
 namespace Odyssey.Graphics
 {
-        /// <summary>
+    /// <summary>
     /// Abstract class front end to <see cref="SharpDX.Direct3D11.Texture2D"/>.
     /// </summary>
     public abstract class Texture2DBase : Texture
@@ -20,9 +20,9 @@ namespace Odyssey.Graphics
         /// </summary>
         /// <param name="device">The <see cref="DirectXDevice"/>.</param>
         /// <param name="description2D">The description.</param>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        /// <msdn-id>ff476521</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         protected internal Texture2DBase(DirectXDevice device, Texture2DDescription description2D)
             : base(device, description2D)
         {
@@ -35,11 +35,11 @@ namespace Odyssey.Graphics
         /// <param name="device">The <see cref="DirectXDevice"/>.</param>
         /// <param name="description2D">The description.</param>
         /// <param name="dataBoxes">A variable-length parameters list containing data rectangles.</param>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        /// <msdn-id>ff476521</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         protected internal Texture2DBase(DirectXDevice device, Texture2DDescription description2D, DataBox[] dataBoxes)
-            : base(device , description2D)
+            : base(device, description2D)
         {
             Resource = new SharpDX.Direct3D11.Texture2D(device, description2D, dataBoxes);
         }
@@ -49,13 +49,23 @@ namespace Odyssey.Graphics
         /// </summary>
         /// <param name="device">The <see cref="DirectXDevice"/>.</param>
         /// <param name="texture">The texture.</param>
-        /// <msdn-id>ff476521</msdn-id>	
-        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>	
-        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>	
+        /// <msdn-id>ff476521</msdn-id>
+        /// <unmanaged>HRESULT ID3D11Device::CreateTexture2D([In] const D3D11_TEXTURE2D_DESC* pDesc,[In, Buffer, Optional] const D3D11_SUBRESOURCE_DATA* pInitialData,[Out, Fast] ID3D11Texture2D** ppTexture2D)</unmanaged>
+        /// <unmanaged-short>ID3D11Device::CreateTexture2D</unmanaged-short>
         protected internal Texture2DBase(DirectXDevice device, SharpDX.Direct3D11.Texture2D texture)
             : base(device, texture.Description)
         {
             Resource = texture;
+        }
+
+        /// <summary>
+        /// <see cref="SharpDX.DXGI.Surface"/> casting operator.
+        /// </summary>
+        /// <param name="from">From the Texture1D.</param>
+        public static implicit operator Surface(Texture2DBase from)
+        {
+            // Don't bother with multithreading here
+            return from == null ? null : from.dxgiSurface ?? (from.dxgiSurface = from.ToDispose(from.Resource.QueryInterface<Surface>()));
         }
 
         public override void Initialize()
@@ -69,12 +79,7 @@ namespace Odyssey.Graphics
         /// <returns></returns>
         public override Texture ToStaging()
         {
-            return new Texture2D(Device, Description.ToStagingDescription());            
-        }
-
-        protected virtual Format GetDefaultViewFormat()
-        {
-            return Description.Format;
+            return new Texture2D(Device, Description.ToStagingDescription());
         }
 
         internal override TextureView GetShaderResourceView(Format viewFormat, ViewType viewType, int arrayOrDepthSlice, int mipIndex)
@@ -187,14 +192,37 @@ namespace Odyssey.Graphics
             }
         }
 
-        /// <summary>
-        /// <see cref="SharpDX.DXGI.Surface"/> casting operator.
-        /// </summary>
-        /// <param name="from">From the Texture1D.</param>
-        public static implicit operator Surface(Texture2DBase from)
+        protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, ResourceUsage usage)
         {
-            // Don't bother with multithreading here
-            return from == null ? null : from.dxgiSurface ?? (from.dxgiSurface = from.ToDispose(from.Resource.QueryInterface<Surface>()));
+            if ((textureFlags & TextureFlags.UnorderedAccess) != 0)
+                usage = ResourceUsage.Default;
+
+            var desc = new Texture2DDescription
+            {
+                Width = width,
+                Height = height,
+                ArraySize = arraySize,
+                SampleDescription = new SampleDescription(1, 0),
+                BindFlags = GetBindFlagsFromTextureFlags(textureFlags),
+                Format = format,
+                MipLevels = CalculateMipMapCount(mipCount, width, height),
+                Usage = usage,
+                CpuAccessFlags = GetCpuAccessFlagsFromUsage(usage),
+                OptionFlags = ResourceOptionFlags.None
+            };
+
+            // If the texture is a RenderTarget + ShaderResource + MipLevels > 1, then allow for GenerateMipMaps method
+            if ((desc.BindFlags & BindFlags.RenderTarget) != 0 && (desc.BindFlags & BindFlags.ShaderResource) != 0 && desc.MipLevels > 1)
+            {
+                desc.OptionFlags |= ResourceOptionFlags.GenerateMipMaps;
+            }
+
+            return desc;
+        }
+
+        protected virtual Format GetDefaultViewFormat()
+        {
+            return Description.Format;
         }
 
         protected override void InitializeViews()
@@ -206,7 +234,7 @@ namespace Odyssey.Graphics
 
                 // Pre initialize by default the view on the first array/mipmap
                 var viewFormat = GetDefaultViewFormat();
-                if(!FormatHelper.IsTypeless(viewFormat))
+                if (!FormatHelper.IsTypeless(viewFormat))
                 {
                     // Only valid for non-typeless viewformat
                     defaultShaderResourceView = GetShaderResourceView(viewFormat, ViewType.Full, 0, 0);
@@ -223,35 +251,5 @@ namespace Odyssey.Graphics
                 GetUnorderedAccessView(0, 0);
             }
         }
-
-        protected static Texture2DDescription NewDescription(int width, int height, PixelFormat format, TextureFlags textureFlags, int mipCount, int arraySize, ResourceUsage usage)
-        {
-            if ((textureFlags & TextureFlags.UnorderedAccess) != 0)
-                usage = ResourceUsage.Default;
-
-            var desc = new Texture2DDescription
-            {
-                               Width = width,
-                               Height = height,
-                               ArraySize = arraySize,
-                               SampleDescription = new SampleDescription(1, 0),
-                               BindFlags = GetBindFlagsFromTextureFlags(textureFlags),
-                               Format = format,
-                               MipLevels = CalculateMipMapCount(mipCount, width, height),
-                               Usage = usage,
-                               CpuAccessFlags = GetCpuAccessFlagsFromUsage(usage),
-                               OptionFlags = ResourceOptionFlags.None
-                           };
-
-
-            // If the texture is a RenderTarget + ShaderResource + MipLevels > 1, then allow for GenerateMipMaps method
-            if ((desc.BindFlags & BindFlags.RenderTarget) != 0 && (desc.BindFlags & BindFlags.ShaderResource) != 0 && desc.MipLevels > 1)
-            {
-                desc.OptionFlags |= ResourceOptionFlags.GenerateMipMaps;
-            }
-
-            return desc;
-        }
     }
-    
 }

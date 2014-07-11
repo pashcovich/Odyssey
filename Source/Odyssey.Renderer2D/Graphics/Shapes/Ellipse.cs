@@ -1,17 +1,18 @@
 ﻿using Odyssey.UserInterface.Controls;
+using SharpDX;
 using SharpDX.Direct2D1;
 using System;
-using Brush = Odyssey.Graphics.Shapes.Brush;
 
 namespace Odyssey.Graphics
 {
-    public class Ellipse : EllipseBase, IShapeD2D
+    public class Ellipse : Shape
     {
         private SharpDX.Direct2D1.Ellipse ellipse;
 
-        public Brush Fill { get; set; }
-
-        public Brush Stroke { get; set; }
+        public override bool Contains(Vector2 cursorLocation)
+        {
+            return BoundingRectangle.Contains(cursorLocation);
+        }
 
         public override void Render()
         {
@@ -23,7 +24,7 @@ namespace Odyssey.Graphics
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            var initializer = new ShapeInitializer<Ellipse>(Device);
+            var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);
 
             foreach (var resource in initializer.CreatedResources)

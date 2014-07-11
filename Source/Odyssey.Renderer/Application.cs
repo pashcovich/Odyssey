@@ -1,4 +1,19 @@
-﻿#region Using Directives
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
 
 using Odyssey.Content;
 using Odyssey.Engine;
@@ -9,8 +24,6 @@ using Odyssey.Talos;
 using Odyssey.Utilities.Reflection;
 using SharpDX;
 using System;
-using System.Diagnostics.Contracts;
-using SharpDX.DirectWrite;
 
 #endregion Using Directives
 
@@ -18,8 +31,8 @@ namespace Odyssey
 {
     public abstract class Application : Component, IWindowService
     {
-        private readonly ApplicationPlatform applicationPlatform;
         private readonly ApplicationTime appTime;
+        private readonly ApplicationPlatform applicationPlatform;
         private readonly IAssetProvider contentManager;
         private readonly int[] lastUpdateCount;
         private readonly TimeSpan maximumElapsedTime;
@@ -72,9 +85,9 @@ namespace Odyssey
                 var service = Activator.CreateInstance(requiredService.ClassType, services);
                 services.AddService(requiredService.ServiceType, service);
             }
-        
+
             // Setup Platform
-            applicationPlatform = (ApplicationPlatform)Activator.CreateInstance(platformTypeAttribute.PlatformType, this);
+            applicationPlatform = (ApplicationPlatform) Activator.CreateInstance(platformTypeAttribute.PlatformType, this);
             applicationPlatform.Activated += ApplicationPlatformActivated;
             applicationPlatform.Deactivated += ApplicationPlatformDeactivated;
             applicationPlatform.Exiting += ApplicationPlatform_Exiting;
@@ -103,8 +116,6 @@ namespace Odyssey
         /// </summary>
         public bool IsRunning { get; private set; }
 
-        object IWindowService.NativeWindow { get { return Window.NativeWindow; } }
-
         public IScene Scene
         {
             get { return scene; }
@@ -124,6 +135,11 @@ namespace Odyssey
         public ApplicationWindow Window
         {
             get { return applicationPlatform != null ? applicationPlatform.MainWindow : null; }
+        }
+
+        object IWindowService.NativeWindow
+        {
+            get { return Window.NativeWindow; }
         }
 
         /// <summary>
@@ -165,7 +181,7 @@ namespace Odyssey
             }
 
             // Gets the graphics device manager
-            deviceManager = Services.GetService(typeof(IDirectXDeviceManager)) as IDirectXDeviceManager;
+            deviceManager = Services.GetService(typeof (IDirectXDeviceManager)) as IDirectXDeviceManager;
             if (deviceManager == null)
             {
                 throw new InvalidOperationException("No DeviceManager found");
@@ -261,7 +277,7 @@ namespace Odyssey
                 accumulatedElapsedGameTime += elapsedAdjustedTime;
 
                 // Calculate the number of update to issue
-                updateCount = (int)(accumulatedElapsedGameTime.Ticks / TargetElapsedTime.Ticks);
+                updateCount = (int) (accumulatedElapsedGameTime.Ticks/TargetElapsedTime.Ticks);
 
                 // If there is no need for update, then exit
                 if (updateCount == 0)
@@ -282,13 +298,13 @@ namespace Odyssey
                 }
 
                 updateCountMean /= lastUpdateCount.Length;
-                nextLastUpdateCountIndex = (nextLastUpdateCountIndex + 1) % lastUpdateCount.Length;
+                nextLastUpdateCountIndex = (nextLastUpdateCountIndex + 1)%lastUpdateCount.Length;
 
                 // Test when we are running slowly
                 drawRunningSlowly = updateCountMean > updateCountAverageSlowLimit;
 
                 // We are going to call Update updateCount times, so we can subtract this from accumulated elapsed game time
-                accumulatedElapsedGameTime = new TimeSpan(accumulatedElapsedGameTime.Ticks - (updateCount * TargetElapsedTime.Ticks));
+                accumulatedElapsedGameTime = new TimeSpan(accumulatedElapsedGameTime.Ticks - (updateCount*TargetElapsedTime.Ticks));
                 singleFrameElapsedTime = TargetElapsedTime;
             }
             else
@@ -329,7 +345,7 @@ namespace Odyssey
             deviceManager.CreateDevice();
 
             // Gets the graphics device service
-            deviceService = Services.GetService(typeof(IDirectXDeviceService)) as IDirectXDeviceService;
+            deviceService = Services.GetService(typeof (IDirectXDeviceService)) as IDirectXDeviceService;
             if (deviceService == null)
                 throw new InvalidOperationException("No deviceService found");
 
@@ -418,10 +434,10 @@ namespace Odyssey
         {
             SetupGraphicsDeviceEvents();
 
-            contentManager.AddMapping(AssetType.Model.ToString(), typeof(Model));
-            contentManager.AddMapping(AssetType.Effect.ToString(), typeof(ShaderCollection));
-            contentManager.AddMapping(AssetType.Texture2D.ToString(), typeof(Texture2D));
-            contentManager.AddMapping(AssetType.TextureCube.ToString(), typeof(TextureCube));
+            contentManager.AddMapping(AssetType.Model.ToString(), typeof (Model));
+            contentManager.AddMapping(AssetType.Effect.ToString(), typeof (ShaderCollection));
+            contentManager.AddMapping(AssetType.Texture2D.ToString(), typeof (Texture2D));
+            contentManager.AddMapping(AssetType.TextureCube.ToString(), typeof (TextureCube));
         }
 
         private void deviceService_DeviceCreated(object sender, EventArgs e)
@@ -473,7 +489,7 @@ namespace Odyssey
         private void SetupGraphicsDeviceEvents()
         {
             // Find the IGraphicsDeviceSerive.
-            deviceService = Services.GetService(typeof(IOdysseyDeviceService)) as IOdysseyDeviceService;
+            deviceService = Services.GetService(typeof (IOdysseyDeviceService)) as IOdysseyDeviceService;
 
             // If there is no graphics device service, don't go further as the whole Game would not work
             if (deviceService == null)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 
 namespace Odyssey.Graphics.Shaders
@@ -12,15 +7,10 @@ namespace Odyssey.Graphics.Shaders
     {
         protected readonly new SharpDX.Direct3D11.VertexShader Resource;
 
-        public VertexShader(DirectXDevice device, string name, byte[] byteCode) : base(device, ShaderType.Vertex, name)
+        public VertexShader(DirectXDevice device, string name, byte[] byteCode)
+            : base(device, ShaderType.Vertex, name)
         {
             Resource = new SharpDX.Direct3D11.VertexShader(device, byteCode);
-        }
-
-        public override void Initialize()
-        {
-            Initialize(Resource);
-            Resource.DebugName = Name;
         }
 
         /// <summary>
@@ -41,9 +31,15 @@ namespace Odyssey.Graphics.Shaders
 
         public override void Apply(string technique, long id, UpdateType updateType)
         {
-            foreach (ConstantBuffer cb in SelectBuffers(technique,id, updateType))
+            foreach (ConstantBuffer cb in SelectBuffers(technique, id, updateType))
                 Device.SetVertexShaderConstantBuffer(cb.Index, cb.Buffer);
             Device.SetShader(this);
+        }
+
+        public override void Initialize()
+        {
+            Initialize(Resource);
+            Resource.DebugName = Name;
         }
     }
 }

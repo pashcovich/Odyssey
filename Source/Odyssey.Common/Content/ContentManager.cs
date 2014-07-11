@@ -1,8 +1,24 @@
-﻿#region Using Directives
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
 
 using SharpDX;
 using SharpDX.Collections;
 using SharpDX.IO;
+using SharpYaml.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -29,7 +45,7 @@ namespace Odyssey.Content
         public ContentManager(IServiceRegistry services)
         {
             this.services = services;
-            services.AddService(typeof(IAssetProvider), this);
+            services.AddService(typeof (IAssetProvider), this);
 
             // Content resolvers
             Resolvers = new ObservableCollection<IResourceResolver>();
@@ -54,14 +70,14 @@ namespace Odyssey.Content
         }
 
         /// <summary>
-        /// Add or remove registered <see cref="IResourceResolver"/> to this instance.
-        /// </summary>
-        public ObservableCollection<IResourceResolver> Resolvers { get; private set; }
-
-        /// <summary>
         /// Add or remove registered <see cref="IContentReader"/> to this instance.
         /// </summary>
         public ObservableDictionary<Type, IContentReader> Readers { get; private set; }
+
+        /// <summary>
+        /// Add or remove registered <see cref="IResourceResolver"/> to this instance.
+        /// </summary>
+        public ObservableCollection<IResourceResolver> Resolvers { get; private set; }
 
         /// <summary>
         /// Gets or sets the root directory.
@@ -85,6 +101,11 @@ namespace Odyssey.Content
         public IServiceRegistry Services
         {
             get { return services; }
+        }
+
+        public void AddMapping(string key, Type type)
+        {
+            ContentMapper.Add(key, type);
         }
 
         [Pure]
@@ -114,7 +135,7 @@ namespace Odyssey.Content
                 {
                     if (loadedAssets.TryGetValue(assetName, out result))
                     {
-                        return (T)result;
+                        return (T) result;
                     }
                 }
 
@@ -136,7 +157,27 @@ namespace Odyssey.Content
             }
 
             // We could have an exception, but that's fine, as the user will be able to find why.
-            return (T)result;
+            return (T) result;
+        }
+
+        public void LoadAssetList(string assetListFile)
+        {
+            var serializer = new Serializer();
+            serializer.Settings.RegisterTagMapping("Asset", typeof (AssetIdentifier));
+            serializer.Settings.RegisterTagMapping("Assets", typeof (AssetIdentifier[]));
+            AssetIdentifier[] assetList;
+            using (var nativeStream = new NativeFileStream(assetListFile, NativeFileMode.Open, NativeFileAccess.Read))
+                assetList = serializer.Deserialize<AssetIdentifier[]>(nativeStream);
+
+            foreach (AssetIdentifier assetIdentifier in assetList)
+            {
+                LoadAsset(assetIdentifier);
+            }
+        }
+
+        public Type Map(string type)
+        {
+            return ContentMapper[type];
         }
 
         public void Store<T>(string assetName, T asset)
@@ -173,29 +214,103 @@ namespace Odyssey.Content
                 }
         }
 
-        public void LoadAssetList(string assetListFile)
+        public void AddResolver(IResourceResolver resolver)
         {
-            var serializer = new SharpYaml.Serialization.Serializer();
-            serializer.Settings.RegisterTagMapping("Asset", typeof(AssetIdentifier));
-            serializer.Settings.RegisterTagMapping("Assets", typeof(AssetIdentifier[]));
-            AssetIdentifier[] assetList;
-            using (var nativeStream = new NativeFileStream(assetListFile, NativeFileMode.Open, NativeFileAccess.Read))
-                assetList = serializer.Deserialize<AssetIdentifier[]>(nativeStream);
+            Resolvers.Add(resolver);
+        }
 
-            foreach (AssetIdentifier assetIdentifier in assetList)
+        public IEnumerable<T> SelectAssets<T>()
+        {
+            return loadedAssets.Values.OfType<T>();
+        }
+
+        /// <summary>
+        /// Unloads and disposes an asset.
+        /// </summary>
+        /// <param name="assetType">The asset type</param>
+        /// <param name="assetName">The asset name</param>
+        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
+        public virtual bool Unload(Type assetType, string assetName)
+        {
+            Contract.Requires<ArgumentNullException>(assetType != null, "assetType");
+            Contract.Requires<ArgumentNullException>(assetName != null, "assetName");
+            object asset;
+
+            object assetLockerRead = GetAssetLocker(assetName, false);
+            if (assetLockerRead == null)
+                return false;
+
+            lock (assetLockerRead)
             {
-                LoadAsset(assetIdentifier);
+                lock (loadedAssets)
+                {
+                    if (!loadedAssets.TryGetValue(assetName, out asset))
+                        return false;
+                    loadedAssets.Remove(assetName);
+                }
+
+                lock (assetLockers)
+                    assetLockers.Remove(assetName);
+            }
+
+            var disposable = asset as IDisposable;
+            if (disposable != null)
+                disposable.Dispose();
+
+            return true;
+        }
+
+        private void ContentReaders_ItemAdded(object sender, ObservableDictionaryEventArgs<Type, IContentReader> e)
+        {
+            lock (registeredContentReaders)
+            {
+                registeredContentReaders.Add(e.Key, e.Value);
             }
         }
 
-        public Type Map(string type)
+        private void ContentReaders_ItemRemoved(object sender, ObservableDictionaryEventArgs<Type, IContentReader> e)
         {
-            return ContentMapper[type];
+            lock (registeredContentReaders)
+            {
+                registeredContentReaders.Remove(e.Key);
+            }
         }
 
-        public void AddMapping(string key, Type type)
+        private void ContentResolvers_ItemAdded(object sender, ObservableCollectionEventArgs<IResourceResolver> e)
         {
-            ContentMapper.Add(key, type);
+            lock (registeredContentResolvers)
+            {
+                registeredContentResolvers.Add(e.Item);
+            }
+        }
+
+        private void ContentResolvers_ItemRemoved(object sender, ObservableCollectionEventArgs<IResourceResolver> e)
+        {
+            lock (registeredContentResolvers)
+            {
+                registeredContentResolvers.Remove(e.Item);
+            }
+        }
+
+        private Stream FindStream(string assetName)
+        {
+            Stream stream = null;
+            List<IResourceResolver> lResolvers;
+            lock (Resolvers)
+            {
+                lResolvers = new List<IResourceResolver>(Resolvers);
+            }
+
+            if (lResolvers.Count == 0)
+                throw new InvalidOperationException("No resolver registered to this content manager");
+
+            foreach (IResourceResolver rResolver in lResolvers)
+            {
+                stream = rResolver.Resolve(assetName);
+                if (stream != null)
+                    break;
+            }
+            return stream;
         }
 
         private object GetAssetLocker(string assetName, bool create)
@@ -235,14 +350,9 @@ namespace Odyssey.Content
             }
         }
 
-        public IEnumerable<T> SelectAssets<T>()
-        {
-            return loadedAssets.Values.OfType<T>();
-        }
-
         private object LoadAsset<T>(string assetName, Stream stream, object options = null)
         {
-            return LoadAsset(assetName, stream, typeof(T), options);
+            return LoadAsset(assetName, stream, typeof (T), options);
         }
 
         private object LoadAsset(string assetName, Stream stream, Type type, object options = null)
@@ -307,100 +417,6 @@ namespace Odyssey.Content
             }
 
             return result;
-        }
-
-        private Stream FindStream(string assetName)
-        {
-            Stream stream = null;
-            List<IResourceResolver> lResolvers;
-            lock (Resolvers)
-            {
-                lResolvers = new List<IResourceResolver>(Resolvers);
-            }
-
-            if (lResolvers.Count == 0)
-                throw new InvalidOperationException("No resolver registered to this content manager");
-
-            foreach (IResourceResolver rResolver in lResolvers)
-            {
-                stream = rResolver.Resolve(assetName);
-                if (stream != null)
-                    break;
-            }
-            return stream;
-        }
-
-        /// <summary>
-        /// Unloads and disposes an asset.
-        /// </summary>
-        /// <param name="assetType">The asset type</param>
-        /// <param name="assetName">The asset name</param>
-        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
-        public virtual bool Unload(Type assetType, string assetName)
-        {
-            Contract.Requires<ArgumentNullException>(assetType != null, "assetType");
-            Contract.Requires<ArgumentNullException>(assetName != null, "assetName");
-            object asset;
-
-            object assetLockerRead = GetAssetLocker(assetName, false);
-            if (assetLockerRead == null)
-                return false;
-
-            lock (assetLockerRead)
-            {
-                lock (loadedAssets)
-                {
-                    if (!loadedAssets.TryGetValue(assetName, out asset))
-                        return false;
-                    loadedAssets.Remove(assetName);
-                }
-
-                lock (assetLockers)
-                    assetLockers.Remove(assetName);
-            }
-
-            var disposable = asset as IDisposable;
-            if (disposable != null)
-                disposable.Dispose();
-
-            return true;
-        }
-
-        public void AddResolver(IResourceResolver resolver)
-        {
-            Resolvers.Add(resolver);
-        }
-
-        private void ContentResolvers_ItemAdded(object sender, ObservableCollectionEventArgs<IResourceResolver> e)
-        {
-            lock (registeredContentResolvers)
-            {
-                registeredContentResolvers.Add(e.Item);
-            }
-        }
-
-        private void ContentResolvers_ItemRemoved(object sender, ObservableCollectionEventArgs<IResourceResolver> e)
-        {
-            lock (registeredContentResolvers)
-            {
-                registeredContentResolvers.Remove(e.Item);
-            }
-        }
-
-        private void ContentReaders_ItemAdded(object sender, ObservableDictionaryEventArgs<Type, IContentReader> e)
-        {
-            lock (registeredContentReaders)
-            {
-                registeredContentReaders.Add(e.Key, e.Value);
-            }
-        }
-
-        private void ContentReaders_ItemRemoved(object sender, ObservableDictionaryEventArgs<Type, IContentReader> e)
-        {
-            lock (registeredContentReaders)
-            {
-                registeredContentReaders.Remove(e.Key);
-            }
         }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using SharpDX.Windows;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -40,15 +37,15 @@ namespace Odyssey.Engine
             DpiY = (int)dpiYProperty.GetValue(null, null);
         }
 
-        private static object CreateDefaultControl()
-        {
-            return new RenderForm("Odyssey Application") { AllowUserResizing = false };
-        }
-
         /// <summary>
         /// Gets or sets a value indicating whether the render loop should use the default <see cref="System.Windows.Forms.Application.DoEvents"/> instead of a custom window message loop lightweight for GC. Default is false
         /// </summary>
         /// <value><c>true</c> if use the default <see cref="System.Windows.Forms.Application.DoEvents"/>; otherwise, <c>false</c>.</value>
         public bool UseApplicationDoEvents { get; set; }
+
+        private static object CreateDefaultControl()
+        {
+            return new RenderForm("Odyssey Application") { AllowUserResizing = false };
+        }
     }
 }

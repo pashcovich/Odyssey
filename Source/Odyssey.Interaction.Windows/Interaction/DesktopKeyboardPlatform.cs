@@ -218,38 +218,6 @@ namespace Odyssey.Interaction
         }
 
         /// <summary>
-        /// Handles the <see cref="Control.PreviewKeyDown"/> event
-        /// </summary>
-        /// <param name="sender">Ignored</param>
-        /// <param name="e">Pressed key is read from <see cref="PreviewKeyDownEventArgs.KeyCode"/> property</param>
-        private void HandlePreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            ProcessKeyEvent(e.KeyCode, RaiseKeyPressed);
-        }
-
-        /// <summary>
-        /// Handles the <see cref="Control.KeyDown"/> event
-        /// </summary>
-        /// <param name="sender">Ignored</param>
-        /// <param name="e">Pressed key is read from <see cref="System.Windows.Forms.KeyEventArgs.KeyCode"/> property</param>
-        private void HandleKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            e.Handled = true;
-            ProcessKeyEvent(e.KeyCode, RaiseKeyPressed);
-        }
-
-        /// <summary>
-        /// Handles the <see cref="Control.KeyUp"/> event
-        /// </summary>
-        /// <param name="sender">Ignored</param>
-        /// <param name="e">Released key is read from <see cref="KeyEventArgs.KeyCode"/> property</param>
-        private void HandleKeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            e.Handled = true;
-            ProcessKeyEvent(e.KeyCode, RaiseKeyReleased);
-        }
-
-        /// <summary>
         /// Translates the WinForms key to Toolkit key and invokes status change
         /// </summary>
         /// <remarks>For modifier keys (Shift, Control, Alt) will invoke its Left... analog additionally</remarks>
@@ -279,6 +247,38 @@ namespace Odyssey.Interaction
                     keyAction(Keys.LeftAlt);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Control.KeyDown"/> event
+        /// </summary>
+        /// <param name="sender">Ignored</param>
+        /// <param name="e">Pressed key is read from <see cref="System.Windows.Forms.KeyEventArgs.KeyCode"/> property</param>
+        private void HandleKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            e.Handled = true;
+            ProcessKeyEvent(e.KeyCode, RaiseKeyPressed);
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Control.KeyUp"/> event
+        /// </summary>
+        /// <param name="sender">Ignored</param>
+        /// <param name="e">Released key is read from <see cref="KeyEventArgs.KeyCode"/> property</param>
+        private void HandleKeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            e.Handled = true;
+            ProcessKeyEvent(e.KeyCode, RaiseKeyReleased);
+        }
+
+        /// <summary>
+        /// Handles the <see cref="Control.PreviewKeyDown"/> event
+        /// </summary>
+        /// <param name="sender">Ignored</param>
+        /// <param name="e">Pressed key is read from <see cref="PreviewKeyDownEventArgs.KeyCode"/> property</param>
+        private void HandlePreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            ProcessKeyEvent(e.KeyCode, RaiseKeyPressed);
         }
     }
 }

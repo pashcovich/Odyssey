@@ -1,7 +1,6 @@
 ﻿#region Using Directives
 
 using Odyssey.Tools.ShaderGenerator.ViewModel;
-using Odyssey.Utilities.Logging;
 using ShaderGenerator.Data;
 using SharpDX;
 using System.Collections.ObjectModel;
@@ -9,7 +8,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
+using Path = System.Windows.Shapes.Path;
 
 #endregion Using Directives
 
@@ -67,6 +66,8 @@ namespace Odyssey.Tools.ShaderGenerator
             {
                 Daedalus.DirectXWindow.Shutdown();
             }
+            Path path = new Path();
+            System.Windows.Media.Geometry.Parse("test");
         }
     }
 }

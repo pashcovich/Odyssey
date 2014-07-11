@@ -1,15 +1,30 @@
-﻿using Odyssey.Engine;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+//
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+//
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion License
+
+#region Using Directives
+
 using Odyssey.Graphics;
 using SharpDX;
-using System;
-using System.Linq;
 using Rectangle = Odyssey.Graphics.Rectangle;
+
+#endregion Using Directives
 
 namespace Odyssey.UserInterface.Controls
 {
     public class Button : ButtonBase
     {
-
         public override bool Contains(Vector2 cursorLocation)
         {
             return BoundingRectangle.Contains(cursorLocation);
@@ -25,15 +40,15 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            Rectangle rEnabled = ToDispose(ShapeBase.FromControl<Rectangle>(this,
-                    string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
-            Rectangle rHighlighted = ToDispose(ShapeBase.FromControl<Rectangle>(this,
-                    string.Format("{0}_{1}_rectangle", Name, ControlStatus.Highlighted)));
+            Rectangle rEnabled = ToDispose(Shape.FromControl<Rectangle>(this,
+                string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
+            Rectangle rHighlighted = ToDispose(Shape.FromControl<Rectangle>(this,
+                string.Format("{0}_{1}_rectangle", Name, ControlStatus.Highlighted)));
 
-            ShapeMap.Add(ControlStatus.Enabled, new[] { rEnabled });
+            ShapeMap.Add(ControlStatus.Enabled, new[] {rEnabled});
 
             if (Description.Highlighted != null)
-                ShapeMap.Add(ControlStatus.Highlighted, new[] { rHighlighted });
+                ShapeMap.Add(ControlStatus.Highlighted, new[] {rHighlighted});
         }
     }
 }

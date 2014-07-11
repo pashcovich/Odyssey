@@ -1,29 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos;
 using Odyssey.Utilities.Logging;
 using SharpDX;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Odyssey.Graphics.Organization.Commands
 {
     [DebuggerDisplay("{Type}[{Effect.Name}]: {entities.Count} items")]
     public class EffectRenderCommand : RenderCommand, IEffectRenderCommand
     {
-        
-
         public EffectRenderCommand(IServiceRegistry services, Effect effect, ModelMeshCollection renderables, IEnumerable<IEntity> entities)
             : base(services, effect, entities)
         {
             Contract.Requires<ArgumentNullException>(renderables != null);
-            
-            
+
             Renderables = renderables;
             Name = string.Format("{0}[{1}]", Type, Effect.Name);
         }
@@ -34,36 +31,6 @@ namespace Odyssey.Graphics.Organization.Commands
 #if DEBUG
             CheckPreconditions();
 #endif
-        }
-
-        void CheckPreconditions()
-        {
-            bool result = true;
-            foreach (TextureMapping tm in Effect[ShaderType.Pixel].SelectTextures().Where(tm => tm.Texture == null))
-            {
-                LogEvent.Engine.Error("{0} is null [{1}.{2}].", tm.Description.Key, Effect[ShaderType.Pixel].Name,
-                    tm.Description.Texture);
-                result = false;
-            }
-            if (!result)
-                throw new InvalidOperationException(string.Format("[{0}]: preconditions failed.", Name));
-        }
-
-        public override void PreRender()
-        {
-            DirectXDevice device = DeviceService.DirectXDevice;
-            device.InputAssembler.InputLayout = Effect.InputLayout;
-
-            foreach (TextureMapping tm in Effect[ShaderType.Pixel].SelectTextures(UpdateType.SceneStatic))
-            {
-                // TODO Update SamplerState assignment
-                device.SetPixelShaderSampler(tm.Description.SamplerIndex, device.SamplerStates.Default);
-                device.SetPixelShaderShaderResourceView(tm.Description.Index, tm.Texture.ShaderResourceView[ViewType.Full, 0,0]);
-            }
-
-            foreach (Shader shader in Effect)
-                shader.Apply(Effect.Name, UpdateType.SceneStatic);
-
         }
 
         public override void PostRender()
@@ -77,6 +44,22 @@ namespace Odyssey.Graphics.Organization.Commands
                 }
         }
 
+        public override void PreRender()
+        {
+            DirectXDevice device = DeviceService.DirectXDevice;
+            device.InputAssembler.InputLayout = Effect.InputLayout;
+
+            foreach (TextureMapping tm in Effect[ShaderType.Pixel].SelectTextures(UpdateType.SceneStatic))
+            {
+                // TODO Update SamplerState assignment
+                device.SetPixelShaderSampler(tm.Description.SamplerIndex, device.SamplerStates.Default);
+                device.SetPixelShaderShaderResourceView(tm.Description.Index, tm.Texture.ShaderResourceView[ViewType.Full, 0, 0]);
+            }
+
+            foreach (Shader shader in Effect)
+                shader.Apply(Effect.Name, UpdateType.SceneStatic);
+        }
+
         public override void Render()
         {
             DirectXDevice device = DeviceService.DirectXDevice;
@@ -88,7 +71,7 @@ namespace Odyssey.Graphics.Organization.Commands
             {
                 if (!entity.IsEnabled)
                     continue;
-                
+
                 foreach (Shader shader in Effect)
                 {
                     shader.Apply(Effect.Name, entity.Id, UpdateType.InstanceStatic);
@@ -100,6 +83,19 @@ namespace Odyssey.Graphics.Organization.Commands
                     mesh.Draw(device);
                 }
             }
+        }
+
+        private void CheckPreconditions()
+        {
+            bool result = true;
+            foreach (TextureMapping tm in Effect[ShaderType.Pixel].SelectTextures().Where(tm => tm.Texture == null))
+            {
+                LogEvent.Engine.Error("{0} is null [{1}.{2}].", tm.Description.Key, Effect[ShaderType.Pixel].Name,
+                    tm.Description.Texture);
+                result = false;
+            }
+            if (!result)
+                throw new InvalidOperationException(string.Format("[{0}]: preconditions failed.", Name));
         }
     }
 }
