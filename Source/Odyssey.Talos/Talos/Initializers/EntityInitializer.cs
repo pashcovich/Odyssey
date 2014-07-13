@@ -15,11 +15,10 @@ namespace Odyssey.Talos.Initializers
 {
     public class EntityInitializer : Initializer<IEntity>
     {
-        private readonly long kPosition;
-        private readonly long kTransform;
-
         public EntityInitializer()
-            : base(new[] {EngineReference.EntityMatrixWorld, EngineReference.EntityMatrixWorldInverse,
+            : base(new[] {
+                EngineReference.EntityMatrixWorld,
+                EngineReference.EntityMatrixWorldInverse,
                 EngineReference.EntityMatrixWorldInverseTranspose,
                 EngineReference.EntityBloomThreshold,
                 EngineReference.EntityBloomParameters,
@@ -28,8 +27,6 @@ namespace Odyssey.Talos.Initializers
                 EngineReference.EntitySpritePosition,
                 EngineReference.EntitySpriteSize})
         {
-            kPosition = ComponentTypeManager.GetKeyPart<PositionComponent>();
-            kTransform = ComponentTypeManager.GetKeyPart<TransformComponent>();
         }
 
         public override void Initialize(DirectXDevice device, Effect effect, IEntity source, InitializerParameters parameters)
@@ -81,26 +78,23 @@ namespace Odyssey.Talos.Initializers
         private IEnumerable<IParameter> CreateParameter(IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
         {
             IDirectXDeviceSettings deviceSettings = initializerParameters.Services.GetService<IDirectXDeviceSettings>();
-            var cPosition = entity.GetComponent<PositionComponent>(kPosition);
-            var cTransform = entity.GetComponent<TransformComponent>(kTransform);
-
             switch (reference)
             {
                 case EngineReference.EntityMatrixWorld:
-                    return new[] { new MatrixParameter(parameterIndex, Param.Matrices.World, () => cTransform.World) };
+                    return new[] { new MatrixParameter(parameterIndex, Param.Matrices.World, () => entity.GetComponent<TransformComponent>().World) };
 
                 case EngineReference.EntityMatrixWorldInverse:
                     return new[]
                     {
                         new MatrixParameter(parameterIndex, Param.Matrices.WorldInverse,
-                            () => Matrix.Invert(cTransform.World))
+                            () => Matrix.Invert(entity.GetComponent<TransformComponent>().World))
                     };
 
                 case EngineReference.EntityMatrixWorldInverseTranspose:
                     return new[]
                     {
                         new MatrixParameter(parameterIndex, Param.Matrices.WorldInverseTranspose,
-                            () => Matrix.Transpose(Matrix.Invert(cTransform.World)))
+                            () => Matrix.Transpose(Matrix.Invert(entity.GetComponent<TransformComponent>().World)))
                     };
 
                 case EngineReference.EntityBlurOffsetsWeights:
@@ -127,11 +121,6 @@ namespace Odyssey.Talos.Initializers
                         data[i] = new Vector4(offsets[i].X, offsets[i].Y, weights[i], 0);
                     }
                     return new[] { new Float4ArrayParameter(parameterIndex, data.Length, Param.Floats.BlurOffsetsAndWeights, () => data) };
-                //return new IParameter[]
-                //{
-                //    new Float2ArrayParameter(parameterIndex, offsets.Length, Param.Floats.BlurOffsets, () => offsets),
-                //    new FloatArrayParameter(parameterIndex, offsets.Length, Param.Floats.BlurWeights, () => weights),
-                //};
 
                 case EngineReference.EntityBloomThreshold:
                     return new[]

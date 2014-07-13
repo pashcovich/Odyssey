@@ -9,18 +9,11 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Tools.ShaderGenerator.Viewer
 {
-    public class ViewerOverlay : Overlay
+    public static class Viewer
     {
-        internal DirectXViewer Viewer { get; private set; }
-
-        private ViewerOverlay(IServiceRegistry services)
-            : base(services)
+        public static Overlay CreateOverlay(IServiceRegistry services, DirectXViewer application)
         {
-        }
-
-        public static ViewerOverlay CreateOverlay(IServiceRegistry services, DirectXViewer application)
-        {
-            ViewerOverlay overlay = new ViewerOverlay(services) { Width = 576, Height = 576, Viewer = application };
+            Overlay overlay = new Overlay(services) { Width = 576, Height = 576};
             overlay.BeginDesign();
 
             Button bCaptureFrame = new Button() { Width = 64, Height = 64, Content = new Label{Text = "D"} };

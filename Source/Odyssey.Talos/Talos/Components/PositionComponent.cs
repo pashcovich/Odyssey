@@ -4,12 +4,21 @@ using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
-    [YamlTag("Position")]
     public class PositionComponent : Component
     {
-        [YamlMember(1)]
-        [YamlStyle(YamlStyle.Flow)]
-        public Vector3 Position { get; set; }
+        private Vector3 position;
+
+        public Vector3 Position
+        {
+            get { return position; }
+            set
+            {
+                position = value;
+                IsDirty = true;
+            }
+        }
+
+        internal bool IsDirty { get; set; }
 
         public PositionComponent()
             : base(ComponentTypeManager.GetType<PositionComponent>())

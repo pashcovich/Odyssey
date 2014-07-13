@@ -81,7 +81,7 @@ namespace Odyssey.UserInterface
 
         /// <summary>
         /// Computes the intersection between the cursor location and this control. It is called
-        /// each time an event is fired on every control in the <see cref="OverlayBase"/> to determine
+        /// each time an event is fired on every control in the <see cref="Odyssey.UserInterface.Controls.Overlay"/> to determine
         /// if the UI needs to react.
         /// </summary>
         /// <param name="cursorLocation">The location of the mouse cursor</param>

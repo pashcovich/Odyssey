@@ -16,21 +16,21 @@ namespace Odyssey.Talos.Messages
         }
 
         public void Register<TMessage>(ISystem system)
-            where TMessage : IMessage
+            where TMessage : Message
         {
             messageMap.Add<TMessage>(system);
             system.MessageQueue.Associate<TMessage>();
         }
 
         public void Unregister<TMessage>(ISystem system)
-            where TMessage : IMessage
+            where TMessage : Message
         {
             messageMap.Remove<TMessage>(system);
             system.MessageQueue.RemoveAssociation<TMessage>();
         }
 
         public void Send<TMessage>(TMessage message)
-            where TMessage : IMessage
+            where TMessage : Message
         {
             var interestedSystems = messageMap.Select<TMessage>();
             foreach (ISystem system in interestedSystems)
@@ -38,9 +38,9 @@ namespace Odyssey.Talos.Messages
         }
 
         public void SendTo<TMessage>(TMessage message, ISystem system)
-            where TMessage : IMessage
+            where TMessage : Message
         {
-            if (!message.IsSynchronous)
+            if (!message.IsBlocking)
                 system.EnqueueMessage(message);
             else
                 system.ReceiveBlockingMessage(message);
@@ -51,11 +51,11 @@ namespace Odyssey.Talos.Messages
         /// Sends a message to a group of ISystem whose <see cref="Aspect"/> matches 
         /// the one supplied as a parameter
         /// </summary>
-        /// <typeparam name="TMessage">The type of the <see cref="IMessage"/>.</typeparam>
+        /// <typeparam name="TMessage">The type of the <see cref="Message"/>.</typeparam>
         /// <param name="message">The message.</param>
         /// <param name="aspect">The aspect.</param>
         public void SendTo<TMessage>(TMessage message, Aspect aspect)
-            where TMessage : IMessage
+            where TMessage : Message
         {
             var interestedSystems = messageMap.Select<TMessage>().Where(s => s.Aspect == aspect);
             foreach (ISystem system in interestedSystems)

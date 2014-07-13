@@ -3,11 +3,7 @@ using Odyssey.Utilities.Collections;
 
 namespace Odyssey.Talos.Messages
 {
-    public class MessageQueue : QueueMap<IMessage>
+    public class MessageQueue : QueueMap<Message>
     {
-        public MessageQueue(ISystem systemOwner)
-        {
-        }
-
     }
 }

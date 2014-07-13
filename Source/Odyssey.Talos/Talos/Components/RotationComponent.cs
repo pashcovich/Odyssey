@@ -7,15 +7,23 @@ namespace Odyssey.Talos.Components
     [YamlTag("Rotation")]
     public class RotationComponent : Component
     {
-        [YamlStyle(YamlStyle.Flow)]
-        public Quaternion Orientation { get; set; }
-        [YamlStyle(YamlStyle.Flow)]
-        public Quaternion Delta { get; set; }
+        private Quaternion orientation;
+
+        internal bool IsDirty { get; set; }
+
+        public Quaternion Orientation
+        {
+            get { return orientation; }
+            set
+            {
+                orientation = value;
+                IsDirty = true;
+            }
+        }
 
         public RotationComponent() : base(ComponentTypeManager.GetType<RotationComponent>())
         {
             Orientation = Quaternion.Identity;
-            Delta = Quaternion.Identity;
         }
     }
 }

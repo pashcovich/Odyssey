@@ -32,10 +32,9 @@ using Color = SharpDX.Color;
 
 namespace MiniUI
 {
-    public class MiniUIApplication : Component, IDirect2DService, IWindowService
+    public class MiniUIApplication : Component, IWindowService
     {
-        private readonly SimpleDeviceManager deviceManager;
-        private readonly Direct2DDevice direct2DDevice;
+        private readonly SimpleDeviceManager d3dDeviceManager;
         private readonly RenderForm form;
         private readonly Overlay overlay;
         private readonly UserInterfaceManager uiManager;
@@ -43,8 +42,10 @@ namespace MiniUI
         public MiniUIApplication()
         {
             var services = new ServiceRegistry();
-
-            deviceManager = ToDispose(new SimpleDeviceManager(services)
+            // Needs to be declared before the D3D device manager as it hooks to
+            // the D3D device creation event
+            var d2dDeviceManager = new Direct2DDeviceManager(services);
+            d3dDeviceManager = ToDispose(new SimpleDeviceManager(services)
             {
                 HorizontalDpi = 96.0f,
                 VerticalDpi = 96.0f,
@@ -58,20 +59,19 @@ namespace MiniUI
             });
             form = new RenderForm("OdysseyUI Test")
             {
-                ClientSize = new Size(deviceManager.PreferredBackBufferWidth, deviceManager.PreferredBackBufferHeight),
+                ClientSize = new Size(d3dDeviceManager.PreferredBackBufferWidth, d3dDeviceManager.PreferredBackBufferHeight),
             };
 
-            direct2DDevice = ToDispose(new Direct2DDevice(services));
-            deviceManager.CreateDevice(form.Handle, DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport);
+            d3dDeviceManager.CreateDevice(form.Handle, DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport);
 
             var content = new ContentManager(services);
             var styleManager = new StyleManager(services);
             uiManager = new DesktopUserInterfaceManager(services);
 
             services.AddService(typeof (IStyleService), styleManager);
-            services.AddService(typeof (IDirect2DService), this);
             services.AddService(typeof (IUserInterfaceState), uiManager);
             services.AddService(typeof (IWindowService), this);
+            services.AddService(typeof (IDirect2DService), d2dDeviceManager);
 
             content.LoadAssetList("Assets/Assets.yaml");
 
@@ -81,11 +81,7 @@ namespace MiniUI
             uiManager.CurrentOverlay = overlay;
         }
 
-        public Direct2DDevice Direct2DDevice
-        {
-            get { return direct2DDevice; }
-        }
-
+        
         public object NativeWindow
         {
             get { return form; }
@@ -93,12 +89,12 @@ namespace MiniUI
 
         public void Run()
         {
-            deviceManager.Context.OutputMerger.SetTargets(deviceManager.BackBuffer);
+            d3dDeviceManager.Context.OutputMerger.SetTargets(d3dDeviceManager.BackBuffer);
             RenderLoop.Run(form, () =>
             {
-                deviceManager.Context.ClearRenderTargetView(deviceManager.BackBuffer, Color.Black);
+                d3dDeviceManager.Context.ClearRenderTargetView(d3dDeviceManager.BackBuffer, Color.Black);
                 Render();
-                deviceManager.SwapChain.Present(0, PresentFlags.None);
+                d3dDeviceManager.SwapChain.Present(0, PresentFlags.None);
             });
         }
 

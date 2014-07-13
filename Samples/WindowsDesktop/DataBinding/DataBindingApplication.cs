@@ -44,7 +44,9 @@ namespace DataBinding
         public DataBindingApplication()
         {
             var services = new ServiceRegistry();
-
+            // Needs to be declared before the D3D device manager as it hooks to
+            // the D3D device creation event
+            var d2dDeviceManager = new Direct2DDeviceManager(services);
             deviceManager = ToDispose(new SimpleDeviceManager(services)
             {
                 HorizontalDpi = 96.0f,
@@ -62,7 +64,6 @@ namespace DataBinding
                 ClientSize = new Size(deviceManager.PreferredBackBufferWidth, deviceManager.PreferredBackBufferHeight),
             };
 
-            direct2DDevice = ToDispose(new Direct2DDevice(services));
             deviceManager.CreateDevice(form.Handle, DeviceCreationFlags.Debug | DeviceCreationFlags.BgraSupport);
 
             var content = new ContentManager(services);
@@ -70,7 +71,7 @@ namespace DataBinding
             uiManager = new DesktopUserInterfaceManager(services);
 
             services.AddService(typeof (IStyleService), styleManager);
-            services.AddService(typeof (IDirect2DService), this);
+            services.AddService(typeof(IDirect2DService), d2dDeviceManager);
             services.AddService(typeof (IUserInterfaceState), uiManager);
             services.AddService(typeof (IWindowService), this);
 

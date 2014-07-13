@@ -21,7 +21,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected internal override void OnPointerExited(PointerEventArgs e)
+        protected override void OnPointerExited(PointerEventArgs e)
         {
             base.OnPointerExited(e);
             ActiveStyle = ShapeMap.GetShapes(ControlStatus.Enabled).ToArray();

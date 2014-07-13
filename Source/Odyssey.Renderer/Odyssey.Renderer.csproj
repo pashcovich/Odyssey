@@ -31,10 +31,6 @@
       <Project>{ff735354-ff98-4b1e-9560-ac65d028fdf8}</Project>
       <Name>Odyssey.Geometry</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Odyssey.Renderer2D\Odyssey.Renderer2D.csproj">
-      <Project>{8cc127c8-19f0-42df-8454-129b3566ef54}</Project>
-      <Name>Odyssey.Renderer2D</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SharpDX">

@@ -78,6 +78,12 @@ namespace Odyssey.Engine
             IsRunningSlowly = isRunningSlowly;
         }
 
+        /// <inheritdoc/>
+        public float FrameTime
+        {
+            get { return (float) ElapsedApplicationTime.TotalSeconds; }
+        }
+
         #endregion
     }
 }

@@ -19,12 +19,13 @@ namespace Odyssey.Talos.Systems
         void AssignToScene(Scene scene);
 
         void EnqueueMessage<TMessage>(TMessage message)
-            where TMessage : IMessage;
-
-        void ReceiveBlockingMessage<TMessage>(TMessage message);
+            where TMessage : Message;
 
         void Initialize();
         void Start();
+
+        void ReceiveBlockingMessage<TMessage>(TMessage message)
+            where TMessage : Message;
 
         void Stop();
 
@@ -34,9 +35,7 @@ namespace Odyssey.Talos.Systems
         /// <param name="key">The key.</param>
         /// <returns>$(True) if the <paramref name="key"/> is supported; $(False) otherwise.</returns>
         bool Supports(long key);
-
         
-
         void Unload();
     }
 }

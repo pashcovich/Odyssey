@@ -2,16 +2,14 @@
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
 using Odyssey.UserInterface.Controls;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Systems
 {
-    [YamlTag("UserInterfaceSystem")]
     public class UserInterfaceSystem : UpdateableSystemBase, IRenderableSystem
     {
         private readonly ComponentType tUserInterface;
 
-        protected OverlayBase Overlay { get; private set; }
+        protected Overlay Overlay { get; private set; }
 
         public UserInterfaceSystem()
             : base(Aspect.All(typeof(UserInterfaceComponent)))

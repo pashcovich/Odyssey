@@ -13,6 +13,4 @@ namespace Odyssey.Talos.Nodes
     public interface ILightService : ICollectionService<int, LightNode>
     { }
 
-    public interface ICameraService : ICollectionService<int, CameraNode>
-    { }
 }

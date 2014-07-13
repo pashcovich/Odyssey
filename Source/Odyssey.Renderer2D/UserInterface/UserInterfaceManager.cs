@@ -51,10 +51,10 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets a reference to current <see cref="OverlayBase"/> displayed on the screen.
+        /// Gets or sets a reference to current <see cref="Odyssey.UserInterface.Controls.Overlay"/> displayed on the screen.
         /// </summary>
-        /// <value>The current <see cref="OverlayBase"/> object.</value>
-        public OverlayBase CurrentOverlay { get; set; }
+        /// <value>The current <see cref="Odyssey.UserInterface.Controls.Overlay"/> object.</value>
+        public IOverlay CurrentOverlay { get; set; }
 
         internal static PointerEventArgs LastPointerEvent { get; private set; }
 
@@ -69,8 +69,6 @@ namespace Odyssey.UserInterface
             get { return services; }
         }
 
-        public UIElement Entered { get; set; }
-
         public PointerManager PointerManager
         {
             get { return pointerManager; }
@@ -82,7 +80,7 @@ namespace Odyssey.UserInterface
             pointerPlatform.Initialize(windowService.NativeWindow);
         }
 
-        public void SetOverlay(OverlayBase overlay)
+        public void SetOverlay(IOverlay overlay)
         {
             CurrentOverlay = overlay;
         }
@@ -116,15 +114,15 @@ namespace Odyssey.UserInterface
                     break;
 
                 case PointerEventType.Moved:
-                    ProcessPointerMovement(pointerEvent);
+                    CurrentOverlay.ProcessPointerMovement(pointerEvent);
                     break;
 
                 case PointerEventType.Pressed:
-                    ProcessPointerPress(pointerEvent);
+                    CurrentOverlay.ProcessPointerPress(pointerEvent);
                     break;
 
                 case PointerEventType.Released:
-                    ProcessPointerRelease(pointerEvent);
+                    CurrentOverlay.ProcessPointerRelease(pointerEvent);
                     break;
 
                 case PointerEventType.WheelChanged:
@@ -135,57 +133,7 @@ namespace Odyssey.UserInterface
             }
         }
 
-        protected void ProcessPointerMovement(PointerEventArgs e)
-        {
-            //Proceeds with the rest
-            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(CurrentOverlay))
-            {
-                e.Handled = control.ProcessPointerMovement(e);
-                if (e.Handled)
-                {
-                    break;
-                }
-            }
-
-            if (e.Handled) return;
-
-            CurrentOverlay.ProcessPointerMovement(e);
-            e.Handled = true;
-        }
-
-        protected void ProcessPointerPress(PointerEventArgs e)
-        {
-            //Proceeds with the rest
-            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(CurrentOverlay))
-            {
-                e.Handled = control.ProcessPointerPressed(e);
-                if (e.Handled)
-                    break;
-            }
-
-            if (e.Handled)
-                return;
-
-            CurrentOverlay.ProcessPointerPressed(e);
-            e.Handled = true;
-        }
-
-        protected void ProcessPointerRelease(PointerEventArgs e)
-        {
-            //Proceeds with the rest
-            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(CurrentOverlay))
-            {
-                e.Handled = control.ProcessPointerRelease(e);
-                if (e.Handled)
-                    break;
-            }
-
-            if (e.Handled)
-                return;
-
-            CurrentOverlay.ProcessPointerRelease(e);
-            e.Handled = true;
-        }
+        
 
         private void AddEvent(PointerPoint point)
         {

@@ -11,12 +11,9 @@ namespace Odyssey.Talos.Systems
     [YamlTag("PointLightSystem")]
     public sealed class PointLightSystem : LightSystem
     {
-        readonly ComponentType tPointLight;
-
         public PointLightSystem()
             : base(Aspect.All(typeof(PositionComponent), typeof(PointLightComponent), typeof(UpdateComponent)))
         {
-            tPointLight = ComponentTypeManager.GetType<PointLightComponent>();
         }
 
         void SetupEntity(IEntity entity)

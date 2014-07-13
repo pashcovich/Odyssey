@@ -62,9 +62,9 @@ namespace Odyssey
             appTime = new ApplicationTime();
             totalTime = new TimeSpan();
             timer = new TimerTick();
-            IsFixedTimeStep = true;
+            IsFixedTimeStep = false;
             maximumElapsedTime = TimeSpan.FromMilliseconds(500.0);
-            TargetElapsedTime = TimeSpan.FromTicks(10000000/60); // target elapsed time is by default 60Hz
+            TargetElapsedTime = TimeSpan.FromTicks(10000000/120); // target elapsed time is by default 60Hz
             lastUpdateCount = new int[4];
             nextLastUpdateCountIndex = 0;
 
@@ -154,7 +154,6 @@ namespace Odyssey
                 EndRun();
                 IsRunning = false;
             }
-            scene.Unload();
         }
 
         /// <summary>
@@ -388,16 +387,6 @@ namespace Odyssey
             {
                 lock (this)
                 {
-                    //var array = new IGameSystem[GameSystems.Count];
-                    //this.GameSystems.CopyTo(array, 0);
-                    //for (int i = 0; i < array.Length; i++)
-                    //{
-                    //    var disposable = array[i] as IDisposable;
-                    //    if (disposable != null)
-                    //    {
-                    //        disposable.Dispose();
-                    //    }
-                    //}
 
                     var disposableGraphicsManager = deviceManager as IDisposable;
                     if (disposableGraphicsManager != null)
@@ -411,6 +400,9 @@ namespace Odyssey
                     {
                         applicationPlatform.Dispose();
                     }
+
+                    if (scene != null)
+                        scene.Unload();
                 }
             }
 

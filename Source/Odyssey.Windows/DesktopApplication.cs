@@ -8,6 +8,7 @@ using Odyssey.UserInterface.Style;
 
 namespace Odyssey
 {
+    [RequiredService(typeof(IDirect2DService), typeof(Direct2DDeviceManager))]
     [RequiredService(typeof(IUserInterfaceState), typeof(DesktopUserInterfaceManager))]
     [RequiredService(typeof(IStyleService), typeof(StyleManager))]
     [PlatformType(typeof(DesktopApplicationPlatform))]

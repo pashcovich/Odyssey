@@ -149,8 +149,8 @@ namespace Odyssey.Engine
                 where
                     supportedDisplayMode.Width == desktopBounds.Width &&
                     supportedDisplayMode.Height == desktopBounds.Height && supportedDisplayMode.Format == format
-                select
-                    new DisplayMode(format, desktopBounds.Width, desktopBounds.Height, supportedDisplayMode.RefreshRate))
+                    orderby supportedDisplayMode.RefreshRate.Numerator descending 
+                select new DisplayMode(format, desktopBounds.Width, desktopBounds.Height, supportedDisplayMode.RefreshRate))
                 .FirstOrDefault();
         }
     }

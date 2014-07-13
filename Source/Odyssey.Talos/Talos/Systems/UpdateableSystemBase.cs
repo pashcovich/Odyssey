@@ -33,6 +33,15 @@ namespace Odyssey.Talos.Systems
             }
         }
 
+
+        public override void Start()
+        {
+        }
+
+        public override void Stop()
+        {
+        }
+
         public abstract void Process(ITimeService time);
     }
 }

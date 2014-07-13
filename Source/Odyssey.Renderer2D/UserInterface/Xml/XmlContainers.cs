@@ -149,7 +149,7 @@ namespace Odyssey.UserInterface.Xml
     [XmlType("Overlay")]
     public class XmlOverlay : XmlContainerControl
     {
-        public XmlOverlay(OverlayBase Overlay) : base(Overlay)
+        public XmlOverlay(Overlay Overlay) : base(Overlay)
         {
         }
 

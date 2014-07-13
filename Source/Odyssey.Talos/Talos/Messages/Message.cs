@@ -1,13 +1,13 @@
 ﻿
 namespace Odyssey.Talos.Messages
 {
-    public abstract class Message : IMessage
+    public abstract class Message
     {
-        public bool IsSynchronous { get; private set; }
+        public bool IsBlocking { get; private set; }
 
-        public Message(bool isSynchronous)
+        public Message(bool isBlocking)
         {
-            IsSynchronous = isSynchronous;
+            IsBlocking = isBlocking;
         }
     }
 }

@@ -75,8 +75,7 @@ namespace Odyssey.Engine
         public override void Initialize()
         {
             var settings = services.GetService<IDirectXDeviceSettings>();
-            BitmapTarget = ToDispose(BitmapTarget.New(d2DDevice, settings.HorizontalDpi, settings.VerticalDpi,
-                settings.PreferredBackBufferWidth, settings.PreferredBackBufferHeight, settings.PreferredBackBufferFormat));
+            BitmapTarget = ToDispose(BitmapTarget.New(d2DDevice, settings.PreferredBackBufferWidth, settings.PreferredBackBufferHeight, settings.PreferredBackBufferFormat));
 
             Initialize(BitmapTarget);
         }

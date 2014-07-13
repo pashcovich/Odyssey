@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ServiceModel.Channels;
 using Odyssey.Talos.Messages;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,6 @@ namespace Odyssey.Talos.Systems
         private readonly MessageQueue messageQueue;
         private readonly string name;
 
-        public event EventHandler<MessageEventArgs> MessageReceived;
         public event EventHandler<MessageEventArgs> BlockingMessageReceived;
 
         [YamlMember(0)]
@@ -52,18 +52,12 @@ namespace Odyssey.Talos.Systems
             id =  1 << index;
             index++;
 
-            messageQueue = new MessageQueue(this);
+            messageQueue = new MessageQueue();
             IsEnabled = true;
         }
 
-        internal protected virtual void OnMessageReceived(MessageEventArgs args)
-        {
-            var handler = MessageReceived;
-            if (handler != null)
-                handler(this, args);
-        }
 
-        internal protected virtual void OnBlockingMessageReceived(MessageEventArgs args)
+        protected virtual void OnBlockingMessageReceived(MessageEventArgs args)
         {
             var handler = BlockingMessageReceived;
             if (handler != null)
@@ -76,18 +70,15 @@ namespace Odyssey.Talos.Systems
         }
 
         public void EnqueueMessage<TMessage>(TMessage message)
-            where TMessage : IMessage
+            where TMessage : Odyssey.Talos.Messages.Message
         {
             messageQueue.Enqueue(message);
         }
 
-        public virtual void Start()
-        {
-        }
+        public abstract void Start();
 
-        public virtual void Stop()
-        {
-        }
+        public abstract void Stop();
+
 
         public virtual void Unload()
         { }
@@ -102,9 +93,10 @@ namespace Odyssey.Talos.Systems
             return Aspect.Interests(entityKey);
         }
 
-        public virtual void ReceiveBlockingMessage<TMessage>(TMessage message)
+        public void ReceiveBlockingMessage<TMessage>(TMessage message)
+            where TMessage : Odyssey.Talos.Messages.Message
         {
-            throw new NotImplementedException();
+            OnBlockingMessageReceived(new MessageEventArgs(message));
         }
 
         [Pure]

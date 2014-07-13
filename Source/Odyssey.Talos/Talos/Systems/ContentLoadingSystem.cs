@@ -8,11 +8,8 @@ namespace Odyssey.Talos.Systems
     public class ContentLoadingSystem<TComponent> : SystemBase, IUpdateableSystem
         where TComponent : ContentComponent
     {
-        protected ComponentType ContentComponentType { get; private set; }
-
         public ContentLoadingSystem() : base(Aspect.All(typeof(TComponent)))
         {
-            ContentComponentType = ComponentTypeManager.GetType<TComponent>();
         }
 
         public override void Start()
@@ -29,7 +26,7 @@ namespace Odyssey.Talos.Systems
 
         void SetupEntity(IEntity entity)
         {
-            var component = entity.GetComponent<TComponent>(ContentComponentType.KeyPart);
+            var component = entity.GetComponent<TComponent>();
             if (!component.IsInited)
             {
                 component.Initialize();

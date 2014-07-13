@@ -36,7 +36,7 @@ namespace Odyssey.Talos.Systems
                 var cPosition = entity.GetComponent<PositionComponent>(tPosition.KeyPart);
 
                 ParentComponent cParent;
-                Vector3 center = entity.TryGetComponent(tParent.KeyPart, out cParent)
+                Vector3 center = entity.TryGetComponent(out cParent)
                     ? cParent.Entity.GetComponent<PositionComponent>(tPosition.KeyPart).Position
                     : Vector3.Zero;
 

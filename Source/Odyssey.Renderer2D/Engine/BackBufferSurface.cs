@@ -22,12 +22,10 @@ namespace Odyssey.Engine
 
         public override void Initialize()
         {
-            var settings = Services.GetService<IDirectXDeviceSettings>();
             try
             {
                 var swapChainService = Services.GetService<ISwapChainPresenterService>();
-                BitmapTarget = ToDispose(BitmapTarget.New(Direct2DDevice, settings.HorizontalDpi, settings.VerticalDpi,
-                    swapChainService.SwapChain.GetBackBuffer<Surface2>(0)));
+                BitmapTarget = ToDispose(BitmapTarget.New(Direct2DDevice, swapChainService.SwapChain.GetBackBuffer<Surface2>(0)));
                 Initialize(BitmapTarget);
             }
             catch (ArgumentException e)

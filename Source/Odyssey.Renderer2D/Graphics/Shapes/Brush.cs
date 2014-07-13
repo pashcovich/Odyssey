@@ -15,8 +15,6 @@
 
 #region Using Directives
 
-#if !WP8
-
 using Odyssey.Engine;
 
 #endregion Using Directives
@@ -44,5 +42,3 @@ namespace Odyssey.Graphics.Shapes
         }
     }
 }
-
-#endif

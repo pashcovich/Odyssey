@@ -113,7 +113,7 @@ namespace Odyssey.Tools.ShaderGenerator.Viewer
             var sInitialization = new InitializationSystem();
             var cameraSystem = new PerspectiveCameraSystem();
             var lightSystem = new PointLightSystem();
-            var positionSystem = new PositionSystem();
+            var positionSystem = new TransformSystem();
             var sOptimization = new OptimizationSystem();
             var sRendering = new RenderSystem();
             var sUI = new UserInterfaceSystem();
@@ -135,7 +135,7 @@ namespace Odyssey.Tools.ShaderGenerator.Viewer
             root.RegisterComponent(new PositionComponent());
 
             Entity camera = scene.CreateEntity("Camera");
-            camera.RegisterComponent(new CameraComponent {Target = new Vector3(0, 0, 0)});
+            camera.RegisterComponent(new CameraComponent {});
             camera.RegisterComponent(new PositionComponent {Position = new Vector3(0, 0f, 3f)});
             camera.RegisterComponent(new UpdateComponent {UpdateFrequency = UpdateFrequency.RealTime});
 

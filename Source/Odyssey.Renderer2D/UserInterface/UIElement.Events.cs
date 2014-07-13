@@ -67,7 +67,7 @@ namespace Odyssey.UserInterface
         /// </summary>
         /// <param name="e">The <see cref="PointerEventArgs"/> instance containing the event
         /// data.</param>
-        protected internal virtual void OnPointerExited(PointerEventArgs e)
+        protected virtual void OnPointerExited(PointerEventArgs e)
         {
             isInside = false;
             if (CanRaiseEvents)
@@ -87,8 +87,7 @@ namespace Odyssey.UserInterface
                 }
             }
 
-            if (PointerExited != null)
-                PointerExited(this, e);
+            RaiseEvent(PointerEntered, this, e);
         }
 
         /// <summary>
@@ -98,16 +97,12 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnPointerEnter(PointerEventArgs e)
         {
-            //DebugManager.LogToScreen(
-            //    DateTime.Now.Millisecond + " Entering " +
-            //    id + " H: " + isHighlighted);
-
             isInside = true;
 
-            if (Overlay.State.Entered.IsInside)
-                Overlay.State.Entered.OnPointerExited(e);
+            if (Overlay.EnteredElement.IsInside)
+                Overlay.EnteredElement.OnPointerExited(e);
 
-            Overlay.State.Entered = this;
+            Overlay.EnteredElement = this;
 
             if (CanRaiseEvents)
             {
@@ -351,19 +346,13 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnGotFocus(EventArgs e)
         {
-            //if (this != UserInterfaceManager.CurrentOverlay.FocusedControl)
-            //{
-            //    UserInterfaceManager.CurrentOverlay.FocusedControl.OnLostFocus(e);
+            if (Overlay.FocusedElement != this)
+            {
+                Overlay.FocusedElement.OnLostFocus(EventArgs.Empty);
+                Overlay.FocusedElement = this;
+            }
 
-            //    UserInterfaceManager.CurrentOverlay.FocusedControl = this;
-            //    IsFocused = true;
-
-            //    OnUpdate(e);
-
-            //    if (GotFocus != null)
-            //        GotFocus(this, e);
-            //}
-            //else return;
+            IsFocused = true;
 
             RaiseEvent(GotFocus, this, e);
             RaiseEvent(Update, this, e);
@@ -403,8 +392,6 @@ namespace Odyssey.UserInterface
         protected virtual void OnLostFocus(EventArgs e)
         {
             IsFocused = IsPressed = false;
-            //UserInterfaceManager.CurrentOverlay.FocusedControl = UserInterfaceManager.CurrentOverlay;
-
             RaiseEvent(LostFocus, this, e);
             RaiseEvent(Update, this, e);
         }

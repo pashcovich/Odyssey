@@ -8,8 +8,6 @@ namespace Odyssey.Talos
     {
         IServiceRegistry Services { get; }
         void Update(ITimeService time);
-        void SendMessage<TMessage>(TMessage message)
-            where TMessage : IMessage;
 
         IEnumerable<IEntity> Entities { get; }
         IEnumerable<IComponent> Components{ get; }

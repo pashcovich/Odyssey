@@ -8,17 +8,12 @@ using SharpDX;
 
 namespace MiniUI
 {
-    public class SampleOverlay : Overlay
+    public static class SampleOverlay
     {
-        protected SampleOverlay(IServiceRegistry services)
-            : base(services)
-        {
-        }
-
-        public static SampleOverlay New(IServiceRegistry services)
+        public static Overlay New(IServiceRegistry services)
         {
             IDirectXDeviceSettings settings = services.GetService<IDirectXDeviceSettings>();
-            var overlay = new SampleOverlay(services)
+            var overlay = new Overlay(services)
             {
                 Width = settings.PreferredBackBufferWidth,
                 Height = settings.PreferredBackBufferHeight

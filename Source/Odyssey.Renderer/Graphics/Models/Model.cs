@@ -32,8 +32,16 @@ namespace Odyssey.Graphics.Models
         {
             using (var serializer = new ModelReader(graphicsDevice, stream))
             {
-                return serializer.ReadModel();
+                Model model = serializer.ReadModel();
+                model.RegisterResources();
+                return model;
             }
+        }
+
+        void RegisterResources()
+        {
+            foreach (var modelMesh in Meshes)
+                ToDispose(modelMesh);
         }
 
     }

@@ -15,53 +15,52 @@ namespace Odyssey.Talos.Components
         Stereo
     }
 
-    [YamlTag("Camera")]
-    public class CameraComponent : Component, IInitializable
+    public class CameraComponent : Component, ICamera
     {
-        public int CameraId { get; set; }
-        public CameraType Type { get; set; }
+        public int Index { get; set; }
         public float NearClip { get; set; }
         public float FarClip { get; set; }
         public float FieldOfView { get; set; }
-        [YamlIgnore] public bool IsInited { get; private set; }
+        public CameraType Type { get; set; }
 
-        [YamlStyle(YamlStyle.Flow)]
         public Vector3 Up { get; set; }
 
-        [YamlStyle(YamlStyle.Flow)]
-        public Vector3 Target { get; set; }
-
-        [YamlIgnore]
-        public Matrix View { get; set; }
-
-        [YamlIgnore]
-        public Matrix Projection { get; set; }
-
+        public Matrix View { get; internal set; }
+        public Matrix Projection { get; internal set; }
+        public Quaternion Orientation { get; set; }
         public ViewportF Viewport { get; set; }
+
+        public Vector3 Direction
+        {
+            get { return new Vector3(-View.M13, -View.M23, -View.M33); }
+        }
+
+        public Vector3 AxisX
+        {
+            get { return new Vector3(View.M11, View.M21, View.M31); }
+        }
+
+        public Vector3 AxisY
+        {
+            get { return new Vector3(View.M12, View.M22, View.M32); }
+        }
+
+        public Vector3 AxisZ
+        {
+            get { return new Vector3(View.M13, View.M23, View.M33); }
+        } 
 
         public CameraComponent() : base(ComponentTypeManager.GetType<CameraComponent>())
         {
-            CameraId = 0;
+            Index = 0;
             NearClip = 1.0f;
             FarClip = 1000.0f;
             FieldOfView = (float) (Math.PI/4);
             Up = Vector3.UnitY;
-            Target = Vector3.Zero;
+            Orientation = Quaternion.Identity;
+            Type = CameraType.Perspective;
         }
 
-        public void Initialize()
-        {
-            if (Viewport != default(ViewportF))
-                return;
 
-            var deviceSettings = Services.GetService<IDirectXDeviceSettings>();
-            Viewport = new ViewportF(0, 0, deviceSettings.PreferredBackBufferWidth, deviceSettings.PreferredBackBufferHeight);
-            IsInited = true;
-        }
-
-        public void Unload()
-        {
-            IsInited = false;
-        }
     }
 }

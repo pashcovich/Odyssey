@@ -151,15 +151,6 @@ namespace Odyssey.UserInterface
             get { return bindings.Values; }
         }
 
-        internal IServiceRegistry Services { get; set; }
-
-        /// <summary>
-        /// Returns true if the control is being updated (ie, it is in the updateQueue collection),
-        /// false otherwise.
-        /// </summary>
-        /// <value><c>true</c> if this instance is being updated; otherwise, <c>false</c>.</value>
-        protected internal bool IsBeingUpdated { get; set; }
-
         /// <summary>
         /// Gets the top left position in the client area of the control.
         /// </summary>
@@ -277,11 +268,11 @@ namespace Odyssey.UserInterface
                     Depth = Depth.AsChildOf(parent.Depth);
                 }
 
-                bool isOverlay = parent is OverlayBase;
+                bool isOverlay = parent is Overlay;
 
                 // Find the overlay we are in;
                 if (isOverlay)
-                    Overlay = (OverlayBase) Parent;
+                    Overlay = (Overlay) Parent;
                 else if (Parent.Overlay != null)
                     Overlay = Parent.Overlay;
             }
@@ -294,7 +285,7 @@ namespace Odyssey.UserInterface
         /// <value>A Vector2 that represents the upper-left corner of the control relative to the
         /// upper-left corner of its container.</value>
         /// <remarks>
-        /// If the controls's <see cref = "Parent" /> is the <see cref = "OverlayBase" />, the
+        /// If the controls's <see cref = "Parent" /> is the <see cref = "Odyssey.UserInterface.Controls.Overlay" />, the
         /// <b>PositionV3</b> property value represents the upper-left corner of the control in
         /// screen coordinates.
         /// </remarks>
@@ -318,7 +309,7 @@ namespace Odyssey.UserInterface
 
         internal bool IsBeingRemoved { get; set; }
 
-        internal OverlayBase Overlay { get; set; }
+        internal Overlay Overlay { get; set; }
 
         protected Direct2DDevice Device
         {

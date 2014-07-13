@@ -1,98 +1,102 @@
-﻿using System.Linq;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
+
 using Odyssey.Engine;
 using Odyssey.Talos.Components;
-using Odyssey.Talos.Initializers;
 using Odyssey.Talos.Messages;
-using Odyssey.Talos.Nodes;
-using System;
-using System.Collections.Generic;
+using SharpDX;
+
+#endregion
 
 namespace Odyssey.Talos.Systems
 {
-    public abstract class CameraSystem<TCamera> : SystemBase, IUpdateableSystem
-        where TCamera : CameraNode
+    public class PerspectiveCameraSystem : UpdateableSystemBase
     {
-        protected ComponentType CameraComponentType { get; private set; }
-
-        readonly CameraCollection cameraNodes;
-        private CameraNode activeCamera;
-
-        protected CameraSystem(Aspect aspect) : base(aspect)
+        public PerspectiveCameraSystem()
+            : base(Aspect.All(typeof (PositionComponent), typeof (RotationComponent), typeof (CameraComponent), typeof (UpdateComponent)))
         {
-            CameraComponentType = ComponentTypeManager.GetType<CameraComponent>();
-            cameraNodes = new CameraCollection();
         }
 
         public override void Start()
         {
-            base.Start();
-            Services.AddService(typeof(ICameraService), cameraNodes);
             Messenger.Register<ContentLoadedMessage<ShaderComponent>>(this);
             Messenger.Register<EntityChangeMessage>(this);
         }
 
         public override void Stop()
         {
-            base.Stop();
             Messenger.Unregister<ContentLoadedMessage<ShaderComponent>>(this);
             Messenger.Unregister<EntityChangeMessage>(this);
         }
-
-        protected void SetupEntity(IEntity entity)
-        {
-            TCamera nCamera = (TCamera)Activator.CreateInstance(typeof(TCamera), new object[] { entity });
-            nCamera.Reset();
-            cameraNodes.Add(nCamera.Id, nCamera);
-            var cCamera = entity.GetComponent<CameraComponent>(CameraComponentType.KeyPart);
-            if (!cCamera.IsInited)
-                cCamera.Initialize();
-            Messenger.Send(new CameraMessage(entity, nCamera, ChangeType.Added));
-        }
         
-        void RemoveEntity(IEntity entity)
-        {
-            ICamera camera = (from kvp in cameraNodes where kvp.Value.EntityId == entity.Id select kvp.Value).First();
-            cameraNodes.Remove(camera.Id);
-            Messenger.Send(new CameraMessage(entity, camera, ChangeType.Removed));
-        }
-
-        public void BeforeUpdate()
+        public override void BeforeUpdate()
         {
             // Entity change
             while (MessageQueue.HasItems<EntityChangeMessage>())
             {
                 EntityChangeMessage mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
+                var entity = mEntity.Source;
+                var camera = entity.GetComponent<CameraComponent>();
+                
                 if (mEntity.Action == ChangeType.Added)
-                    SetupEntity(mEntity.Source);
+                {
+                    ResetCamera(entity);
+                    Messenger.Send(new CameraMessage(entity, camera, ChangeType.Added));
+                }
                 else if (mEntity.Action == ChangeType.Removed)
-                    RemoveEntity(mEntity.Source);
+                    Messenger.Send(new CameraMessage(entity, camera, ChangeType.Removed));
             }
-
-            // Todo improve camera system
-            activeCamera = cameraNodes.Values.First();
-
-            // Set up shader
-            //while (MessageQueue.HasItems<ContentLoadedMessage<ShaderComponent>>())
-            //{
-            //    var mShader = MessageQueue.Dequeue<ContentLoadedMessage<ShaderComponent>>();
-            //    ShaderInitializer shaderInitializer = new ShaderInitializer(Scene.Services, mShader.Content.Technique.Effect, mShader.Content.Technique.ActiveTechnique);
-            //    shaderInitializer.InitializeCamera(activeCamera);
-            //}
-
         }
 
-        public void Process(ITimeService time)
+        public override void Process(ITimeService time)
         {
             foreach (IEntity entity in Entities)
             {
-                var cameraNode = (from kvp in cameraNodes
-                    where kvp.Value.EntityId == entity.Id
-                    select kvp.Value).First();
-
-                cameraNode.Update(time);
+                var cUpdate = entity.GetComponent<UpdateComponent>();
+                if (!cUpdate.RequiresUpdate)
+                    continue;
+                var cPosition = entity.GetComponent<PositionComponent>();
+                var cRotation = entity.GetComponent<RotationComponent>();
+                var cCamera = entity.GetComponent<CameraComponent>();
+                cCamera.View = Matrix.Translation(-cPosition.Position)* Matrix.RotationQuaternion(cRotation.Orientation);
             }
         }
 
-        public abstract void AfterUpdate();
+        private void ResetCamera(IEntity entity)
+        {
+            var deviceSettings = entity.Scene.Services.GetService<IDirectXDeviceSettings>();
+            float aspectRatio = deviceSettings.PreferredBackBufferWidth/(float) deviceSettings.PreferredBackBufferHeight;
+            var cCamera = entity.GetComponent<CameraComponent>();
+            var cPosition = entity.GetComponent<PositionComponent>();
+            var cRotation = entity.GetComponent<RotationComponent>();
+            
+            TargetComponent cTarget;
+            cCamera.Viewport = new ViewportF(0, 0, deviceSettings.PreferredBackBufferWidth,
+                deviceSettings.PreferredBackBufferHeight);
+            cCamera.Projection = Matrix.PerspectiveFovRH(cCamera.FieldOfView, aspectRatio, cCamera.NearClip, cCamera.FarClip);
+            entity.TryGetComponent(out cTarget);
+
+            Vector3 pFocus = cTarget != null ? cTarget.Location : Vector3.Zero;
+            cRotation.Orientation = Quaternion.LookAtRH(cPosition.Position, pFocus, cCamera.Up);
+            cCamera.View = Matrix.LookAtRH(cPosition.Position, pFocus, cCamera.Up);
+
+            var cUpdate = entity.GetComponent<UpdateComponent>();
+            if (cUpdate.UpdateFrequency == UpdateFrequency.Static)
+                cUpdate.RequiresUpdate = false;
+        }
     }
 }

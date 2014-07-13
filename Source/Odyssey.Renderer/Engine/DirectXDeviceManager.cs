@@ -32,14 +32,12 @@ namespace Odyssey.Engine
     /// <summary>
     /// Manages the <see cref="DirectXDevice"/> lifecycle.
     /// </summary>
-    public class DirectXDeviceManager : Component, IDirectXDeviceManager, IOdysseyDeviceService, IDirectXDeviceSettings,
-        IDirect2DService
+    public class DirectXDeviceManager : Component, IDirectXDeviceManager, IOdysseyDeviceService, IDirectXDeviceSettings
     {
         #region Fields
 
         private readonly Application application;
         private readonly IDirectXDeviceFactory deviceFactory;
-        private readonly Direct2DDevice direct2DDevice;
         private bool beginDrawOk;
         private DisplayOrientation currentWindowOrientation;
         private bool depthBufferShaderResource;
@@ -122,8 +120,6 @@ namespace Odyssey.Engine
             application.Services.AddService(typeof (IDirectXDeviceService), this);
             application.Services.AddService(typeof (IOdysseyDeviceService), this);
             application.Services.AddService(typeof (IDirectXDeviceSettings), this);
-            application.Services.AddService(typeof (IDirect2DService), this);
-            direct2DDevice = new Direct2DDevice(application.Services);
 
             deviceFactory = (IDirectXDeviceFactory) application.Services.GetService(typeof (IDirectXDeviceFactory));
             if (deviceFactory == null)
@@ -273,11 +269,6 @@ namespace Odyssey.Engine
                     deviceSettingsChanged = true;
                 }
             }
-        }
-
-        public Direct2DDevice Direct2DDevice
-        {
-            get { return direct2DDevice; }
         }
 
         public float HorizontalDpi

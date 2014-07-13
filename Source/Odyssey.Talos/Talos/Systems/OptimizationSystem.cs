@@ -14,7 +14,7 @@ using SharpYaml.Serialization;
 namespace Odyssey.Talos.Systems
 {
     [YamlTag("Optimization")]
-    public class OptimizationSystem : SystemBase, IUpdateableSystem
+    public class OptimizationSystem : UpdateableSystemBase, IUpdateableSystem
     {
         private readonly RenderMapper renderMapper;
         readonly ComponentType tShader;
@@ -27,13 +27,12 @@ namespace Odyssey.Talos.Systems
             renderMapper = new RenderMapper();
         }
 
-        public void BeforeUpdate()
+        public override void BeforeUpdate()
         {
             renderMapper.Clear();
         }
 
-
-        public void Process(ITimeService time)
+        public override void Process(ITimeService time)
         {
             foreach (IEntity entity in Entities.Where(e => e.IsEnabled))
             {

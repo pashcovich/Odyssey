@@ -7,12 +7,10 @@ namespace Odyssey.UserInterface
     {
         PointerManager PointerManager { get; }
 
-        void SetOverlay(OverlayBase overlay);
+        void SetOverlay(IOverlay overlay);
 
         void Initialize();
 
         void Update();
-
-        UIElement Entered { get; set; }
     }
 }

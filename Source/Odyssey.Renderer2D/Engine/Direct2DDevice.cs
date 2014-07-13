@@ -24,7 +24,7 @@ namespace Odyssey.Engine
         private Device device;
         private DeviceContext deviceContext;
         private DWFactory directWriteFactory;
-        private IDirect3DProvider dxDeviceCache;
+        
         private D2DFactory factory;
         private Direct2DSurface target;
 
@@ -34,7 +34,7 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="Direct2DDevice" />, subscribes to <see cref="IDirectXDeviceService" /> changes
+        /// Initializes a new instance of <see cref="Direct2DDevice" />.
         /// events via
         /// <see cref="IDirectXDeviceService" />.
         /// </summary>
@@ -45,17 +45,37 @@ namespace Odyssey.Engine
             dx11Service = services.GetService<IDirectXDeviceService>();
             this.services = services;
             this.debugLevel = debugLevel;
+        }
 
-            dx11Service.DeviceCreated += DirectXDx11ServiceOnDx11Created;
-            dx11Service.DeviceDisposing += DirectXDx11ServiceOnDx11Disposing;
-            dx11Service.DeviceChangeBegin += DirectXDx11ServiceOnDx11ChangeBegin;
-            dx11Service.DeviceChangeEnd += DirectXDx11ServiceOnDx11ChangeEnd;
-            dx11Service.DeviceLost += DirectXDx11ServiceOnDx11Lost;
+        public Direct2DDevice(IServiceRegistry services, SharpDX.Direct3D11.Device d3dDevice, DebugLevel debugLevel)
+        {
+            this.services = services;
+            using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
+            {
+                factory = ToDispose(new SharpDX.Direct2D1.Factory1(FactoryType.SingleThreaded, debugLevel));
+                device = ToDispose(new Device(factory, dxgiDevice));
+                deviceContext = ToDispose(new DeviceContext(device, DeviceContextOptions.None));
+            }
+
+            backBuffer = ToDispose(BackBufferSurface.New(this));
+            backBuffer.Initialize();
+
+            directWriteFactory = ToDispose(new DWFactory());
         }
 
         public Direct2DSurface BackBuffer
         {
             get { return backBuffer; }
+        }
+
+        public float HorizontalDpi
+        {
+            get { return deviceContext.DotsPerInch.Width; }
+        }
+
+        public float VerticalDpi
+        {
+            get { return deviceContext.DotsPerInch.Height; }
         }
 
         /// <summary>
@@ -105,6 +125,9 @@ namespace Odyssey.Engine
             get { return services; }
         }
 
+        internal void CreateResources()
+        { }
+
         public void DrawGeometry(Graphics.Shapes.Geometry geometry, Brush brush)
         {
             deviceContext.DrawGeometry(geometry, brush);
@@ -152,71 +175,11 @@ namespace Odyssey.Engine
             DisposeAll();
         }
 
-        private void CreateOrUpdateDirect2D()
-        {
-            // Dispose and recreate all devices only if the DirectXDevice changed
-            if (dxDeviceCache != dx11Service.DirectXDevice)
-            {
-                dxDeviceCache = dx11Service.DirectXDevice;
-
-                DisposeAll();
-
-                var d3dDevice = dxDeviceCache.Device;
-
-                using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
-                {
-                    factory = ToDispose(new SharpDX.Direct2D1.Factory1(FactoryType.SingleThreaded, debugLevel));
-                    device = ToDispose(new Device(factory, dxgiDevice));
-                    deviceContext = ToDispose(new DeviceContext(device, DeviceContextOptions.None));
-                }
-
-                backBuffer = ToDispose(BackBufferSurface.New(this));
-                backBuffer.Initialize();
-
-                directWriteFactory = ToDispose(new DWFactory());
-            }
-        }
-
-        private void DirectXDx11ServiceOnDx11ChangeBegin(object sender, EventArgs e)
-        {
-        }
-
-        private void DirectXDx11ServiceOnDx11ChangeEnd(object sender, EventArgs e)
-        {
-            CreateOrUpdateDirect2D();
-        }
-
-        /// <summary>
-        /// Handles the <see cref="IDirectXDeviceService.DeviceCreated" /> event.
-        /// Initializes the <see cref="Direct2DDevice.Device" /> and <see cref="DeviceContext" />.
-        /// </summary>
-        /// <param name="sender">Ignored.</param>
-        /// <param name="e">Ignored.</param>
-        private void DirectXDx11ServiceOnDx11Created(object sender, EventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// Handles the <see cref="IDirectXDeviceService.DeviceDisposing" /> event.
-        /// Disposes the <see cref="Direct2DDevice.Device" />, <see cref="DeviceContext" /> and its render target
-        /// associated with the current <see cref="Direct2DDevice" /> instance.
-        /// </summary>
-        /// <param name="sender">Ignored.</param>
-        /// <param name="e">Ignored.</param>
-        private void DirectXDx11ServiceOnDx11Disposing(object sender, EventArgs e)
-        {
-            DisposeAll();
-        }
-
-        private void DirectXDx11ServiceOnDx11Lost(object sender, EventArgs e)
-        {
-        }
-
         /// <summary>
         /// Disposes the <see cref="Direct2DDevice.Device" />, <see cref="DeviceContext" /> and its render target
         /// associated with the current <see cref="Direct2DDevice" /> instance.
         /// </summary>
-        private void DisposeAll()
+        public void DisposeAll()
         {
             if (target != backBuffer)
                 RemoveAndDispose(ref target);
