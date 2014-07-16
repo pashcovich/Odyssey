@@ -11,18 +11,20 @@ using EngineReference = Odyssey.Engine.EngineReference;
 
 namespace Odyssey.Daedalus.Shaders.Structs
 {
-    [DataContract]
     public partial class ConstantBuffer : Struct
     {
-        [DataMember]
         private Dictionary<string, EngineReference> references;
+        private UpdateType updateType;
 
-        [DataMember]
-        public UpdateType UpdateType { get; set; }
+        public UpdateType UpdateType
+        {
+            get { return updateType; }
+            set { updateType = value; }
+        }
 
         public ConstantBuffer()
         {
-            Type = Shaders.Type.ConstantBuffer;
+            Type = Type.ConstantBuffer;
             Index = 0;
             references = new Dictionary<string, EngineReference>();
         }
@@ -59,6 +61,13 @@ namespace Odyssey.Daedalus.Shaders.Structs
                 sb.AppendLine("};");
                 return sb.ToString();
             }
+        }
+
+        public override void Serialize(BinarySerializer serializer)
+        {
+            base.Serialize(serializer);
+            serializer.SerializeEnum(ref updateType);
+            serializer.Serialize(ref references, serializer.Serialize, (ref EngineReference er) => serializer.Serialize(ref er));
         }
     }
 }

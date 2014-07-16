@@ -20,14 +20,32 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 
     public class ForBlock : NodeBase
     {
+        private string index;
+        private ConditionType conditionType;
+        private StepType step;
+
         [SupportedType(Type.Float)]
         public INode StartCondition { get; set; }
         [SupportedType(Type.Float)]
         public INode EndCondition { get; set; }
 
-        public string Index { get; set; }
-        public ConditionType ConditionType { get; set; }
-        public StepType Step { get; set; }
+        public string Index
+        {
+            get { return index; }
+            set { index = value; }
+        }
+
+        public ConditionType ConditionType
+        {
+            get { return conditionType; }
+            set { conditionType = value; }
+        }
+
+        public StepType Step
+        {
+            get { return step; }
+            set { step = value; }
+        }
 
         [IgnoreValidation(true)]
         public override IVariable Output { get; set; }
@@ -56,6 +74,19 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
         {
             AddNode("StartCondition",StartCondition);
             AddNode("EndCondition",EndCondition);
+        }
+
+        protected override void SerializeProperties(BinarySerializer serializer)
+        {
+            base.SerializeProperties(serializer);
+            serializer.Serialize(ref index);
+            serializer.SerializeEnum(ref conditionType);
+            serializer.SerializeEnum(ref step);
+        }
+
+        protected override void SerializeVariables(BinarySerializer serializer)
+        {
+            
         }
 
         internal static string ConvertCondition(ConditionType type)

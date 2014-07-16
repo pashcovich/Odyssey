@@ -79,11 +79,10 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Functions
         {
             base.SerializeMethods(serializer);
             
-            MethodBase methodBase = (MethodBase)method ;
-            methodBase.Serialize(serializer);
-
-            if (serializer.Mode == SerializerMode.Read)
-                method = methodBase;
+            if (serializer.Mode == SerializerMode.Write)
+                MethodBase.WriteMethod(serializer, method);
+            else
+                method = MethodBase.ReadMethod(serializer);
         }
     }
 }

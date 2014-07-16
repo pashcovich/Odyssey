@@ -17,13 +17,13 @@ namespace Odyssey.Talos.Initializers
 
         private static readonly Type[] InstanceInitializers =
         {
-            typeof (MaterialInitializer), typeof (EntityInitializer)
+            typeof (MaterialInitializer), typeof (EntityInitializer),typeof(EffectInitializer)
         };
 
         private static readonly Type[] RegisteredInitializers =
         {
             typeof (CameraInitializer), typeof (LightInitializer), typeof (ApplicationInitializer),
-            typeof (MaterialInitializer), typeof (EntityInitializer)
+            typeof (MaterialInitializer), typeof (EntityInitializer),typeof(EffectInitializer)
         };
 
         private readonly Effect effect;

@@ -95,7 +95,7 @@ namespace Odyssey.Graphics.Shaders
             parameters.AddRange(newParameters);
         }
 
-        public void Assemble(DirectXDevice directX)
+        public void Assemble()
         {
             if (IsInited)
                 LogEvent.Engine.Warning("Attempted to reinitialize [{0}]", Name);

@@ -61,7 +61,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 
         protected override void SerializeVariables(BinarySerializer serializer)
         {
-            base.SerializeProperties(serializer);
+            base.SerializeVariables(serializer);
             if (serializer.Mode == SerializerMode.Write)
             {
                 Variable.WriteVariable(serializer, Sampler);

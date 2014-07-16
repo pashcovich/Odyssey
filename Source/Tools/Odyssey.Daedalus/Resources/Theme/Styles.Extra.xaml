@@ -37,7 +37,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Button Content="{Binding Content}" Padding="2" Width="48" Height="48" ToolTip="{Binding Tooltip}" Command="{Binding MainCommand.Command}"
-                                        Grid.Row="0" Grid.Column="0" />
+                                        Grid.Row="0" Grid.Column="0"/>
             <ComboBox Grid.Row="0" Grid.Column="1" Width="30" Visibility="{Binding HasOtherCommands, Converter={StaticResource BoolToVisibility}}" ItemsSource="{Binding SecondaryCommands}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>

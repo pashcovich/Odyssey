@@ -7,6 +7,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
     {
         IVariable output;
         private bool parenthesize;
+        private bool assignToInput1;
 
         [SupportedType(Type.Vector)]
         [SupportedType(Type.Matrix)]
@@ -16,7 +17,11 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
         [SupportedType(Type.Matrix)]
         public INode Input2 { get; set; }
 
-        public bool AssignToInput1 { get; set; }
+        public bool AssignToInput1
+        {
+            get { return assignToInput1; }
+            set { assignToInput1 = value; }
+        }
 
         public bool Parenthesize
         {
@@ -78,6 +83,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
         {
             base.SerializeProperties(serializer);
             serializer.Serialize(ref parenthesize);
+            serializer.Serialize(ref assignToInput1);
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Documents;
 using GalaSoft.MvvmLight;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace Odyssey.Daedalus.ViewModel
         UIElement content;
         private CommandViewModel mainCommand;
         private List<CommandViewModel> secondaryCommands;
+        private Key key;
 
         public UIElement Content { get { return content; } set { content = value; RaisePropertyChanged("Content"); } }
         public bool HasOtherCommands { get { return secondaryCommands != null && secondaryCommands.Any(); }}
@@ -30,6 +32,16 @@ namespace Odyssey.Daedalus.ViewModel
             {
                 tooltip = value;
                 RaisePropertyChanged("Tooltip");
+            }
+        }
+
+        public Key Key
+        {
+            get { return key; }
+            set
+            {
+                key = value;
+                RaisePropertyChanged("Key");
             }
         }
 

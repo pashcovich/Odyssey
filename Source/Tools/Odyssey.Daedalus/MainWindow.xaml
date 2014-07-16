@@ -10,9 +10,6 @@
         Title="Odyssey Daedalus"
         Icon="./Resources/Icons/AppIcon.png"
         DataContext="{Binding Main, Source={StaticResource Locator}}" Closing="Window_Closing">
-    <Window.Resources>
-        <vc:BoolToVisibilityConverter x:Key="BoolToVisibility" TrueValue="Visible" FalseValue="Collapsed"/>
-    </Window.Resources>
     <Grid Background="#FF181818">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

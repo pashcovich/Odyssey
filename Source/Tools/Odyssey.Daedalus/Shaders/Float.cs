@@ -16,8 +16,6 @@ namespace Odyssey.Daedalus.Shaders
             get { return new Vector { Name = Param.Floats.GlowStrength, EngineReference = ReferenceFactory.Effect.GlowStrength, Type = Type.Float }; }
         }
 
-
-
         #region Bloom
         public static Vector BloomThreshold
         {

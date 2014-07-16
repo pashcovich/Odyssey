@@ -47,7 +47,7 @@ namespace Odyssey.Graphics.Shaders
         {
             foreach (ConstantBuffer cb in buffers.Where(cb => !cb.IsInited))
             {
-                cb.Assemble(Device);
+                cb.Assemble();
             }
         }
 

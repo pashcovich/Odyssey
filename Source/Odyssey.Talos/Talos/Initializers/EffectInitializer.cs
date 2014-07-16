@@ -45,7 +45,7 @@ namespace Odyssey.Talos.Initializers
 
         protected override bool ValidateConstantBuffer(ConstantBufferDescription cb)
         {
-            return cb.ContainsMetadata(Param.Properties.LightId);
+            return true;
         }
 
         protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent,IEntity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)

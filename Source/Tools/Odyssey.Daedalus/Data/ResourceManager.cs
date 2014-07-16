@@ -10,9 +10,8 @@ namespace Odyssey.Daedalus.Data
 {
     public class ResourceManager
     {
-        public Model.ShaderDescription[] Load()
+        public ShaderDescription[] Load()
         {
-            ReferenceSerializer.Serialize(@"C:\Users\Adalberto\Documents\Visual Studio 2013\Projects\Odyssey\Source\Tools\Odyssey.Daedalus\Assets\Odyssey.refs");
             return new[] {
                 //new ShaderDescription {Shader =  new NormalMappingVS()},
                 //new ShaderDescription {Shader =  new NormalMappingPS()},
@@ -22,12 +21,12 @@ namespace Odyssey.Daedalus.Data
                 //new ShaderDescription() { Shader = new SpriteVS()},
                 //new ShaderDescription() { Shader= new SpriteDebugPS()},
 
-                //new ShaderDescription() { Shader = new FullScreenQuadPS()},
-                //new ShaderDescription() {Shader = new FullScreenQuadVS()},
-                //new ShaderDescription(){Shader = new GaussianBlurPS()}, 
-                //new ShaderDescription() {Shader = new GlowPS()}, 
-                //new ShaderDescription(){Shader = new BloomExtractPS()}, 
-                //new ShaderDescription(){Shader = new BloomCombinePS()}, 
+                new ShaderDescription() { Shader = new FullScreenQuadPS()},
+                new ShaderDescription() {Shader = new FullScreenQuadVS()},
+                new ShaderDescription(){Shader = new GaussianBlurPS()}, 
+                new ShaderDescription() {Shader = new GlowPS()}, 
+                new ShaderDescription(){Shader = new BloomExtractPS()}, 
+                new ShaderDescription(){Shader = new BloomCombinePS()}, 
 
                 //new ShaderDescription() { Shader= new PhongVS()},
                 //new ShaderDescription() { Shader= new PhongInstanceVS()},
@@ -38,8 +37,8 @@ namespace Odyssey.Daedalus.Data
                 //new ShaderDescription() { Shader= new PhongDiffuseMapPS()},
                 //new ShaderDescription() { Shader= new PhongCubeMapPS()},
 
-                new Model.ShaderDescription() {Shader =  new WireframeVS()},
-                new Model.ShaderDescription() {Shader =  new WireframePS()},
+                //new Model.ShaderDescription() {Shader =  new WireframeVS()},
+                //new Model.ShaderDescription() {Shader =  new WireframePS()},
 
             };
         }

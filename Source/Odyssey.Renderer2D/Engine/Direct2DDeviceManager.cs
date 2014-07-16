@@ -68,8 +68,7 @@ namespace Odyssey.Engine
                     d2dDevice.DisposeAll();
 
                 var d3dDevice = dxDeviceCache.Device;
-                d2dDevice =
-                    ToDispose(new Direct2DDevice(services, d3dDevice,
+                d2dDevice = ToDispose(new Direct2DDevice(services, d3dDevice,
                         d3dDevice.CreationFlags.HasFlag(DeviceCreationFlags.Debug) ? DebugLevel.Warning : DebugLevel.None));
                 var deviceSettings = services.GetService<IDirectXDeviceSettings>();
                 if (!MathHelper.ScalarNearEqual(deviceSettings.HorizontalDpi, d2dDevice.HorizontalDpi) ||

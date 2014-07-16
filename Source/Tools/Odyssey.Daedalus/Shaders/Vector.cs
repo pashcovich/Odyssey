@@ -21,6 +21,8 @@ namespace Odyssey.Daedalus.Shaders
 
     public sealed partial class Vector : Variable, IValueVariable
     {
+        private float[] value;
+
         [SupportedType(Type.Float)]
         [SupportedType(Type.Float2)]
         [SupportedType(Type.Float3)]
@@ -46,15 +48,16 @@ namespace Odyssey.Daedalus.Shaders
             }
         }
 
-        public float[] Value { get; set; }
+        public float[] Value    
+        {
+            get { return value; }
+            set { this.value = value; }
+        }
 
         public override void Serialize(BinarySerializer serializer)
         {
             base.Serialize(serializer);
-            float[] value = Value;
             serializer.Serialize(ref value, serializer.Serialize);
-            if (serializer.Mode == SerializerMode.Read)
-                Value = value;
         }
 
         public override string Definition

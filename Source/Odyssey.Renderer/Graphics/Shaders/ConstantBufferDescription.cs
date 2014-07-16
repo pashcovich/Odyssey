@@ -1,4 +1,5 @@
-﻿using Odyssey.Graphics.Effects;
+﻿using System.Diagnostics;
+using Odyssey.Graphics.Effects;
 using Odyssey.Utilities;
 using Odyssey.Utilities.Logging;
 using SharpDX.Serialization;
@@ -99,6 +100,8 @@ namespace Odyssey.Graphics.Shaders
             if (parsedReferences == null)
             {
                 LogEvent.Engine.Error("'{0}' no references have been parsed", name);
+                foreach (var reference in references)
+                    LogEvent.Engine.Error("\tMissing: '{0}'", reference.Value);
                 return references.Count == 0;
             }
 

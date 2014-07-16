@@ -151,7 +151,7 @@ namespace Odyssey.Graphics.Shaders
         public void AssembleBuffers()
         {
             foreach (ConstantBuffer cb in shaders.Values.SelectMany(shader => shader.Buffers.Where(cb => !cb.IsInited)))
-                cb.Assemble(device);
+                cb.Assemble();
         }
 
         public void UpdateBuffers(UpdateType updateType)

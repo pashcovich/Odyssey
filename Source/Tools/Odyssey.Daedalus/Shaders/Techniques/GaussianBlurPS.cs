@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Daedalus.Data;
+﻿using Odyssey.Daedalus.Data;
 using Odyssey.Daedalus.Shaders.Nodes;
 using Odyssey.Daedalus.Shaders.Nodes.Math;
 using Odyssey.Daedalus.Shaders.Nodes.Operators;
 using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
-using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
-using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
 namespace Odyssey.Daedalus.Shaders.Techniques
 {
@@ -40,31 +33,31 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             Add(cbStatic);
 
             DeclarationNode nColor = DeclarationNode.InitNode("color", Shaders.Type.Float4, 0, 0, 0, 0);
-            ArrayNode fOffsetWeight = new ArrayNode() {Input = fOffsetsAndWeights, Index = "i"};
+            ArrayNode fOffsetWeight = new ArrayNode {Input = fOffsetsAndWeights, Index = "i"};
 
-            AdditionNode nBlur = new AdditionNode()
+            AdditionNode nBlur = new AdditionNode
             {
-                PreCondition = new ForBlock()
+                PreCondition = new ForBlock
                 {
                     PreCondition = nColor,
-                    StartCondition = new ScalarNode(){Value = 0},
-                    EndCondition = new ScalarNode(){Value = 15}
+                    StartCondition = new ScalarNode {Value = 0},
+                    EndCondition = new ScalarNode {Value = 15}
                 },
                 OpensBlock = true,
                 Input1 = nColor,
-                Input2 = new MultiplyNode()
+                Input2 = new MultiplyNode
                 {
-                    Input1 = new TextureSampleNode()
+                    Input1 = new TextureSampleNode
                     {
                         Texture = tDiffuse,
                         Sampler = sLinear,
-                        Coordinates = new AdditionNode()
+                        Coordinates = new AdditionNode
                         {
-                            Input1 = new ReferenceNode() {Value = InputStruct[Param.SemanticVariables.Texture]},
-                            Input2 = new SwizzleNode(){Input = fOffsetWeight, Swizzle = new []{Swizzle.X, Swizzle.Y}},
+                            Input1 = new ReferenceNode {Value = InputStruct[Param.SemanticVariables.Texture]},
+                            Input2 = new SwizzleNode {Input = fOffsetWeight, Swizzle = new []{Swizzle.X, Swizzle.Y}},
                         }
                     },
-                    Input2 = new SwizzleNode() { Input = fOffsetWeight, Swizzle = new[] { Swizzle.Z } },
+                    Input2 = new SwizzleNode { Input = fOffsetWeight, Swizzle = new[] { Swizzle.Z } },
                 },
                 ClosesBlock = true,
                 IsVerbose = true,

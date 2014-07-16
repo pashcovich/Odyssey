@@ -12,6 +12,11 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
     {
         public List<INode> Inputs { get; set; }
 
+        protected MultipleInputsNodeBase()
+        {
+            Inputs = new List<INode>();
+        }
+
         protected override void RegisterNodes()
         {
             for (int i = 0; i < Inputs.Count; i++)

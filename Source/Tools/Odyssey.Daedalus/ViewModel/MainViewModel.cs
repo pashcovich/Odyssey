@@ -1,5 +1,8 @@
 #region Using Directives
 
+using System;
+using System.Linq;
+using System.Net.Sockets;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Odyssey.Daedalus.View;
@@ -52,22 +55,21 @@ namespace Odyssey.Daedalus.ViewModel
             {
                 new ButtonViewModel
                 {
-                    Tooltip = "Open shader graph",
+                    Tooltip = "Open shader graph (Ctrl+O)",
+                    Key = Key.O,
                     Content = (UIElement) WindowsApplication.Current.FindResource("iOpen"),
                     MainCommand =
                         new CommandViewModel
                         {
                             Label = "Open",
-                            Command = new RelayCommand(() => { if (vmCompilation.Open()) IsShaderGraphMode = true; })
+                            Command = new RelayCommand(() => { if (vmCompilation.Open()) IsShaderGraphMode = true; }),
                         },
-                    SecondaryCommands =
-                        new List<CommandViewModel>
+                    SecondaryCommands = new List<CommandViewModel>
                         {
                             new CommandViewModel
                             {
                                 Label = "Add",
-                                Command =
-                                    new RelayCommand(() => { if (vmCompilation.Open(false)) IsShaderGraphMode = true; })
+                                Command = new RelayCommand(() => { if (vmCompilation.Open(false)) IsShaderGraphMode = true; })
                             }
                         },
                 },
@@ -80,8 +82,10 @@ namespace Odyssey.Daedalus.ViewModel
                 new ButtonViewModel
                 {
                     MainCommand = new CommandViewModel {Label = "Save", Command = SaveCommand},
-                    Tooltip = "Save shader graph",
+                    Tooltip = "Save shader graph (Ctrl+S)",
                     Content = (UIElement) WindowsApplication.Current.FindResource("iSave"),
+                    Key = Key.S
+
                 },
                 compileVM,
                 new ButtonViewModel
@@ -92,7 +96,8 @@ namespace Odyssey.Daedalus.ViewModel
                             Label = "Define",
                             Command = new RelayCommand(() => vmCompilation.CreateTechnique(), () => IsShaderGraphMode)
                         },
-                    Tooltip = "Define a new technique",
+                    Tooltip = "Define a new technique (Ctrl+D)",
+                    Key = Key.D,
                     Content = (UIElement) WindowsApplication.Current.FindResource("iNewTechnique"),
                 },
                 new ButtonViewModel
@@ -110,6 +115,12 @@ namespace Odyssey.Daedalus.ViewModel
                     Content = (UIElement) WindowsApplication.Current.FindResource("iSettings"),
                 },
             };
+
+            var bindings = from c in commands
+                where c.Key != Key.None
+                select new InputBinding(c.MainCommand.Command, new KeyGesture(c.Key, ModifierKeys.Control));
+
+            WindowsApplication.Current.MainWindow.InputBindings.AddRange(bindings.ToList());
 
             MessengerInstance.Register<TechniqueMessage>(this, ReceiveMessage);
 

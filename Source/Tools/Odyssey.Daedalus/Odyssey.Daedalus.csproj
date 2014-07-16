@@ -132,7 +132,6 @@
     <Compile Include="Shaders\Techniques\FullScreenQuadVS.cs" />
     <Compile Include="Shaders\Techniques\GaussianBlurPS.cs" />
     <Compile Include="Shaders\Techniques\GlowPS.cs" />
-    <Compile Include="Shaders\Techniques\KinectDepthPS.cs" />
     <Compile Include="Shaders\Techniques\NormalMappingPS.cs" />
     <Compile Include="Shaders\Techniques\NormalMappingVS.cs" />
     <Compile Include="Shaders\Techniques\SkyboxPS.cs" />

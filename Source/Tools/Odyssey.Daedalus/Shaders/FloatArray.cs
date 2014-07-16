@@ -12,6 +12,8 @@ namespace Odyssey.Daedalus.Shaders
     public sealed partial class FloatArray
     {
         private float[] value;
+        private Type arrayItemType;
+        private int length;
 
         public FloatArray()
         {
@@ -34,9 +36,17 @@ namespace Odyssey.Daedalus.Shaders
             }
         }
 
-        public Type ArrayItemType { get; set; }
+        public Type ArrayItemType
+        {
+            get { return arrayItemType; }
+            set { arrayItemType = value; }
+        }
 
-        public int Length { get; set; }
+        public int Length
+        {
+            get { return length; }
+            set { length = value; }
+        }
 
         public float[] Value
         {
@@ -57,12 +67,9 @@ namespace Odyssey.Daedalus.Shaders
         public override void Serialize(BinarySerializer serializer)
         {
             base.Serialize(serializer);
-            var array = Value;
-                serializer.Serialize(ref array, serializer.Serialize);
-
-            if (serializer.Mode == SerializerMode.Read)
-                Value = array;
-
+            serializer.Serialize(ref value, serializer.Serialize, SerializeFlags.Nullable);
+            serializer.SerializeEnum(ref arrayItemType);
+            serializer.Serialize(ref length);
         }
 
         public override string Definition
