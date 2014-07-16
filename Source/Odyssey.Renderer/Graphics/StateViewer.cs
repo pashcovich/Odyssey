@@ -14,9 +14,10 @@ namespace Odyssey.Graphics
     public class StateViewer
     {
         private readonly IServiceRegistry services;
-        RasterizerState rasterizerState;
-        BlendState blendState;
-        DepthStencilState depthStencilState;
+        private readonly DirectXDevice device;
+        PreferredRasterizerState rasterizerState;
+        PreferredBlendState blendState;
+        PreferredDepthStencilState depthStencilState;
         private readonly LinkedList<Command> sourceCommands;
         private readonly LinkedList<Command> resultCommands;
         private LinkedListNode<Command> cursor;
@@ -27,6 +28,7 @@ namespace Odyssey.Graphics
         {
             Contract.Requires<ArgumentNullException>(list != null, "List cannot be null.");
             this.services = services;
+            device = services.GetService<IOdysseyDeviceService>().DirectXDevice;
             resultCommands = new LinkedList<Command>();
             sourceCommands = new LinkedList<Command>(list);
         }
@@ -46,52 +48,41 @@ namespace Odyssey.Graphics
             }
             Effect effect = cRender.Effect;
 
+            PreferredRasterizerState preferredRasterizerState = effect.TechniqueKey.RasterizerState;
+            PreferredBlendState preferredBlendState = effect.TechniqueKey.BlendState;
+            PreferredDepthStencilState preferredDepthStencilState = effect.TechniqueKey.DepthStencilState;
+
             if (CheckRasterizerState(effect))
-                AddNewCommand(new RasterizerStateChangeCommand(services, effect.PreferredRasterizerState));
+                AddNewCommand(new RasterizerStateChangeCommand(services, device.RasterizerStates[preferredRasterizerState.ToString()]));
 
             if (CheckBlendState(effect))
-                AddNewCommand(new BlendStateChangeCommand(services, effect.PreferredBlendState));
+                AddNewCommand(new BlendStateChangeCommand(services, device.BlendStates[preferredBlendState.ToString()]));
 
             if (CheckDepthStencilState(effect))
-                AddNewCommand(new DepthStencilStateChangeCommand(services, effect.PreferredDepthStencilState));
+                AddNewCommand(new DepthStencilStateChangeCommand(services, device.DepthStencilStates[preferredDepthStencilState.ToString()]));
 
             AddNewCommand(command);
 
-            rasterizerState = effect.PreferredRasterizerState;
-            blendState = effect.PreferredBlendState;
+            rasterizerState = preferredRasterizerState;
+            blendState = preferredBlendState;
+            depthStencilState = preferredDepthStencilState;
         }
 
         
         public bool CheckBlendState(Effect effect)
         {
-            return blendState == null || string.Equals(effect.PreferredBlendState.Name, blendState.Name);
+            return effect.TechniqueKey.BlendState != blendState;
         }
 
         public bool CheckRasterizerState(Effect effect)
         {
-            return rasterizerState==null || string.Equals(effect.PreferredRasterizerState.Name, rasterizerState.Name);
+            return effect.TechniqueKey.RasterizerState != rasterizerState;
         }
 
         public bool CheckDepthStencilState(Effect effect)
         {
-            return depthStencilState == null || string.Equals(effect.PreferredBlendState.Name, depthStencilState.Name);
+            return effect.TechniqueKey.DepthStencilState != depthStencilState;
         }
-
-        public void SetRasterizerState(RasterizerState newRasterizerState)
-        {
-            rasterizerState = newRasterizerState;
-        }
-
-        public void SetBlendState(BlendState newBlendState)
-        {
-            blendState = newBlendState;
-        }
-
-        public void SetDepthStencilState(DepthStencilState newDepthStencilState)
-        {
-            depthStencilState = newDepthStencilState;
-        }
-
 
         public LinkedList<Command> Analyze()
         {

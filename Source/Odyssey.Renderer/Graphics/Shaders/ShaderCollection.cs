@@ -7,22 +7,32 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
+using SharpDX.Serialization;
 
 namespace Odyssey.Graphics.Shaders
 {
-    [DataContract]
     [ContentReader(typeof(EffectReader))]
-    public class ShaderCollection : IEnumerable<TechniqueMapping>
+    public class ShaderCollection : IEnumerable<TechniqueMapping>, IDataSerializable
     {
-        [DataMember]
-        private readonly Dictionary<string, TechniqueMapping> techniques;
+        public const string OdysseyIdentifier = "OEFX";
+        public const int Version = 0x100;
 
-        [DataMember]
-        public string Name { get; internal set; }
+        private Dictionary<string, TechniqueMapping> techniques;
+        private string name;
+
+        public string Name
+        {
+            get { return name; }
+            internal set { name = value; }
+        }
+
+        public ShaderCollection() : this("Untitled")
+        {
+        }
 
         public ShaderCollection(string name)
         {
-            Name = name;
+            this.name = name;
             techniques = new Dictionary<string, TechniqueMapping>();
         }
 
@@ -66,20 +76,15 @@ namespace Odyssey.Graphics.Shaders
             get { return techniques[key]; }
         }
 
-        public static ShaderCollection Load(string name)
+        public static ShaderCollection Load(string fullPath)
         {
-            return Load(Global.EffectPath, name);
-        }
-
-        public static ShaderCollection Load(string path, string name)
-        {
-            NativeFileStream fs = new NativeFileStream(string.Format("{0}\\{1}.ofx", path, name),
-                NativeFileMode.Open, NativeFileAccess.Read);
-            ShaderCollection shaderCollection;
+            NativeFileStream fs = new NativeFileStream(fullPath,NativeFileMode.Open , NativeFileAccess.Read);
             try
             {
-                DataContractSerializer dcs = new DataContractSerializer(typeof(ShaderDescription));
-                shaderCollection = (ShaderCollection)dcs.ReadObject(fs);
+                ShaderCollection sc = null;
+                BinarySerializer bs = new BinarySerializer(fs, SerializerMode.Read) { AllowIdentity = true };
+                bs.Serialize(ref sc);
+                return sc;
             }
             catch (SerializationException e)
             {
@@ -90,8 +95,25 @@ namespace Odyssey.Graphics.Shaders
             {
                 fs.Dispose();
             }
+        }
 
-            return shaderCollection;
+        public static void Save(string fullPath, ShaderCollection shaderCollection)
+        {
+            NativeFileStream fs = new NativeFileStream(fullPath, NativeFileMode.Create, NativeFileAccess.Write);
+            try
+            {
+                BinarySerializer bs = new BinarySerializer(fs, SerializerMode.Write) { AllowIdentity = true};
+                bs.Serialize(ref shaderCollection);
+            }
+            catch (SerializationException e)
+            {
+                LogEvent.Tool.Error(e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Dispose();
+            }
         }
 
         public IEnumerator<TechniqueMapping> GetEnumerator()
@@ -102,6 +124,33 @@ namespace Odyssey.Graphics.Shaders
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.BeginChunk(OdysseyIdentifier);
+            // Writes the version
+            if (serializer.Mode == SerializerMode.Read)
+            {
+                int version = serializer.Reader.ReadInt32();
+                if (version != Version)
+                {
+                    throw new NotSupportedException(string.Format("ModelData version [0x{0:X}] is not supported. Expecting [0x{1:X}]", version, Version));
+                }
+            }
+            else
+            {
+                serializer.Writer.Write(Version);
+            }
+
+            serializer.Serialize(ref name);
+
+            // Techniques
+            serializer.BeginChunk("TECH");
+            serializer.Serialize(ref techniques, serializer.Serialize, (ref TechniqueMapping t) => serializer.Serialize(ref t));
+            serializer.EndChunk();
+
+            serializer.EndChunk();
         }
     }
 }

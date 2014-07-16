@@ -73,7 +73,9 @@
     <Compile Include="Engine\PresentationInterval.cs" />
     <Compile Include="Engine\PresentationParameters.cs" />
     <Compile Include="Engine\RenderTargetGraphicsPresenter.cs" />
+    <Compile Include="Graphics\BlendStateCollection.cs" />
     <Compile Include="Graphics\Buffer.Constant.cs" />
+    <Compile Include="Graphics\DepthStencilStateCollection.cs" />
     <Compile Include="Graphics\DepthStencilViewSelector.cs" />
     <Compile Include="Graphics\Models\BufferCollection.cs" />
     <Compile Include="Graphics\Models\CylinderMesh.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Graphics\Models\VertexBufferBindingCollection.cs" />
     <Compile Include="Graphics\Organization\Commands\IPostProcessCommand.cs" />
     <Compile Include="Graphics\PostProcessing\Blur.cs" />
+    <Compile Include="Graphics\RasterizerStateCollection.cs" />
     <Compile Include="Graphics\Shaders\ConstantBufferIndex.cs" />
     <Compile Include="Graphics\Shaders\EffectPool.cs" />
     <Compile Include="Graphics\Shaders\Float2ArrayParameter.cs" />

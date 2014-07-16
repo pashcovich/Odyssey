@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics.Eventing.Reader;
 using System.Text;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes;
 using System;
 using System.Linq;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
 using SharpDX;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public sealed partial class FloatArray
     {

@@ -1,4 +1,5 @@
-﻿using Odyssey.Content;
+﻿using System;
+using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Utilities.Logging;
@@ -6,7 +7,7 @@ using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
-    public abstract class ContentComponent : Component, IInitializable, IContentComponent
+    public abstract class ContentComponent : Component, IInitializable, IContentComponent, IDisposable
     {
         string assetName;
         [YamlMember(1)]
@@ -41,5 +42,13 @@ namespace Odyssey.Talos.Components
                 LogEvent.Engine.Error("[{0}] not found.", AssetName);
             return test;
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected abstract void Dispose(bool disposing);
     }
 }

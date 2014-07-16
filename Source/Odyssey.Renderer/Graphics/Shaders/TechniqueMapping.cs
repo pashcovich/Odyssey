@@ -1,34 +1,37 @@
 ﻿using Odyssey.Graphics.Effects;
 using Odyssey.Utilities;
-using Odyssey.Utilities.Reflection;
 using SharpDX.DXGI;
 using SharpDX.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Odyssey.Graphics.Shaders
 {
-    [DataContract]
     [DebuggerDisplay("{Name}")]
     public class TechniqueMapping : IDataSerializable
     {
-        [DataMember]
-        private readonly Dictionary<ShaderType, ShaderDescription> techniqueMap;
-
-        private string name;
         private TechniqueKey key;
+        private string name;
+        private Dictionary<ShaderType, ShaderDescription> techniqueMap;
 
-        [DataMember]
+        public TechniqueMapping() : this("Untitled")
+        {
+        }
+
+        public TechniqueMapping(string name)
+        {
+            this.name = name;
+            techniqueMap = new Dictionary<ShaderType, ShaderDescription>();
+        }
+
         public TechniqueKey Key
         {
             get { return key; }
             internal set { key = value; }
         }
 
-        [DataMember]
         public string Name
         {
             get { return name; }
@@ -37,20 +40,12 @@ namespace Odyssey.Graphics.Shaders
 
         public IEnumerable<ShaderDescription> Shaders { get { return techniqueMap.Values; } }
 
-        public TechniqueMapping(string name)
+        public ShaderDescription this[ShaderType type]
         {
-            techniqueMap = new Dictionary<ShaderType, ShaderDescription>();
-            Name = name;
-        }
-
-        public void Set(ShaderDescription shader)
-        {
-            techniqueMap[shader.ShaderType] = shader;
-        }
-
-        public void Remove(ShaderType shaderType)
-        {
-            techniqueMap.Remove(shaderType);
+            get
+            {
+                return techniqueMap[type];
+            }
         }
 
         public bool Contains(ShaderType type)
@@ -61,6 +56,30 @@ namespace Odyssey.Graphics.Shaders
         public bool Contains(string shaderName)
         {
             return techniqueMap.Values.Count(s => s.Name == shaderName) > 0;
+        }
+
+        public VertexInputLayout GenerateVertexInputLayout()
+        {
+            VertexShaderFlags vsFlags = Key.VertexShader;
+
+            return VertexInputLayout.New(0, vsFlags.GetUniqueFlags().Cast<VertexShaderFlags>().SelectMany(CreateElement).ToArray());
+        }
+
+        public void Remove(ShaderType shaderType)
+        {
+            techniqueMap.Remove(shaderType);
+        }
+
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref name);
+            serializer.Serialize(ref key);
+            serializer.Serialize(ref techniqueMap, serializer.SerializeEnum, (ref ShaderDescription desc) => serializer.Serialize(ref desc));
+        }
+
+        public void Set(ShaderDescription shader)
+        {
+            techniqueMap[shader.ShaderType] = shader;
         }
 
         public bool TryGetValue(ShaderType type, out ShaderDescription shader)
@@ -77,21 +96,6 @@ namespace Odyssey.Graphics.Shaders
         public bool Validate()
         {
             return Shaders.Aggregate(true, (current, shaderDesc) => current & shaderDesc.Validate());
-        }
-
-        public ShaderDescription this[ShaderType type]
-        {
-            get
-            {
-                return techniqueMap[type];
-            }
-        }
-
-        public VertexInputLayout GenerateVertexInputLayout()
-        {
-            VertexShaderFlags vsFlags = Key.VertexShader;
-
-            return VertexInputLayout.New(0, vsFlags.GetUniqueFlags().Cast<VertexShaderFlags>().SelectMany(CreateElement).ToArray());
         }
 
         private static VertexElement[] CreateElement(VertexShaderFlags flag)
@@ -128,13 +132,6 @@ namespace Odyssey.Graphics.Shaders
                 default:
                     throw new ArgumentOutOfRangeException(string.Format("[{0}]: VertexShaderFlag not valid", flag));
             }
-        }
-
-        public void Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref name);
-            serializer.Serialize(ref key);
-            //serializer.Serialize(ref techniqueMap);
         }
     }
 }

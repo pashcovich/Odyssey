@@ -3,7 +3,11 @@
     public enum ReferenceType
     {
         None,
-        Engine,
+        Application,
+        Entity,
+        Camera,
+        Light,
+        Material,
         Texture
     }
 

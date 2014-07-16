@@ -1,8 +1,9 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Data;
+using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public partial class Texture : Variable
     {
@@ -20,7 +21,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     Name = Param.Textures.DiffuseMap,
                     Type = Shaders.Type.Texture2D,
                     Index = 0,
-                    ShaderReference = new ShaderReference(TextureReference.Diffuse)
+                    EngineReference = ReferenceFactory.Texture.Diffuse
                 };
             }
         }
@@ -34,7 +35,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     Name = Param.Textures.CubeMap,
                     Type = Shaders.Type.TextureCube,
                     Index = 0,
-                    ShaderReference = new ShaderReference(TextureReference.Diffuse)
+                    EngineReference = ReferenceFactory.Texture.Diffuse
                 };
             }
         }
@@ -48,7 +49,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     Name = Param.Textures.NormalMap,
                     Type = Type.Texture2D,
                     Index = 0,
-                    ShaderReference = new ShaderReference(TextureReference.NormalMap)
+                    EngineReference = ReferenceFactory.Texture.Normal
                 };
             }
         }
@@ -62,7 +63,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     Name = Param.Textures.ShadowMap,
                     Type = Shaders.Type.Texture2D,
                     Index = 0,
-                    ShaderReference = new ShaderReference(TextureReference.ShadowMap)
+                    EngineReference = ReferenceFactory.Texture.Shadow
                 };
             }
         }

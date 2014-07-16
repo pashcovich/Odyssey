@@ -1,11 +1,11 @@
-﻿using Odyssey.Engine;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+﻿using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using SharpDX.Serialization;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     [DataContract]
     public class PSOutputNode : NodeBase
@@ -43,7 +43,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("FinalColor", FinalColor);
+            AddNode("FinalColor", FinalColor);
         }
     }
 }

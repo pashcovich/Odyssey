@@ -34,7 +34,7 @@ namespace Odyssey.Talos.Components
             NormalMap = Content.Get<Texture>(NormalMapKey);
             if (!NormalMap.IsInited)
                 NormalMap.Initialize();
-            TextureMap.Add(TextureReference.NormalMap, NormalMap);
+            TextureMap.Add(TextureReference.NormalMap.ToString(), NormalMap);
         }
 
         public override bool Validate()

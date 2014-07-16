@@ -1,7 +1,7 @@
 ﻿using System;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property, AllowMultiple = true)]
     public class PixelShaderAttribute : Attribute

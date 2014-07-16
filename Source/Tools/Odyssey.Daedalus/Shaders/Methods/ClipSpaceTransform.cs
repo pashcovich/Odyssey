@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public class ClipSpaceTransform : MethodBase
     {

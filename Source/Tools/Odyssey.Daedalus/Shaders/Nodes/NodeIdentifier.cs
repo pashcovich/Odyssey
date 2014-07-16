@@ -1,6 +1,6 @@
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     internal struct NodeIdentifier : IDataSerializable
     {

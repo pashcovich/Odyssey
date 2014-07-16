@@ -12,6 +12,8 @@ namespace Odyssey.Talos
         IEnumerable<IEntity> Entities { get; }
         IEnumerable<IComponent> Components{ get; }
 
+        IEnumerable<TComponent> SelectComponents<TComponent>()
+            where TComponent : IComponent;
         IEnumerable<IComponent> SelectEntityComponents(IEntity entity);
         bool TryGetEntityComponent<TComponent>(IEntity entity, long keyPart, out TComponent component)
             where TComponent : IComponent;

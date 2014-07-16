@@ -36,7 +36,6 @@ namespace Odyssey.UserInterface.Controls
         private const string DefaultTextTheme = "DefaultText";
         private readonly Direct2DDevice device;
         private readonly IServiceRegistry services;
-        private readonly IUserInterfaceState state;
         private readonly IStyleService styleService;
         private UIElement captureElement;
 

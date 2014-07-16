@@ -1,6 +1,6 @@
-﻿using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
+﻿using Odyssey.Daedalus.Shaders.Nodes;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public struct Binding
     {

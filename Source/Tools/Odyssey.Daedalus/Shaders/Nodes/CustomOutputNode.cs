@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     public class CustomOutputNode : NodeBase
     {
@@ -88,7 +88,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
             var fieldList = fields.ToList();
             foreach (var field in fieldList)
             {
-                Nodes.Add(field.Key, field.Value.Node);
+                AddNode(field.Key, field.Value.Node);
             }
         }
 

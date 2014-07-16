@@ -9,14 +9,14 @@ using SharpYaml.Serialization;
 namespace Odyssey.Talos.Components
 {
     [RequiredComponent(typeof(ShaderComponent))]
-    [YamlTag("DiffuseMapping")]
     public class DiffuseMappingComponent : ContentComponent, ITextureResource
     {
-        protected Dictionary<TextureReference, Texture> TextureMap { get; private set; }
+        protected Dictionary<string, Texture> TextureMap { get; private set; }
+
         public DiffuseMappingComponent()
             : base(ComponentTypeManager.GetType(typeof(ContentComponent)))
         {
-            TextureMap = new Dictionary<TextureReference, Texture>();
+            TextureMap = new Dictionary<string, Texture>();
         }
 
         public override bool IsInited { get { return DiffuseMap != null && DiffuseMap.IsInited; } }
@@ -29,13 +29,19 @@ namespace Odyssey.Talos.Components
                 DiffuseMap.Unload();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                DiffuseMap.Dispose();
+        }
+
         public override void Initialize()
         {
             Contract.Requires<InvalidOperationException>(DiffuseMapKey != null);
             DiffuseMap = Content.Get<Texture>(DiffuseMapKey);
             if (!DiffuseMap.IsInited)
                 DiffuseMap.Initialize();
-            TextureMap.Add(TextureReference.Diffuse, DiffuseMap);
+            TextureMap.Add(TextureReference.Diffuse.ToString(), DiffuseMap);
         }
 
         public override bool Validate()
@@ -46,7 +52,7 @@ namespace Odyssey.Talos.Components
             return test;
         }
 
-        public Texture this[TextureReference type]
+        public Texture this[string type]
         {
             get
             {

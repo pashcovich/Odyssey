@@ -11,7 +11,6 @@ namespace Odyssey.Graphics.Organization.Commands
     public class RenderSceneToTextureCommand : RenderToTextureCommandBase
     {
         private readonly CommandManager commands;
-        protected CommandManager Commands { get { return commands; } }
 
         public RenderSceneToTextureCommand(IServiceRegistry services, IEnumerable<Command> commands, Texture2DDescription description = default(Texture2DDescription))
             : base(services, description)
@@ -28,7 +27,7 @@ namespace Odyssey.Graphics.Organization.Commands
         public override void Unload()
         {
             base.Unload();
-            foreach (var command in Commands)
+            foreach (var command in commands)
                 command.Unload();
         }
     }

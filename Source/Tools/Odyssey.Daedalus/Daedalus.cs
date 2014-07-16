@@ -1,12 +1,13 @@
-﻿using Odyssey.Tools.ShaderGenerator.View;
-using Odyssey.Tools.ShaderGenerator.Viewer;
+﻿using Odyssey.Daedalus.Properties;
+using Odyssey.Daedalus.Viewer;
+using Odyssey.Daedalus.View;
 using Odyssey.Utilities.Logging;
 using System;
 using System.IO;
 using System.Windows.Threading;
-using Settings = Odyssey.Tools.ShaderGenerator.Properties.Settings;
+using Settings = Odyssey.Daedalus.Properties.Settings;
 
-namespace Odyssey.Tools.ShaderGenerator
+namespace Odyssey.Daedalus
 {
     public static class Daedalus
     {

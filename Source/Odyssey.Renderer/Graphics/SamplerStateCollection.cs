@@ -80,6 +80,9 @@ namespace Odyssey.Graphics
             AnisotropicClamp = Add(SamplerState.New(device, "AnisotropicClamp", Filter.Anisotropic, TextureAddressMode.Clamp));
             AnisotropicMirror = Add(SamplerState.New(device, "AnisotropicMirror", Filter.Anisotropic, TextureAddressMode.Mirror));
             Default = LinearClamp;
+
+            foreach (var state in Items)
+                state.Initialize();
         }
     }
 }

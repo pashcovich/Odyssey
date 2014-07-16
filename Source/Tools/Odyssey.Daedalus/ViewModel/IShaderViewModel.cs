@@ -1,11 +1,12 @@
-﻿using Odyssey.Graphics.Effects;
+﻿using Odyssey.Daedalus.Model;
+using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public interface IShaderViewModel
     {
         string ColorizedSourceCode { get; }
-        Odyssey.Tools.ShaderGenerator.Model.CompilationStatus CompilationStatus { get; set; }
+        CompilationStatus CompilationStatus { get; set; }
         FeatureLevel FeatureLevel { get; }
         ShaderModel ShaderModel { get; }
         bool IsEmpty { get; }

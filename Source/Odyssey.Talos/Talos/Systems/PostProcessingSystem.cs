@@ -47,8 +47,7 @@ namespace Odyssey.Talos.Systems
                 commandManager.Run();
             }
         }
-
-
+        
         public override void Process(ITimeService time)
         {
             if (!MessageQueue.HasItems<OptimizationCompleteMessage>()) return;
@@ -123,6 +122,6 @@ namespace Odyssey.Talos.Systems
             StateViewer sv = new StateViewer(Services, filteredCommands);
             return sv.Analyze(); 
         }
-
+        
     }
 }

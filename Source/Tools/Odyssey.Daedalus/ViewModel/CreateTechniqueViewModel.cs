@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Data;
 using ICommand = System.Windows.Input.ICommand;
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class CreateTechniqueViewModel : ViewModelBase
     {

@@ -1,42 +1,26 @@
-﻿using System;
+﻿using Odyssey.Graphics.Effects;
+using SharpDX.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.Serialization;
-using Odyssey.Graphics.Effects;
-using SharpDX.Serialization;
 
 namespace Odyssey.Graphics.Shaders
 {
-    [DataContract(IsReference = true)]
-    [KnownType(typeof(EngineReference))]
-    [KnownType(typeof(VertexShaderFlags))]
     [DebuggerDisplay("{Name}")]
-    public class ShaderDescription
+    public class ShaderDescription : IDataSerializable
     {
-        [DataMember] readonly Dictionary<int, ConstantBufferDescription> cbReferences;
-        [DataMember] readonly Dictionary<int, TextureDescription> textureReferences;
-        [DataMember] readonly Dictionary<int, SamplerStateDescription> samplerReferences;
+        private byte[] byteCode;
+        private Dictionary<int, ConstantBufferDescription> cbReferences;
+        private FeatureLevel featureLevel;
+        private string name;
+        private Dictionary<int, SamplerStateDescription> samplerReferences;
+        private ShaderType shaderType;
+        private Dictionary<int, TextureDescription> textureReferences;
 
-        [DataMember]
-        public string Name { get; private set; }
-        [DataMember]
-        public ShaderType ShaderType { get; private set; }
-        [DataMember]
-        public FeatureLevel FeatureLevel { get; private set; }
-        [DataMember]
-        public byte[] ByteCode { get; private set; }
-
-        [DataMember]
-        public TechniqueMapping Technique { get; internal set; }
-
-        public int TextureCount { get { return textureReferences.Count; } }
-        public int SamplerCount { get { return samplerReferences.Count; } }
-
-        public IEnumerable<ConstantBufferDescription> ConstantBuffers { get { return cbReferences.Values; } }
-        public IEnumerable<TextureDescription> TextureReferences { get { return textureReferences.Values; } }
-        public IEnumerable<SamplerStateDescription> SamplerReferences { get { return samplerReferences.Values; } }
+        public ShaderDescription()
+        { }
 
         public ShaderDescription(string name, ShaderType shaderType, FeatureLevel featureLevel, byte[] bytecode,
             IEnumerable<ConstantBufferDescription> shaderReferences, IEnumerable<TextureDescription> textureReferences, IEnumerable<SamplerStateDescription> samplerReferences)
@@ -58,11 +42,39 @@ namespace Odyssey.Graphics.Shaders
                 this.samplerReferences.Add(sRef.Index, sRef);
         }
 
-        public TextureDescription GetTextureDescription(int index)
+        public byte[] ByteCode
         {
-            Contract.Requires<ArgumentException>(TextureCount > index);
-            return textureReferences[index];
+            get { return byteCode; }
+            private set { byteCode = value; }
         }
+
+        public IEnumerable<ConstantBufferDescription> ConstantBuffers { get { return cbReferences.Values; } }
+
+        public FeatureLevel FeatureLevel
+        {
+            get { return featureLevel; }
+            private set { featureLevel = value; }
+        }
+
+        public string Name
+        {
+            get { return name; }
+            private set { name = value; }
+        }
+
+        public int SamplerCount { get { return samplerReferences.Count; } }
+
+        public IEnumerable<SamplerStateDescription> SamplerReferences { get { return samplerReferences.Values; } }
+
+        public ShaderType ShaderType
+        {
+            get { return shaderType; }
+            private set { shaderType = value; }
+        }
+
+        public int TextureCount { get { return textureReferences.Count; } }
+
+        public IEnumerable<TextureDescription> TextureReferences { get { return textureReferences.Values; } }
 
         public SamplerStateDescription GetSamplerStateDescription(int index)
         {
@@ -70,14 +82,34 @@ namespace Odyssey.Graphics.Shaders
             return samplerReferences[index];
         }
 
-        public bool Validate()
+        public TextureDescription GetTextureDescription(int index)
         {
-            return ConstantBuffers.Aggregate(true, (current, cbDesc) => current & cbDesc.Validate());
+            Contract.Requires<ArgumentException>(TextureCount > index);
+            return textureReferences[index];
         }
 
         public void Serialize(BinarySerializer serializer)
         {
-            throw new NotImplementedException();
+            serializer.BeginChunk("FXDS");
+
+            serializer.Serialize(ref name);
+            serializer.SerializeEnum(ref featureLevel);
+            serializer.SerializeEnum(ref shaderType);
+            serializer.Serialize(ref byteCode);
+
+            // Shader References
+            serializer.BeginChunk("REFS");
+            serializer.Serialize(ref cbReferences, serializer.Serialize, (ref ConstantBufferDescription cb) => serializer.Serialize(ref cb));
+            serializer.Serialize(ref textureReferences, serializer.Serialize);
+            serializer.Serialize(ref samplerReferences, serializer.Serialize);
+            serializer.EndChunk();
+
+            serializer.EndChunk();
+        }
+
+        public bool Validate()
+        {
+            return ConstantBuffers.Aggregate(true, (current, cbDesc) => current & cbDesc.Validate());
         }
     }
 }

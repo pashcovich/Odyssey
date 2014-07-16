@@ -1,59 +1,72 @@
-﻿using System.Collections.Generic;
+﻿using Odyssey.Graphics.Effects;
+using Odyssey.Utilities;
+using Odyssey.Utilities.Logging;
+using SharpDX.Serialization;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
-using Odyssey.Graphics.Effects;
-using Odyssey.Utilities.Logging;
+using EngineReference = Odyssey.Engine.EngineReference;
 
 namespace Odyssey.Graphics.Shaders
 {
     [DataContract]
-    public class ConstantBufferDescription
+    public class ConstantBufferDescription : IDataSerializable
     {
         [DataMember]
-        private readonly string name;
+        private Dictionary<string, string> metadata;
 
         [DataMember]
-        private readonly int index;
+        private Dictionary<int, EngineReference> references;
 
         [DataMember]
-        private readonly UpdateType updateFrequency;
+        private ShaderType shaderType;
 
         [DataMember]
-        private readonly Dictionary<int, EngineReference> references;
-
-        [DataMember] private readonly ShaderType shaderType;
+        private int index;
 
         [DataMember]
-        private readonly Dictionary<string, string> metadata;
+        private string name;
 
         private Dictionary<string, List<EngineReference>> parsedReferences;
 
-        public string Name { get { return name; } }
+        [DataMember]
+        private UpdateType updateFrequency;
 
-        public int Index { get { return index; } }
-
-        public ShaderType ShaderType { get { return shaderType; } }
-
-        public UpdateType UpdateFrequency { get { return updateFrequency; } }
-
-        public IEnumerable<KeyValuePair<int, EngineReference>> References { get { return references; } }
-
-        public IEnumerable<KeyValuePair<string, string>> Metadata { get { return metadata; } }
-
-        public ConstantBufferDescription(string name, int index, UpdateType updateFrequency, ShaderType shaderType, 
-            IEnumerable<ShaderReference> engineReferences, IEnumerable<KeyValuePair<string, string>> metadata)
+        public ConstantBufferDescription()
         {
-            Contract.ForAll(engineReferences, r => r.Type == ReferenceType.Engine);
+            name = "Unknown";
+            index = 0;
+            updateFrequency = UpdateType.None;
+            shaderType = ShaderType.None;
+            references = new Dictionary<int, EngineReference>();
+            metadata = new Dictionary<string, string>();
+        }
+
+        public ConstantBufferDescription(string name, int index, UpdateType updateFrequency, ShaderType shaderType,
+            IEnumerable<EngineReference> engineReferences, IEnumerable<KeyValuePair<string, string>> metadata)
+        {
             this.name = name;
             this.index = index;
             this.updateFrequency = updateFrequency;
             this.shaderType = shaderType;
             references = new Dictionary<int, EngineReference>();
 
-            references = engineReferences.ToDictionary(rShader => rShader.Index, rShader => (EngineReference)rShader.Value);
+            references = engineReferences.ToDictionary(rShader => rShader.Index, rShader => rShader);
             this.metadata = metadata.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
+
+        public int Index { get { return index; } }
+
+        public IEnumerable<KeyValuePair<string, string>> Metadata { get { return metadata; } }
+
+        public string Name { get { return name; } }
+
+        public IEnumerable<KeyValuePair<int, EngineReference>> References { get { return references; } }
+
+        public ShaderType ShaderType { get { return shaderType; } }
+
+        public UpdateType UpdateFrequency { get { return updateFrequency; } }
 
         public bool ContainsMetadata(string key)
         {
@@ -65,30 +78,29 @@ namespace Odyssey.Graphics.Shaders
             return metadata[key];
         }
 
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref name);
+            serializer.Serialize(ref index);
+            serializer.SerializeEnum(ref shaderType);
+            serializer.SerializeEnum(ref updateFrequency);
+            serializer.Serialize(ref references, serializer.Serialize, (ref EngineReference r) => serializer.Serialize(ref r));
+            serializer.Serialize(ref metadata, serializer.Serialize, serializer.Serialize);
+        }
+
         public bool TryGetValue(string key, out string value)
         {
             return metadata.TryGetValue(key, out value);
-        }
-
-        internal void MarkAsParsed(string technique, EngineReference reference)
-        {
-            if (parsedReferences == null)
-                parsedReferences = new Dictionary<string, List<EngineReference>>();
-            if (!parsedReferences.ContainsKey(technique))
-                parsedReferences.Add(technique, new List<EngineReference>());
-            parsedReferences[technique].Add(reference);
-        }
-
-        internal bool IsParsed(string technique, EngineReference reference)
-        {
-            return parsedReferences != null && parsedReferences.ContainsKey(technique) && parsedReferences[technique].Contains(reference);
         }
 
         public bool Validate()
         {
             bool test = true;
             if (parsedReferences == null)
+            {
+                LogEvent.Engine.Error("'{0}' no references have been parsed", name);
                 return references.Count == 0;
+            }
 
             foreach (var kvp in parsedReferences)
             {
@@ -101,11 +113,22 @@ namespace Odyssey.Graphics.Shaders
                     test = false;
                 }
             }
-            
 
-            
-            
             return test;
+        }
+
+        internal bool IsParsed(string technique, EngineReference reference)
+        {
+            return parsedReferences != null && parsedReferences.ContainsKey(technique) && parsedReferences[technique].Contains(reference);
+        }
+
+        internal void MarkAsParsed(string technique, EngineReference reference)
+        {
+            if (parsedReferences == null)
+                parsedReferences = new Dictionary<string, List<EngineReference>>();
+            if (!parsedReferences.ContainsKey(technique))
+                parsedReferences.Add(technique, new List<EngineReference>());
+            parsedReferences[technique].Add(reference);
         }
     }
 }

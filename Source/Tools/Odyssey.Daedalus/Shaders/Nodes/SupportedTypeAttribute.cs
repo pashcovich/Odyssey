@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     [DataContract]
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]

@@ -2,7 +2,7 @@
 using System.Windows;
 using Odyssey.Utilities.Logging;
 
-namespace Odyssey.Tools.ShaderGenerator
+namespace Odyssey.Daedalus
 {
     /// <summary>
     /// Interaction logic for App.xaml

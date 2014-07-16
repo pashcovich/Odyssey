@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public enum Type
     {

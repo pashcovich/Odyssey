@@ -4,13 +4,13 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Win32;
+using Odyssey.Daedalus.Data;
+using Odyssey.Daedalus.Model;
+using Odyssey.Daedalus.Serialization;
+using Odyssey.Daedalus.View;
+using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Model;
-using Odyssey.Tools.ShaderGenerator.Serialization;
-using Odyssey.Tools.ShaderGenerator.View;
-using Odyssey.Tools.ShaderGenerator.ViewModel.Messages;
 using Odyssey.Utilities.Logging;
-using ShaderGenerator.Data;
 using SharpDX.Serialization;
 using System;
 using System.Collections.Generic;
@@ -19,12 +19,12 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Settings = Odyssey.Tools.ShaderGenerator.Properties.Settings;
+using Settings = Odyssey.Daedalus.Properties.Settings;
 using ShaderDescription = Odyssey.Graphics.Shaders.ShaderDescription;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class CompilationViewModel : ViewModelBase
     {
@@ -120,7 +120,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
 
             if (shaderCount > 0)
             {
-                string outputPath = Settings.Default.OutputPath;
+                string outputPath = Properties.Settings.Default.OutputPath;
                 string fullPath = Path.Combine(outputPath, string.Format("{0}.{1}", shaderCollection.Name, "ofx"));
                 ResourceManager.Serialize(fullPath, shaderCollection);
                 DisplayCompletionMessage(shaderCount, errorList.Count);
@@ -179,9 +179,11 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
 
             if (shaderCount > 0)
             {
-                string outputPath = Settings.Default.OutputPath;
+                string outputPath = Properties.Settings.Default.OutputPath;
                 string fullPath = Path.Combine(outputPath, string.Format("{0}.{1}", shaderCollection.Name, "ofx"));
                 ResourceManager.Serialize(fullPath, shaderCollection);
+                Graphics.Shaders.ShaderCollection sc;
+                ResourceManager.Read(fullPath, out sc);
                 DisplayCompletionMessage(shaderCount, errorList.Count);
             }
         }
@@ -189,8 +191,8 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
         private void DisplayCompletionMessage(int shaders, int errors)
         {
             string message = shaders == 1
-                ? string.Format("The shader was saved in {0}", Settings.Default.OutputPath)
-                : string.Format("A total of {0} shaders were saved in {1}", shaders, Settings.Default.OutputPath);
+                ? string.Format("The shader was saved in {0}", Properties.Settings.Default.OutputPath)
+                : string.Format("A total of {0} shaders were saved in {1}", shaders, Properties.Settings.Default.OutputPath);
 
             string errorMessage = errors > 0
                 ? string.Format("\n{0} failed to compile. See build output for details.", errors)
@@ -221,7 +223,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                 ShaderCodeViewModel shaderVM = new ShaderCodeViewModel
                 {
                     Name = Path.GetFileNameWithoutExtension(file),
-                    ShaderModel = Settings.Default.DefaultShaderModel,
+                    ShaderModel = Properties.Settings.Default.DefaultShaderModel,
                     SourceCode = sourceCode
                 };
                 shaderList.Add(shaderVM);
@@ -309,7 +311,10 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
                                       select new TechniqueDescription(t.Name, t.TechniqueMapping.Key,
                                           from s in shaderList.OfType<ShaderDescriptionViewModel>()
                                           where s.IsAssignedTo(t)
-                                          select s.ShaderDescriptionModel.Shader));
+                                          select s.ShaderDescriptionModel.Shader)).ToArray();
+
+                foreach (var shader in techniqueGraph.SelectMany(t => t.Shaders))
+                    shader.Build();
 
                 using (FileStream fs = new FileStream(saveDialog.FileName, FileMode.Create))
                 {

@@ -131,5 +131,6 @@ namespace Odyssey.Engine
                 EventHandler<ServiceEventArgs> handler = ServiceRemoved;
                 if (handler != null) handler(this, e);
             }
+
     }
 }

@@ -12,7 +12,7 @@ namespace Odyssey.Graphics.Organization.Commands
 
     public abstract class RenderCommand : Command, IRenderCommand
     {
-        private readonly Effect effect;
+        private Effect effect;
         private readonly List<IEntity> entities;
         
         protected ModelMeshCollection Renderables { get; set; }
@@ -71,9 +71,9 @@ namespace Odyssey.Graphics.Organization.Commands
 
         public override void Unload()
         {
+            RemoveAndDispose(ref effect);
             foreach (ModelMesh mesh in Renderables.Where(mesh => mesh != null))
                 mesh.Dispose();
-            
             Dispose();
         }
     }

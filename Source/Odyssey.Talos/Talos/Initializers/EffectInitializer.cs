@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Odyssey.Engine;
+using Odyssey.Geometry;
+using Odyssey.Graphics.Effects;
+using Odyssey.Graphics.PostProcessing;
+using Odyssey.Graphics.Shaders;
+using Odyssey.Talos.Components;
+using Odyssey.Talos.Nodes;
+using SharpDX;
+using EngineReference = Odyssey.Graphics.Effects.EngineReference;
+
+namespace Odyssey.Talos.Initializers
+{
+    internal class EffectInitializer : Initializer<IEntity>
+    {
+        private readonly IDirectXDeviceSettings deviceSettings;
+
+        public EffectInitializer(IServiceRegistry services)
+            : base(services, Reference.Group.Effect)
+        {
+        }
+
+        public override void SetupInitialization(ShaderInitializer initializer)
+        {
+            var services = initializer.Services;
+            var effect = initializer.Effect;
+
+            var scene = services.GetService<IScene>();
+
+            var data = from e in scene.Entities
+                       let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
+                       from cTechnique in techniqueComponents
+                       from technique in cTechnique.Techniques
+                       where technique.ActiveTechniqueId == effect.Name
+                       select e.Id;
+
+            foreach (long entityId in data)
+            {
+                InitializerParameters parameters = new InitializerParameters(entityId, initializer.Technique, services, InstanceSelector);
+                initializer.Initialize(this, scene.SelectEntity(entityId), parameters);
+            }
+        }
+
+        protected override bool ValidateConstantBuffer(ConstantBufferDescription cb)
+        {
+            return cb.ContainsMetadata(Param.Properties.LightId);
+        }
+
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent,IEntity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
+        {
+            if (!ReferenceActions.ContainsKey(reference))
+                throw new InvalidOperationException(string.Format("[{0}]: Effect parameter not valid", reference));
+
+            return ReferenceActions[reference](parameterIndex, entity, initializerParameters);
+        }
+
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
+        {
+            {
+                Reference.Effect.BlurOffsetWeights, ComputeBlurOffsetsAndWeights
+            },
+            {
+                Reference.Effect.BloomThreshold, (index, entity, parameters) => new[]
+                {
+                    new FloatParameter(index, Param.Floats.BloomThreshold,
+                        () => entity.GetComponent<BloomComponent>().Threshold),
+                }
+            },
+            {
+                Reference.Effect.BloomParameters, (index, entity, parameters) => new[]
+                {
+                    new Float4Parameter(index, "BloomParameters",
+                        delegate
+                        {
+                            var cBloom = entity.GetComponent<BloomComponent>();
+                            return new Vector4(cBloom.Intensity, cBloom.BaseIntensity, cBloom.Saturation, cBloom.BaseSaturation);
+                        })
+                }
+            },
+            {
+                Reference.Effect.GlowStrength, (index, entity, parameters) => new[]
+                {
+                    new FloatParameter(index, Param.Floats.GlowStrength,
+                        () => entity.GetComponent<GlowComponent>().GlowStrength),
+                }
+            },
+            {
+                Reference.Effect.SpritePosition, (index, entity, parameters) => new[]
+                {
+                    new Float3Parameter(index, Param.Vectors.SpritePosition,
+                        () => entity.GetComponent<SpriteComponent>().Position.ToVector3(1)),
+                }
+            },
+            {
+                Reference.Effect.SpriteSize, (index, entity, parameters) => new[]
+                {
+                    new Float2Parameter(index, Param.Vectors.SpriteSize,
+                        () => entity.GetComponent<SpriteComponent>().Size),
+                }
+            },
+        };
+
+        private static IEnumerable<IParameter> ComputeBlurOffsetsAndWeights(int index, IEntity entity, InitializerParameters parameters)
+        {
+            var deviceSettings = parameters.Services.GetService<IDirectXDeviceSettings>();
+            bool isHorizontal = parameters.Technique.Name == "GaussianBlurH";
+            float texelWidth;
+            float texelHeight;
+            var cBlur = entity.GetComponent<BlurComponent>();
+            if (isHorizontal)
+            {
+                texelWidth = 1.0f/(deviceSettings.PreferredBackBufferWidth*cBlur.DownScale);
+                texelHeight = 0;
+            }
+            else
+            {
+                texelWidth = 0;
+                texelHeight = 1.0f/(deviceSettings.PreferredBackBufferHeight*cBlur.DownScale);
+            }
+            Vector2[] offsets;
+            float[] weights;
+            Blur.ComputeParameters(texelWidth, texelHeight, out weights, out offsets);
+            Vector4[] data = new Vector4[Blur.SampleCount];
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = new Vector4(offsets[i].X, offsets[i].Y, weights[i], 0);
+            }
+            return new[] {new Float4ArrayParameter(index, data.Length, Param.Floats.BlurOffsetsAndWeights, () => data)};
+        }
+
+    }
+}

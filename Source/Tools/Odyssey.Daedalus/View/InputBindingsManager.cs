@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Odyssey.Tools.ShaderGenerator.View
+namespace Odyssey.Daedalus.View
 {
     public static class InputBindingsManager
     {

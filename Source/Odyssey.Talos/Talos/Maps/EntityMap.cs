@@ -107,8 +107,8 @@ namespace Odyssey.Talos.Maps
 
         public void Unload()
         {
-            foreach (IInitializable initializableComponent in components.Values.OfType<IInitializable>())
-                initializableComponent.Unload();
+            foreach (IDisposable disposableComponent in components.Values.OfType<IDisposable>())
+                disposableComponent.Dispose();
         }
 
         public bool Validate()

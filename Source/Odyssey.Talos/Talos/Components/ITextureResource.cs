@@ -6,6 +6,6 @@ namespace Odyssey.Talos.Components
 {
     public interface ITextureResource : IContentComponent
     {
-        Texture this[TextureReference type] { get; }
+        Texture this[string type] { get; }
     }
 }

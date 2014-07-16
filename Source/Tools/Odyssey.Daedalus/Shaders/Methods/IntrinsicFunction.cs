@@ -6,14 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes;
+using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public class IntrinsicFunction : MethodBase
     {
-        private readonly int arguments;
+        private int arguments;
         public int Arguments { get { return arguments; } }
+
+        public IntrinsicFunction() : base()
+        {
+            arguments = 0;
+            Name = "Undefined";
+        }
 
         public IntrinsicFunction(string methodName, int arguments) : base(true)
         {
@@ -24,6 +31,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
         public override string Body
         {
             get { return string.Format("Intrinsic Functions do not have a body"); }
+        }
+
+        public override void Serialize(BinarySerializer serializer)
+        {
+            base.Serialize(serializer);
+            serializer.Serialize(ref arguments);
         }
     }
 }

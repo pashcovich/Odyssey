@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public class ShaderBuilder
     {

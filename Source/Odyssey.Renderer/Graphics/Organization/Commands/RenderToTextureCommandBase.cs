@@ -63,8 +63,6 @@ namespace Odyssey.Graphics.Organization.Commands
 
         public void SetInputs(IEnumerable<Texture> textures)
         {
-            Contract.Requires<ArgumentNullException>(textures != null, "textures");
-            Contract.Requires<ArgumentException>(textures.Any());
             Inputs.AddRange(textures);
         }
 
@@ -133,8 +131,6 @@ namespace Odyssey.Graphics.Organization.Commands
 
         public virtual void PostRender()
         {
-            var device = DeviceService.DirectXDevice;
-            //device.SetRenderTargets(device.DepthStencilBuffer, device.RenderTarget);
         }
 
 

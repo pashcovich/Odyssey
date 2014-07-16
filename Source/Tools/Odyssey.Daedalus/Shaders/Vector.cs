@@ -1,5 +1,5 @@
-﻿using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
+﻿using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
 using SharpDX.Serialization;
 using System;
 using System.Diagnostics.Contracts;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public enum Swizzle
     {

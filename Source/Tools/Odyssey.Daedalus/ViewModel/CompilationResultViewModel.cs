@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
-using Odyssey.Tools.ShaderGenerator.Model;
+using Odyssey.Daedalus.Model;
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class CompilationResultViewModel : ViewModelBase
     {

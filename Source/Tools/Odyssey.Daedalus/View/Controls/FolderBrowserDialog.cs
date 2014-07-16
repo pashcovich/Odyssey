@@ -1,4 +1,4 @@
-﻿using Odyssey.Tools.ShaderGenerator.View.Controls.Interop;
+﻿using Odyssey.Daedalus.View.Controls.Interop;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Controls
+namespace Odyssey.Daedalus.View.Controls
 {
 public class FolderBrowserDialog : IDisposable //, IDialogControlHost
 {

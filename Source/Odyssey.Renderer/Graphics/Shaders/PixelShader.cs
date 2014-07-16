@@ -28,14 +28,12 @@ namespace Odyssey.Graphics.Shaders
         {
             foreach (ConstantBuffer cb in SelectBuffers(technique, updateType))
                 Device.SetPixelShaderConstantBuffer(cb.Index, cb.Buffer);
-            Device.SetShader(this);
         }
 
         public override void Apply(string technique, long id, UpdateType updateType)
         {
             foreach (ConstantBuffer cb in SelectBuffers(technique, id, updateType))
                 Device.SetPixelShaderConstantBuffer(cb.Index, cb.Buffer);
-            Device.SetShader(this);
         }
 
         /// <summary>

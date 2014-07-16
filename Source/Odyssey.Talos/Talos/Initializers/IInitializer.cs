@@ -1,4 +1,4 @@
-﻿using Odyssey.Graphics.Effects;
+﻿using Odyssey.Engine;
 
 namespace Odyssey.Talos.Initializers
 {

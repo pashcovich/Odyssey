@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Controls.Interop
+namespace Odyssey.Daedalus.View.Controls.Interop
 {
     internal static class NativeMethods
     {

@@ -3,7 +3,7 @@ namespace Odyssey.Content
     internal enum AssetType
     {
         Undefined,
-        Data,
+        EngineReferences,
         Model,
         Texture2D,
         TextureCube,

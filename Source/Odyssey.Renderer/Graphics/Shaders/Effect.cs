@@ -70,10 +70,6 @@ namespace Odyssey.Graphics.Shaders
                 byteSize += psDesc.ByteCode.Length;
                 shaders.Add(ShaderType.Pixel, pixelShader);
             }
-
-            PreferredRasterizerState = ToDispose(Convert(device, mapping.Key.RasterizerState));
-            PreferredBlendState = Convert(device, mapping.Key.BlendState);
-            PreferredDepthStencilState = Convert(device, mapping.Key.DepthStencilState);
         }
 
         private Effect(DirectXDevice device, string name)
@@ -87,11 +83,6 @@ namespace Odyssey.Graphics.Shaders
             get { return inputLayout; }
         }
 
-        public RasterizerState PreferredRasterizerState { get; private set; }
-
-        public BlendState PreferredBlendState { get; private set; }
-
-        public DepthStencilState PreferredDepthStencilState { get; private set; }
 
         public TechniqueKey TechniqueKey
         {
@@ -155,50 +146,6 @@ namespace Odyssey.Graphics.Shaders
         public bool ContainsShader(string shaderName)
         {
             return shaders.Values.Any(s => s.Name == shaderName);
-        }
-
-        private static RasterizerState Convert(DirectXDevice device, PreferredRasterizerState preferredRasterizerState)
-        {
-            switch (preferredRasterizerState)
-            {
-                default:
-                case Organization.PreferredRasterizerState.Solid:
-                    return RasterizerState.New(device, RasterizerState.Solid);
-
-                case Organization.PreferredRasterizerState.Wireframe:
-                    return RasterizerState.New(device, RasterizerState.Wireframe);
-            }
-        }
-
-        private static BlendState Convert(DirectXDevice device, PreferredBlendState preferredRasterizerState)
-        {
-            switch (preferredRasterizerState)
-            {
-                default:
-                case Organization.PreferredBlendState.Additive:
-                case Organization.PreferredBlendState.Disabled:
-                    return BlendState.New(device, BlendState.BlendDisabled);
-
-                    //return BlendState.New(device, BlendOption.SourceAlpha, BlendOption.InverseSourceAlpha, BlendOperation.Add,
-                    //    BlendOption.One, BlendOption.One, BlendOperation.Add);
-                    return BlendState.New(device, "Additive", BlendOption.SourceAlpha, BlendOption.One);
-            }
-        }
-
-        private static DepthStencilState Convert(DirectXDevice device, PreferredDepthStencilState preferredDepthStencilState)
-        {
-            switch (preferredDepthStencilState)
-            {
-                default:
-                case Organization.PreferredDepthStencilState.Enabled:
-                    return DepthStencilState.New(device, DepthStencilState.Default);
-
-                case Organization.PreferredDepthStencilState.EnabledComparisonLessEqual:
-                    return DepthStencilState.New(device, DepthStencilState.EnabledComparisonLessEqual);
-
-                case Organization.PreferredDepthStencilState.DepthWriteDisabled:
-                    return DepthStencilState.New(device, DepthStencilState.DepthWriteDisabled);
-            }
         }
 
         public void AssembleBuffers()

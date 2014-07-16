@@ -1,6 +1,6 @@
 ﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
+using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Utilities.Collections;
 using SharpDX.Serialization;
 using System;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public class SwizzleNode : NodeBase
     {
@@ -80,7 +80,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Input", Input);
+            AddNode("Input", Input);
         }
 
         protected override void SerializeProperties(BinarySerializer serializer)

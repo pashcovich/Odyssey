@@ -81,6 +81,13 @@ namespace Odyssey.Talos.Components
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                foreach (var technique in techniques.Where(technique => technique != null))
+                    technique.Dispose();
+        }
+
         public override void Unload()
         {
             foreach (var technique in techniques.Where(technique => technique != null))

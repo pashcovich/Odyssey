@@ -16,6 +16,7 @@
 #region Using Directives
 
 using GalaSoft.MvvmLight.Messaging;
+using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
@@ -23,7 +24,6 @@ using Odyssey.Graphics.Shaders;
 using Odyssey.Talos;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Systems;
-using Odyssey.Tools.ShaderGenerator.ViewModel.Messages;
 using SharpDX;
 using SharpDX.Diagnostics;
 using SharpDX.Direct3D11;
@@ -31,7 +31,7 @@ using System;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.Viewer
+namespace Odyssey.Daedalus.Viewer
 {
     public class DirectXViewer : DesktopWpfApplication
     {
@@ -155,7 +155,7 @@ namespace Odyssey.Tools.ShaderGenerator.Viewer
             previewModel.RegisterComponent(cShader);
 
             Entity ui = scene.CreateEntity("UI");
-            ui.RegisterComponent(new UserInterfaceComponent {Overlay = ViewerOverlay.CreateOverlay(Services, this)});
+            ui.RegisterComponent(new UserInterfaceComponent {Overlay = Viewer.CreateOverlay(Services, this)});
             ui.RegisterComponent(new UpdateComponent() {UpdateFrequency = UpdateFrequency.RealTime});
 
             scene.EndDesign();

@@ -19,7 +19,7 @@ using System.Windows;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.View
+namespace Odyssey.Daedalus.View
 {
     /// <summary>
     /// Interaction logic for SourceView.xaml

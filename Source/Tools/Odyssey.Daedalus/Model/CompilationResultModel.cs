@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Tools.ShaderGenerator.Model
+﻿namespace Odyssey.Daedalus.Model
 {
     public class CompilationResultModel
     {

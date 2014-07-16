@@ -2,11 +2,11 @@
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Structs;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public class PhongLighting : MethodBase
     {

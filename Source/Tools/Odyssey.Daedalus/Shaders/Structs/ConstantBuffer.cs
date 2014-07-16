@@ -7,14 +7,15 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using EngineReference = Odyssey.Engine.EngineReference;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
+namespace Odyssey.Daedalus.Shaders.Structs
 {
     [DataContract]
     public partial class ConstantBuffer : Struct
     {
         [DataMember]
-        private Dictionary<EngineReference, ShaderReference> references;
+        private Dictionary<string, EngineReference> references;
 
         [DataMember]
         public UpdateType UpdateType { get; set; }
@@ -23,25 +24,24 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
         {
             Type = Shaders.Type.ConstantBuffer;
             Index = 0;
-            references = new Dictionary<EngineReference, ShaderReference>();
+            references = new Dictionary<string, EngineReference>();
         }
 
-        public IEnumerable<ShaderReference> References { get { return references.Values; } }
+        public IEnumerable<EngineReference> References { get { return references.Values; } }
 
-        public void SetReference(ShaderReference reference)
+        public void SetReference(EngineReference reference)
         {
-            Contract.Requires<ArgumentException>(reference.Type == ReferenceType.Engine);
-            EngineReference cbReference = (EngineReference)reference.Value;
-            if (!references.ContainsKey(cbReference))
-                references.Add(cbReference, reference);
+            string refId = reference.ToString();
+            if (!references.ContainsKey(refId))
+                references.Add(refId, reference);
             reference.Index = references.Count - 1;
         }
 
         public override void Add(IVariable variable)
         {
             base.Add(variable);
-            if (variable.ShaderReference != null)
-                SetReference(variable.ShaderReference);
+            if (variable.EngineReference != null)
+                SetReference(variable.EngineReference);
         }
 
         public override string Definition

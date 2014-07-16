@@ -8,9 +8,14 @@ namespace Odyssey.Geometry
 
         #region Vector2 extensions
 
-        public static Vector4 ToVector4(this Vector2 vector2, float y = 0f, float w = 0f)
+        public static Vector3 ToVector3(this Vector2 vector2, float z = 0f)
         {
-            return new Vector4(vector2, 0, 0);
+            return new Vector3(vector2, z);
+        }
+
+        public static Vector4 ToVector4(this Vector2 vector2, float z = 0f, float w = 0f)
+        {
+            return new Vector4(vector2, z, w);
         }
 
         #endregion
@@ -20,8 +25,6 @@ namespace Odyssey.Geometry
         {
             return new Vector4(vector3, w);
         }
-
-       
 
         #endregion
 

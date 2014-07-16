@@ -22,7 +22,8 @@ namespace Odyssey.Graphics.Shapes
 
         protected override void OnInitializing(ControlEventArgs e)
         {
-            Contract.Requires<InvalidOperationException>(Data != null, "Data");
+            if (Data == null)
+                throw new InvalidOperationException("'Data' cannot be null");
             ToDispose(Data).Initialize();
             var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);

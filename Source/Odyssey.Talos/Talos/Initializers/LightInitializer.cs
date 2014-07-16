@@ -7,18 +7,17 @@ using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Nodes;
 using SharpDX;
+using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
     internal class LightInitializer : Initializer<LightNode>
     {
 
-        public LightInitializer()
-            : base(new[] { 
-            EngineReference.LightPointPS,
-            EngineReference.LightPointVS, EngineReference.LightPointMatrixProjection, EngineReference.LightDirection})
+        public LightInitializer(IServiceRegistry services)
+            : base(services, Reference.Group.Light)
         {
-        }
+        } 
 
         public override void SetupInitialization(ShaderInitializer initializer)
         {
@@ -40,32 +39,26 @@ namespace Odyssey.Talos.Initializers
             return cb.ContainsMetadata(Param.Properties.LightId);
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent,LightNode lightNode, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
+        {
+            {
+                Reference.Struct.PointLightPS, (index, light, parameters) => Convert(index, (PointLightNode)light)
+            },
+            {
+                Reference.Vector.Direction, (index, light, parameters) => new[]
+                {new Float3Parameter(index, "lightdir", () => new Vector3(-1, 0, -1))}
+            },
+        };
+
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent,LightNode lightNode, int parameterIndex, string reference, InitializerParameters initializerParameters)
         {
             string lightIdValue = cbParent.Get(Param.Properties.LightId);
             int lightId = Int32.Parse(lightIdValue);
 
-            IEnumerable<IParameter> parameter = CreateParameter(lightNode, lightId, parameterIndex, reference);
-            return parameter;
-        }
+            if (!ReferenceActions.ContainsKey(reference))
+                throw new InvalidOperationException(string.Format("[{0}]: Light parameter not valid", reference));
 
-        IEnumerable<IParameter> CreateParameter(LightNode lightNode, int lightId, int parameterIndex, EngineReference reference)
-        {
-
-            switch (reference)
-            {
-                case EngineReference.LightPointVS:
-                    throw new NotImplementedException();
-
-                case EngineReference.LightPointPS:
-                    return Convert(parameterIndex, (PointLightNode)lightNode);
-
-                case EngineReference.LightDirection:
-                    return new[] {new Float3Parameter(parameterIndex, "lightdir", () => new Vector3(-1, 0, -1))};
-
-                default:
-                    throw new InvalidOperationException(string.Format("[{0}]: camera parameter not valid", reference));
-            }
+            return ReferenceActions[reference](parameterIndex, lightNode, initializerParameters);
         }
 
         static IEnumerable<IParameter> Convert(int parameterIndex, PointLightNode lightNode)

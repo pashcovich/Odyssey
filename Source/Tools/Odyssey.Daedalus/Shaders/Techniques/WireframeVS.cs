@@ -1,15 +1,15 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Functions;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     public class WireframeVS : Shader
     {
@@ -23,8 +23,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             InputStruct = VertexPositionNormalBarycentric;
             OutputStruct = VertexPositionTextureIntensityBarycentricOut;
 
-            ConstantBuffer cbFrame = CBPerFrame;
-            ConstantBuffer cbInstance = CBPerInstance;
+            Structs.ConstantBuffer cbFrame = CBPerFrame;
+            Structs.ConstantBuffer cbInstance = CBPerInstance;
             Add(cbFrame);
             Add(cbInstance);
 
@@ -83,11 +83,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             Result = outputNode;
         }
 
-        public static ConstantBuffer CBPerFrame
+        public static Structs.ConstantBuffer CBPerFrame
         {
             get
             {
-                ConstantBuffer cbFrame = new ConstantBuffer
+                Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     UpdateType = UpdateType.SceneFrame
@@ -99,11 +99,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             }
         }
 
-        public static ConstantBuffer CBPerInstance
+        public static Structs.ConstantBuffer CBPerInstance
         {
             get
             {
-                ConstantBuffer cbInstance = ConstantBuffer.CBPerInstance;
+                Structs.ConstantBuffer cbInstance = Structs.ConstantBuffer.CBPerInstance;
                 return cbInstance;
             }
         }

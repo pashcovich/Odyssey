@@ -14,6 +14,15 @@ namespace Odyssey.Talos.Components
         [YamlIgnore] public Model Model { get; private set; }
         public override bool IsInited { get { return Model != null; } }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (Model != null)
+                    Model.Dispose();
+            }
+        }
+
         public ModelComponent()
             : base(ComponentTypeManager.GetType<ModelComponent>())
         {

@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class ShaderAttributeViewModel : ViewModelBase
     {

@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Functions;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
 using System.Runtime.Serialization;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     [DataContract]
     public class SpriteVS : Shader
@@ -25,8 +25,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             InputStruct = Struct.VertexPositionNormalTexture;
             OutputStruct = VSOut;
 
-            ConstantBuffer cbStatic = CBStatic;
-            ConstantBuffer cbInstance = CBPerInstance;
+            Structs.ConstantBuffer cbStatic = CBStatic;
+            Structs.ConstantBuffer cbInstance = CBPerInstance;
             Add(cbStatic);
             Add(cbInstance);
 
@@ -60,11 +60,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             }
         }
 
-        public static ConstantBuffer CBStatic
+        public static Structs.ConstantBuffer CBStatic
         {
             get
             {
-                ConstantBuffer cbStatic = new ConstantBuffer
+                Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
                     UpdateType = UpdateType.SceneStatic,
@@ -75,11 +75,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             }
         }
 
-        public static ConstantBuffer CBPerInstance
+        public static Structs.ConstantBuffer CBPerInstance
         {
             get
             {
-                ConstantBuffer cbInstance = new ConstantBuffer();
+                Structs.ConstantBuffer cbInstance = new Structs.ConstantBuffer();
                 cbInstance.Add(Vector.SpritePosition);
                 cbInstance.Add(Vector.SpriteSize);
                 return cbInstance;

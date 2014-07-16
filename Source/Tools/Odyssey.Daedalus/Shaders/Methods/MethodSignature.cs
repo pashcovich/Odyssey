@@ -2,12 +2,17 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Text;
+using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
-    public struct MethodSignature
+    public struct MethodSignature : IDataSerializable
     {
-        private readonly Type returnType;
+        private Type returnType;
+        private TechniqueKey key;
+        private IMethod method;
+        private string[] parameters;
+        private string[] signatureTypes;
 
         public MethodSignature(IMethod method, TechniqueKey key, string[] signatureTypes, string[] parameters, Type returnType)
             : this()
@@ -22,13 +27,29 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
 
         public Type ReturnType { get { return returnType; } }
 
-        public TechniqueKey Key { get; private set; }
+        public TechniqueKey Key
+        {
+            get { return key; }
+            private set { key = value; }
+        }
 
-        public IMethod Method { get; private set; }
+        public IMethod Method
+        {
+            get { return method; }
+            private set { method = value; }
+        }
 
-        public string[] Parameters { get; private set; }
+        public string[] Parameters
+        {
+            get { return parameters; }
+            private set { parameters = value; }
+        }
 
-        public string[] SignatureTypes { get; private set; }
+        public string[] SignatureTypes
+        {
+            get { return signatureTypes; }
+            private set { signatureTypes = value; }
+        }
 
         public string Call(params string[] arguments)
         {
@@ -68,6 +89,18 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
             sb.Remove(sb.Length - 2, 2);
             sb.Append(")");
             return sb.ToString();
+        }
+
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.SerializeEnum(ref returnType);
+            serializer.Serialize(ref key);
+            if (serializer.Mode == SerializerMode.Write)
+                MethodBase.WriteMethod(serializer, method);
+            else method = MethodBase.ReadMethod(serializer);
+            serializer.Serialize(ref parameters, serializer.Serialize);
+            serializer.Serialize(ref signatureTypes, serializer.Serialize);
+
         }
     }
 }

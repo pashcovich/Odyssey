@@ -1,9 +1,9 @@
-﻿using Odyssey.Tools.ShaderGenerator.ViewModel;
+﻿using Odyssey.Daedalus.ViewModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Odyssey.Tools.ShaderGenerator.View
+namespace Odyssey.Daedalus.View
 {
     /// <summary>
     /// Interaction logic for CompilationView.xaml

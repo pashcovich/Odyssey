@@ -29,12 +29,11 @@ namespace Odyssey.Utilities.Reflection
         {
             Contract.Requires<ArgumentNullException>(type != null, "type");
             TypeInfo currentType = type.GetTypeInfo();
-            PropertyInfo property;
             containingProperty = null;
 
             foreach (string propertyName in path.Split('.'))
             {
-                property = currentType.GetDeclaredProperty(propertyName);
+                PropertyInfo property = currentType.GetDeclaredProperty(propertyName);
 
                 if (property == null)
                     return currentType.GetDeclaredField(propertyName);

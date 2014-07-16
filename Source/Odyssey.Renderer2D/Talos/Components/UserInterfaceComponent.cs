@@ -22,7 +22,8 @@ namespace Odyssey.Talos.Components
 
         public void Initialize()
         {
-            Contract.Requires<InvalidOperationException>(Overlay != null);
+            if (Overlay == null)
+            throw new InvalidOperationException("'Overlay' cannot be null");
             UserInterfaceState = Services.GetService<IUserInterfaceState>();
             if (UserInterfaceState == null)
                 throw new InvalidOperationException("UserInterfaceState");

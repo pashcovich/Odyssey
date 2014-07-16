@@ -38,9 +38,10 @@ namespace Odyssey.Graphics.Shapes
             FigureEnd figureEnd)
         {
             Contract.Requires<ArgumentNullException>(points != null);
-            Contract.Requires<ArgumentException>(points.Count() >= 2, "Figure needs at least two points.");
-
             var array = points as Vector2[] ?? points.ToArray();
+            if (array.Length < 2)
+                throw new ArgumentException("Figure needs at least two points");
+            
             PolyLine polyLine = new PolyLine(device);
             var sink = polyLine.DefineFigure();
             sink.BeginFigure(array[0], figureBegin);

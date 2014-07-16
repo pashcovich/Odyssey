@@ -8,7 +8,6 @@ namespace Odyssey.Graphics.Shapes
     public class PolygonGeometry : PathGeometry
     {
         private readonly Polygon polygon;
-        private readonly int sides;
 
         private PolygonGeometry(Direct2DDevice device, Polygon polygon)
             : base(device)

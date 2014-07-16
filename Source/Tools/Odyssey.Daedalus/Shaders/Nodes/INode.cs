@@ -1,8 +1,8 @@
-﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
+﻿using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Graphics.Shaders;
 using System.Collections.Generic;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     public interface INode
     {

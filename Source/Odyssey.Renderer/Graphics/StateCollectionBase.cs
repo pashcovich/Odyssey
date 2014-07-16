@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Engine;
 using SharpDX;
+using SharpDX.DXGI;
 
 namespace Odyssey.Graphics
 {
@@ -25,7 +26,7 @@ namespace Odyssey.Graphics
         /// <summary>
         /// Gets the graphics device associated with this collection.
         /// </summary>
-        protected readonly DirectXDevice GraphicsDevice;
+        protected DirectXDevice DirectXDevice;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StateCollectionBase{T}" /> class.
@@ -33,7 +34,7 @@ namespace Odyssey.Graphics
         /// <param name="device">The device.</param>
         protected StateCollectionBase(DirectXDevice device)
         {
-            GraphicsDevice = device;
+            DirectXDevice = device;
         }
 
         /// <summary>
@@ -65,8 +66,9 @@ namespace Odyssey.Graphics
         protected override T TryToGetOnNotFound(string name)
         {
             var handler = StateAllocatorCallback;
-            if (handler != null) return handler(GraphicsDevice, name);
+            if (handler != null) return handler(DirectXDevice, name);
             return default(T);
         }
+
     }
 }

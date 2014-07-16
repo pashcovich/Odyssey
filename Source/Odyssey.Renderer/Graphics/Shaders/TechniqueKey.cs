@@ -9,7 +9,6 @@ using System.Runtime.Serialization;
 
 namespace Odyssey.Graphics.Shaders
 {
-    [DataContract]
     public struct TechniqueKey : IEquatable<TechniqueKey>, IDataSerializable
     {
         private ShaderModel shaderModel;
@@ -20,7 +19,7 @@ namespace Odyssey.Graphics.Shaders
         private PreferredDepthStencilState depthStencilState;
 
         public TechniqueKey(VertexShaderFlags vs = VertexShaderFlags.None, PixelShaderFlags ps = PixelShaderFlags.None, ShaderModel sm = ShaderModel.SM_4_0_Level_9_1,
-            PreferredRasterizerState rasterizerState = PreferredRasterizerState.Solid, PreferredBlendState blendState = PreferredBlendState.Disabled, PreferredDepthStencilState depthStencilState = PreferredDepthStencilState.Enabled)
+            PreferredRasterizerState rasterizerState = PreferredRasterizerState.CullBack, PreferredBlendState blendState = PreferredBlendState.Opaque, PreferredDepthStencilState depthStencilState = PreferredDepthStencilState.Enabled)
             : this()
         {
             VertexShader = vs;

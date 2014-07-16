@@ -8,8 +8,8 @@
     <ProjectGuid>{AECE17C4-C423-45EE-93F8-A888C6BDA617}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Odyssey.Tools.ShaderGenerator</RootNamespace>
-    <AssemblyName>ShaderGenerator</AssemblyName>
+    <RootNamespace>Odyssey.Daedalus</RootNamespace>
+    <AssemblyName>Daedalus</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -90,7 +90,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\FeatureLevelProvider.cs" />
+    <Compile Include="Data\ReferenceFactory.cs" />
+    <Compile Include="Data\ReferenceSerializer.cs" />
     <Compile Include="Data\ResourceManager.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Viewer\DirectXThread.cs" />
@@ -172,7 +173,6 @@
     <Compile Include="Shaders\Nodes\Functions\PhongLightingNode.cs" />
     <Compile Include="Shaders\Nodes\Math\SubtractionNode.cs" />
     <Compile Include="Shaders\Nodes\VSNormalTexturedTangentOutputNode.cs" />
-    <Compile Include="Shaders\ReferenceAttribute.cs" />
     <Compile Include="Shaders\Nodes\Operators\CastNode.cs" />
     <Compile Include="Shaders\Nodes\Math\MatrixMultiplyNode.cs" />
     <Compile Include="Shaders\Nodes\PhongVSOutputNode.cs" />
@@ -362,6 +362,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Assets\Odyssey.refs" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

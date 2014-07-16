@@ -2,10 +2,10 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Odyssey.Daedalus.View.Controls;
+using Odyssey.Daedalus.Viewer;
+using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.View.Controls;
-using Odyssey.Tools.ShaderGenerator.Viewer;
-using Odyssey.Tools.ShaderGenerator.ViewModel.Messages;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -13,7 +13,7 @@ using WindowsApplication = System.Windows.Application;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class PreviewViewModel : ViewModelBase
     {

@@ -48,7 +48,7 @@ namespace Odyssey.Talos.Systems
             }
         }
 
-        public void AfterUpdate()
+        public override void AfterUpdate()
         {
             CreateCommands(renderMapper.EffectModelsPairs);
         }

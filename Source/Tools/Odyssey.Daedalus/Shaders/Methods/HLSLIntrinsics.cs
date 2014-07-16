@@ -1,6 +1,6 @@
 ﻿using Odyssey.Graphics.Shaders;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public static class HlslIntrinsics
     {

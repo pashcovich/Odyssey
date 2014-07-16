@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
+namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {
     public class DivisionNode : MathNodeBase
     {

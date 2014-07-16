@@ -23,7 +23,7 @@ using System.Windows;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.Viewer
+namespace Odyssey.Daedalus.Viewer
 {
     /// <summary>
     /// Interaction logic for DirectXWindow.xaml

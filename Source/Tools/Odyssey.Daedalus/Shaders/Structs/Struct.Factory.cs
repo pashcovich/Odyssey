@@ -1,8 +1,9 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Data;
+using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
+namespace Odyssey.Daedalus.Shaders.Structs
 {
     public partial class Struct
     {
@@ -164,7 +165,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
                 {
                     CustomType = Shaders.CustomType.Material,
                     Name = "material",
-                    ShaderReference = new ShaderReference(EngineReference.Material)
+                    EngineReference = ReferenceFactory.Material.StructMaterialPS
                 };
 
                 material.Add(new Vector { Name = Param.Material.kA, Type = Type.Float });
@@ -188,7 +189,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
                 {
                     CustomType = Shaders.CustomType.PointLight,
                     Name = "lPoint",
-                    ShaderReference = new ShaderReference(EngineReference.LightPointPS)
+                    EngineReference = ReferenceFactory.Light.StructPointPS
                 };
 
                 lPoint.Add(new Vector { Name = Param.Light.Intensity, Type = Type.Float });
@@ -211,7 +212,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
                 {
                     CustomType = Shaders.CustomType.PointLight,
                     Name = "lPoint",
-                    ShaderReference = new ShaderReference(EngineReference.LightPointVS)
+                    EngineReference = ReferenceFactory.Light.StructPointVS
                 };
                 lPoint.Add(Matrix.LightView);
                 lPoint.Add(Matrix.LightProjection);

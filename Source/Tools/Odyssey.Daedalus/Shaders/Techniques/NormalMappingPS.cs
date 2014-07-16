@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Functions;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     public class NormalMappingPS : PhongDiffuseMapPS
     {

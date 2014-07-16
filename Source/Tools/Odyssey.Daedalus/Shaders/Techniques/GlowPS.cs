@@ -1,15 +1,15 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Functions;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     public class GlowPS : Shader
     {
@@ -75,11 +75,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             };
         }
 
-        public static ConstantBuffer CBFrame
+        public static Structs.ConstantBuffer CBFrame
         {
             get
             {
-                var cbFrame = new ConstantBuffer
+                var cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     UpdateType = UpdateType.InstanceFrame,

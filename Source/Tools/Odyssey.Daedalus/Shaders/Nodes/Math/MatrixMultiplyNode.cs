@@ -1,10 +1,9 @@
-﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-
+﻿using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Graphics.Shaders;
 using System;
 using System.Diagnostics.Contracts;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
+namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {
     public class MatrixMultiplyNode : MultiplyNode
     {

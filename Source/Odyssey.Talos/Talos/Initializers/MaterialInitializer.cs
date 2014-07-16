@@ -9,16 +9,17 @@ using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Nodes;
 using SharpDX;
+using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
     public class MaterialInitializer : Initializer<IMaterial>
     {
 
-        public MaterialInitializer()
-            : base(new[] { EngineReference.Material, EngineReference.MaterialDiffuse })
+        public MaterialInitializer(IServiceRegistry services)
+            : base(services, Reference.Group.Material)
         {
-        }
+        } 
 
         public override void SetupInitialization(ShaderInitializer initializer)
         {
@@ -27,8 +28,8 @@ namespace Odyssey.Talos.Initializers
             
             var scene = services.GetService<IScene>();
             var data = from e in scene.Entities
-                       where e.ContainsComponent<MaterialComponent>()
-                       let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
+                where e.ContainsComponent<MaterialComponent>()
+                let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
                 from techniqueRange in techniqueComponents
                 from technique in techniqueRange.Techniques
                 where technique.ActiveTechniqueId == effect.Name
@@ -51,31 +52,25 @@ namespace Odyssey.Talos.Initializers
             return cb.ContainsMetadata(Param.Properties.Material);
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IMaterial material, int parameterIndex, EngineReference reference, InitializerParameters initializerParameterse)
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IMaterial material, int parameterIndex, string reference, InitializerParameters initializerParameters)
         {
-            return CreateParameter(material, parameterIndex, reference);
+            if (!ReferenceActions.ContainsKey(reference))
+                throw new InvalidOperationException(string.Format("[{0}]: Material parameter not valid", reference));
+
+            return ReferenceActions[reference](parameterIndex, material, initializerParameters);
         }
 
-        static IEnumerable<IParameter> CreateParameter(IMaterial material, int parameterIndex, EngineReference reference)
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
         {
-
-            switch (reference)
             {
+                Reference.Color.Diffuse,
+                (index, material,parameters) => new[] {new Float4Parameter(index, Param.Material.Diffuse, () => material.Diffuse)}
+            },
+            {Reference.Struct.MaterialPS, Convert}
+        };
 
-                case EngineReference.MaterialDiffuse:
-                    return new [] { new Float4Parameter(parameterIndex,Param.Material.Diffuse, () => material.Diffuse)};
-
-                case EngineReference.Material:
-                    return Convert(parameterIndex, material);
-
-                default:
-                    throw new ArgumentException(string.Format("EngineReference: {0} not valid.", reference));
-            }
-        }
-
-        static IEnumerable<IParameter> Convert(int parameterIndex, IMaterial material)
+        static IEnumerable<IParameter> Convert(int parameterIndex, IMaterial material, InitializerParameters parameters)
         {
-         
             List<IParameter> parameterCollection = new List<IParameter>
             {
                 new Float4Parameter(parameterIndex, Param.Material.Coefficients, () =>

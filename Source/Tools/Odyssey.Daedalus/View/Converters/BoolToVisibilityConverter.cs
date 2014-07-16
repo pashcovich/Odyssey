@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Converters
+namespace Odyssey.Daedalus.View.Converters
 {
     public class BoolToVisibilityConverter : IValueConverter
     {

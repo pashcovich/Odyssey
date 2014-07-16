@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     [DataContract]
     public partial class Sampler : Variable

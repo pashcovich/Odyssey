@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Tools.ShaderGenerator.ViewModel.Messages
+﻿namespace Odyssey.Daedalus.ViewModel.Messages
 {
     public enum TechniqueAction
     {

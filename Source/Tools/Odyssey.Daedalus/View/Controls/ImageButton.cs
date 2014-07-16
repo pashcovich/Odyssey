@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Controls
+namespace Odyssey.Daedalus.View.Controls
 {
     public class ImageButton : Button
     {

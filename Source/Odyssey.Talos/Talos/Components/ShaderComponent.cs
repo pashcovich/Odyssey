@@ -20,6 +20,12 @@ namespace Odyssey.Talos.Components
         }
 
         public override bool IsInited { get { return Technique != null && Technique.IsInited; } }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                if (Technique!= null)
+                Technique.Dispose();
+        }
 
         IEnumerable<Technique> ITechniqueComponent.Techniques
         {

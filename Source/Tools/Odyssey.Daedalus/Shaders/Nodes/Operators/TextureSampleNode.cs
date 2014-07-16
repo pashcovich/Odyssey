@@ -2,7 +2,7 @@
 using SharpDX.Serialization;
 using System.Collections.Generic;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public class TextureSampleNode : NodeBase
     {
@@ -56,10 +56,10 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Coordinates", Coordinates);
+            AddNode("Coordinates", Coordinates);
         }
 
-        protected override void SerializeProperties(BinarySerializer serializer)
+        protected override void SerializeVariables(BinarySerializer serializer)
         {
             base.SerializeProperties(serializer);
             if (serializer.Mode == SerializerMode.Write)

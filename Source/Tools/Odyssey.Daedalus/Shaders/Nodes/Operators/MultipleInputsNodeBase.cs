@@ -6,19 +6,18 @@ using System.Reflection;
 using Odyssey.Graphics.Shaders;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public abstract class MultipleInputsNodeBase : NodeBase
     {
         public List<INode> Inputs { get; set; }
-
 
         protected override void RegisterNodes()
         {
             for (int i = 0; i < Inputs.Count; i++)
             {
                 var node = Inputs[i];
-                Nodes.Add(string.Format("Input{0}",i), node);
+                AddNode(string.Format("Input{0}",i), node);
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
+namespace Odyssey.Daedalus.Shaders.Structs
 {
     public interface IStruct : IVariable
     {

@@ -1,10 +1,9 @@
-﻿using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-
+﻿using Odyssey.Daedalus.Shaders.Nodes;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     [DataContract]
     public partial class Texture : Variable

@@ -87,7 +87,7 @@ namespace Odyssey.UserInterface
                 }
             }
 
-            RaiseEvent(PointerEntered, this, e);
+            RaiseEvent(PointerExited, this, e);
         }
 
         /// <summary>

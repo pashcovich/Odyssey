@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Converters
+namespace Odyssey.Daedalus.View.Converters
 {
     public class TechniqueTagConverter : IValueConverter
     {

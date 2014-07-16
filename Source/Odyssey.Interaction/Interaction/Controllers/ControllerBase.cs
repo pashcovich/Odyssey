@@ -28,7 +28,8 @@ namespace Odyssey.Interaction.Controllers
 
         public virtual void BindToEntity(IEntity source)
         {
-            Contract.Requires<ArgumentNullException>(source != null, "source");
+            if (source == null)
+                throw new ArgumentNullException("source");
             Source = source;
             if (!Source.TryGetComponent(out cPosition))
                 throw new InvalidOperationException(string.Format("'{0}' does not contain a {1}", source.Name, cPosition.GetType()));

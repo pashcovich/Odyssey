@@ -47,6 +47,8 @@ namespace Odyssey.Graphics.Organization.Commands
         public override void PreRender()
         {
             DirectXDevice device = DeviceService.DirectXDevice;
+            device.SetCurrentEffect(Effect);
+
             device.InputAssembler.InputLayout = Effect.InputLayout;
 
             foreach (TextureMapping tm in Effect[ShaderType.Pixel].SelectTextures(UpdateType.SceneStatic))
@@ -63,7 +65,7 @@ namespace Odyssey.Graphics.Organization.Commands
         public override void Render()
         {
             DirectXDevice device = DeviceService.DirectXDevice;
-            device.CurrentEffect = Effect;
+            
             foreach (Shader shader in Effect)
                 shader.Apply(Effect.Name, UpdateType.SceneFrame);
 

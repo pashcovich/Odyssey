@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Engine;
-using Odyssey.Tools.ShaderGenerator.Serialization;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Daedalus.Serialization;
+using Odyssey.Daedalus.Shaders.Structs;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public sealed class VariableCollection : Dictionary<string,IVariable>, IDataSerializable
     {
@@ -23,24 +23,13 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
             for (int i = 0; i < varCount; i++)
             {
-                string varType = string.Empty;
-                Variable variable;
-
                 if (serializer.Mode == SerializerMode.Write)
-                {
-                    variable = vars[i];
-                    varType = variable.GetType().FullName;
-                    serializer.Serialize(ref varType);
-                    variable.Serialize(serializer);
-                }
+                    Variable.WriteVariable(serializer, vars[i]);
                 else
                 {
-                    serializer.Serialize(ref varType);
-                    variable = ((Variable)Activator.CreateInstance(System.Type.GetType(varType)));
-                    variable.Serialize(serializer);
+                    Variable variable = Variable.ReadVariable(serializer);
                     Owner.Add(variable);
                 }
-
             }
             serializer.EndChunk();
         }

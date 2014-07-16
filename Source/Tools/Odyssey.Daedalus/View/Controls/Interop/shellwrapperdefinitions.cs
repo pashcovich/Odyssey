@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Controls.Interop
+namespace Odyssey.Daedalus.View.Controls.Interop
 {
     // Dummy base interface for CommonFileDialog coclasses
     internal interface NativeCommonFileDialog

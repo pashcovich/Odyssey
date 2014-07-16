@@ -21,6 +21,8 @@ namespace Odyssey.Content
 
         void LoadAssetList(string fileName);
 
+        bool Unload<T>(string assetName);
+
         void Unload();
 
         Type Map(string assetType);

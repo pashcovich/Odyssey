@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Converters
+namespace Odyssey.Daedalus.View.Converters
 {
     public class LineColumnValueConverter : IMultiValueConverter
     {

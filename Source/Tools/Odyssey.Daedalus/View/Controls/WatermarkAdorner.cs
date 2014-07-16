@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Controls
+namespace Odyssey.Daedalus.View.Controls
 {
 
     /// <summary>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
+namespace Odyssey.Daedalus.Shaders.Structs
 {
     public partial class Struct : Variable, IStruct, IContainer
     {
@@ -112,12 +112,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
         {
             base.Serialize(serializer);
             serializer.Serialize(ref customType);
-
             variables.Serialize(serializer);
-
-            if (serializer.Mode != SerializerMode.Read) return;
-            foreach (var kvp in variables)
-                kvp.Value.Owner = this;
         }
     }
 }

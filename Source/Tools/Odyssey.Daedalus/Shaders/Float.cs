@@ -1,19 +1,19 @@
-﻿using Odyssey.Engine;
-using Odyssey.Graphics;
+﻿using Odyssey.Daedalus.Data;
+using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public static class Float
     {
         public static Vector ShadowBias
         {
-            get { return new Vector { Name = Param.Floats.ShadowBias, Type = Type.Float, ShaderReference = new ShaderReference(EngineReference.EntitySpriteSize) }; }
+            get { return new Vector { Name = Param.Floats.ShadowBias, Type = Type.Float, EngineReference = ReferenceFactory.Effect.SpriteSize }; }
         }
 
         public static Vector GlowStrength
         {
-            get { return new Vector { Name = Param.Floats.GlowStrength, ShaderReference = new ShaderReference(EngineReference.EntityGlowStrength),Type = Type.Float}; }
+            get { return new Vector { Name = Param.Floats.GlowStrength, EngineReference = ReferenceFactory.Effect.GlowStrength, Type = Type.Float }; }
         }
 
 
@@ -26,7 +26,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                 return new Vector()
                 {
                     Name = Param.Floats.BloomThreshold,
-                    ShaderReference = new ShaderReference(EngineReference.EntityBloomThreshold),
+                    EngineReference = ReferenceFactory.Effect.BloomThreshold,
                     Type = Type.Float
                 };
             }

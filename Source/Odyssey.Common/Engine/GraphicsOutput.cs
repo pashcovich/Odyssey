@@ -146,8 +146,7 @@ namespace Odyssey.Engine
             var desktopBounds = outputDescription.DesktopBounds;
 
             return (from supportedDisplayMode in SupportedDisplayModes
-                where
-                    supportedDisplayMode.Width == desktopBounds.Width &&
+                where supportedDisplayMode.Width == desktopBounds.Width &&
                     supportedDisplayMode.Height == desktopBounds.Height && supportedDisplayMode.Format == format
                     orderby supportedDisplayMode.RefreshRate.Numerator descending 
                 select new DisplayMode(format, desktopBounds.Width, desktopBounds.Height, supportedDisplayMode.RefreshRate))

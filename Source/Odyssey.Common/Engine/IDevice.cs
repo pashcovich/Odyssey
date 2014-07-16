@@ -24,17 +24,15 @@ namespace Odyssey.Engine
 
     public interface IDirect3DProvider
     {
+#if DIRECTX11_1   
         DeviceContext1 Context { get; }
 
         Device1 Device { get; }
-
-        bool IsDebugMode { get; }
-
-#if DIRECTX11_1
 #else
         SharpDX.Direct3D11.Device Device { get; }
         SharpDX.Direct3D11.DeviceContext Context { get; }
 #endif
+        bool IsDebugMode { get; }
     }
 
     public interface IDirectWriteProvider

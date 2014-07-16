@@ -81,7 +81,7 @@ namespace Odyssey.Interaction
         /// <inheritdoc/>
         public void GetState(PointerState state)
         {
-            Contract.Requires<ArgumentNullException>(state!=null, "state");
+            if (state == null) throw new ArgumentNullException("state");
 
             state.Points.Clear();
 

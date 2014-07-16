@@ -24,6 +24,9 @@ using Odyssey.Talos;
 using Odyssey.Utilities.Reflection;
 using SharpDX;
 using System;
+using SharpDX.Direct3D11;
+using SharpDX.IO;
+using Texture2D = Odyssey.Graphics.Texture2D;
 
 #endregion Using Directives
 
@@ -77,7 +80,14 @@ namespace Odyssey
 
             services.AddService(typeof (IWindowService), this);
             services.AddService(typeof (ITimeService), appTime);
+
+            // Setup Content Manager
             contentManager = new ContentManager(services);
+            contentManager.AddMapping(AssetType.EngineReferences.ToString(), typeof(EngineReferenceCollection));
+            contentManager.AddMapping(AssetType.Model.ToString(), typeof(Model));
+            contentManager.AddMapping(AssetType.Effect.ToString(), typeof(ShaderCollection));
+            contentManager.AddMapping(AssetType.Texture2D.ToString(), typeof(Texture2D));
+            contentManager.AddMapping(AssetType.TextureCube.ToString(), typeof(TextureCube));
 
             var additionalServices = ReflectionHelper.GetAttributes<RequiredServiceAttribute>(GetType());
             foreach (var requiredService in additionalServices)
@@ -350,7 +360,7 @@ namespace Odyssey
 
             // Checks the graphics device
             if (deviceService.DirectXDevice == null)
-                throw new InvalidOperationException("No DirectXDevice found");
+                throw new InvalidOperationException("No device found");
 
             // Initialize this instance and all game systems
             Initialize();
@@ -388,13 +398,13 @@ namespace Odyssey
                 lock (this)
                 {
 
-                    var disposableGraphicsManager = deviceManager as IDisposable;
-                    if (disposableGraphicsManager != null)
+                    var disposableDeviceManager = deviceManager as IDisposable;
+                    if (disposableDeviceManager != null)
                     {
-                        disposableGraphicsManager.Dispose();
+                        disposableDeviceManager.Dispose();
                     }
 
-                    DisposeGraphicsDeviceEvents();
+                    DisposeDeviceEvents();
 
                     if (applicationPlatform != null)
                     {
@@ -403,6 +413,7 @@ namespace Odyssey
 
                     if (scene != null)
                         scene.Unload();
+
                 }
             }
 
@@ -424,32 +435,30 @@ namespace Odyssey
 
         protected virtual void Initialize()
         {
-            SetupGraphicsDeviceEvents();
+            const string filePath = Global.DataPath + "System.yaml";
+            const string references = "EngineReferences";
+            if (!NativeFile.Exists(filePath))
+                throw new InvalidOperationException(string.Format("Odyssey System Data not found: check if {0} exists",filePath));
 
-            contentManager.AddMapping(AssetType.Model.ToString(), typeof (Model));
-            contentManager.AddMapping(AssetType.Effect.ToString(), typeof (ShaderCollection));
-            contentManager.AddMapping(AssetType.Texture2D.ToString(), typeof (Texture2D));
-            contentManager.AddMapping(AssetType.TextureCube.ToString(), typeof (TextureCube));
+            contentManager.LoadAssetList(filePath);
+
+            var refData = contentManager.Get<EngineReferenceCollection>(references);
+            services.AddService(typeof(IReferenceService), refData);
+            SetupDeviceEvents();
         }
 
         private void deviceService_DeviceCreated(object sender, EventArgs e)
         {
-            //LoadContent();
+            
         }
 
         private void deviceService_DeviceDisposing(object sender, EventArgs e)
         {
             Content.Unload();
             applicationPlatform.MainWindow.Dispose();
-
-            //if (contentLoaded)
-            //{
-            //    UnloadContent();
-            //    contentLoaded = false;
-            //}
         }
 
-        private void DisposeGraphicsDeviceEvents()
+        private void DisposeDeviceEvents()
         {
             if (deviceService != null)
             {
@@ -478,10 +487,10 @@ namespace Odyssey
             }
         }
 
-        private void SetupGraphicsDeviceEvents()
+        private void SetupDeviceEvents()
         {
             // Find the IGraphicsDeviceSerive.
-            deviceService = Services.GetService(typeof (IOdysseyDeviceService)) as IOdysseyDeviceService;
+            deviceService = Services.GetService(typeof(IDirectXDeviceService)) as IDirectXDeviceService;
 
             // If there is no graphics device service, don't go further as the whole Game would not work
             if (deviceService == null)

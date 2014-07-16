@@ -1,6 +1,7 @@
 ﻿#region Using Directives
 
 using Odyssey.Graphics;
+using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using SharpDX;
 using SharpDX.Direct3D;
@@ -14,6 +15,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using DepthStencilState = Odyssey.Graphics.DepthStencilState;
 using Device = SharpDX.Direct3D11.Device;
 using Device1 = SharpDX.Direct3D11.Device1;
+using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
 using PixelShader = SharpDX.Direct3D11.PixelShader;
 using RasterizerState = Odyssey.Graphics.RasterizerState;
 using Rectangle = SharpDX.Rectangle;
@@ -28,19 +30,22 @@ namespace Odyssey.Engine
 {
     public class DirectXDevice : Component, IDirect3DProvider
     {
-#if DIRECTX11_1
-        internal Effect CurrentEffect;
         internal InputAssemblerStage InputAssembler;
         internal OutputMergerStage OutputMerger;
         internal PixelShaderStage PixelShader;
         internal RasterizerStage RasterizerStage;
         internal VertexShaderStage VertexShader;
-        private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
-        private readonly DeviceContext1 context;
-        private readonly RenderTargetView[] currentRenderTargetViews;
-        private readonly Device1 device;
         private readonly EffectPool effectPool;
+        private readonly RenderTargetView[] currentRenderTargetViews;
+        private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
 
+#if DIRECTX11_1
+        private readonly DeviceContext1 context;
+        private readonly Device1 device;
+#else
+        SharpDX.Direct3D11.DeviceContext context;
+        SharpDX.Direct3D11.Device device;
+#endif
         private readonly DeviceFeatures features;
 
         private readonly bool isDebugMode;
@@ -56,6 +61,7 @@ namespace Odyssey.Engine
         private VertexInputLayout currentVertexInputLayout;
 
         private int maxSlotCountForVertexBuffer;
+        private Effect currentEffect;
 
         protected DirectXDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None,
             params FeatureLevel[] featureLevels)
@@ -76,6 +82,7 @@ namespace Odyssey.Engine
         protected DirectXDevice(Device existingDevice, GraphicsAdapter adapter = null)
         {
 #if DIRECTX11_1
+            ToDispose(existingDevice);
             device = ToDispose(existingDevice.QueryInterface<Device1>());
 
             // Get Direct3D 11.1 context
@@ -116,6 +123,9 @@ namespace Odyssey.Engine
             currentRenderTargetViews = new RenderTargetView[SimultaneousRenderTargetCount];
 
             SamplerStates = ToDispose(new SamplerStateCollection(this));
+            RasterizerStates = ToDispose(new RasterizerStateCollection(this));
+            DepthStencilStates = ToDispose(new DepthStencilStateCollection(this));
+            BlendStates = ToDispose(new BlendStateCollection(this));
             effectPool = ToDispose(new EffectPool(this));
             Initialize();
         }
@@ -135,6 +145,20 @@ namespace Odyssey.Engine
         public DepthStencilBuffer DepthStencilBuffer
         {
             get { return Presenter != null ? Presenter.DepthStencilBuffer : null; }
+        }
+
+        internal Effect CurrentEffect
+        {
+            get { return currentEffect; }
+        }
+
+        internal void SetCurrentEffect(Effect effect)
+        {
+            Contract.Requires<ArgumentNullException>(effect != null, "effect");
+            currentEffect = effect;
+            SetShader((Graphics.Shaders.VertexShader) currentEffect[ShaderType.Vertex]);
+            if (currentEffect.ContainsShader(ShaderType.Pixel))
+                SetShader((Graphics.Shaders.PixelShader) currentEffect[ShaderType.Pixel]);
         }
 
         /// <summary>
@@ -214,7 +238,10 @@ namespace Odyssey.Engine
             get { return Presenter != null ? Presenter.BackBuffer : null; }
         }
 
-        public SamplerStateCollection SamplerStates { get; private set; }
+        internal SamplerStateCollection SamplerStates { get; private set; }
+        internal RasterizerStateCollection RasterizerStates { get; private set; }
+        internal BlendStateCollection BlendStates { get; private set; }
+        internal DepthStencilStateCollection DepthStencilStates { get; private set; }
 
         /// <summary>
         /// Gets the main viewport.
@@ -251,23 +278,6 @@ namespace Odyssey.Engine
         {
             set { InputAssembler.PrimitiveTopology = value; }
         }
-
-#else
-        SharpDX.Direct3D11.DeviceContext context;
-        SharpDX.Direct3D11.Device device;
-
-        SharpDX.Direct3D11.DeviceContext IDirect3DProvider.Context
-        {
-            get { return context; }
-        }
-        SharpDX.Direct3D11.Device IDirect3DProvider.Device
-        {
-            get { return device; }
-        }
-#endif
-#if DIRECTX11_1
-
-#endif
 
         public static implicit operator Device(DirectXDevice from)
         {
@@ -1033,6 +1043,7 @@ namespace Odyssey.Engine
                     GraphicsAdapter.Dispose();
                     WICHelper.Factory.Dispose();
                 }
+
             }
 
             base.Dispose(disposeManagedResources);

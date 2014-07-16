@@ -1,4 +1,5 @@
-﻿using Odyssey.Engine;
+﻿using System.Runtime.CompilerServices;
+using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.PostProcessing;
@@ -10,24 +11,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ITextureResource = Odyssey.Talos.Components.ITextureResource;
-
+using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 namespace Odyssey.Talos.Initializers
 {
     public class EntityInitializer : Initializer<IEntity>
     {
-        public EntityInitializer()
-            : base(new[] {
-                EngineReference.EntityMatrixWorld,
-                EngineReference.EntityMatrixWorldInverse,
-                EngineReference.EntityMatrixWorldInverseTranspose,
-                EngineReference.EntityBloomThreshold,
-                EngineReference.EntityBloomParameters,
-                EngineReference.EntityBlurOffsetsWeights,
-                EngineReference.EntityGlowStrength,
-                EngineReference.EntitySpritePosition,
-                EngineReference.EntitySpriteSize})
+        public EntityInitializer(IServiceRegistry services)
+            : base(services, Reference.Group.Entity)
         {
-        }
+        } 
 
         public override void Initialize(DirectXDevice device, Effect effect, IEntity source, InitializerParameters parameters)
         {
@@ -44,11 +36,11 @@ namespace Odyssey.Talos.Initializers
             var scene = services.GetService<IScene>();
 
             var data = from e in scene.Entities
-                       let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
-                       from techniqueRange in techniqueComponents
-                       from technique in techniqueRange.Techniques
-                       where technique.ActiveTechniqueId == effect.Name
-                       select e.Id;
+                        let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
+                        from cTechnique in techniqueComponents
+                        from technique in cTechnique.Techniques
+                        where technique.ActiveTechniqueId == effect.Name
+                        select e.Id;
 
             foreach (long entityId in data)
             {
@@ -57,9 +49,12 @@ namespace Odyssey.Talos.Initializers
             }
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
         {
-            return CreateParameter(entity, parameterIndex, reference, initializerParameters);
+            if (!ReferenceActions.ContainsKey(reference))
+                throw new InvalidOperationException(string.Format("[{0}]: Entity parameter not valid", reference));
+
+            return ReferenceActions[reference](parameterIndex, entity, initializerParameters);
         }
 
         protected override bool ValidateConstantBuffer(ConstantBufferDescription cb)
@@ -67,101 +62,44 @@ namespace Odyssey.Talos.Initializers
             return true;
         }
 
-        private static Texture FindResource(IEnumerable<IComponent> components, string key, TextureReference type)
+        /// <summary>
+        /// Searches through components looking for a <see cref="Texture"/> resource associated to
+        /// a <see cref="Shader"/> asset having the specified reference.
+        /// </summary>
+        /// <param name="components">A sequence of <see cref="Components.Component"/> belonging to an <see cref="Entity"/>.</param>
+        /// <param name="key">The key value identifying the <see cref="Shader"/> asset.</param>
+        /// <param name="reference">The reference value identifying the <see cref="Texture"/>.</param>
+        /// <returns></returns>
+        private static Texture FindResource(IEnumerable<IComponent> components, string key, string reference)
         {
             var enumerable = components as IComponent[] ?? components.ToArray();
             var resource = enumerable.OfType<ITextureResource>().FirstOrDefault(c => c.AssetName == key);
 
-            return resource != null ? resource[type] : null;
+            return resource != null ? resource[reference] : null;
         }
 
-        private IEnumerable<IParameter> CreateParameter(IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
         {
-            IDirectXDeviceSettings deviceSettings = initializerParameters.Services.GetService<IDirectXDeviceSettings>();
-            switch (reference)
             {
-                case EngineReference.EntityMatrixWorld:
-                    return new[] { new MatrixParameter(parameterIndex, Param.Matrices.World, () => entity.GetComponent<TransformComponent>().World) };
+                Reference.Matrix.World, (index, entity, parameters) => new[]
+                {new MatrixParameter(index, Param.Matrices.World, () => entity.GetComponent<TransformComponent>().World)}
+            },
+            {
+                Reference.Matrix.WorldInverse, (index, entity, parameters) => new[]
+                {
+                    new MatrixParameter(index, Param.Matrices.WorldInverse,
+                        () => Matrix.Invert(entity.GetComponent<TransformComponent>().World))
+                }
+            },
+            {
+                Reference.Matrix.WorldInverseTranspose, (index, entity, parameters) => new[]
+                {
+                    new MatrixParameter(index, Param.Matrices.WorldInverseTranspose,
+                        () => Matrix.Transpose(Matrix.Invert(entity.GetComponent<TransformComponent>().World)))
+                }
+            },
+        };
 
-                case EngineReference.EntityMatrixWorldInverse:
-                    return new[]
-                    {
-                        new MatrixParameter(parameterIndex, Param.Matrices.WorldInverse,
-                            () => Matrix.Invert(entity.GetComponent<TransformComponent>().World))
-                    };
-
-                case EngineReference.EntityMatrixWorldInverseTranspose:
-                    return new[]
-                    {
-                        new MatrixParameter(parameterIndex, Param.Matrices.WorldInverseTranspose,
-                            () => Matrix.Transpose(Matrix.Invert(entity.GetComponent<TransformComponent>().World)))
-                    };
-
-                case EngineReference.EntityBlurOffsetsWeights:
-                    bool isHorizontal = initializerParameters.Technique.Name == "GaussianBlurH";
-                    float texelWidth;
-                    float texelHeight;
-                    var cBlur = entity.GetComponent<BlurComponent>();
-                    if (isHorizontal)
-                    {
-                        texelWidth = 1.0f / (deviceSettings.PreferredBackBufferWidth * cBlur.DownScale);
-                        texelHeight = 0;
-                    }
-                    else
-                    {
-                        texelWidth = 0;
-                        texelHeight = 1.0f / (deviceSettings.PreferredBackBufferHeight * cBlur.DownScale);
-                    }
-                    Vector2[] offsets;
-                    float[] weights;
-                    Blur.ComputeParameters(texelWidth, texelHeight, out weights, out offsets);
-                    Vector4[] data = new Vector4[Blur.SampleCount];
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        data[i] = new Vector4(offsets[i].X, offsets[i].Y, weights[i], 0);
-                    }
-                    return new[] { new Float4ArrayParameter(parameterIndex, data.Length, Param.Floats.BlurOffsetsAndWeights, () => data) };
-
-                case EngineReference.EntityBloomThreshold:
-                    return new[]
-                    {
-                        new FloatParameter(parameterIndex, Param.Floats.BloomThreshold,
-                            () => entity.GetComponent<BloomComponent>().Threshold),
-                    };
-
-                case EngineReference.EntityBloomParameters:
-                    var cBloom = entity.GetComponent<BloomComponent>();
-                    return new[]
-                    {
-                        new Float4Parameter(parameterIndex, "BloomParameters",
-                            () => new Vector4(cBloom.Intensity,cBloom.BaseIntensity,cBloom.Saturation, cBloom.BaseSaturation))
-                    };
-
-                case EngineReference.EntityGlowStrength:
-                    return new[]
-                    {
-                        new FloatParameter(parameterIndex, Param.Floats.GlowStrength,
-                            () => entity.GetComponent<GlowComponent>().GlowStrength),
-                    };
-
-                case EngineReference.EntitySpritePosition:
-                    return new[]
-                    {
-                        new Float3Parameter(parameterIndex, Param.Vectors.SpritePosition,
-                            () => new Vector3(entity.GetComponent<SpriteComponent>().Position, 1)),
-                    };
-
-                case EngineReference.EntitySpriteSize:
-                    return new[]
-                    {
-                        new Float2Parameter(parameterIndex, Param.Vectors.SpriteSize,
-                            () => entity.GetComponent<SpriteComponent>().Size)
-                    };
-
-                default:
-                    throw new ArgumentException(string.Format("EngineReference: {0} not valid.", reference));
-            }
-        }
 
         private void InitializeTextures(Effect effect, IEntity source, InitializerParameters parameters)
         {
@@ -174,7 +112,7 @@ namespace Odyssey.Talos.Initializers
                 var textureDesc = row.TextureDesc;
                 if (!effect[textureDesc.ShaderType].HasTexture(textureDesc.Index))
                 {
-                    var texture = FindResource(source.Components, row.Shader.Name, row.TextureDesc.Texture);
+                    Texture texture = FindResource(source.Components, row.Shader.Name, row.TextureDesc.Texture);
                     if (texture == null)
                     {
                         LogEvent.Engine.Error("[{0}] is missing a component containing a [{1}] texture and tagged with [{2}].", source.Name,

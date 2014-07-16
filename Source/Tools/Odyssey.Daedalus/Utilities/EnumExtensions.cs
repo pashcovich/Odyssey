@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Utilities
+namespace Odyssey.Daedalus.Utilities
 {
     public static class EnumExtensions
     {

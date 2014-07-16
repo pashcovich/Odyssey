@@ -1,61 +1,68 @@
-﻿using Odyssey.Graphics;
-using Odyssey.Graphics.Effects;
-using Odyssey.Tools.ShaderGenerator.Serialization;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+﻿
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
 
-using Odyssey.Utilities;
-using SharpDX.Direct3D11;
-using SharpDX.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using Odyssey.Daedalus.Serialization;
+using Odyssey.Daedalus.Shaders.Structs;
+using SharpDX.Serialization;
+using EngineReference = Odyssey.Engine.EngineReference;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     [DataContract(IsReference = true)]
-    [KnownType("KnownTypes")]
     public abstract partial class Variable : IEquatable<Variable>, IVariable, IDataSerializable
     {
-        internal static Dictionary<string, int> VariableCounter = new Dictionary<string, int>();
+        #region Private Fields
 
-        private readonly Dictionary<string, string> markupData;
+        internal static readonly Dictionary<string, int> VariableCounter = new Dictionary<string, int>();
+        private string id;
+        private string comments;
+        private EngineReference engineReference;
+        private bool isConstant;
+        private Dictionary<string, string> markupData;
+        private string name;
+        private string semantic;
+        private Type type;
 
-        public virtual Type Type { get; set; }
+        #endregion Private Fields
 
-        public string Name { get; set; }
+        #region Protected Constructors
 
-        public string Comments { get; set; }
-
-        public ShaderReference ShaderReference { get; internal set; }
-
-        public string Semantic { get; set; }
-
-        public int? Index { get; set; }
-
-        public IStruct Owner { get; internal set; }
-
-        public bool IsConstant { get; set; }
-
-        public IEnumerable<KeyValuePair<string, string>> Markup { get { return markupData; } }
-
-        public virtual string FullName
+        protected Variable()
         {
-            get
-            {
-                if (Owner == null || Owner.Type == Type.ConstantBuffer)
-                    return Name;
-                else
-                    return String.Format("{0}.{1}", Owner.Name, Name);
-            }
+            markupData = new Dictionary<string, string>();
+            string type = GetType().Name;
+            if (!VariableCounter.ContainsKey(type))
+                VariableCounter.Add(type, 1);
+            
+            id = String.Format("{0}{1}", type, VariableCounter[type]++);
+            name = id;
         }
 
-        public bool IsEmpty
+        #endregion Protected Constructors
+
+        #region Public Properties
+
+        public string Id { get { return id; } }
+
+        public string Comments
         {
-            get { return this == default(Variable); }
+            get { return comments; }
+            set { comments = value; }
         }
 
         public virtual string Definition
@@ -85,34 +92,99 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
         }
 
-        protected Variable()
+        public EngineReference EngineReference
         {
-            markupData = new Dictionary<string, string>();
-            string type = GetType().Name;
-            if (!VariableCounter.ContainsKey(type))
-                VariableCounter.Add(type, 0);
-
-            Name = String.Format("{0}{1}", type, VariableCounter[type]++);
+            get { return engineReference; }
+            internal set { engineReference = value; }
         }
 
-        #region Equality
-
-        public bool Equals(Variable other)
+        public virtual string FullName
         {
-            return (Type == other.Type) && (Name == other.Name) && (Semantic == other.Semantic) && (Index == other.Index);
+            get
+            {
+                if (Owner == null || Owner.Type == Type.ConstantBuffer)
+                    return Name;
+                else
+                    return String.Format("{0}.{1}", Owner.Name, Name);
+            }
         }
 
-        public override int GetHashCode()
+        public bool HasMarkup
         {
-            return Type.GetHashCode() + Name.GetHashCode() + Semantic.GetHashCode() + Index.GetHashCode();
+            get { return markupData.Any(); }
         }
 
-        // <inheritdoc/>
-        public override bool Equals(object obj)
+        public int? Index { get; set; }
+
+        public bool IsConstant
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Variable)) return false;
-            return Equals((Variable)obj);
+            get { return isConstant; }
+            set { isConstant = value; }
+        }
+
+        IStruct IVariable.Owner
+        {
+            get { return Owner; }
+            set { Owner = value; }
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> Markup
+        {
+            get { return markupData; }
+        }
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public IStruct Owner { get; internal set; }
+
+        public string Semantic
+        {
+            get { return semantic; }
+            set { semantic = value; }
+        }
+
+        public virtual Type Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public static int ComponentsFromType(Type type)
+        {
+            int components = 0;
+            switch (type)
+            {
+                case Type.Float:
+                    components = 1;
+                    break;
+
+                case Type.Float2:
+                    components = 2;
+                    break;
+
+                case Type.Float3:
+                    components = 3;
+                    break;
+
+                case Type.Float4:
+                    components = 4;
+                    break;
+            }
+
+            return components;
+        }
+
+        public static bool operator !=(Variable left, Variable right)
+        {
+            return !(left == right);
         }
 
         public static bool operator ==(Variable left, Variable right)
@@ -132,27 +204,48 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             return left.Equals(right);
         }
 
-        public static bool operator !=(Variable left, Variable right)
-        {
-            return !(left == right);
-        }
-
-        #endregion Equality
-
-        public override string ToString()
-        {
-            return Definition;
-        }
-
-        public bool HasMarkup
-        {
-            get { return markupData.Any(); }
-        }
-
         [Pure]
         public bool ContainsMarkup(string key)
         {
             return markupData.ContainsKey(key);
+        }
+
+        public bool Equals(Variable other)
+        {
+            return (Type == other.Type) && (Name == other.Name) && (Semantic == other.Semantic) && (Index == other.Index);
+        }
+
+        // <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (obj.GetType() != typeof(Variable)) return false;
+            return Equals((Variable)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Type.GetHashCode() + Name.GetHashCode() + Semantic.GetHashCode() + Index.GetHashCode();
+        }
+
+        public string GetMarkupValue(string key)
+        {
+            Contract.Requires<ArgumentException>(ContainsMarkup(key), "Variable does not contain requested markup.");
+            return markupData[key];
+        }
+
+        public virtual void Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref id);
+            serializer.Serialize(ref name);
+            serializer.SerializeEnum(ref type);
+            serializer.Serialize(ref comments, SerializeFlags.Nullable);
+            serializer.Serialize(ref semantic, SerializeFlags.Nullable);
+            int index = Index ?? -1;
+            serializer.Serialize(ref index);
+            serializer.Serialize(ref isConstant);
+            serializer.Serialize(ref engineReference, SerializeFlags.Nullable);
+            serializer.Serialize(ref markupData, serializer.Serialize, serializer.Serialize);
         }
 
         public void SetMarkup(string key, string value)
@@ -172,17 +265,14 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                 SetMarkup(kvp.Key, kvp.Value);
         }
 
-        public string GetMarkupValue(string key)
+        public override string ToString()
         {
-            Contract.Requires<ArgumentException>(ContainsMarkup(key), "Variable does not contain requested markup.");
-            return markupData[key];
+            return Definition;
         }
 
-        internal static string GetRegister(IVariable variable)
-        {
-            string prefix = GetPrefix(variable.Type);
-            return String.Format("{0}{1}", prefix, variable.Index);
-        }
+        #endregion Public Methods
+
+        #region Internal Methods
 
         internal static string GetPrefix(Type type)
         {
@@ -226,17 +316,13 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             return prefix;
         }
 
-        private static System.Type[] KnownTypes()
+        internal static string GetRegister(IVariable variable)
         {
-            return new[] {typeof(Filter),
-                typeof(TextureAddressMode),
-                typeof(Comparison),
-                typeof(TextureReference),
-                typeof(EngineReference)
-            };
+            string prefix = GetPrefix(variable.Type);
+            return String.Format("{0}{1}", prefix, variable.Index);
         }
 
-        internal static IVariable InitVariable(string name, Type type, string semantic = null, string customType = Shaders.CustomType.None)
+        internal static IVariable InitVariable(string name, Type type, string semantic = null, string customType = CustomType.None)
         {
             IVariable variable = null;
             switch (type)
@@ -271,137 +357,70 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     break;
 
                 case Type.ConstantBuffer:
-                    return new ConstantBuffer { Name = name, Type = type };
+                    return new ConstantBuffer {Name = name, Type = type};
 
                 case Type.Texture2D:
                 case Type.Texture3D:
                 case Type.TextureCube:
-                    return new Texture() { Name = name, Type = type };
+                    return new Texture() {Name = name, Type = type};
 
                 case Type.Sampler:
                 case Type.SamplerComparisonState:
-                    return new Sampler() { Name = name, Type = type };
+                    return new Sampler() {Name = name, Type = type};
             }
 
             return variable;
         }
 
-        IStruct IVariable.Owner
+        internal static Variable ReadVariable(BinarySerializer serializer)
         {
-            get { return Owner; }
-            set { Owner = value; }
-        }
+            ShaderGraphSerializer sg = (ShaderGraphSerializer)serializer;
 
-        public virtual void Serialize(BinarySerializer serializer)
-        {
-            string name = Name;
-            serializer.Serialize(ref name);
-
-            Type type = Type;
-            serializer.SerializeEnum(ref type);
-
-            string comments = Comments;
-            serializer.Serialize(ref comments, SerializeFlags.Nullable);
-
-            string semantic = Semantic;
-            serializer.Serialize(ref semantic, SerializeFlags.Nullable);
-
-            int index = Index ?? -1;
-            serializer.Serialize(ref index);
-
-            bool isConstant = IsConstant;
-            serializer.Serialize(ref isConstant);
-
-            var shaderReference = ShaderReference;
-            serializer.Serialize(ref shaderReference, SerializeFlags.Nullable);
-
-            var markupKvp = markupData.ToList();
-            int count = markupKvp.Count;
-            serializer.Serialize(ref count);
-
-            for (int i = 0; i < count; i++)
+            bool isNewVar =false;
+            serializer.Serialize(ref isNewVar);
+            if (isNewVar)
             {
-                string key = String.Empty;
-                string value = String.Empty;
-
-                if (serializer.Mode == SerializerMode.Write)
-                {
-                    var kvp = markupKvp[i];
-                    key = kvp.Key;
-                    value = kvp.Value;
-                }
-
-                serializer.Serialize(ref key);
-                serializer.Serialize(ref value);
-
-                if (serializer.Mode == SerializerMode.Read)
-                    markupData.Add(key, value);
+                string outputType = null;
+                serializer.Serialize(ref outputType);
+                var variable = (Variable)Activator.CreateInstance(System.Type.GetType(outputType));
+                variable.Serialize(serializer);
+                sg.MarkVariableAsParsed(variable);
+                return variable;
             }
-
-            if (serializer.Mode == SerializerMode.Read)
+            else
             {
-                Name = name;
-                Type = type;
-                Comments = comments;
-                Semantic = semantic;
-                if (index != -1)
-                    Index = index;
-                IsConstant = isConstant;
-                ShaderReference = shaderReference;
-                //var sg = (ShaderGraphSerializer)serializer;
-
-                //if (owner == null) return;
-
-                //if (sg.IsParsed(owner.Name))
-                //    Owner = (Struct) sg.GetVariable(owner.Name);
-                //else
-                //{
-                //    Owner = owner;
-                //    sg.MarkAsParsed(owner);
-                //}
+                string varId = null;
+                serializer.Serialize(ref varId);
+                if (sg.IsVariableParsed(varId))
+                    return sg.GetVariable(varId);
+                else throw new InvalidOperationException(string.Format("Variable '{0}' not found", varId));
             }
         }
 
         internal static void WriteVariable(BinarySerializer serializer, IVariable variable)
         {
-            string outputType = variable.GetType().FullName;
-            Variable var = (Variable)variable;
-            serializer.Serialize(ref outputType);
-            var.Serialize(serializer);
-        }
+            ShaderGraphSerializer sg = (ShaderGraphSerializer)serializer;
 
-        internal static Variable ReadVariable(BinarySerializer serializer)
-        {
-            string outputType = null;
-            serializer.Serialize(ref outputType);
-            Variable variable = (Variable)Activator.CreateInstance(System.Type.GetType(outputType));
-            variable.Serialize(serializer);
-            return variable;
-        }
+            Variable v = (Variable)variable;
 
-        public static int ComponentsFromType(Type type)
-        {
-            int components = 0;
-            switch (type)
+            // Is this node new one or a reference to another one encountered before?
+            bool isNewVar = !sg.IsVariableParsed(v.Id);
+            serializer.Serialize(ref isNewVar);
+            if (!isNewVar)
             {
-                case Type.Float:
-                    components = 1;
-                    break;
-
-                case Type.Float2:
-                    components = 2;
-                    break;
-
-                case Type.Float3:
-                    components = 3;
-                    break;
-
-                case Type.Float4:
-                    components = 4;
-                    break;
+                string varName = v.Id;
+                serializer.Serialize(ref varName);
+            }
+            else
+            {
+                string outputType = v.GetType().FullName;
+                serializer.Serialize(ref outputType);
+                v.Serialize(serializer);
+                sg.MarkVariableAsParsed(v);
             }
 
-            return components;
         }
+
+        #endregion Internal Methods
     }
 }

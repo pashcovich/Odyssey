@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Daedalus.Shaders.Structs;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public class ArrayNode : NodeBase
     {
@@ -48,6 +48,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
         {
             base.SerializeProperties(serializer);
             serializer.Serialize(ref index);
+        }
+
+        protected override void SerializeVariables(BinarySerializer serializer)
+        {
+            base.SerializeVariables(serializer);
             if (serializer.Mode == SerializerMode.Write)
                 Variable.WriteVariable(serializer, Input);
             else

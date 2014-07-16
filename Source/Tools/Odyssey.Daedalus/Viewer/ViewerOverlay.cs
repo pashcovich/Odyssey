@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Tools.ShaderGenerator.Viewer
+namespace Odyssey.Daedalus.Viewer
 {
     public static class Viewer
     {

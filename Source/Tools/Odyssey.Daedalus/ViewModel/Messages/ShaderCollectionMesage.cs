@@ -4,7 +4,7 @@ using Odyssey.Graphics.Shaders;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel.Messages
+namespace Odyssey.Daedalus.ViewModel.Messages
 {
     public class ShaderCollectionMesage
     {

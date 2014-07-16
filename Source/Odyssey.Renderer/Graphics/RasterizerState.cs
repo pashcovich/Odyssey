@@ -80,42 +80,5 @@ namespace Odyssey.Graphics
             state.Name = name;
             return state;
         }
-
-        internal static RasterizerStateDescription Solid
-        {
-            get
-            {
-                return new RasterizerStateDescription
-                {
-                    CullMode = CullMode.Back,
-                    IsDepthClipEnabled = true,
-                    FillMode = FillMode.Solid,
-                    IsAntialiasedLineEnabled = true,
-                    IsFrontCounterClockwise = false,
-                    IsMultisampleEnabled = true,
-                    DepthBias = 100,
-                    DepthBiasClamp = 0.0f,
-                    SlopeScaledDepthBias = 1.0f,
-                };
-            }
-        }
-
-        internal static RasterizerStateDescription Wireframe
-        {
-            get
-            {
-                return
-                    new RasterizerStateDescription
-                    {
-                        CullMode = CullMode.None,
-                        IsDepthClipEnabled = true,
-                        FillMode = FillMode.Wireframe,
-                        IsAntialiasedLineEnabled = true,
-                        IsFrontCounterClockwise = false,
-                        IsMultisampleEnabled = true
-                    };
-            }
-
-        }
     }
 }

@@ -8,15 +8,15 @@ using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Utilities;
-using Odyssey.Tools.ShaderGenerator.ViewModel.Messages;
-using Shader = Odyssey.Tools.ShaderGenerator.Shaders.Shader;
+using Odyssey.Daedalus.Utilities;
+using Shader = Odyssey.Daedalus.Shaders.Shader;
 
 #endregion
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class TechniqueMappingViewModel : ViewModelBase
     {
@@ -168,7 +168,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             var pixelShader = shaderList.FirstOrDefault(s => s.Type == ShaderType.Pixel);
 
             TechniqueMapping.Key = new TechniqueKey(vertexShader.KeyPart.VertexShader, pixelShader.KeyPart.PixelShader,
-                Shader.FromFeatureLevel(vertexShader.FeatureLevel),
+                Shaders.Shader.FromFeatureLevel(vertexShader.FeatureLevel),
                 TechniqueMapping.Key.RasterizerState, TechniqueMapping.Key.BlendState,
                 TechniqueMapping.Key.DepthStencilState);
         }

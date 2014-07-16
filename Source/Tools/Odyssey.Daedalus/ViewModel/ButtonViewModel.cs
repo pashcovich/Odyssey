@@ -5,7 +5,7 @@ using GalaSoft.MvvmLight;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class ButtonViewModel : ViewModelBase
     {

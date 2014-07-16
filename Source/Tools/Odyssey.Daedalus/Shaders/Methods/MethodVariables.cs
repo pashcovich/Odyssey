@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+﻿namespace Odyssey.Daedalus.Shaders.Methods
 {
     public abstract partial class MethodBase
     {

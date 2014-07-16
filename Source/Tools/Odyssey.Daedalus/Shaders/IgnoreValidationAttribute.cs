@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class IgnoreValidationAttribute : Attribute

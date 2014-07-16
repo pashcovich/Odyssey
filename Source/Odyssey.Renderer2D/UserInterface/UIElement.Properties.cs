@@ -242,12 +242,6 @@ namespace Odyssey.UserInterface
             }
         }
 
-        public string Name
-        {
-            get { return base.Name; }
-            set { base.Name = value; }
-        }
-
         /// <summary>
         /// Gets or Sets the parent control. When a new parent control is set the absolute position
         /// of the child control is also computed.

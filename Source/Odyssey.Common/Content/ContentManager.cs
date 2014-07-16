@@ -64,9 +64,6 @@ namespace Odyssey.Content
 
             // Init ContentManager
             Resolvers.Add(new FileSystemResourceResolver(Global.Assets));
-            //Readers.Add(typeof(TextureContentReader), new TextureContentReader());
-            //Readers.Add(typeof(EffectReader),new EffectReader());
-            //Readers.Add(typeof(OmdReader),new OmdReader());
         }
 
         /// <summary>
@@ -222,6 +219,16 @@ namespace Odyssey.Content
         public IEnumerable<T> SelectAssets<T>()
         {
             return loadedAssets.Values.OfType<T>();
+        }
+
+        /// <summary>
+        /// Unloads and disposes an asset.
+        /// </summary>
+        /// <param name="assetName">The asset name</param>
+        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
+        public virtual bool Unload<T>(string assetName)
+        {
+            return Unload(typeof (T), assetName);
         }
 
         /// <summary>

@@ -1,14 +1,14 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Functions;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System.Runtime.Serialization;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     [DataContract]
     public class PhongShadowsPS : PhongPS
@@ -24,8 +24,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             inputStruct.Name = "input";
             InputStruct = inputStruct;
 
-            ConstantBuffer cbStatic = CBStatic;
-            ConstantBuffer cbFrame = CBFrame;
+            Structs.ConstantBuffer cbStatic = CBStatic;
+            Structs.ConstantBuffer cbFrame = CBFrame;
             Texture tShadow = Texture.ShadowMap;
             Sampler sShadowSampler = Sampler.MinMagMiLinearMirrorLessEqual;
             sShadowSampler.Name = "sShadowMap";
@@ -47,11 +47,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             
         }
 
-        public static ConstantBuffer CBStatic
+        public static Structs.ConstantBuffer CBStatic
         {
             get
             {
-                ConstantBuffer cbStatic = new ConstantBuffer
+                Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
                     UpdateType = UpdateType.SceneStatic,
@@ -64,11 +64,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             }
         }
 
-        public static new ConstantBuffer CBFrame
+        public static new Structs.ConstantBuffer CBFrame
         {
             get
             {
-                ConstantBuffer cbFrame = new ConstantBuffer
+                Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     UpdateType = UpdateType.SceneFrame,

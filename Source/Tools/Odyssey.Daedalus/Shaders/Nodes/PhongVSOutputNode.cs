@@ -1,11 +1,10 @@
-﻿using Odyssey.Engine;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-
+﻿using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     public class PhongVSOutputNode : VSNormalTexturedOutputNode
     {
@@ -44,7 +43,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
         protected override void RegisterNodes()
         {
             base.RegisterNodes();
-            Nodes.Add("WorldPosition", WorldPosition);
+            AddNode("WorldPosition", WorldPosition);
         }
     }
 
@@ -73,7 +72,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
         protected override void RegisterNodes()
         {
             base.RegisterNodes();
-            Nodes.Add("ShadowProjection", ShadowProjection);
+            AddNode("ShadowProjection", ShadowProjection);
         }
     }
 }

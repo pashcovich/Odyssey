@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using Odyssey.Content;
+using Odyssey.Daedalus.Shaders;
+using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Serialization
+namespace Odyssey.Daedalus.Serialization
 {
     public class ShaderGraphSerializer : BinarySerializer
     {
@@ -20,11 +21,15 @@ namespace Odyssey.Tools.ShaderGenerator.Serialization
         /// </summary>
         internal const string OSGB = "OSGB";
         internal const int Version = 0x100;
-        private Dictionary<string, Variable> parsedVariables;
-        private Dictionary<string, NodeBase> parsedNodes;
+        private readonly Dictionary<string, Variable> parsedVariables;
+        private readonly Dictionary<string, NodeBase> parsedNodes;
+        private readonly Dictionary<string, MethodBase> parsedMethods;
 
         public ShaderGraphSerializer(Stream stream, SerializerMode mode) : base(stream, mode)
         {
+            parsedVariables = new Dictionary<string, Variable>();
+            parsedNodes = new Dictionary<string, NodeBase>();
+            parsedMethods = new Dictionary<string, MethodBase>();
             AllowIdentity = true;
         }
 
@@ -58,15 +63,13 @@ namespace Odyssey.Tools.ShaderGenerator.Serialization
         public IEnumerable<TechniqueDescription> Load(Stream stream)
         {
             var techniques = new List<TechniqueDescription>();
-            parsedVariables = new Dictionary<string, Variable>();
-            parsedNodes = new Dictionary<string, NodeBase>();
             Read(ref techniques);
             return techniques;
         }
 
         public void MarkVariableAsParsed(Variable variable)
         {
-            parsedVariables.Add(variable.Name, variable);
+            parsedVariables.Add(variable.Id, variable);
         }
 
         public bool IsVariableParsed(string name)
@@ -94,5 +97,26 @@ namespace Odyssey.Tools.ShaderGenerator.Serialization
             return parsedNodes[id];
         }
 
+        public void MarkMethodAsParsed(MethodBase method)
+        {
+            parsedMethods.Add(method.Name, method);
+        }
+
+        public bool IsMethodParsed(string name)
+        {
+            return parsedMethods.ContainsKey(name);
+        }
+
+        public MethodBase GetMethod(string name)
+        {
+            return parsedMethods[name];
+        }
+
+        public void Clear()
+        {
+            parsedVariables.Clear();
+            parsedNodes.Clear();
+            parsedMethods.Clear();
+        }
     }
 }

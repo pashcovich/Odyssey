@@ -67,6 +67,7 @@
     <Compile Include="Talos\Initializers\ApplicationInitializer.cs" />
     <Compile Include="Talos\Initializers\IInitializer.cs" />
     <Compile Include="Talos\Initializers\InitializerParameters.cs" />
+    <Compile Include="Talos\Initializers\EffectInitializer.cs" />
     <Compile Include="Talos\Maps\SystemEventArgs.cs" />
     <Compile Include="Talos\Messages\CameraMessage.cs" />
     <Compile Include="Talos\Messages\LightMessage.cs" />

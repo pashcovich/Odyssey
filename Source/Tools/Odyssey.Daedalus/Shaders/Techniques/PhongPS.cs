@@ -1,16 +1,16 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Functions;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System.Runtime.Serialization;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     public class PhongCubeMapPS : PhongPS
     {
@@ -80,9 +80,9 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             InputStruct = input;
             OutputStruct = Struct.PixelShaderOutput;
 
-            ConstantBuffer cbStatic = CBLight;
-            ConstantBuffer cbFrame = CBFrame;
-            ConstantBuffer cbInstance = ConstantBuffer.CBMaterial;
+            Structs.ConstantBuffer cbStatic = CBLight;
+            Structs.ConstantBuffer cbFrame = CBFrame;
+            Structs.ConstantBuffer cbInstance = ConstantBuffer.CBMaterial;
 
             Struct pointLight = (Struct)cbStatic[Param.Struct.PointLight];
             Struct material = (Struct)cbInstance[Param.Struct.Material];
@@ -160,11 +160,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             };
         }
 
-        public static ConstantBuffer CBFrame
+        public static Structs.ConstantBuffer CBFrame
         {
             get
             {
-                ConstantBuffer cbFrame = new ConstantBuffer
+                Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     UpdateType = UpdateType.SceneFrame,
@@ -174,11 +174,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             }
         }
 
-        public static ConstantBuffer CBLight
+        public static Structs.ConstantBuffer CBLight
         {
             get
             {
-                ConstantBuffer cbStatic = new ConstantBuffer
+                Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
                     UpdateType = UpdateType.SceneFrame,

@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     [DataContract]
     public class VSNormalTexturedOutputNode : VSTexturedOutputNode
@@ -31,7 +31,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
         protected override void RegisterNodes()
         {
             base.RegisterNodes();
-            Nodes.Add("Normal", Normal);
+            AddNode("Normal", Normal);
         }
         
     }

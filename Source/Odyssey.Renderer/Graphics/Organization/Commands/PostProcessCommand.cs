@@ -39,6 +39,7 @@ namespace Odyssey.Graphics.Organization.Commands
             base.PreRender();
 
             DirectXDevice device = DeviceService.DirectXDevice;
+            device.SetCurrentEffect(Effect);
             device.InputAssembler.InputLayout = Effect.InputLayout;
             device.SetPixelShaderSampler(0, device.SamplerStates.Default);
             for (int i = 0; i < Inputs.Count; i++)
@@ -57,7 +58,6 @@ namespace Odyssey.Graphics.Organization.Commands
         public override void Render()
         {
             DirectXDevice device = DeviceService.DirectXDevice;
-            device.CurrentEffect = Effect;
             foreach (Shader shader in Effect)
                 shader.Apply(Effect.Name, UpdateType.SceneFrame);
 

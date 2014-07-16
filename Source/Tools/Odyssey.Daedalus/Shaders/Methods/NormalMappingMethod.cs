@@ -2,7 +2,7 @@
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public class NormalMappingMethod : MethodBase
     {

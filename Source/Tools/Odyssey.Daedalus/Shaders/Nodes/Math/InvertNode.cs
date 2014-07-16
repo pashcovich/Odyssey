@@ -1,5 +1,5 @@
-﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
+﻿using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Graphics.Shaders;
 using SharpDX.Serialization;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
+namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {
     public class InvertNode : NodeBase
     {
@@ -45,7 +45,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Input", Input);
+            AddNode("Input", Input);
         }
     }
 }

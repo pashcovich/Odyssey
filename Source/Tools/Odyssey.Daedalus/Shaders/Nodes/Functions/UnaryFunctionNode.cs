@@ -1,12 +1,12 @@
-﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
+﻿using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Graphics.Shaders;
 using SharpDX.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
+namespace Odyssey.Daedalus.Shaders.Nodes.Functions
 {
     public class UnaryFunctionNode : NodeBase
     {
@@ -15,17 +15,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
         public IMethod Function { get; set; }
 
         [DataMember]
-        [SupportedType(Type.Float)]
-        [SupportedType(Type.Float2)]
-        [SupportedType(Type.Float3)]
-        [SupportedType(Type.Float4)]
+        [SupportedType(Type.Vector)]
         [SupportedType(Type.Matrix)]
         public INode Input1 { get; set; }
 
-        [SupportedType(Type.Float)]
-        [SupportedType(Type.Float2)]
-        [SupportedType(Type.Float3)]
-        [SupportedType(Type.Float4)]
+        [SupportedType(Type.Vector)]
         public override IVariable Output
         {
             get
@@ -70,7 +64,15 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Input1", Input1);
+            AddNode("Input1", Input1);
+        }
+
+        protected override void SerializeMethods(BinarySerializer serializer)
+        {
+            base.SerializeProperties(serializer);
+            if (serializer.Mode == SerializerMode.Write)
+                MethodBase.WriteMethod(serializer, Function);
+            else Function = MethodBase.ReadMethod(serializer);
         }
     }
 }

@@ -2,8 +2,8 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Odyssey.Tools.ShaderGenerator.View;
-using Odyssey.Tools.ShaderGenerator.ViewModel.Messages;
+using Odyssey.Daedalus.View;
+using Odyssey.Daedalus.ViewModel.Messages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -12,7 +12,7 @@ using WindowsApplication = System.Windows.Application;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     /// <summary>
     /// This class contains properties that the main View can data bind to.

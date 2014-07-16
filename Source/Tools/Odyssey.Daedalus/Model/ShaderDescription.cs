@@ -1,12 +1,12 @@
 ﻿using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Shader = Odyssey.Tools.ShaderGenerator.Shaders.Shader;
+using Shader = Odyssey.Daedalus.Shaders.Shader;
 
-namespace Odyssey.Tools.ShaderGenerator.Model
+namespace Odyssey.Daedalus.Model
 {
     public class ShaderDescription
     {
-        public Shader Shader { get; internal set; }
+        public Shaders.Shader Shader { get; internal set; }
         public string Name { get { return Shader.Name; } }
         public FeatureLevel FeatureLevel { get { return Shader.FeatureLevel; } set { Shader.FeatureLevel = value; } }
         public CompilationStatus CompilationStatus { get; set; }

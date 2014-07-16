@@ -4,12 +4,12 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
+namespace Odyssey.Daedalus.Shaders.Nodes.Functions
 {
     public class FunctionNode : MultipleInputsNodeBase
     {
@@ -73,6 +73,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
         {
             base.SerializeProperties(serializer);
             serializer.SerializeEnum(ref returnType);
+        }
+
+        protected override void SerializeMethods(BinarySerializer serializer)
+        {
+            base.SerializeMethods(serializer);
+            
             MethodBase methodBase = (MethodBase)method ;
             methodBase.Serialize(serializer);
 

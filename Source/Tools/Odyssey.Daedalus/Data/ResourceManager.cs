@@ -1,15 +1,18 @@
-﻿using Odyssey.Tools.ShaderGenerator;
-using Odyssey.Tools.ShaderGenerator.Model;
-using Odyssey.Tools.ShaderGenerator.Shaders.Techniques;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
+using System.Windows.Navigation;
+using Odyssey.Daedalus.Shaders.Techniques;
+using Odyssey.Graphics.Shaders;
+using SharpDX.Serialization;
+using ShaderDescription = Odyssey.Daedalus.Model.ShaderDescription;
 
-namespace ShaderGenerator.Data
+namespace Odyssey.Daedalus.Data
 {
     public class ResourceManager
     {
-        public ShaderDescription[] Load()
+        public Model.ShaderDescription[] Load()
         {
+            ReferenceSerializer.Serialize(@"C:\Users\Adalberto\Documents\Visual Studio 2013\Projects\Odyssey\Source\Tools\Odyssey.Daedalus\Assets\Odyssey.refs");
             return new[] {
                 //new ShaderDescription {Shader =  new NormalMappingVS()},
                 //new ShaderDescription {Shader =  new NormalMappingPS()},
@@ -18,17 +21,14 @@ namespace ShaderGenerator.Data
                 //new ShaderDescription { Shader = new SpriteDebugPS()},
                 //new ShaderDescription() { Shader = new SpriteVS()},
                 //new ShaderDescription() { Shader= new SpriteDebugPS()},
+
                 //new ShaderDescription() { Shader = new FullScreenQuadPS()},
-                
                 //new ShaderDescription() {Shader = new FullScreenQuadVS()},
-                //new ShaderDescription() {Shader = new GaussianBlurVerticalVS()},
-                //new ShaderDescription() {Shader = new GaussianBlurVerticalPS()},
-                //new ShaderDescription() {Shader = new GaussianBlurHorizontalVS()},
-                //new ShaderDescription() {Shader = new GaussianBlurHorizontalPS()},
                 //new ShaderDescription(){Shader = new GaussianBlurPS()}, 
                 //new ShaderDescription() {Shader = new GlowPS()}, 
                 //new ShaderDescription(){Shader = new BloomExtractPS()}, 
                 //new ShaderDescription(){Shader = new BloomCombinePS()}, 
+
                 //new ShaderDescription() { Shader= new PhongVS()},
                 //new ShaderDescription() { Shader= new PhongInstanceVS()},
                 //////new ShaderDescription() { Shader= new PhongShadowsVS()},
@@ -38,50 +38,23 @@ namespace ShaderGenerator.Data
                 //new ShaderDescription() { Shader= new PhongDiffuseMapPS()},
                 //new ShaderDescription() { Shader= new PhongCubeMapPS()},
 
-                new ShaderDescription() {Shader =  new WireframeVS()},
-                new ShaderDescription() {Shader =  new WireframePS()},
+                new Model.ShaderDescription() {Shader =  new WireframeVS()},
+                new Model.ShaderDescription() {Shader =  new WireframePS()},
 
             };
         }
 
-        public static void Serialize<T>(string fullPath, T shaderData, System.Type[] derivedTypes = null)
+        public static void Serialize(string fullPath, ShaderCollection shaderCollection)
         {
-            FileStream fs = new FileStream(fullPath, FileMode.Create);
-            try
-            {
-                DataContractSerializer dcs = new DataContractSerializer(typeof(T), derivedTypes);
-                dcs.WriteObject(fs, shaderData);
-            }
-            catch (SerializationException e)
-            {
-                Log.Daedalus.Error(e.Message);
-                throw;
-            }
-            finally
-            {
-                fs.Close();
-            }
+            ShaderCollection.Save(fullPath, shaderCollection);
         }
 
-        public static T Deserialize<T>(string fullpath, System.Type[] derivedTypes = null)
+        public static void Read(string fullPath, out ShaderCollection shaderCollection)
         {
-            FileStream fs = new FileStream(fullpath, FileMode.Open);
-            T data;
-            try
-            {
-                DataContractSerializer dcs = new DataContractSerializer(typeof(T), derivedTypes);
-                data = (T)dcs.ReadObject(fs);
-            }
-            catch (SerializationException e)
-            {
-                Log.Daedalus.Error(e.Message);
-                throw;
-            }
-            finally
-            {
-                fs.Close();
-            }
-            return data;
+
+            shaderCollection = ShaderCollection.Load(fullPath);
         }
+
+        
     }
 }

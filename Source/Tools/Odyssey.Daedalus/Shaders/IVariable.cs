@@ -1,8 +1,10 @@
-﻿using Odyssey.Graphics;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+﻿using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Graphics;
+using Odyssey.Graphics.Effects;
 using System.Collections.Generic;
+using EngineReference = Odyssey.Engine.EngineReference;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public interface IVariable
     {
@@ -15,7 +17,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         string Semantic { get; }
         int? Index { get; set; }
         IStruct Owner { get; set; }
-        ShaderReference ShaderReference { get; }
+        EngineReference EngineReference { get; }
 
         string GetMarkupValue(string key);
         bool HasMarkup { get; }

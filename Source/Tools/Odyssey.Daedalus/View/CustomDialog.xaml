@@ -1,4 +1,4 @@
-﻿<Window x:Class="Odyssey.Tools.ShaderGenerator.View.CustomDialog"
+﻿<Window x:Class="Odyssey.Daedalus.View.CustomDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="CustomDialog" Height="160" Width="320" ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize" WindowStyle="ToolWindow" Loaded="Window_Loaded">

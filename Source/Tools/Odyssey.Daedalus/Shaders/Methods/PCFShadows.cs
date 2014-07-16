@@ -3,7 +3,7 @@ using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public class PCFShadows : MethodBase
     {

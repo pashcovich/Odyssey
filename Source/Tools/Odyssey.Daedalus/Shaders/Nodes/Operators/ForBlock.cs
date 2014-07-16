@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public enum ConditionType
     {
@@ -54,8 +54,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("StartCondition",StartCondition);
-            Nodes.Add("EndCondition",EndCondition);
+            AddNode("StartCondition",StartCondition);
+            AddNode("EndCondition",EndCondition);
         }
 
         internal static string ConvertCondition(ConditionType type)

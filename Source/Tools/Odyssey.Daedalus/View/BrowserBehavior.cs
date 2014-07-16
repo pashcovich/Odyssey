@@ -20,7 +20,7 @@ using System.Windows.Controls;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.View
+namespace Odyssey.Daedalus.View
 {
     public class BrowserBehavior
     {

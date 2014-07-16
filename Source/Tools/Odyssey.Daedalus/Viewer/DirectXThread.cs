@@ -6,7 +6,7 @@ using System.Windows;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.Viewer
+namespace Odyssey.Daedalus.Viewer
 {
     public class DirectXThread
     {

@@ -1,13 +1,13 @@
-﻿using Odyssey.Graphics.Effects;
+﻿using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+using Odyssey.Daedalus.Shaders.Structs;
 using SharpDX.Serialization;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
+namespace Odyssey.Daedalus.Shaders.Nodes.Functions
 {
     [DataContract]
     public class PhongLightingNode : NodeBase
@@ -181,14 +181,14 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Light", Light);
-            Nodes.Add("LightDirection", LightDirection);
-            Nodes.Add("Material", Material);
-            Nodes.Add("Normal", Normal);
+            AddNode("Light", Light);
+            AddNode("LightDirection", LightDirection);
+            AddNode("Material", Material);
+            AddNode("Normal", Normal);
             if (DiffuseMap)
-                Nodes.Add("DiffuseMapSample", DiffuseMapSample);
+                AddNode("DiffuseMapSample", DiffuseMapSample);
             if (Shadows)
-                Nodes.Add("ShadowMapSample", ShadowMapSample);
+                AddNode("ShadowMapSample", ShadowMapSample);
         }
     }
 }

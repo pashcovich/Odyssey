@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Odyssey.Tools.ShaderGenerator.Properties {
+namespace Odyssey.Daedalus.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -38,7 +38,8 @@ namespace Odyssey.Tools.ShaderGenerator.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SM_2_0")]
-        public global::Odyssey.Graphics.Effects.ShaderModel DefaultShaderModel {
+        public global::Odyssey.Graphics.Effects.ShaderModel DefaultShaderModel
+        {
             get {
                 return ((global::Odyssey.Graphics.Effects.ShaderModel)(this["DefaultShaderModel"]));
             }

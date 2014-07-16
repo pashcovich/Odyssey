@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public class CastNode : NodeBase
     {
+        private string[] mask;
+
         #region Static Methods
 
         public static CastNode WorldInverseTransposeFloat3x3
@@ -52,7 +54,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
         public override IVariable Output { get; set; }
 
         [IgnoreValidation(true)]
-        public string[] Mask { get; set; }
+        public string[] Mask
+        {
+            get { return mask; }
+            set { mask = value; }
+        }
 
         public override string Access()
         {
@@ -129,7 +135,13 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Input", Input);
+            AddNode("Input", Input);
+        }
+
+        protected override void SerializeProperties(BinarySerializer serializer)
+        {
+            base.SerializeProperties(serializer);
+            serializer.Serialize(ref mask, serializer.Serialize);
         }
     }
 }

@@ -46,6 +46,7 @@
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentReaderAttribute.cs" />
     <Compile Include="Content\ContentReaderParameters.cs" />
+    <Compile Include="Content\ReferenceReader.cs" />
     <Compile Include="Content\FileSystemResourceResolver.cs" />
     <Compile Include="Content\IAssetProvider.cs" />
     <Compile Include="Content\IByteSize.cs" />
@@ -53,12 +54,16 @@
     <Compile Include="Content\IResourceResolver.cs" />
     <Compile Include="Engine\ApplicationTime.cs" />
     <Compile Include="Engine\DisplayMode.cs" />
+    <Compile Include="Engine\EngineReference.cs" />
+    <Compile Include="Engine\EngineReferenceCollection.cs" />
     <Compile Include="Engine\IDirect2DDevice.cs" />
     <Compile Include="Engine\IDirectXDeviceService.cs" />
+    <Compile Include="Engine\IReferenceService.cs" />
     <Compile Include="Engine\ISwapChainPresenterService.cs" />
     <Compile Include="Engine\ITimeService.cs" />
     <Compile Include="Engine\IWindowService.cs" />
     <Compile Include="Engine\PlatformTypeAttribute.cs" />
+    <Compile Include="Engine\Reference.cs" />
     <Compile Include="Engine\RequiredServiceAttribute.cs" />
     <Compile Include="Engine\SimpleDeviceManager.cs" />
     <Compile Include="Graphics\Effects\Enums.cs" />

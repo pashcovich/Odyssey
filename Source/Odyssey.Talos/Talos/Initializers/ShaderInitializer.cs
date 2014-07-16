@@ -1,4 +1,6 @@
-﻿using Odyssey.Engine;
+﻿using System.Linq.Expressions;
+using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities.Logging;
@@ -50,7 +52,7 @@ namespace Odyssey.Talos.Initializers
             var initializers = InitializerMap[effect.Name].Keys.ToList();
             foreach (Type type in initializers)
             {
-                IInitializer initializer = (IInitializer)Activator.CreateInstance(type);
+                IInitializer initializer = (IInitializer)Activator.CreateInstance(type, new object[]{services});
                 initializer.SetupInitialization(this);
             }
         }
@@ -79,15 +81,15 @@ namespace Odyssey.Talos.Initializers
             if (InitializerMap.ContainsKey(effect.Name))
                 return;
 
-            EngineReference[] references = (from shader in technique.Shaders
+            Engine.EngineReference[] references = (from shader in technique.Shaders
                                             from cbDesc in shader.ConstantBuffers
                                             from kvp in cbDesc.References
                                             select kvp.Value).ToArray();
             InitializerMap.Add(effect.Name, new Dictionary<Type, bool>());
 
             foreach (Type t in from t in RegisteredInitializers
-                               let initializer = (IInitializer)Activator.CreateInstance(t)
-                               let result = initializer.AcceptedReferences.Intersect(references)
+                               let initializer = (IInitializer)Activator.CreateInstance(t, new object[] {services})
+                               let result = initializer.AcceptedReferences.Intersect(references, Engine.EngineReference.Comparer)
                                where result.Any()
                                select t)
             {

@@ -12,7 +12,7 @@
         public const string Assets = "Assets/";
         public const string ModelPath = Assets + "Models/";
         public const string EffectPath = Assets + "Effects/";
-        public const string XmlPath = Assets + "Data/";
+        public const string DataPath = Assets + "Data/";
         public const string TexturePath = Assets + "Textures/";
         public const string GUIPath = Assets + "GUI/";
 

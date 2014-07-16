@@ -133,29 +133,5 @@ namespace Odyssey.Graphics
             }
         }
 
-        internal static DepthStencilStateDescription EnabledComparisonLessEqual
-        {
-            get
-            {
-                var description = DepthStencilStateDescription.Default();
-                description.IsDepthEnabled = true;
-                description.DepthWriteMask = DepthWriteMask.All;
-                description.DepthComparison = Comparison.LessEqual;;
-                return description;
-            }
-        }
-
-        internal static DepthStencilStateDescription DepthWriteDisabled
-        {
-            get
-            {
-                var description = DepthStencilStateDescription.Default();
-                description.IsDepthEnabled = false;
-                description.IsStencilEnabled = false;
-                description.DepthWriteMask = DepthWriteMask.All;
-                description.DepthComparison = Comparison.Always;
-                return description;
-            }
-        }
     }
 }

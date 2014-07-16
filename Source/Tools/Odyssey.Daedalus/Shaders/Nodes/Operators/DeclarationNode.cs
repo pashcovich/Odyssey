@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text;
 using System.Threading.Tasks;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
 using Odyssey.Utilities.Collections;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public class DeclarationNode : MultipleInputsNodeBase
     {

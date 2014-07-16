@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public interface IValueVariable
     {

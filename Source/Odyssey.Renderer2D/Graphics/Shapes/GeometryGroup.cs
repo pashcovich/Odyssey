@@ -34,7 +34,8 @@ namespace Odyssey.Graphics.Shapes
         protected GeometryGroup(Direct2DDevice device, FillMode fillMode, SharpDX.Direct2D1.Geometry[] geometries)
             : base(device)
         {
-            Contract.Requires<InvalidOperationException>(geometries.Any(), "At least one geometry needed.");
+            Contract.Requires<ArgumentNullException>(geometries!=null, "geometries");
+            Contract.Requires<InvalidOperationException>(geometries.Length>0, "At least one geometry needed.");
             Resource = new SharpDX.Direct2D1.GeometryGroup(Device, GetD2DFlag(fillMode), geometries.ToArray());
         }
 

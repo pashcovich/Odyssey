@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.View.Controls
+namespace Odyssey.Daedalus.View.Controls
 {
     public class WaitCursor : IDisposable
     {

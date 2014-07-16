@@ -885,9 +885,7 @@ namespace Odyssey.Engine
 
             OnInitializeDeviceSettings(this, new InitializeDeviceSettingsEventArgs(newInfo));
 
-            // this.ValidateGraphicsDeviceInformation(newInfo);
             directXDevice = deviceFactory.CreateDevice(newInfo);
-            application.Services.AddService(typeof (DirectXDevice), DirectXDevice);
 
             DirectXDevice.Disposing += GraphicsDevice_Disposing;
 

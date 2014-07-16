@@ -6,18 +6,19 @@ using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Nodes;
+using SharpDX;
+using Buffer = Odyssey.Graphics.Buffer;
+using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
     internal class CameraInitializer: Initializer<IEntity>
     {
 
-        public CameraInitializer()
-            : base(new[] { 
-            EngineReference.CameraVectorPosition,
-            EngineReference.CameraMatrixView, EngineReference.CameraMatrixProjection})
+        public CameraInitializer(IServiceRegistry services)
+            : base(services, Reference.Group.Camera)
         {
-        }
+        } 
 
         public override void SetupInitialization(ShaderInitializer initializer)
         {
@@ -43,31 +44,33 @@ namespace Odyssey.Talos.Initializers
             return cb.ContainsMetadata(Param.Properties.CameraId);
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, EngineReference reference, InitializerParameters initializerParameters)
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
         {
             string cameraIdValue = cbParent.Get(Param.Properties.CameraId);
             int cameraId = Int32.Parse(cameraIdValue);
 
-            IEnumerable<IParameter> parameters = CreateParameter(entity, cameraId, parameterIndex, reference);
-            return parameters;
+            if (!ReferenceActions.ContainsKey(reference))
+                throw new InvalidOperationException(string.Format("[{0}]: Camera parameter not valid", reference));
+
+            return ReferenceActions[reference](parameterIndex, entity, initializerParameters);
         }
 
-        IEnumerable<IParameter> CreateParameter(IEntity entity, int cameraId, int parameterIndex, EngineReference reference)
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
         {
-            switch (reference)
             {
-                case EngineReference.CameraVectorPosition:
-                    return new[] { new Float3Parameter(parameterIndex, Param.Vectors.CameraPosition, () => entity.GetComponent<PositionComponent>().Position) };
+                Reference.Vector.Position, (index, entity, parameters) => new[]
+                {new Float3Parameter(index, Param.Vectors.CameraPosition, () => entity.GetComponent<PositionComponent>().Position)}
+            },
+            {
+                Reference.Matrix.View, (index, entity, parameters) => new[]
+                {new MatrixParameter(index, Param.Matrices.View, () => entity.GetComponent<CameraComponent>().View)}
+            },
+            {
+                Reference.Matrix.Projection, (index, entity, parameters) => new[]
+                {new MatrixParameter(index, Param.Matrices.Projection, () => entity.GetComponent<CameraComponent>().Projection)}
+            },
 
-                case EngineReference.CameraMatrixView:
-                    return new[] { new MatrixParameter(parameterIndex, Param.Matrices.View, () => entity.GetComponent<CameraComponent>().View) };
+        };
 
-                case EngineReference.CameraMatrixProjection:
-                    return new[] { new MatrixParameter(parameterIndex, Param.Matrices.Projection, () => entity.GetComponent<CameraComponent>().Projection) };
-
-                default:
-                    throw new InvalidOperationException(string.Format("[{0}]: camera parameter not valid", reference));
-            }
-        }
     }
 }

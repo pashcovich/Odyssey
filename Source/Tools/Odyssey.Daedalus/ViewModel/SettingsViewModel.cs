@@ -1,10 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Odyssey.Tools.ShaderGenerator.View.Controls;
+using Odyssey.Daedalus.View.Controls;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
 
 

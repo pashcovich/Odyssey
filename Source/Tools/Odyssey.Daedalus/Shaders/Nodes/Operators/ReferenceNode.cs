@@ -1,11 +1,11 @@
-﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
+﻿using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Graphics.Shaders;
 using SharpDX.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
+namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
     public class ReferenceNode : NodeBase
     {
@@ -60,7 +60,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators
         {
         }
 
-        protected override void SerializeProperties(BinarySerializer serializer)
+        protected override void SerializeVariables(BinarySerializer serializer)
         {
             base.SerializeProperties(serializer);
             if (serializer.Mode == SerializerMode.Write)

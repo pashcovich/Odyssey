@@ -1,13 +1,13 @@
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Functions;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     public class FullScreenQuadVS : Shader
     {
@@ -21,7 +21,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             InputStruct = Struct.VertexPositionNormalTexture;
             OutputStruct = SpriteVS.VSOut;
 
-            ConstantBuffer cbStatic = SpriteVS.CBStatic;
+            Structs.ConstantBuffer cbStatic = SpriteVS.CBStatic;
             Add(cbStatic);
 
             DeclarationNode nClip = ClipSpaceTransformNode.FullScreenNode(InputStruct, cbStatic[Param.Vectors.ViewportSize]);

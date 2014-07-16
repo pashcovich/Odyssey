@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfEngineReference xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Odyssey.Engine">
+	<EngineReference Type="Application" Value="ViewportSize" />
+	<EngineReference Type="Camera" Value="MatrixProjection" />
+	<EngineReference Type="Camera" Value="MatrixView" />
+	<EngineReference Type="Camera" Value="VectorPosition" />
+	<EngineReference Type="Effect" Value="BloomParameters" />
+	<EngineReference Type="Effect" Value="BloomThreshold" />
+	<EngineReference Type="Effect" Value="BlurOffsetsWeights" />
+	<EngineReference Type="Effect" Value="BlurOffsetsWeights" />
+	<EngineReference Type="Effect" Value="SpritePosition" />
+	<EngineReference Type="Effect" Value="SpriteSize" />
+	<EngineReference Type="Entity" Value="MatrixWorld" />
+	<EngineReference Type="Entity" Value="MatrixWorldInverse" />
+	<EngineReference Type="Entity" Value="MatrixWorldInverseTranspose" />
+	<EngineReference Type="Light" Value="MatrixProjection" />
+	<EngineReference Type="Light" Value="MatrixView" />
+	<EngineReference Type="Light" Value="PointPS" />
+	<EngineReference Type="Light" Value="PointVS" />
+	<EngineReference Type="Light" Value="VectorDirection" />
+	<EngineReference Type="Material" Value="Diffuse" />
+	<EngineReference Type="Material" Value="Material" />
+</ArrayOfEngineReference>

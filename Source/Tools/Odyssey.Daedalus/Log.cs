@@ -1,8 +1,8 @@
-﻿using Odyssey.Tools.ShaderGenerator.Properties;
+﻿using Odyssey.Daedalus.Properties;
 using Odyssey.Utilities.Logging;
 using System.IO;
 
-namespace Odyssey.Tools.ShaderGenerator
+namespace Odyssey.Daedalus
 {
     public static class Log
     {

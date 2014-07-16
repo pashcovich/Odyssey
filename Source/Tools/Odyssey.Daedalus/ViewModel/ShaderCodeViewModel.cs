@@ -1,13 +1,13 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Odyssey.Daedalus.Model;
+using Odyssey.Daedalus.View;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Model;
-using Odyssey.Tools.ShaderGenerator.View;
 using System.Collections.ObjectModel;
-using Shader = Odyssey.Tools.ShaderGenerator.Shaders.Shader;
+using Shader = Odyssey.Daedalus.Shaders.Shader;
 
-namespace Odyssey.Tools.ShaderGenerator.ViewModel
+namespace Odyssey.Daedalus.ViewModel
 {
     public class ShaderCodeViewModel : ViewModelBase, IShaderViewModel
     {
@@ -57,10 +57,10 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
         }
         public ShaderModel ShaderModel
         {
-            get { return Shader.FromFeatureLevel(featureLevel); }
+            get { return Shaders.Shader.FromFeatureLevel(featureLevel); }
             set
             {
-                featureLevel = Shader.FromShaderModel(value, Type);
+                featureLevel = Shaders.Shader.FromShaderModel(value, Type);
                 RaisePropertyChanged("ShaderModel");
             }
         }
@@ -97,7 +97,7 @@ namespace Odyssey.Tools.ShaderGenerator.ViewModel
             {
                 shaderType = value; 
                 RaisePropertyChanged("Type");
-                FeatureLevel = Shader.FromShaderModel(ShaderModel, shaderType);
+                FeatureLevel = Shaders.Shader.FromShaderModel(ShaderModel, shaderType);
             }
         }
 

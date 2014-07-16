@@ -1,14 +1,14 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System.Runtime.Serialization;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
+namespace Odyssey.Daedalus.Shaders.Techniques
 {
     public class PhongInstanceVS : Shader
     {
@@ -25,7 +25,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             InputStruct = instanceStruct;
             OutputStruct = Struct.VertexPositionNormalTextureOut;
 
-            ConstantBuffer cbFrame = ConstantBuffer.CBPerFrame;
+            Structs.ConstantBuffer cbFrame = ConstantBuffer.CBPerFrame;
             Add(cbFrame);
 
             IVariable position = InputStruct[Param.SemanticVariables.ObjectPosition];
@@ -103,8 +103,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             InputStruct = Struct.VertexPositionNormalTexture;
             OutputStruct = Struct.VertexPositionNormalTextureOut;
 
-            ConstantBuffer cbFrame = ConstantBuffer.CBPerFrame;
-            ConstantBuffer cbInstance = CBPerInstance;
+            Structs.ConstantBuffer cbFrame = ConstantBuffer.CBPerFrame;
+            Structs.ConstantBuffer cbInstance = CBPerInstance;
             Add(cbFrame);
             Add(cbInstance);
 
@@ -149,11 +149,11 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Techniques
             };
         }
 
-        public static ConstantBuffer CBPerInstance
+        public static Structs.ConstantBuffer CBPerInstance
         {
             get
             {
-                ConstantBuffer cbInstance = ConstantBuffer.CBPerInstance;
+                Structs.ConstantBuffer cbInstance = ConstantBuffer.CBPerInstance;
                 cbInstance.Add(Matrix.EntityWorldInverseTranspose);
                 return cbInstance;
             }

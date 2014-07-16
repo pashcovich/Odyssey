@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Converters
+namespace Odyssey.Daedalus.View.Converters
 {
     public class ShaderModelConverter : IValueConverter
     {

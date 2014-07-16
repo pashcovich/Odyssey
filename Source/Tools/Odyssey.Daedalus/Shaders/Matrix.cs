@@ -1,8 +1,9 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Data;
+using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public partial class Matrix : Variable
     {
@@ -10,7 +11,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public static Matrix EntityWorld
         {
-            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.World, ShaderReference = new ShaderReference(EngineReference.EntityMatrixWorld) }; }
+            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.World, EngineReference = ReferenceFactory.Entity.MatrixWorld }; }
         }
 
         public static Matrix EntityInstanceWorld
@@ -21,7 +22,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                 {
                     Type = Type.Matrix,
                     Name = Param.SemanticVariables.InstanceWorld,
-                    ShaderReference = new ShaderReference(EngineReference.EntityMatrixWorld),
+                    EngineReference = ReferenceFactory.Entity.MatrixWorld,
                     Semantic = Semantics.InstanceWorld,
                 };
                 matrix.SetMarkup(Param.Properties.InstanceSlot, 1);
@@ -31,19 +32,19 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public static Matrix EntityWorldInverse
         {
-            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.WorldInverse, ShaderReference = new ShaderReference(EngineReference.EntityMatrixWorldInverse) }; }
+            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.WorldInverse, EngineReference = ReferenceFactory.Entity.MatrixWorldInverse }; }
         }
 
         public static Matrix EntityWorldInverseTranspose
         {
-            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.WorldInverseTranspose, ShaderReference = new ShaderReference(EngineReference.EntityMatrixWorldInverseTranspose) }; }
+            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.WorldInverseTranspose, EngineReference = ReferenceFactory.Entity.MatrixWorldInverseTranspose }; }
         }
 
         public static Matrix CameraView
         {
             get
             {
-                var mView = new Matrix { Type = Type.Matrix, Name = Param.Matrices.View, ShaderReference = new ShaderReference(EngineReference.CameraMatrixView) };
+                var mView = new Matrix { Type = Type.Matrix, Name = Param.Matrices.View, EngineReference = ReferenceFactory.Camera.MatrixView };
                 mView.SetMarkup(Param.Properties.CameraId, 0);
                 return mView;
             }
@@ -53,7 +54,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         {
             get
             {
-                var mProjection = new Matrix { Type = Type.Matrix, Name = Param.Matrices.Projection, ShaderReference = new ShaderReference(EngineReference.CameraMatrixProjection) };
+                var mProjection = new Matrix { Type = Type.Matrix, Name = Param.Matrices.Projection, EngineReference = ReferenceFactory.Camera.MatrixProjection };
                 mProjection.SetMarkup(Param.Properties.CameraId, 0);
                 return mProjection;
             }
@@ -63,12 +64,12 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public static Matrix LightView
         {
-            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.LightView, ShaderReference = new ShaderReference(EngineReference.MatrixLightView) }; }
+            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.LightView, EngineReference = ReferenceFactory.Light.MatrixView }; }
         }
 
         public static Matrix LightProjection
         {
-            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.LightProjection, ShaderReference = new ShaderReference(EngineReference.MatrixLightProjection) }; }
+            get { return new Matrix { Type = Type.Matrix, Name = Param.Matrices.LightProjection, EngineReference = ReferenceFactory.Light.MatrixProjection }; }
         }
     }
 }

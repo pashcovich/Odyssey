@@ -1,13 +1,13 @@
 ﻿#region Using Directives
 
+using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System.Collections.Generic;
 using System.Text;
 
 #endregion Using Directives
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     public class VSNormalTexturedTangentOutputNode : PhongVSOutputNode
     {

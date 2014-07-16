@@ -1,6 +1,6 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
+namespace Odyssey.Daedalus.Shaders.Nodes
 {
     [DataContract]
     public abstract class VSOutputNodeBase : NodeBase
@@ -61,7 +61,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Position", Position);
+            AddNode("Position", Position);
         }
     }
 }

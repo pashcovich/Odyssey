@@ -1,13 +1,13 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes.Math;
+using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Operators;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
 using SharpDX.Serialization;
 using System.Collections.Generic;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
+namespace Odyssey.Daedalus.Shaders.Nodes.Functions
 {
     public class ClipSpaceTransformNode : NodeBase
     {
@@ -17,10 +17,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
         [SupportedType(Type.Float3)]
         public IVariable InstancePosition { get; set; }
 
-        [SupportedType(Type.Float)]
-        [SupportedType(Type.Float2)]
-        [SupportedType(Type.Float3)]
-        [SupportedType(Type.Float4)]
+        [SupportedType(Type.Vector)]
         public override IVariable Output
         {
             get
@@ -67,22 +64,26 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Functions
             clipSpaceMethod.ActivateSignature(key);
         }
 
-        protected override void SerializeProperties(BinarySerializer serializer)
+        protected override void SerializeMethods(BinarySerializer serializer)
         {
-            base.SerializeProperties(serializer);
+            base.SerializeMethods(serializer);
+            if (serializer.Mode == SerializerMode.Read)
+                MethodBase.WriteMethod(serializer, clipSpaceMethod);
+            else clipSpaceMethod = MethodBase.ReadMethod(serializer);
+        }
 
+        protected override void SerializeVariables(BinarySerializer serializer)
+        {
+            base.SerializeVariables(serializer);
             if (serializer.Mode == SerializerMode.Write)
-            {
                 Variable.WriteVariable(serializer, InstancePosition);
-                // TODO Serialize MethodBase
-            }
             else
                 InstancePosition = Variable.ReadVariable(serializer);
         }
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Position", Position);
+            AddNode("Position", Position);
         }
 
         public static DeclarationNode FullScreenNode(IStruct inputStruct, IVariable viewportSize)

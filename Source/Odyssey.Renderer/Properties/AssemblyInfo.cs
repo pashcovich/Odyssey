@@ -1,8 +1,8 @@
 ﻿using System.Resources;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-[assembly: AssemblyTitle("Odyssey.Common")]
-[assembly: AssemblyDescription("Common classes for the Odyssey Engine.")]
+[assembly: AssemblyTitle("Odyssey.Renderer")]
+[assembly: AssemblyDescription("Odyssey Engine Rendering System")]
 [assembly: AssemblyCompany("Avengers Utd - http://www.avengersutd.com/")]
 [assembly: AssemblyCopyright("GPLv3")]
 [assembly: NeutralResourcesLanguage("en")]
@@ -17,4 +17,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Odyssey.Talos")]
 [assembly: InternalsVisibleTo("Odyssey.Windows")]
 [assembly: InternalsVisibleTo("Odyssey.Windows.WPF")]
-[assembly: InternalsVisibleTo("ShaderGenerator")]
+[assembly: InternalsVisibleTo("Daedalus")]

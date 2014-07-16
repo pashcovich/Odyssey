@@ -1,14 +1,20 @@
-﻿using System.Security.Cryptography;
-using Odyssey.Engine;
-using Odyssey.Graphics;
-using Odyssey.Graphics.Effects;
-using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Methods;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
-using Odyssey.Tools.ShaderGenerator.Shaders.Structs;
-using Odyssey.Utilities;
-using Odyssey.Utilities.Logging;
-using SharpDX.Direct3D11;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -16,42 +22,51 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using Odyssey.Daedalus.Serialization;
+using Odyssey.Daedalus.Shaders.Methods;
+using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Daedalus.Shaders.Structs;
+using Odyssey.Engine;
+using Odyssey.Graphics.Effects;
+using Odyssey.Graphics.Shaders;
+using Odyssey.Utilities;
+using Odyssey.Utilities.Logging;
+using SharpDX.Direct3D11;
 using SharpDX.Serialization;
-using ConstantBuffer = Odyssey.Tools.ShaderGenerator.Shaders.Structs.ConstantBuffer;
+using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 using SamplerStateDescription = Odyssey.Graphics.Shaders.SamplerStateDescription;
-using TextureDescription = Odyssey.Graphics.Shaders.TextureDescription;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+#endregion
+
+namespace Odyssey.Daedalus.Shaders
 {
     [DataContract(IsReference = true)]
-    [KnownType("KnownTypes")]
     public class Shader : IDataSerializable, IContainer
     {
-        string sourceCode;
-        int cbCount;
-        int customTypeCount;
-        int samplerCount;
-        int textureCount;
+        private int cbCount;
+        private Dictionary<int, ConstantBufferDescription> cbReferences;
         private int constantsCount;
-        [DataMember]
-        VariableCollection variables;
-        Dictionary<int, ConstantBufferDescription> cbReferences;
-        Dictionary<int, TextureDescription> textureReferences;
-        Dictionary<int, SamplerStateDescription> samplerReferences;
-        Dictionary<string, string> metaData;
+        private int customTypeCount;
         private bool enableSeparators;
-        private string name;
         private FeatureLevel featureLevel;
         private IStruct inputStruct;
+        private TechniqueKey keyPart;
+        private Dictionary<string, string> metaData;
+        private string name;
         private IStruct outputStruct;
         private INode result;
+        private int samplerCount;
+        private Dictionary<int, SamplerStateDescription> samplerReferences;
+        private string sourceCode;
+        private int textureCount;
+        private Dictionary<int, TextureDescription> textureReferences;
         private ShaderType type;
-        private TechniqueKey keyPart;
+        private VariableCollection variables;
 
         public Shader()
         {
             NodeBase.NodeCounter.Clear();
-            variables = new VariableCollection() { Owner = this };
+            variables = new VariableCollection() {Owner = this};
         }
 
         #region Properties
@@ -66,13 +81,13 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
         }
 
-        public IEnumerable<ConstantBuffer> ConstantBuffers
+        public IEnumerable<Structs.ConstantBuffer> ConstantBuffers
         {
             get
             {
                 return (from kvp in variables
                     where kvp.Value.Type == Shaders.Type.ConstantBuffer
-                    select kvp.Value).Cast<ConstantBuffer>();
+                    select kvp.Value).Cast<Structs.ConstantBuffer>();
             }
         }
 
@@ -99,7 +114,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                 };
                 return from kvp in variables
                     where valueTypes.Contains(kvp.Value.Type)
-                    select (Variable)kvp.Value;
+                    select (Variable) kvp.Value;
                 ;
             }
         }
@@ -262,7 +277,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     variable.Index = constantsCount++;
                     break;
             }
-                
+
             if (variables.All(kvp => kvp.Value.Name != variable.Name))
                 variables.Add(Variable.GetRegister(variable), variable);
 
@@ -270,15 +285,55 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                 return;
 
             var childStructs = from vS in varStruct.Variables.OfType<IStruct>()
-                               where vS.CustomType != CustomType.None
-                               select vS;
+                where vS.CustomType != CustomType.None
+                select vS;
 
             foreach (IStruct childStruct in childStructs)
             {
                 customTypeCount++;
                 Add(childStruct);
             }
+        }
 
+        public void Serialize(BinarySerializer serializer)
+        {
+            var sgs = (ShaderGraphSerializer) serializer;
+            sgs.Clear();
+
+            serializer.BeginChunk("SHAD");
+
+            serializer.BeginChunk("PROP");
+            serializer.Serialize(ref name);
+            serializer.Serialize(ref keyPart);
+            serializer.Serialize(ref enableSeparators);
+            serializer.SerializeEnum(ref featureLevel);
+            serializer.SerializeEnum(ref type);
+            serializer.EndChunk();
+
+            variables.Serialize(serializer);
+
+            Struct sInput = (Struct) inputStruct;
+            Struct sOutput = (Struct) outputStruct;
+            serializer.BeginChunk("STRT");
+            serializer.Serialize(ref sInput);
+            serializer.Serialize(ref sOutput);
+            serializer.EndChunk();
+
+            serializer.BeginChunk("RSLT");
+
+            if (serializer.Mode == SerializerMode.Write)
+                NodeBase.WriteNode(serializer, Result);
+            else
+                Result = NodeBase.ReadNode(serializer);
+            serializer.EndChunk();
+
+            serializer.EndChunk();
+
+            if (serializer.Mode == SerializerMode.Read)
+            {
+                InputStruct = sInput;
+                OutputStruct = sOutput;
+            }
         }
 
         public void Add(IEnumerable<IVariable> newVariables)
@@ -291,7 +346,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             where TVariable : IVariable
         {
             Contract.Requires<ArgumentException>(Contains(name), "name");
-            return (TVariable)variables.First(kvp=> string.Equals(kvp.Value.Name, name)).Value;
+            return (TVariable) variables.First(kvp => string.Equals(kvp.Value.Name, name)).Value;
         }
 
         public void Remove(IVariable variable)
@@ -315,17 +370,19 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             samplerCount = 0;
         }
 
-        void CollectReferences()
+        private void CollectReferences()
         {
             cbReferences = new Dictionary<int, ConstantBufferDescription>();
             textureReferences = new Dictionary<int, TextureDescription>();
             samplerReferences = new Dictionary<int, SamplerStateDescription>();
             metaData = new Dictionary<string, string>();
 
+            // Collect Instance references
             var instanceReferences = (from v in InputStruct.Variables
-                where v.ShaderReference != null
-                group v.ShaderReference by v.GetMarkupValue(Param.Properties.InstanceSlot) into instanceBuffers
-                                      select new { Slot = Int32.Parse(instanceBuffers.Key), References = instanceBuffers}).ToArray();
+                where v.EngineReference != null
+                group v.EngineReference by v.GetMarkupValue(Param.Properties.InstanceSlot)
+                into instanceBuffers
+                select new {Slot = Int32.Parse(instanceBuffers.Key), References = instanceBuffers}).ToArray();
 
             foreach (var instanceBuffer in instanceReferences)
             {
@@ -334,50 +391,63 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                         instanceBuffer.References, Enumerable.Empty<KeyValuePair<string, string>>()));
             }
 
-            foreach (ConstantBuffer cb in ConstantBuffers)
+            // Collect ConstantBuffer references
+            foreach (Structs.ConstantBuffer cb in ConstantBuffers)
             {
                 var markupData = from v in cb.Variables
-                                 from markup in v.Markup
-                                 where v.HasMarkup
-                                 select markup;
+                    from markup in v.Markup
+                    where v.HasMarkup
+                    select markup;
 
                 foreach (var kvp in markupData)
                 {
+                    // Check whether we defined multiple instances of the same metadata property 
                     if (!metaData.ContainsKey(kvp.Key))
                         metaData.Add(kvp.Key, kvp.Value);
                     else if (metaData[kvp.Key] != kvp.Value)
                         LogEvent.Tool.Error("Conflicting metadata: [{0}] and [{1}]", kvp.Value, metaData[kvp.Key]);
                 }
 
-                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Name, cb.Index.Value, cb.UpdateType, Type, cb.References, metaData);
-                cbReferences.Add(cbCount++, cbReference);     
-                metaData.Clear();      
+                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Name, cb.Index.Value, cb.UpdateType, Type,
+                    cb.References, metaData);
+                cbReferences.Add(cbCount++, cbReference);
+                metaData.Clear();
             }
 
-            foreach (var texture in Textures.Where(t => t.ShaderReference != null))
+            // Collect Texture references
+            foreach (var texture in Textures.Where(t => t.EngineReference != null))
             {
-                TextureReference reference =  (TextureReference)texture.ShaderReference.Value;
-                string key = texture.ContainsMarkup(Texture.Key) ? texture.GetMarkupValue(Texture.Key) : string.Format("{0}.{1}", Name, reference);
+                string reference = texture.EngineReference.Value;
+                string key = texture.ContainsMarkup(Texture.Key)
+                    ? texture.GetMarkupValue(Texture.Key)
+                    : string.Format("{0}.{1}", Name, reference);
                 UpdateType updateType = UpdateType.None;
                 int samplerIndex = 0;
                 if (texture.HasMarkup)
                 {
+                    // Write metadata indicating preferred metadata
                     samplerIndex = int.Parse(texture.GetMarkupValue(Texture.SamplerIndex));
-                    updateType = texture.ContainsMarkup(Texture.UpdateType) ?
-                        ReflectionHelper.ParseEnum<UpdateType>(texture.GetMarkupValue(Texture.UpdateType))
+                    updateType = texture.ContainsMarkup(Texture.UpdateType)
+                        ? ReflectionHelper.ParseEnum<UpdateType>(texture.GetMarkupValue(Texture.UpdateType))
                         : UpdateType.SceneStatic;
                 }
-                TextureDescription tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, updateType, Type);
+                TextureDescription tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, updateType,
+                    Type);
                 textureReferences.Add(tDescription.Index, tDescription);
             }
+
+            // Collect sampler references
             foreach (var sampler in Samplers)
             {
+                string name = sampler.GetMarkupValue(Sampler.SamplerName);
                 Filter filter = ReflectionHelper.ParseEnum<Filter>(sampler.GetMarkupValue(Sampler.Filter));
-                TextureAddressMode tAddressMode = ReflectionHelper.ParseEnum<TextureAddressMode>(sampler.GetMarkupValue(Sampler.TextureAddressMode));
+                TextureAddressMode tAddressMode =
+                    ReflectionHelper.ParseEnum<TextureAddressMode>(sampler.GetMarkupValue(Sampler.TextureAddressMode));
                 Comparison comparison = ReflectionHelper.ParseEnum<Comparison>(sampler.GetMarkupValue(Sampler.Comparison));
                 var samplerDesc = new SamplerStateDescription
                 {
                     Index = sampler.Index.Value,
+                    Name = name,
                     Comparison = comparison,
                     Filter = filter,
                     TextureAddressMode = tAddressMode,
@@ -411,7 +481,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             foreach (IVariable customType in CustomTypes)
                 sb.Add(customType.Definition);
 
-            if (EnableSeparators && cbCount > 0) 
+            if (EnableSeparators && cbCount > 0)
                 sb.AddSeparator("ConstantBuffers");
 
             foreach (IVariable variable in ConstantBuffers)
@@ -466,15 +536,15 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         internal static System.Type[] KnownTypes()
         {
-            return ReflectionHelper.GetDerivedTypes(typeof(Shader)).Concat(ReflectionHelper.GetDerivedTypes(typeof(Variable))).ToArray();
+            return ReflectionHelper.GetDerivedTypes(typeof (Shader)).Concat(ReflectionHelper.GetDerivedTypes(typeof (Variable))).ToArray();
         }
 
         internal static ShaderModel FromFeatureLevel(FeatureLevel featureLevel)
         {
             string featureLevelValue = featureLevel.ToString();
 
-            string shaderModelValue = "SM" + featureLevelValue.Substring(2, featureLevelValue.Length-2);
-            return (ShaderModel)Enum.Parse(typeof(ShaderModel), shaderModelValue);
+            string shaderModelValue = "SM" + featureLevelValue.Substring(2, featureLevelValue.Length - 2);
+            return (ShaderModel) Enum.Parse(typeof (ShaderModel), shaderModelValue);
         }
 
         internal static FeatureLevel FromShaderModel(ShaderModel model, ShaderType type)
@@ -491,10 +561,10 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                     break;
             }
             string shaderModelValue = model.ToString();
-            string featureLevelValue = shaderCode + shaderModelValue.Substring(2, shaderModelValue.Length-2);
+            string featureLevelValue = shaderCode + shaderModelValue.Substring(2, shaderModelValue.Length - 2);
             if (type == ShaderType.Vertex && model == ShaderModel.SM_2_B)
-                featureLevelValue = featureLevelValue.Replace('B','A');
-            return (FeatureLevel)Enum.Parse(typeof(FeatureLevel), featureLevelValue);
+                featureLevelValue = featureLevelValue.Replace('B', 'A');
+            return (FeatureLevel) Enum.Parse(typeof (FeatureLevel), featureLevelValue);
         }
 
         internal static TechniqueKey GenerateKeyPartRequirements(Shader shader)
@@ -511,22 +581,21 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             foreach (var psAttribute in psAttributes)
                 psFlags |= psAttribute.Features;
 
-            
+
             return new TechniqueKey(vsFlags, psFlags, sm: model);
         }
 
 
         public static TechniqueKey GenerateKeyPart(Shader shader)
         {
-            
             VertexShaderFlags vsFlags = VertexShaderFlags.None;
             PixelShaderFlags psFlags = PixelShaderFlags.None;
             ShaderModel model = FromFeatureLevel(shader.FeatureLevel);
-            
+
             foreach (var property in shader.Result.DescendantNodes
                 .Select(node => node.GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.PropertyType == typeof(INode))).SelectMany(properties => properties))
+                    .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => p.PropertyType == typeof (INode))).SelectMany(properties => properties))
             {
                 switch (shader.Type)
                 {
@@ -543,46 +612,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
             }
 
             return new TechniqueKey(vsFlags, psFlags, sm: model);
-        }
-
-
-        public void Serialize(BinarySerializer serializer)
-        {
-            serializer.BeginChunk("SHAD");
-
-            serializer.BeginChunk("PROP");
-            serializer.Serialize(ref name);
-            serializer.Serialize(ref keyPart);
-            serializer.Serialize(ref enableSeparators);
-            serializer.SerializeEnum(ref featureLevel);
-            serializer.SerializeEnum(ref type);
-            serializer.EndChunk();
-
-            variables.Serialize(serializer);
-
-            Struct sInput = (Struct)inputStruct;
-            Struct sOutput = (Struct)outputStruct;
-            serializer.BeginChunk("STRT");
-            serializer.Serialize(ref sInput);
-            serializer.Serialize(ref sOutput);
-            serializer.EndChunk();
-
-            serializer.BeginChunk("RSLT");
-    
-            if (serializer.Mode == SerializerMode.Write)
-                NodeBase.WriteNode(serializer, Result);
-            else
-                Result = NodeBase.ReadNode(serializer);
-            serializer.EndChunk();
-
-            serializer.EndChunk();
-
-            if (serializer.Mode == SerializerMode.Read)
-            {
-                InputStruct = sInput;
-                OutputStruct = sOutput;
-            }
-
         }
     }
 }

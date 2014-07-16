@@ -1,16 +1,16 @@
-﻿using Odyssey.Graphics.Effects;
-using Odyssey.Tools.ShaderGenerator.Model;
-using Odyssey.Tools.ShaderGenerator.ViewModel;
+﻿using Odyssey.Daedalus.Model;
+using Odyssey.Daedalus.Properties;
+using Odyssey.Daedalus.ViewModel;
+using Odyssey.Graphics.Effects;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using Odyssey.Tools.ShaderGenerator.Properties;
 using ShaderDescription = Odyssey.Graphics.Shaders.ShaderDescription;
 
-namespace Odyssey.Tools.ShaderGenerator
+namespace Odyssey.Daedalus
 {
     public class ShaderCompiler
     {

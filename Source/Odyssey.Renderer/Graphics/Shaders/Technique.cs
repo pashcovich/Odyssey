@@ -12,7 +12,6 @@ namespace Odyssey.Graphics.Shaders
     {
         public const string DefaultTechnique = "Default";
 
-        private readonly IAssetProvider content;
         private readonly DirectXDevice device;
         private readonly ShaderCollection shaderCollection;
         private Effect effect;
@@ -24,7 +23,6 @@ namespace Odyssey.Graphics.Shaders
             Contract.Requires<ArgumentException>(shaderCollection.Contains(DefaultTechnique), "Default technique not found");
             this.device = device;
             this.shaderCollection = shaderCollection;
-            content = assetProvider;
             RemoveAndDispose(ref effect);
             ActiveTechnique = shaderCollection.Get(DefaultTechnique);
             Name = shaderCollection.Name;
@@ -37,10 +35,6 @@ namespace Odyssey.Graphics.Shaders
         public bool IsInited { get; private set; }
 
         internal string ActiveTechniqueId { get { return string.Format("{0}.{1}", Name, ActiveTechnique.Name); } }
-
-        internal DirectXDevice Device { get { return device; } }
-
-        protected IAssetProvider Content { get { return content; } }
 
         protected ShaderCollection ShaderCollection { get { return shaderCollection; } }
 

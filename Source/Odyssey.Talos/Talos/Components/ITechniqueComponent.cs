@@ -7,7 +7,7 @@ using Odyssey.Graphics.Shaders;
 
 namespace Odyssey.Talos.Components
 {
-    public interface ITechniqueComponent
+    public interface ITechniqueComponent : IComponent
     {
         IEnumerable<Technique> Techniques { get; }
     }

@@ -1,9 +1,9 @@
-﻿using Odyssey.Graphics.Effects;
+﻿using Odyssey.Daedalus.Shaders.Nodes;
+using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Tools.ShaderGenerator.Shaders.Nodes;
 using System.Text;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public class TexOffset : MethodBase
     {

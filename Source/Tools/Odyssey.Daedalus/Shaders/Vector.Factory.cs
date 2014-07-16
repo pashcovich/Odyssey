@@ -1,8 +1,9 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Daedalus.Data;
+using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders
+namespace Odyssey.Daedalus.Shaders
 {
     public partial class Vector
     {
@@ -14,7 +15,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
                 {
                     Type = Type.Float3,
                     Name = Param.Vectors.CameraPosition,
-                    ShaderReference = new ShaderReference(EngineReference.CameraVectorPosition)
+                    EngineReference = ReferenceFactory.Camera.VectorPosition
                     
                 };
                 v.SetMarkup(Param.Properties.CameraId, 0);
@@ -24,14 +25,14 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public static Vector ViewportSize
         {
-            get { return new Vector { Type = Type.Float2, Name = Param.Vectors.ViewportSize, ShaderReference = new ShaderReference(EngineReference.ApplicationCurrentViewportSize) }; }
+            get { return new Vector { Type = Type.Float2, Name = Param.Vectors.ViewportSize, EngineReference = ReferenceFactory.Application.ViewportSize }; }
         }
 
         public static Vector SpritePosition
         {
             get
             {
-                return new Vector { Type = Type.Float3, Name = Param.Vectors.SpritePosition, ShaderReference = new ShaderReference(EngineReference.EntitySpritePosition) }; 
+                return new Vector { Type = Type.Float3, Name = Param.Vectors.SpritePosition, EngineReference = ReferenceFactory.Effect.SpritePosition }; 
             }
         }
 
@@ -39,7 +40,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
         {
             get
             {
-                var v = new Vector { Type = Type.Float3, Name = Param.Vectors.LightDirection, ShaderReference = new ShaderReference(EngineReference.LightDirection) };
+                var v = new Vector { Type = Type.Float3, Name = Param.Vectors.LightDirection, EngineReference = ReferenceFactory.Light.VectorDirection };
                 v.SetMarkup(Param.Properties.LightId, 0);
                 return v;
             }
@@ -132,7 +133,7 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders
 
         public static Vector SpriteSize
         {
-            get { return new Vector { Name = Param.Vectors.SpriteSize, Type = Type.Float2, ShaderReference = new ShaderReference(EngineReference.EntitySpriteSize) }; }
+            get { return new Vector { Name = Param.Vectors.SpriteSize, Type = Type.Float2, EngineReference = ReferenceFactory.Effect.SpriteSize }; }
         }
     }
 }

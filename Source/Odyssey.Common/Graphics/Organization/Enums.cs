@@ -15,13 +15,13 @@ namespace Odyssey.Graphics.Organization
 
     public enum PreferredRasterizerState
     {
-        Solid,
+        CullBack,
         Wireframe
     }
 
     public enum PreferredBlendState
     {
-        Disabled,
+        Opaque,
         Additive,
         /// <summary>
         /// SourceBlend = SourceAlpha/1, DestBlend = InvSourceAlpha/1, Op = Add
@@ -33,7 +33,7 @@ namespace Odyssey.Graphics.Organization
     {
         Enabled,
         EnabledComparisonLessEqual,
-        DepthWriteDisabled
+        None,
     }
 
     [Flags]

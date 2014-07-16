@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Odyssey.Engine;
-using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using SharpDX;
+using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
     public class ApplicationInitializer : Initializer<IOdysseyDeviceService>
     {
-        public ApplicationInitializer()
-            : base(new[] {EngineReference.ApplicationCurrentViewportSize})
+        public ApplicationInitializer(IServiceRegistry services)
+            : base(services, Reference.Group.Application)
         {
         }
 
@@ -29,17 +29,21 @@ namespace Odyssey.Talos.Initializers
             initializer.Initialize(this, settings, parameters);
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IOdysseyDeviceService source, int parameterIndex, EngineReference reference, InitializerParameters parameters)
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
         {
-            var device = source.DirectXDevice;
-            switch (reference)
             {
-                case EngineReference.ApplicationCurrentViewportSize:
-                    return new [] { new Float2Parameter(parameterIndex, Param.Vectors.ViewportSize, () => new Vector2(device.Viewport.Width, device.Viewport.Height))};
+                Reference.Application.ViewportSize, (index, deviceService, parameters) => 
+                new [] { new Float2Parameter(index, Param.Vectors.ViewportSize, () => new Vector2(deviceService.DirectXDevice.Viewport.Width, deviceService.DirectXDevice.Viewport.Height))}
+            },
+        };
 
-                default:
-                    throw new ArgumentException(string.Format("{0}: {1} not valid.", GetType().Name, reference));
-            }
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IOdysseyDeviceService source,
+            int parameterIndex, string reference, InitializerParameters initializerParameters)
+        {
+            if (!ReferenceActions.ContainsKey(reference))
+                throw new ArgumentException(string.Format("{0}: {1} not valid.", GetType().Name, reference));
+
+            return ReferenceActions[reference](parameterIndex, source, initializerParameters);
         }
     }
 }

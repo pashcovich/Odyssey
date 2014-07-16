@@ -1,9 +1,9 @@
-﻿using Odyssey.Tools.ShaderGenerator.Model;
+﻿using Odyssey.Daedalus.Model;
 using System;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Converters
+namespace Odyssey.Daedalus.View.Converters
 {
     public class CompilationStatusToBrushConverter : IValueConverter
     {

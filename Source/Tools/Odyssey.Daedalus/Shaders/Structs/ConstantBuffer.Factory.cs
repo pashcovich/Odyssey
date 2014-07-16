@@ -1,7 +1,7 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Structs
+namespace Odyssey.Daedalus.Shaders.Structs
 {
     public partial class ConstantBuffer
     {

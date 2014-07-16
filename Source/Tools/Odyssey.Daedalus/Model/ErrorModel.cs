@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Odyssey.Tools.ShaderGenerator.Model
+namespace Odyssey.Daedalus.Model
 {
     public enum Category
     {

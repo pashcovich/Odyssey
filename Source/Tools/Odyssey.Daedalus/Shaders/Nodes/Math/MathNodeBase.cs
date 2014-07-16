@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Odyssey.Graphics.Shaders;
 using SharpDX.Serialization;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
+namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {
     public abstract class MathNodeBase : NodeBase
     {
@@ -73,8 +70,8 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
 
         protected override void RegisterNodes()
         {
-            Nodes.Add("Input1", Input1);
-            Nodes.Add("Input2", Input2);
+            AddNode("Input1", Input1);
+            AddNode("Input2", Input2);
         }
 
         protected override void SerializeProperties(BinarySerializer serializer)
@@ -82,5 +79,6 @@ namespace Odyssey.Tools.ShaderGenerator.Shaders.Nodes.Math
             base.SerializeProperties(serializer);
             serializer.Serialize(ref parenthesize);
         }
+
     }
 }

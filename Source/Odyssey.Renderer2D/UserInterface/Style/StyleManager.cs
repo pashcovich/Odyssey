@@ -50,7 +50,7 @@ namespace Odyssey.UserInterface.Style
 
             var description = theme.FirstOrDefault(t => t.Name == controlClass);
 
-            if (description == null)
+            if (description == default(TextDescription))
             {
                 LogEvent.UserInterface.Warning("[{0}] description not found.", controlClass);
                 return theme.First(c => c.Name == ControlDescription.Error);

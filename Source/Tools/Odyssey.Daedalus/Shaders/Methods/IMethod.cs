@@ -1,7 +1,7 @@
 ﻿using Odyssey.Graphics.Shaders;
 using System.Collections.Generic;
 
-namespace Odyssey.Tools.ShaderGenerator.Shaders.Methods
+namespace Odyssey.Daedalus.Shaders.Methods
 {
     public interface IMethod
     {

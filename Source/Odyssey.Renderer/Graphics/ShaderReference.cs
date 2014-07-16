@@ -42,7 +42,7 @@ namespace Odyssey.Graphics
         {}
 
         public ShaderReference(EngineReference reference)
-            : this(ReferenceType.Engine, reference)
+            : this(ReferenceType.Entity, reference)
         {}
 
         public ShaderReference(TextureReference reference)

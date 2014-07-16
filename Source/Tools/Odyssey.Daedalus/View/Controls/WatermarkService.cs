@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 
-namespace Odyssey.Tools.ShaderGenerator.View.Controls
+namespace Odyssey.Daedalus.View.Controls
 {
     /// <summary>
     /// Class that provides the Watermark attached property
