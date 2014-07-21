@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Graphics.Models
 {
-    public static class ModelAnalyser
+    public static class ModelAnalyzer
     {
         private const VertexShaderFlags vsDefault = VertexShaderFlags.Position | VertexShaderFlags.Normal | VertexShaderFlags.TextureUV;
         private const VertexShaderFlags vsBarycentric = VertexShaderFlags.Position | VertexShaderFlags.Normal | VertexShaderFlags.TextureUV | VertexShaderFlags.Barycentric;

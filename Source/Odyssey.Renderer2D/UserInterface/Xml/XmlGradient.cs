@@ -1,4 +1,5 @@
-﻿using Odyssey.UserInterface.Style;
+﻿using Odyssey.Graphics.Shapes;
+using Odyssey.UserInterface.Style;
 using SharpDX;
 using System;
 using System.Globalization;
@@ -48,14 +49,14 @@ namespace Odyssey.UserInterface.Xml
             GradientType = cs.Type;
             if (cs.GradientStops == null) return;
 
-            if (cs.GradientStops[0] == cs.GradientStops[1] || cs.GradientStops.Length == 1)
+            if (cs.GradientStops[0] == cs.GradientStops[1] || cs.GradientStops.Count == 1)
             {
                 ColorValue = cs.GradientStops[0].Color.ToRgba().ToString("X8");
             }
             else
             {
-                XmlGradientArray = new XmlGradientStop[cs.GradientStops.Length];
-                for (int i = 0; i < cs.GradientStops.Length; i++)
+                XmlGradientArray = new XmlGradientStop[cs.GradientStops.Count];
+                for (int i = 0; i < cs.GradientStops.Count; i++)
                 {
                     XmlGradientArray[i] = new XmlGradientStop(cs.GradientStops[i]);
                 }
@@ -107,12 +108,7 @@ namespace Odyssey.UserInterface.Xml
                     break;
             }
 
-            return new LinearGradient
-            {
-                Name = Name,
-                Type = GradientType,
-                GradientStops = gradientColors,
-            };
+            return new LinearGradient(Name,Vector2.Zero, new Vector2(1,0), new GradientStopCollection(gradientColors));
         }
     }
     /*

@@ -37,6 +37,17 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
             }
         }
 
+        public static CastNode PositionV3toV4(IVariable position)
+        {
+            return new CastNode
+            {
+                Input = new SwizzleNode { Input = new ReferenceNode { Value = position }, Swizzle = new[] { Swizzle.X, Swizzle.Y, Swizzle.Z, Swizzle.Null } },
+                Output = new Vector { Type = Shaders.Type.Float4, Name = "vPosition" },
+                Mask = new[] { "0", "0", "0", "1" },
+                IsVerbose = true
+            };
+        }
+
         #endregion Static Methods
 
         [DataMember]

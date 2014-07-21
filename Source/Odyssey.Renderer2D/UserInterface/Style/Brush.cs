@@ -16,10 +16,11 @@
 #region Using Directives
 
 using Odyssey.Engine;
+using SharpDX;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.UserInterface.Style
 {
     public abstract class Brush : Direct2DResource
     {
@@ -29,6 +30,17 @@ namespace Odyssey.Graphics.Shapes
             : base(device)
         {
             Resource = brush;
+        }
+
+        public override void Initialize()
+        {
+            Initialize(ToDispose(Resource));
+        }
+
+        public Matrix3x2 Transform
+        {
+            get { return Resource.Transform; }
+            set { Resource.Transform = value; }
         }
 
         /// <summary>

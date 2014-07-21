@@ -295,7 +295,7 @@ namespace Odyssey.Content
             {
                 throw new InvalidOperationException(string.Format("Invalid slot [{0}] for {1} (Max: {2})", index, typeof(T).Name, list.Count));
             }
-            return new ModelBufferRange<T> { Resource = list[index], Count = range.Count, Start = range.Start };
+            return new ModelBufferRange<T> { Resource = list[index], Count = range.Count, Start = range.Start};
         }
     }
 }

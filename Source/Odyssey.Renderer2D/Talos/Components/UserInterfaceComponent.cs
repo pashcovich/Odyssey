@@ -7,20 +7,24 @@ using System.Diagnostics.Contracts;
 namespace Odyssey.Talos.Components
 {
     [RequiredComponent(typeof(UpdateComponent))]
-    public class UserInterfaceComponent : Component, IInitializable
+    public class UserInterfaceComponent : ContentComponent
     {
         public IUserInterfaceState UserInterfaceState { get; private set; }
 
         public Overlay Overlay { get; set; }
 
-        public bool IsInited { get { return Overlay.IsInited; } }
+        public override bool IsInited { get { return Overlay.IsInited; } }
+        protected override void Dispose(bool disposing)
+        {
+            Overlay.Dispose();
+        }
 
         public UserInterfaceComponent()
             : base(ComponentTypeManager.GetType<UserInterfaceComponent>())
         {
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             if (Overlay == null)
             throw new InvalidOperationException("'Overlay' cannot be null");
@@ -32,9 +36,11 @@ namespace Odyssey.Talos.Components
             Overlay.Initialize();
         }
 
-        public void Unload()
+        public override bool Validate()
         {
-            Overlay.Unload();
+            // TODO add possibility of loading GUI from disk
+            return true;
         }
+
     }
 }

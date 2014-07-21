@@ -1,33 +1,30 @@
-﻿#region #Disclaimer
+﻿#region License
 
-// Author: Adalberto L. Simeone (Taranto, Italy)
-// E-Mail: avengerdragon@gmail.com
-// Website: http://www.avengersutd.com/blog
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
 // 
-// This source code is Intellectual property of the Author
-// and is released under the Creative Commons Attribution 
-// NonCommercial License, available at:
-// http://creativecommons.org/licenses/by-nc/3.0/ 
-// You can alter and use this source code as you wish, 
-// provided that you do not use the results in commercial
-// projects, without the express and written consent of
-// the Author.
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
 
 #endregion
 
-#region Using directives
+#region Using Directives
 
-using SharpDX;
 using System.Collections.Generic;
 using Real = System.Single;
 using Point = SharpDX.Vector2;
+
 #endregion
 
 namespace Odyssey.Geometry
 {
     public interface IPolygon : IEnumerable<Point>
     {
-
         Vertices Vertices { get; }
         Point Centroid { get; }
         float Area { get; }

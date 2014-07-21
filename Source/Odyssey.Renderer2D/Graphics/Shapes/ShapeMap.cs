@@ -15,16 +15,17 @@
 
 #region Using Directives
 
-using Odyssey.Graphics;
-using Odyssey.UserInterface.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.UserInterface;
+using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Style;
 
 #endregion Using Directives
 
-namespace Odyssey.UserInterface.Style
+namespace Odyssey.Graphics.Shapes
 {
     public class ShapeMap
     {
@@ -68,7 +69,6 @@ namespace Odyssey.UserInterface.Style
             foreach (UIElement shape in AllShapes)
             {
                 shape.DesignMode = false;
-                shape.Layout();
                 shape.Initialize();
             }
         }

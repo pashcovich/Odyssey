@@ -24,6 +24,7 @@
   <ItemGroup>
     <Compile Include="GeometryHelper.cs" />
     <Compile Include="IPolygon.cs" />
+    <Compile Include="Primitives\Ellipse.cs" />
     <Compile Include="Primitives\Face.cs" />
     <Compile Include="Primitives\Polygon.cs" />
     <Compile Include="Primitives\Segment.cs" />

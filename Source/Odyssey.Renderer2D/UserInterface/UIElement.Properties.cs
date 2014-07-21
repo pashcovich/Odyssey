@@ -1,56 +1,47 @@
 #region License
 
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
-//
+// 
 // The Odyssey Engine is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License Version 3 as published by
 // the Free Software Foundation.
-//
+// 
 // The Odyssey Engine is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
-#endregion License
+#endregion
 
 #region Using Directives
 
+using System;
+using System.Collections.Generic;
 using Odyssey.Engine;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
 using SharpDX;
-using System;
-using System.Collections.Generic;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
+        #region Private Fields
+
         private float height;
+        private Matrix3x2 transform;
         private float width;
 
-        #region Public properties
+        #endregion Private Fields
+
+        #region Public Properties
 
         public RectangleF BoundingRectangle
         {
             get { return boundingRectangle; }
-            //set
-            //{
-            //    RectangleF oldValue = boundingRectangle;
-            //    if (boundingRectangle != value)
-            //        boundingRectangle = value;
-            //    else
-            //        return;
-
-            //    if (oldValue.X != boundingRectangle.X || oldValue.Y != boundingRectangle.Y)
-            //        OnPositionChanged(EventArgs.Empty);
-
-            //    if (oldValue.Width != boundingRectangle.Width || oldValue.Height != boundingRectangle.Height)
-            //        OnSizeChanged(EventArgs.Empty);
-            //}
         }
 
         public object DataContext { get; set; }
@@ -143,23 +134,6 @@ namespace Odyssey.UserInterface
                 OnSizeChanged(EventArgs.Empty);
             }
         }
-
-        internal Vector3 AbsoluteOrthoPosition { get; set; }
-
-        internal IEnumerable<BindingExpression> Bindings
-        {
-            get { return bindings.Values; }
-        }
-
-        /// <summary>
-        /// Gets the top left position in the client area of the control.
-        /// </summary>
-        /// <value>The top left position.</value>
-        /// <remarks>
-        /// The top left position is computed considering the <see cref = "BorderSize" /> value and
-        /// the <see cref = "Thickness" />value.
-        /// </remarks>
-        protected internal Vector2 TopLeftPosition { get; set; }
 
         /// <summary>
         /// Gets the absolute position in screen coordinates of the upper-left corner of this
@@ -299,18 +273,22 @@ namespace Odyssey.UserInterface
             }
         }
 
-        #endregion Public properties
+        #endregion Public Properties
+
+        #region Internal Properties
+
+        internal Vector3 AbsoluteOrthoPosition { get; set; }
+
+        internal IEnumerable<BindingExpression> Bindings
+        {
+            get { return bindings.Values; }
+        }
 
         internal bool IsBeingRemoved { get; set; }
 
-        internal Overlay Overlay { get; set; }
+        #endregion Internal Properties
 
-        protected Direct2DDevice Device
-        {
-            get { return Overlay.Device; }
-        }
-
-        #region Protected properties
+        #region Protected Internal Properties
 
         protected internal virtual Depth Depth { get; set; }
 
@@ -348,6 +326,32 @@ namespace Odyssey.UserInterface
             }
         }
 
-        #endregion Protected properties
+        protected internal Overlay Overlay { get; internal set; }
+
+        /// <summary>
+        /// Gets the top left position in the client area of the control.
+        /// </summary>
+        /// <value>The top left position.</value>
+        /// <remarks>
+        /// The top left position is computed considering the <see cref = "BorderSize" /> value and
+        /// the <see cref = "Thickness" />value.
+        /// </remarks>
+        protected internal Vector2 TopLeftPosition { get; set; }
+
+        #endregion Protected Internal Properties
+
+        #region Protected Properties
+
+        public Matrix3x2 Transform
+        {
+            get { return transform; }
+        }
+
+        protected Direct2DDevice Device
+        {
+            get { return Overlay.Device; }
+        }
+
+        #endregion Protected Properties
     }
 }

@@ -1,9 +1,12 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Graphics.Shapes;
+using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
-using Brush = Odyssey.Graphics.Shapes.Brush;
+using Brush = Odyssey.UserInterface.Style.Brush;
+using ParagraphAlignment = SharpDX.DirectWrite.ParagraphAlignment;
+using TextAlignment = SharpDX.DirectWrite.TextAlignment;
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -23,7 +26,7 @@ namespace Odyssey.UserInterface.Controls
                 return;
 
             timer.Measure();
-            Device.SetTransform(Matrix.Identity);
+            Device.Transform = Matrix.Identity;
             Device.DrawTest(string.Format("{0:F2} FPS ({1:F1} ms)", timer.MeasuredFPS, timer.FrameTime * 1000.0), TextFormat, new RectangleF(8, 8, 8 + 256, 8 + 16), sceneColorBrush);
         }
 

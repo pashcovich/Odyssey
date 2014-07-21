@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using Odyssey.Geometry.Primitives;
+using Odyssey.Utilities.Extensions;
 using SharpDX;
 using System.Linq;
 
@@ -197,6 +199,41 @@ namespace Odyssey.Graphics.Models
             }
 
             return newVertices;
+        }
+
+        /// <summary>
+        /// Randomizes the order in which primitives are listed in the array. It works by
+        /// reordering groups of consecutive indices.
+        /// </summary>
+        /// <param name="indices">The initial array of indices.</param>
+        /// <param name="polygonFaceCount">The number of faces forming a polygon.</param>
+        /// <returns>An array of indices where primitives are listed in a random order.</returns>
+        public static int[] RandomizePrimitiveOrder(int[] indices, int polygonFaceCount = 1)
+        {
+            Contract.Requires<ArgumentNullException>(indices != null, "indices");
+            Contract.Requires<ArgumentException>(indices.Length > 0 && indices.Length % 3 ==0, "Index count must be non-zero and a multiple of three");
+            Contract.Requires<ArgumentException>(polygonFaceCount > 0, "A polygon must be formed by at least one face");
+
+            int[] primitiveOrder = System.Linq.Enumerable.Range(0, indices.Length/ (3*polygonFaceCount)).ToArray();
+            int[] randomizedOrder = primitiveOrder.RandomSubset(primitiveOrder.Length).ToArray();
+
+            int[] newIndices = new int[indices.Length];
+            for (int i = 0; i < randomizedOrder.Length; i++)
+            {
+                int baseIndex = randomizedOrder[i] * 3 * polygonFaceCount;
+                int baseDestIndex = i * 3 * polygonFaceCount;
+
+                for (int j = 0; j < polygonFaceCount; j++)
+                {
+
+                    baseIndex += j*3;
+                    baseDestIndex += j*3;
+                    newIndices[baseDestIndex] = indices[baseIndex];
+                    newIndices[baseDestIndex + 1] = indices[baseIndex + 1];
+                    newIndices[baseDestIndex + 2] = indices[baseIndex + 2];
+                }
+            }
+            return newIndices;
         }
     }
 }

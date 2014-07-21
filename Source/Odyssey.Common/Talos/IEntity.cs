@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Odyssey.Talos
 {
@@ -22,10 +23,11 @@ namespace Odyssey.Talos
             where TComponent : IComponent;
         TComponent GetComponent<TComponent>(long keyPart)
             where TComponent : IComponent;
+
+        IComponent GetComponent(Type component);
         TComponent GetComponent<TComponent>()
             where TComponent : IComponent;
 
-        IComponent GetComponent(string componentType);
         IScene Scene { get;}
         bool Validate();
     }

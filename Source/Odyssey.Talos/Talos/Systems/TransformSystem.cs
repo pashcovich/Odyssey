@@ -13,7 +13,7 @@ namespace Odyssey.Talos.Systems
     public class TransformSystem : UpdateableSystemBase
     {
         public TransformSystem()
-            : base(Aspect.All(typeof(PositionComponent), typeof(UpdateComponent), typeof(TransformComponent))
+            : base(Selector.All(typeof(PositionComponent), typeof(UpdateComponent), typeof(TransformComponent))
             .GetOne(typeof (RotationComponent), typeof (ScalingComponent), typeof (ParentComponent)))
         {
         }

@@ -1,7 +1,7 @@
 ﻿using Odyssey.UserInterface.Style;
 using SharpDX;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Shapes
 {
     public interface IShape : IRenderable
     {

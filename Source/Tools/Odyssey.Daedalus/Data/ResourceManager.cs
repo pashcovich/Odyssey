@@ -21,12 +21,12 @@ namespace Odyssey.Daedalus.Data
                 //new ShaderDescription() { Shader = new SpriteVS()},
                 //new ShaderDescription() { Shader= new SpriteDebugPS()},
 
-                new ShaderDescription() { Shader = new FullScreenQuadPS()},
-                new ShaderDescription() {Shader = new FullScreenQuadVS()},
-                new ShaderDescription(){Shader = new GaussianBlurPS()}, 
-                new ShaderDescription() {Shader = new GlowPS()}, 
-                new ShaderDescription(){Shader = new BloomExtractPS()}, 
-                new ShaderDescription(){Shader = new BloomCombinePS()}, 
+                //new ShaderDescription() { Shader = new FullScreenQuadPS()},
+                //new ShaderDescription() {Shader = new FullScreenQuadVS()},
+                //new ShaderDescription(){Shader = new GaussianBlurPS()}, 
+                //new ShaderDescription() {Shader = new GlowPS()}, 
+                //new ShaderDescription(){Shader = new BloomExtractPS()}, 
+                //new ShaderDescription(){Shader = new BloomCombinePS()}, 
 
                 //new ShaderDescription() { Shader= new PhongVS()},
                 //new ShaderDescription() { Shader= new PhongInstanceVS()},
@@ -37,8 +37,11 @@ namespace Odyssey.Daedalus.Data
                 //new ShaderDescription() { Shader= new PhongDiffuseMapPS()},
                 //new ShaderDescription() { Shader= new PhongCubeMapPS()},
 
-                //new Model.ShaderDescription() {Shader =  new WireframeVS()},
-                //new Model.ShaderDescription() {Shader =  new WireframePS()},
+                new Model.ShaderDescription() {Shader =  new WireframeVS()},
+                new Model.ShaderDescription() {Shader =  new WireframePS()},
+
+                //new ShaderDescription() { Shader = new ShapeVS()},
+                //new ShaderDescription() { Shader = new ShapePS()}
 
             };
         }

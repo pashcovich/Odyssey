@@ -8,7 +8,7 @@ namespace Odyssey.Talos.Systems
         /// Returns the composed ID resulting from the set of <see cref="IComponent"/>
         /// this ISystem is associated to.
         /// </summary>
-        Aspect Aspect { get; }
+        Selector Selector { get; }
         long Id { get; }
         bool IsEnabled { get; }
 

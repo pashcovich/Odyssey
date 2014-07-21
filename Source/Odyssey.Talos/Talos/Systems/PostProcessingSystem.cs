@@ -20,7 +20,7 @@ namespace Odyssey.Talos.Systems
     {
         private readonly CommandManager commandManager;
 
-        public PostProcessingSystem() : base(Aspect.All(typeof(PostProcessComponent)))
+        public PostProcessingSystem() : base(Selector.All(typeof(PostProcessComponent)))
         {
             commandManager = new CommandManager();
         }
@@ -112,12 +112,16 @@ namespace Odyssey.Talos.Systems
 
         IEnumerable<Command> FilterCommands(IEnumerable<Command> commands, string tagFilter)
         {
-            List<Command> filteredCommands = 
-                (from cRender in commands.OfType<RenderCommand>() 
-                 let filteredEntities = from e in cRender.Entities where e.GetComponent<TagComponent>().Tags.Contains(tagFilter) select e
-                 let tRenderCommand = cRender.GetType() 
-                 select (RenderCommand) Activator.CreateInstance(tRenderCommand, new object[] {Services, cRender.Effect, cRender.Items, filteredEntities}))
-                 .Cast<Command>().ToList();
+            List<Command> filteredCommands =
+                (from cRender in commands.OfType<RenderCommand>()
+                    let filteredEntities = from e in cRender.Entities 
+                                           where e.ContainsComponent<TagComponent>() && e.GetComponent<TagComponent>().Tags.Contains(tagFilter)
+                                           select e
+                    where filteredEntities.Any()
+                    let tRenderCommand = cRender.GetType()
+                    select (RenderCommand) Activator.CreateInstance(tRenderCommand,
+                                new object[] {Services, cRender.Effect, cRender.Items, filteredEntities}))
+                                .Cast<Command>().ToList();
 
             StateViewer sv = new StateViewer(Services, filteredCommands);
             return sv.Analyze(); 

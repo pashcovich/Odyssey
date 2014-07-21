@@ -26,13 +26,7 @@ namespace Odyssey.UserInterface.Style
         All = Top | Bottom | Left | Right,
     }
 
-    public enum GradientType
-    {
-        Uniform,
-        LinearVerticalGradient,
-        LinearHorizontalGradient,
-        Radial
-    }
+   
 
    
 }

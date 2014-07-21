@@ -9,7 +9,7 @@ namespace Odyssey.Talos.Systems
         protected ComponentType Update { get { return tUpdate; } }
         
 
-        protected UpdateableSystemBase(Aspect aspect) : base(aspect)
+        protected UpdateableSystemBase(Selector selector) : base(selector)
         {
             tUpdate = ComponentTypeManager.GetType<UpdateComponent>();
         }

@@ -119,7 +119,7 @@
     <Compile Include="Talos\Nodes\LightNode.cs" />
     <Compile Include="Talos\Nodes\PointLightNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Talos\Systems\Aspect.cs" />
+    <Compile Include="Talos\Systems\Selector.cs" />
     <Compile Include="Talos\Systems\CameraSystem.cs" />
     <Compile Include="Talos\Systems\IUpdateableSystem.cs" />
     <Compile Include="Talos\Systems\OrbitSystem.cs" />

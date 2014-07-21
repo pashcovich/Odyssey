@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Engine;
-using Odyssey.Graphics.Meshes;
-using Odyssey.Utilities.Reflection;
 using SharpDX;
 using SharpDX.Direct3D;
-using SharpDX.DXGI;
 
 namespace Odyssey.Graphics.Models
 {
@@ -131,6 +127,8 @@ namespace Odyssey.Graphics.Models
             PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList, ModelOperation modelOperations = ModelOperation.None)
         {
             bool toLeftHanded = modelOperations.HasFlag(ModelOperation.ReverseIndices);
+            if (modelOperations.HasFlag(ModelOperation.ReshuffleIndices))
+                indices = ModelEditor.RandomizePrimitiveOrder(indices, 2);
 
             if (modelOperations.HasFlag(ModelOperation.CalculateTangents))
             {
@@ -145,7 +143,8 @@ namespace Odyssey.Graphics.Models
             else if (modelOperations.HasFlag(ModelOperation.CalculateBarycentricCoordinatesAndExcludeEdges))
             {
                 var barycentricVertices = ModelEditor.ConvertToBarycentricEdgeNormalVertices(vertices, indices);
-                return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, null, primitiveTopology, false).ToModel(device);
+                int[] newIndices = Enumerable.Range(0, barycentricVertices.Length).ToArray();
+                return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, newIndices, primitiveTopology, false).ToModel(device);
             }
             else return new GeometricPrimitive(name, vertices, indices, primitiveTopology, toLeftHanded).ToModel(device);
 

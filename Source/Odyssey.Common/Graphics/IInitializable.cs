@@ -4,6 +4,5 @@
     {
         bool IsInited { get; }
         void Initialize();
-        void Unload();
     }
 }

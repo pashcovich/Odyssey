@@ -2,41 +2,42 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Utilities.Reflection;
 
 namespace Odyssey.Talos.Systems
 {
-    public class Aspect
+    public class Selector
     {
         protected long ContainsTypesMap { get; set; }
         protected long ExcludeTypesMap { get; set; }
         protected long OneTypesMap { get; set; }
 
-        protected Aspect()
+        protected Selector()
         {
             this.OneTypesMap = 0;
             this.ExcludeTypesMap = 0;
             this.ContainsTypesMap = 0;
         }
 
-        public static Aspect All(params Type[] types)
+        public static Selector All(params Type[] types)
         {
-            return new Aspect().GetAll(types);
+            return new Selector().GetAll(types);
         }
 
-        public static Aspect Exclude(params Type[] types)
+        public static Selector Exclude(params Type[] types)
         {
-            return new Aspect().GetExclude(types);
+            return new Selector().GetExclude(types);
         }
 
-        public static Aspect One(params Type[] types)
+        public static Selector One(params Type[] types)
         {
-            return new Aspect().GetOne(types);
+            return new Selector().GetOne(types);
         }
 
-        public Aspect GetAll(params Type[] types)
+        public Selector GetAll(params Type[] types)
         {
             Contract.Requires<ArgumentNullException>(types!=null);
-            //Contract.Requires<InvalidOperationException>(ReflectionHelper.AreTypesDerived(types, typeof(IComponent)), "Supplied type is not a valid component.");
+            Contract.Requires<InvalidOperationException>(ReflectionHelper.AreTypesDerived(types, typeof(IComponent)), "Supplied type is not a valid component.");
 
             foreach (ComponentType componentType in types.Select(ComponentTypeManager.GetType))
             {
@@ -46,7 +47,7 @@ namespace Odyssey.Talos.Systems
             return this;
         }
 
-        public Aspect GetExclude(params Type[] types)
+        public Selector GetExclude(params Type[] types)
         {
             Contract.Requires<ArgumentNullException>(types != null);
 
@@ -58,7 +59,7 @@ namespace Odyssey.Talos.Systems
             return this;
         }
 
-        public Aspect GetOne(params Type[] types)
+        public Selector GetOne(params Type[] types)
         {
             Contract.Requires<ArgumentNullException>(types != null);
 

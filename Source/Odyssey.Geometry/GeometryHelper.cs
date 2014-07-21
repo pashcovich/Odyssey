@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Real = System.Single;
+﻿using Real = System.Single;
 using Point = SharpDX.Vector2;
 
 namespace Odyssey.Geometry
 {
-    public class GeometryHelper
+    public static class GeometryHelper
     {
         /// <summary>
         /// Determines if three vertices are collinear (ie. on a straight line)

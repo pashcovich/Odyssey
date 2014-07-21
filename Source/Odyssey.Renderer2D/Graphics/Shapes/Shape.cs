@@ -15,7 +15,6 @@
 
 #region Using Directives
 
-using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Style;
@@ -23,7 +22,7 @@ using SharpDX;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Shapes
 {
     public abstract class Shape : UIElement, IShape
     {
@@ -57,6 +56,12 @@ namespace Odyssey.Graphics
             };
 
             return shape;
+        }
+
+        protected override void OnLayoutUpdated(System.EventArgs e)
+        {
+            base.OnLayoutUpdated(e);
+            Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
         }
     }
 }

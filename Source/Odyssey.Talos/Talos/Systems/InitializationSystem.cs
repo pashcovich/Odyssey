@@ -12,7 +12,7 @@ namespace Odyssey.Talos.Systems
     public class InitializationSystem : UpdateableSystemBase
     {
         public InitializationSystem()
-            : base(Aspect.One(typeof(ShaderComponent), typeof(PostProcessComponent)))
+            : base(Selector.One(typeof(ShaderComponent), typeof(PostProcessComponent)))
         {
         }
 

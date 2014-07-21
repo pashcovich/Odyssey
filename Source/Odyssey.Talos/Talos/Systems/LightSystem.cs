@@ -13,7 +13,7 @@ namespace Odyssey.Talos.Systems
 
         protected LightCollection LightNodes { get { return lightNodes; } }
 
-        protected LightSystem(Aspect aspect) : base(aspect)
+        protected LightSystem(Selector selector) : base(selector)
         {
             lightNodes = new LightCollection();
         }

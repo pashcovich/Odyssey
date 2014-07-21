@@ -14,7 +14,7 @@ namespace Odyssey.Graphics
 
         public override void Render()
         {
-            Device.SetTransform(transform);
+            Device.Transform = transform;
 
             Device.FillGeometry(shape, Fill);
             Device.DrawGeometry(shape, Stroke);

@@ -83,7 +83,7 @@
     <Compile Include="Graphics\Models\IModelMesh.cs" />
     <Compile Include="Graphics\Models\IPrimitiveGenerator.cs" />
     <Compile Include="Graphics\Models\Model.cs" />
-    <Compile Include="Graphics\Models\ModelAnalyser.cs" />
+    <Compile Include="Graphics\Models\ModelAnalyzer.cs" />
     <Compile Include="Graphics\Models\ModelBufferRange.cs" />
     <Compile Include="Graphics\Models\ModelData.cs" />
     <Compile Include="Graphics\Models\ModelData.IndexBuffer.cs" />
@@ -170,6 +170,10 @@
     <Compile Include="Graphics\Shaders\TechniqueKey.cs" />
     <Compile Include="Graphics\Shaders\TechniqueMapping.cs" />
     <Compile Include="Graphics\Shaders\TextureDescription.cs" />
+    <Compile Include="Graphics\Shapes\Designer.cs" />
+    <Compile Include="Graphics\Shapes\Designer.Ellipse.cs" />
+    <Compile Include="Graphics\Shapes\Designer.Rectangle.cs" />
+    <Compile Include="Graphics\Shapes\ShapeMeshDescription.cs" />
     <Compile Include="Graphics\StateCollectionBase.cs" />
     <Compile Include="Graphics\StateViewer.cs" />
     <Compile Include="Graphics\Texture.cs" />
@@ -189,7 +193,7 @@
     <Compile Include="Graphics\VertexElement.cs" />
     <Compile Include="Graphics\VertexElementAttribute.cs" />
     <Compile Include="Graphics\VertexInputLayout.cs" />
-    <Compile Include="Graphics\VertexPositionNormalTextureBarycentricEdge.cs" />
+    <Compile Include="Graphics\VertexPostionColor.cs" />
     <Compile Include="Graphics\VertexPositionNormalTextureBarycentric.cs" />
     <Compile Include="Graphics\VertexPositionNormalTexture .cs" />
     <Compile Include="Graphics\VertexPositionNormalTextureCube.cs" />
@@ -222,6 +226,7 @@
   <ItemGroup>
     <Compile Include="Graphics\Buffer.Typed.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

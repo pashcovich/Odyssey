@@ -48,16 +48,16 @@ namespace Odyssey.Talos.Messages
         }
 
         /// <summary>
-        /// Sends a message to a group of ISystem whose <see cref="Aspect"/> matches 
+        /// Sends a message to a group of ISystem whose <see cref="Selector"/> matches 
         /// the one supplied as a parameter
         /// </summary>
         /// <typeparam name="TMessage">The type of the <see cref="Message"/>.</typeparam>
         /// <param name="message">The message.</param>
-        /// <param name="aspect">The aspect.</param>
-        public void SendTo<TMessage>(TMessage message, Aspect aspect)
+        /// <param name="selector">The aspect.</param>
+        public void SendTo<TMessage>(TMessage message, Selector selector)
             where TMessage : Message
         {
-            var interestedSystems = messageMap.Select<TMessage>().Where(s => s.Aspect == aspect);
+            var interestedSystems = messageMap.Select<TMessage>().Where(s => s.Selector == selector);
             foreach (ISystem system in interestedSystems)
                 SendTo(message, system);
         }

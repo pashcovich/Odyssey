@@ -20,7 +20,7 @@ namespace Odyssey.Talos.Systems
         readonly ComponentType tShader;
         readonly ComponentType tModel;
 
-        public OptimizationSystem() : base(Aspect.All(typeof (ModelComponent), typeof(ShaderComponent)))
+        public OptimizationSystem() : base(Selector.All(typeof (ModelComponent), typeof(ShaderComponent)))
         {
             tShader = ComponentTypeManager.GetType<ShaderComponent>();
             tModel = ComponentTypeManager.GetType<ModelComponent>();

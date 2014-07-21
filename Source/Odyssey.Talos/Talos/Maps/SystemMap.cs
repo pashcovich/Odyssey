@@ -75,7 +75,7 @@ namespace Odyssey.Talos.Maps
 
         public ISystem GetSystem(IEntity entity)
         {
-            return systems.First(s => s.Aspect.Interests(entity.Key));
+            return systems.First(s => s.Selector.Interests(entity.Key));
         }
 
         void AddEntityToSystems(IEntity entity)

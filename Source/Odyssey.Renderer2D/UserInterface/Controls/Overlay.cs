@@ -41,14 +41,14 @@ namespace Odyssey.UserInterface.Controls
 
         #region Properties
 
-        public string ControlTheme { get; set; }
+        public string ControlTheme { get; private set; }
 
         public IStyleService StyleService
         {
             get { return styleService; }
         }
 
-        public string TextTheme { get; set; }
+        public string TextTheme { get; private set; }
 
         public new Direct2DDevice Device { get { return device; } }
 
@@ -70,6 +70,8 @@ namespace Odyssey.UserInterface.Controls
 
         internal UIElement EnteredElement { get; set; }
         internal UIElement FocusedElement { get; set; }
+
+        public IServiceRegistry Services { get { return services; } }
 
         #endregion Properties
 
@@ -127,10 +129,12 @@ namespace Odyssey.UserInterface.Controls
                 control.Render();
         }
 
-        public override void Unload()
+        protected override void Dispose(bool disposeManagedResources)
         {
-            foreach (UIElement uiElement in Controls)
-                uiElement.Unload();
+            base.Dispose(disposeManagedResources);
+            if (disposeManagedResources)
+                foreach (UIElement uiElement in Controls)
+                    uiElement.Dispose();
             IsInited = false;
         }
 

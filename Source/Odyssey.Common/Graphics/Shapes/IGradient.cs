@@ -1,12 +1,12 @@
 using SharpDX;
 
-namespace Odyssey.UserInterface.Style
+namespace Odyssey.Graphics.Shapes
 {
     public interface IGradient
     {
-        string Name { get; set; }
-        GradientType Type { get; set; }
-        GradientStop[] GradientStops { get; set; }
+        string Name { get;  }
+        GradientType Type { get; }
+        GradientStopCollection GradientStops { get; }
     }
 
     public interface IBorderShader : IGradient

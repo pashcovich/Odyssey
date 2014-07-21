@@ -16,6 +16,7 @@
 #region Using Directives
 
 using Odyssey.Geometry.Primitives;
+using Odyssey.Graphics.Shapes;
 using SharpDX;
 
 #endregion Using Directives

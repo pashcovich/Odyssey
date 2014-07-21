@@ -12,7 +12,7 @@ namespace Odyssey.Utilities.Reflection
 {
     public static class ReflectionHelper
     {
-        public static bool AreTypesDerived(Type[] derivedTypes, Type baseType)
+        public static bool AreTypesDerived(IEnumerable<Type> derivedTypes, Type baseType)
         {
             TypeInfo baseTypeInfo = baseType.GetTypeInfo();
             return derivedTypes.All(t => baseTypeInfo.IsAssignableFrom(t.GetTypeInfo()));
@@ -45,6 +45,42 @@ namespace Odyssey.Utilities.Reflection
             }
 
             return null;
+        }
+
+        public static PropertyInfo FindPropertyPath(Type type, string path)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            TypeInfo currentType = type.GetTypeInfo();
+            PropertyInfo propertyInfo = null;
+            foreach (string propertyName in path.Split('.'))
+            {
+                propertyInfo = currentType.GetDeclaredProperty(propertyName);
+                currentType = propertyInfo.PropertyType.GetTypeInfo();
+            }
+
+            return propertyInfo;
+        }
+
+        public static MemberInfo FindMemberPath(Type type, string path, out PropertyInfo containingProperty)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            TypeInfo currentType = type.GetTypeInfo();
+            containingProperty = null;
+            MemberInfo member = null;
+
+            foreach (string propertyName in path.Split('.'))
+            {
+
+                member = currentType.GetDeclaredProperty(propertyName) as MemberInfo ?? currentType.GetDeclaredField(propertyName) as MemberInfo;
+
+                if (member !=null)
+                {
+                    currentType = member.GetType().GetTypeInfo();
+                    containingProperty = (PropertyInfo)member ;
+                }
+            }
+
+            return member;
         }
 
         public static TAttribute GetAttribute<TAttribute>(Type sourceType)

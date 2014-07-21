@@ -27,7 +27,7 @@ namespace Odyssey.Talos.Systems
     public class PerspectiveCameraSystem : UpdateableSystemBase
     {
         public PerspectiveCameraSystem()
-            : base(Aspect.All(typeof (PositionComponent), typeof (RotationComponent), typeof (CameraComponent), typeof (UpdateComponent)))
+            : base(Selector.All(typeof (PositionComponent), typeof (RotationComponent), typeof (CameraComponent), typeof (UpdateComponent)))
         {
         }
 

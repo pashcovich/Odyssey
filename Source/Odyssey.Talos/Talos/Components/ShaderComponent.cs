@@ -61,10 +61,6 @@ namespace Odyssey.Talos.Components
             Technique.Initialize();
         }
 
-        public override void Unload()
-        {
-            if (Technique != null)
-                Technique.Dispose();
-        }
+
     }
 }

@@ -11,7 +11,7 @@ namespace Odyssey.Talos.Systems
 {
     public class ControllerSystem : UpdateableSystemBase
     {
-        public ControllerSystem() : base(Aspect.All(typeof(ControllerComponent)))
+        public ControllerSystem() : base(Selector.All(typeof(ControllerComponent)))
         {
         }
 

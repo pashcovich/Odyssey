@@ -1,9 +1,9 @@
-﻿using Odyssey.UserInterface.Controls;
+﻿using System;
+using Odyssey.UserInterface.Controls;
 using SharpDX;
 using SharpDX.Direct2D1;
-using System;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Shapes
 {
     public class Ellipse : Shape
     {

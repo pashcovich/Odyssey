@@ -117,9 +117,11 @@ namespace Odyssey.Talos
             return Scene.GetEntityComponent<TComponent>(this, keyPart);
         }
 
-        public IComponent GetComponent(string componentType)
+        public IComponent GetComponent(Type componentType)
         {
-            return GetComponent<IComponent>(ComponentTypeManager.GetKeyPart(componentType));
+            Contract.Requires<ArgumentNullException>(componentType!= null, "componentType");
+            Contract.Requires<ArithmeticException>(ReflectionHelper.IsTypeDerived(componentType, typeof(IComponent)));
+            return Scene.GetEntityComponent<IComponent>(this, ComponentTypeManager.GetKeyPart(componentType));
         }
 
         public bool Validate()

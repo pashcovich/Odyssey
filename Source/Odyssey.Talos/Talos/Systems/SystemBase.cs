@@ -1,16 +1,30 @@
-﻿using System.ComponentModel;
-using System.ServiceModel.Channels;
-using Odyssey.Talos.Messages;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
+
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using Odyssey.Talos.Messages;
 using SharpDX;
-using SharpYaml.Serialization;
+
+#endregion
 
 namespace Odyssey.Talos.Systems
 {
-    [DebuggerDisplay("Name = {Name}")]
     public abstract class SystemBase : ISystem
     {
         private static int index;
@@ -18,51 +32,57 @@ namespace Odyssey.Talos.Systems
         private readonly MessageQueue messageQueue;
         private readonly string name;
 
-        public event EventHandler<MessageEventArgs> BlockingMessageReceived;
-
-        [YamlMember(0)]
-        public string Name { get { return name; } }
-        [YamlMember(1)]
-        [DefaultValue(true)]
-        public bool IsEnabled { get; set; }
-        
-        [YamlIgnore] 
-        public Aspect Aspect { get; private set; }
-        [YamlIgnore]
-        public long Id { get { return id; } }
-        [YamlIgnore]
-        public MessageQueue MessageQueue { get { return messageQueue; } }
-
-        [YamlIgnore]
-        public Scene Scene { get; private set; }
-
-        [YamlIgnore]
-        protected IServiceRegistry Services { get { return Scene.Services; } }
-
-        [YamlIgnore]
-        protected IEnumerable<IEntity> Entities { get { return Scene.SystemMap.SelectAllEntities(this);} }
-
-        protected Messenger Messenger { get { return Scene.Messenger; } }
-        protected bool HasEntities { get { return Scene.SystemHasEntities(this); } }
-
-        protected SystemBase(Aspect aspect)
+        protected SystemBase(Selector selector)
         {
-            Aspect = aspect;
+            Selector = selector;
             name = GetType().Name;
-            id =  1 << index;
+            id = 1 << index;
             index++;
 
             messageQueue = new MessageQueue();
             IsEnabled = true;
         }
 
-
-        protected virtual void OnBlockingMessageReceived(MessageEventArgs args)
+        public string Name
         {
-            var handler = BlockingMessageReceived;
-            if (handler != null)
-                handler(this, args);
+            get { return name; }
         }
+
+        protected IServiceRegistry Services
+        {
+            get { return Scene.Services; }
+        }
+
+        protected IEnumerable<IEntity> Entities
+        {
+            get { return Scene.SystemMap.SelectAllEntities(this); }
+        }
+
+        protected Messenger Messenger
+        {
+            get { return Scene.Messenger; }
+        }
+
+        protected bool HasEntities
+        {
+            get { return Scene.SystemHasEntities(this); }
+        }
+
+        public bool IsEnabled { get; set; }
+
+        public Selector Selector { get; private set; }
+
+        public long Id
+        {
+            get { return id; }
+        }
+
+        public MessageQueue MessageQueue
+        {
+            get { return messageQueue; }
+        }
+
+        public Scene Scene { get; private set; }
 
         public void AssignToScene(Scene scene)
         {
@@ -70,7 +90,7 @@ namespace Odyssey.Talos.Systems
         }
 
         public void EnqueueMessage<TMessage>(TMessage message)
-            where TMessage : Odyssey.Talos.Messages.Message
+            where TMessage : Message
         {
             messageQueue.Enqueue(message);
         }
@@ -81,29 +101,33 @@ namespace Odyssey.Talos.Systems
 
 
         public virtual void Unload()
-        { }
+        {
+        }
 
         public virtual void Initialize()
-        { }
+        {
+        }
 
 
         [Pure]
         public bool Supports(long entityKey)
         {
-            return Aspect.Interests(entityKey);
+            return Selector.Interests(entityKey);
         }
 
         public void ReceiveBlockingMessage<TMessage>(TMessage message)
-            where TMessage : Odyssey.Talos.Messages.Message
+            where TMessage : Message
         {
             OnBlockingMessageReceived(new MessageEventArgs(message));
         }
 
-        [Pure]
-        internal bool IsEntityRegistered(IEntity entity)
-        {
-            return Scene.SystemMap.IsEntityRegisteredToSystem(entity, this);
-        }
+        public event EventHandler<MessageEventArgs> BlockingMessageReceived;
 
+        protected virtual void OnBlockingMessageReceived(MessageEventArgs args)
+        {
+            var handler = BlockingMessageReceived;
+            if (handler != null)
+                handler(this, args);
+        }
     }
 }

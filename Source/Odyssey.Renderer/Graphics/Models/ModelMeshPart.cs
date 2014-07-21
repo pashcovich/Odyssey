@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Odyssey.Content;
 using Odyssey.Engine;
+using Odyssey.Graphics.Organization.Commands;
 using SharpDX;
 
 namespace Odyssey.Graphics.Models
@@ -15,7 +16,7 @@ namespace Odyssey.Graphics.Models
     /// </summary>
     /// <remarks>
     /// Unlike XNA, a <see cref="ModelMeshPart"/> is not bound to a specific Effect. The effect must have been setup prior calling the <see cref="DrawUnindexed"/> method on this instance.
-    /// The <see cref="DrawUnindexed"/> method is only responsible to setup the VertexBuffer, IndexBuffer and call the appropriate <see cref="GraphicsDevice.DrawIndexed"/> method on the <see cref="GraphicsDevice"/>.
+    /// The <see cref="DrawIndexed"/> method is only responsible to setup the VertexBuffer, IndexBuffer and call the appropriate <see cref="DirectXDevice.DrawIndexed"/> method on the <see cref="DirectXDevice"/>.
     /// </remarks>
     public class ModelMeshPart : ComponentBase
     {
@@ -26,6 +27,21 @@ namespace Odyssey.Graphics.Models
 
         public PrimitiveType PrimitiveType;
         public bool IsIndex32Bit;
+
+        /// <summary>
+        /// Indicates how many primitives to render. Value will be clamped between [r..1],
+        /// where r is the minimum value needed to render at least one primitive; set to 1 to
+        /// render the whole model.
+        /// <exception cref="System.InvalidOperationException">Before rendering, if <see cref="SetPrimitiveRatio"/> is set to 0.</exception>
+        /// <param name="value">Indicates the percentage of primitives to render</param>
+        /// </summary>
+        public void SetPrimitiveRatio(float value)
+        {
+            int numPrimitives = IndexBuffer.Resource.ElementCount / 3;
+            numPrimitives = (int)Math.Round(numPrimitives*value);
+            IndexBuffer.Count = numPrimitives * 3;
+        }
+        
 
         /// <summary>
         /// The index buffer range for this mesh part.

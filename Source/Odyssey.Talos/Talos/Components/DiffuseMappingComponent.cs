@@ -23,7 +23,7 @@ namespace Odyssey.Talos.Components
         public Texture DiffuseMap { get; protected set; }
         public string DiffuseMapKey { get; set; }
 
-        public override void Unload()
+        public virtual void Unload()
         {
             if (DiffuseMap != null)
                 DiffuseMap.Unload();

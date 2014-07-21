@@ -94,6 +94,8 @@
     <Compile Include="Data\ReferenceSerializer.cs" />
     <Compile Include="Data\ResourceManager.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Shaders\Techniques\ShapePS.cs" />
+    <Compile Include="Shaders\Techniques\ShapeVS.cs" />
     <Compile Include="Viewer\DirectXThread.cs" />
     <Compile Include="Serialization\ShaderGraphSerializer.cs" />
     <Compile Include="Serialization\TechniqueDescription.cs" />

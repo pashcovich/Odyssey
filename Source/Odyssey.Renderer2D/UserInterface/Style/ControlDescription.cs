@@ -28,6 +28,7 @@
 #region Using directives
 
 using Odyssey.Content;
+using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Style;
 using Odyssey.UserInterface.Controls;
 using SharpDX;

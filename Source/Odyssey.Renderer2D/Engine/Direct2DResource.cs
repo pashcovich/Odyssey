@@ -30,12 +30,12 @@ namespace Odyssey.Engine
         public Direct2DDevice Device { get; internal set; }
 
         /// <summary>
-        /// The attached Direct3D11 resource to this instance.
+        /// The attached Direct2D1 resource to this instance.
         /// </summary>
         protected Resource Resource { get; set; }
 
         /// <summary>
-        /// Implicit casting operator to <see cref="SharpDX.Direct3D11.Resource"/>
+        /// Implicit casting operator to <see cref="SharpDX.Direct2D1.Resource"/>
         /// </summary>
         /// <param name="from">The GraphicsResource to convert from.</param>
         public static implicit operator Resource(Direct2DResource from)

@@ -12,7 +12,7 @@ namespace Odyssey.Talos.Systems
         protected Overlay Overlay { get; private set; }
 
         public UserInterfaceSystem()
-            : base(Aspect.All(typeof(UserInterfaceComponent)))
+            : base(Selector.All(typeof(UserInterfaceComponent)))
         {
             tUserInterface = ComponentTypeManager.GetType<UserInterfaceComponent>();
         }

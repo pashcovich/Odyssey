@@ -22,20 +22,19 @@ namespace Odyssey.Daedalus.Shaders.Structs
                 return vpt;
             }
         }
-
         public static Struct VertexPositionNormalTexture
         {
             get
             {
-                Struct vpt = new Struct
+                Struct vpnt = new Struct
                 {
                     Name = "input",
                     CustomType = Shaders.CustomType.VSIn,
                 };
-                vpt.Add(Vector.ObjectPosition);
-                vpt.Add(Vector.Normal);
-                vpt.Add(Vector.TextureUV);
-                return vpt;
+                vpnt.Add(Vector.ObjectPosition);
+                vpnt.Add(Vector.Normal);
+                vpnt.Add(Vector.TextureUV);
+                return vpnt;
             }
         }
 
@@ -74,23 +73,6 @@ namespace Odyssey.Daedalus.Shaders.Structs
             }
         }
 
-        public static Struct VertexPositionTextureOut
-        {
-            get
-            {
-                Struct vpt = new Struct
-                {
-                    CustomType = Shaders.CustomType.VSOut,
-                    Name = "output",
-                };
-                vpt.Add(Vector.ClipPosition);
-                vpt.Add(Vector.TextureUV);
-                return vpt;
-            }
-        }
-
-
-
         public static Struct VertexPositionColor 
         {
             get
@@ -98,6 +80,7 @@ namespace Odyssey.Daedalus.Shaders.Structs
                 Struct vpc = new Struct
                 {
                     Name = "input",
+                    CustomType = Shaders.CustomType.VSIn
                 };
                 vpc.Add(Vector.ObjectPosition);
                 vpc.Add(Vector.Color);

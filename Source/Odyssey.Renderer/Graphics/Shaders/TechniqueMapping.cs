@@ -1,5 +1,6 @@
 ﻿using Odyssey.Graphics.Effects;
 using Odyssey.Utilities;
+using Odyssey.Utilities.Extensions;
 using SharpDX.DXGI;
 using SharpDX.Serialization;
 using System;
@@ -113,6 +114,9 @@ namespace Odyssey.Graphics.Shaders
 
                 case VertexShaderFlags.TextureUVW:
                     return new[] { VertexElement.TextureCoordinate(Format.R32G32B32_Float) };
+
+                case VertexShaderFlags.Color:
+                    return new[] {VertexElement.Color(Format.R32G32B32A32_Float)};
 
                 case VertexShaderFlags.Tangent:
                     return new[] { VertexElement.Tangent(Format.R32G32B32A32_Float) };

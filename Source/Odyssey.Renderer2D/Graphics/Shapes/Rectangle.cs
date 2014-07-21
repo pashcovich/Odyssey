@@ -1,8 +1,8 @@
 ﻿using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Style;
 using SharpDX;
-using SharpDX.Direct2D1;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Shapes
 {
     public class Rectangle : Shape
     {
@@ -19,10 +19,7 @@ namespace Odyssey.Graphics
 
         protected override void OnInitializing(ControlEventArgs e)
         {
-            base.OnInitializing(e);
-            var initializer = new ShapeInitializer(Device);
-            initializer.Initialize(this);
-            foreach (var resource in initializer.CreatedResources)
+            foreach (var resource in ShapeInitializer.CreateResources(Device, this))
                 ToDispose(resource);
         }
     }

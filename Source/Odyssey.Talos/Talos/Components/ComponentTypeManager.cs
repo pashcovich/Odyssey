@@ -21,7 +21,7 @@ namespace Odyssey.Talos.Components
             return GetType<T>().KeyPart;
         }
 
-        public static long GetKeyPart(string componentType)
+        public static long GetKeyPart(Type componentType)
         {
             return GetType(componentType).KeyPart;
         }
@@ -31,12 +31,6 @@ namespace Odyssey.Talos.Components
             return GetType(typeof(T));
         }
 
-        public static ComponentType GetType(string componentType)
-        {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(componentType), "componentType");
-            Type type = ComponentTypes.Keys.First(t => string.Equals(t.Name, componentType));
-            return GetType(type);
-        }
         public static ComponentType GetType(Type component)
         {
             Contract.Requires<ArgumentNullException>(component != null);

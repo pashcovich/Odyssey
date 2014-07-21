@@ -12,7 +12,7 @@ namespace Odyssey.Talos.Systems
     public sealed class PointLightSystem : LightSystem
     {
         public PointLightSystem()
-            : base(Aspect.All(typeof(PositionComponent), typeof(PointLightComponent), typeof(UpdateComponent)))
+            : base(Selector.All(typeof(PositionComponent), typeof(PointLightComponent), typeof(UpdateComponent)))
         {
         }
 

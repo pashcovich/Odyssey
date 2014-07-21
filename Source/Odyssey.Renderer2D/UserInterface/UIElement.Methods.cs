@@ -67,10 +67,6 @@ namespace Odyssey.UserInterface
         //    else
         //        return UserInterfaceManager.CurrentOverlay.WindowManager[depth.WindowLayer - 1];
         //}
-        public virtual void Unload()
-        {
-            Dispose();
-        }
 
         public void BringToFront()
         {

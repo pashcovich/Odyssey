@@ -11,7 +11,7 @@ namespace Odyssey.Graphics
     /// This structure is related to <see cref="SharpDX.Direct3D11.InputElement"/>.
     /// </summary>	
     /// <remarks>	
-    /// <p>Because <see cref="SharpDX.Direct3D11.InputElement"/> requires to have the same <see cref="InputElement.Slot"/>, <see cref="SharpDX.InputElement.InstanceDataStepRate"/>,
+    /// <p>Because <see cref="SharpDX.Direct3D11.InputElement"/> requires to have the same <see cref="InputElement.Slot"/>, <see cref="InputElement.InstanceDataStepRate"/>,
     /// this <see cref="VertexInputLayout"/> structure encapsulates a set of <see cref="VertexBufferLayout"/>.</p>
     /// <p>
     /// This class is caching <see cref="VertexInputLayout"/> to improve performance.

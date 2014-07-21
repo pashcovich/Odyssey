@@ -44,7 +44,7 @@ namespace Odyssey.Graphics.Models
                 {
                     Name = Name,
                     VertexBuffer = new ModelBufferRange<VertexBufferBinding> { 
-                        Count = vertexBuffer.ElementCount, Resource = vertexBufferBinding, 
+                        Count = vertexBuffer.ElementCount, Resource = vertexBufferBinding,
                     Start = 0},
                     ParentMesh = this,
                     PrimitiveType = primitiveType,

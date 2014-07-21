@@ -1,12 +1,13 @@
 ﻿#region Using Directives
 
 using Odyssey.Graphics;
+using Odyssey.Graphics.Shapes;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using System;
 using System.Diagnostics.Contracts;
-using Brush = Odyssey.Graphics.Shapes.Brush;
+using Brush = Odyssey.UserInterface.Style.Brush;
 using D2DFactory = SharpDX.Direct2D1.Factory1;
 using DWFactory = SharpDX.DirectWrite.Factory1;
 using FactoryType = SharpDX.Direct2D1.FactoryType;
@@ -159,9 +160,15 @@ namespace Odyssey.Engine
             deviceContext.AntialiasMode = antialiasMode;
         }
 
-        public void SetTransform(Matrix3x2 transform)
+        public Matrix3x2 Transform
         {
-            deviceContext.Transform = transform;
+            get { return deviceContext.Transform; }
+            set { deviceContext.Transform = value; }
+        }
+
+        public void SetPrimitiveBlend(PrimitiveBlend blendMode)
+        {
+            deviceContext.PrimitiveBlend = blendMode; 
         }
 
         /// <summary>

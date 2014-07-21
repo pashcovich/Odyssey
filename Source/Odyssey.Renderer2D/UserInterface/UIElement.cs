@@ -136,6 +136,7 @@ namespace Odyssey.UserInterface
             }
 
             boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
+            transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);
         }
     }
 }

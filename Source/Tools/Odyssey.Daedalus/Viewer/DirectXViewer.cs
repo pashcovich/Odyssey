@@ -105,7 +105,7 @@ namespace Odyssey.Daedalus.Viewer
             var device = Services.GetService<IOdysseyDeviceService>().DirectXDevice;
             scene = new Scene(Services);
 
-            var cube = CubeMesh.New(device, modelOperations: ModelAnalyser.DetectModelRequirements(vsFlags));
+            var cube = CubeMesh.New(device, modelOperations: ModelAnalyzer.DetectModelRequirements(vsFlags));
             Content.Store(cube.Name, cube);
 
             var modelSystem = new ContentLoadingSystem<ModelComponent>();

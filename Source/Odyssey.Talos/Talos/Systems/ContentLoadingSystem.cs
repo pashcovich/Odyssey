@@ -8,7 +8,7 @@ namespace Odyssey.Talos.Systems
     public class ContentLoadingSystem<TComponent> : SystemBase, IUpdateableSystem
         where TComponent : ContentComponent
     {
-        public ContentLoadingSystem() : base(Aspect.All(typeof(TComponent)))
+        public ContentLoadingSystem() : base(Selector.All(typeof(TComponent)))
         {
         }
 

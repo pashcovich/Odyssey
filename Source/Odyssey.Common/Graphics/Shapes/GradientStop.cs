@@ -1,11 +1,7 @@
-﻿using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using SharpDX;
 
-namespace Odyssey.UserInterface.Style
+namespace Odyssey.Graphics.Shapes
 {
     public class GradientStop : IEquatable<GradientStop>
     {
@@ -66,5 +62,10 @@ namespace Odyssey.UserInterface.Style
         }
 
         #endregion Equality
+
+        public static explicit operator SharpDX.Direct2D1.GradientStop(GradientStop from)
+        {
+            return from == null ? default(SharpDX.Direct2D1.GradientStop) : new SharpDX.Direct2D1.GradientStop() {Color = from.Color, Position = from.Offset};
+        }
     }
 }

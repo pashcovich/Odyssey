@@ -52,14 +52,11 @@ namespace Odyssey.Geometry.Primitives
 
         #region Constructors
 
-        internal Polygon(Point[] points) : this()
+        internal Polygon(IEnumerable<Point> points)
+            : this()
         {
             Vertices.AddRange(points);
         }
-
-        internal Polygon(IEnumerable<Point> points)
-            : this()
-        {}
 
         internal Polygon()
         {
@@ -332,7 +329,6 @@ namespace Odyssey.Geometry.Primitives
         {
             float polygonSide = SideLength(circumCircleRadius, sides);
 
-
             Vector2[] polygonPoints = new Vector2[sides];
             
             for (int i = 0; i < sides; i++)
@@ -343,7 +339,6 @@ namespace Odyssey.Geometry.Primitives
 
                 polygonPoints[i] = new Vector2(x, y);
             }
-
 
             return new Polygon(polygonPoints);
         }

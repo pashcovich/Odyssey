@@ -82,10 +82,11 @@ namespace Odyssey.Graphics.Effects
         Normal = 1 << 1,
         TextureUV = 1 << 2,
         TextureUVW = 1 << 3,
-        Tangent = 1 << 4,
-        Barycentric = 1 << 5,
-        ShadowProjection = 1 << 6,
-        InstanceWorld = 1 << 7,
+        Color = 1 << 4,
+        Tangent = 1 << 5,
+        Barycentric = 1 << 6,
+        ShadowProjection = 1 << 7,
+        InstanceWorld = 1 << 8,
 
         All = ~0,
     }

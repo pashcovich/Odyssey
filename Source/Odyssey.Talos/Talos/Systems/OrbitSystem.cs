@@ -13,7 +13,7 @@ namespace Odyssey.Talos.Systems
         readonly ComponentType tPosition;
         private readonly ComponentType tParent;
 
-        public OrbitSystem() : base(Aspect.All(typeof (OrbitBehaviourComponent), typeof (UpdateComponent))
+        public OrbitSystem() : base(Selector.All(typeof (OrbitBehaviourComponent), typeof (UpdateComponent))
             .GetOne(typeof (RotationComponent), typeof (ParentComponent)))
         {
             tOrbitBehaviour = ComponentTypeManager.GetType<OrbitBehaviourComponent>();

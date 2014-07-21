@@ -15,16 +15,15 @@
 
 #region Using Directives
 
-using Odyssey.Engine;
-using Odyssey.Graphics.Shapes;
-using Odyssey.UserInterface.Style;
 using System.Collections.Generic;
+using Odyssey.Engine;
+using Odyssey.UserInterface.Style;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Shapes
 {
-    internal class ShapeInitializer
+    public class ShapeInitializer
     {
         private readonly Direct2DDevice device;
         private readonly List<Direct2DResource> resources;
@@ -50,13 +49,53 @@ namespace Odyssey.Graphics
             switch (shape.FillShader.Type)
             {
                 default:
-                    shape.Stroke = SolidBrush.New(device, shape.StrokeShader.GradientStops[0].Color);
                     shape.Fill = SolidBrush.New(device, shape.FillShader.GradientStops[0].Color);
+                    break;
+            }
+
+            switch (shape.StrokeShader.Type)
+            {
+                default:
+                    shape.Stroke = SolidBrush.New(device, shape.StrokeShader.GradientStops[0].Color);
                     break;
             }
 
             resources.Add(shape.Stroke);
             resources.Add(shape.Fill);
+        }
+
+        public static IEnumerable<Direct2DResource> CreateResources(Direct2DDevice device, Shape shape)
+        {
+            var resources = new List<Direct2DResource>();
+            if (shape.FillShader == null)
+                shape.FillShader = LinearGradient.CreateUniform(Shape.DefaultFillColor);
+            if (shape.StrokeShader == null)
+                shape.StrokeShader = LinearGradient.CreateUniform(Shape.DefaultStrokeColor);
+
+            switch (shape.FillShader.Type)
+            {
+                case GradientType.Linear:
+                    shape.Fill = LinearGradientBrush.New(device, shape);
+                    break;
+
+                default:
+                    shape.Fill = SolidBrush.New(device, shape.FillShader.GradientStops[0].Color);
+                    break;
+            }
+
+            switch (shape.StrokeShader.Type)
+            {
+                default:
+                    shape.Stroke = SolidBrush.New(device, shape.StrokeShader.GradientStops[0].Color);
+                    break;
+            }
+            
+            shape.Stroke.Initialize();
+            shape.Fill.Initialize();
+
+            resources.Add(shape.Stroke);
+            resources.Add(shape.Fill);
+            return resources;
         }
     }
 }

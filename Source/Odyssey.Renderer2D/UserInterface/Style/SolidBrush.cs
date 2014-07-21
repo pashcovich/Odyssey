@@ -6,27 +6,24 @@ using SharpDX.Direct2D1;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.UserInterface.Style
 {
-    public class SolidBrush : Brush
+    internal class SolidBrush : Brush
     {
-        private readonly Color4 color;
-
-        private SolidBrush(Direct2DDevice device, Color4 color, SolidColorBrush brush)
+        private SolidBrush(Direct2DDevice device, SolidColorBrush brush)
             : base(device, brush)
         {
-            this.color = color;
             Initialize(Resource);
         }
 
         public Color4 Color
         {
-            get { return color; }
+            get { return ((SolidColorBrush)Resource).Color; }
         }
 
         public static SolidBrush New(Direct2DDevice device, Color4 color)
         {
-            return new SolidBrush(device, color, new SolidColorBrush(device, color));
+            return new SolidBrush(device, new SolidColorBrush(device, color));
         }
     }
 }

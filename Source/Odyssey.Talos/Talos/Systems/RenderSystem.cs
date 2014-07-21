@@ -13,7 +13,7 @@ namespace Odyssey.Talos.Systems
     {
         private readonly CommandManager commandManager;
 
-        public RenderSystem() : base(Aspect.All(typeof (ModelComponent), typeof (ShaderComponent)))
+        public RenderSystem() : base(Selector.All(typeof (ModelComponent), typeof (ShaderComponent)))
         {
             commandManager = new CommandManager();
         }

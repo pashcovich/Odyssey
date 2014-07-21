@@ -31,7 +31,6 @@ namespace Odyssey.Talos.Components
         {
         }
 
-        public abstract void Unload();
         public abstract void Initialize();
         public abstract bool IsInited { get; }
 

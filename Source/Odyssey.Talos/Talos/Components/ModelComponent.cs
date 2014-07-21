@@ -8,10 +8,9 @@ namespace Odyssey.Talos.Components
     [OptionalComponent(typeof(ShaderComponent), typeof(PostProcessComponent))]
     [RequiredComponent(typeof(PositionComponent))]
     [RequiredComponent(typeof(TransformComponent))]
-    [YamlTag("Model")]
     public class ModelComponent : ContentComponent
     {
-        [YamlIgnore] public Model Model { get; private set; }
+        public Model Model { get; private set; }
         public override bool IsInited { get { return Model != null; } }
 
         protected override void Dispose(bool disposing)
@@ -27,12 +26,7 @@ namespace Odyssey.Talos.Components
             : base(ComponentTypeManager.GetType<ModelComponent>())
         {
         }
-        
-        public override void Unload()
-        {
-            if (Model != null)
-                Model.Dispose();
-        }
+
 
         public override void Initialize()
         {

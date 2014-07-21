@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Odyssey.Content;
 using Odyssey.Engine;
-using Odyssey.Graphics;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities.Logging;
@@ -88,7 +83,7 @@ namespace Odyssey.Talos.Components
                     technique.Dispose();
         }
 
-        public override void Unload()
+        public virtual void Unload()
         {
             foreach (var technique in techniques.Where(technique => technique != null))
                 technique.Dispose();
