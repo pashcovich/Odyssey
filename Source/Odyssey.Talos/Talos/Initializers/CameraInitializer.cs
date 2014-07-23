@@ -24,9 +24,9 @@ namespace Odyssey.Talos.Initializers
         {
             var services = initializer.Services;
             var scene = services.GetService<IScene>();
-            var effect = initializer.Effect;
-            InitializerParameters parameters = new InitializerParameters(-1, initializer.Technique, services, StaticSelector);
-            var data = from metaData in effect.MetaData
+            var technique = initializer.Technique;
+            InitializerParameters parameters = new InitializerParameters(-1, technique, services, StaticSelector);
+            var data = from metaData in technique.MetaData
                        where metaData.Key == Param.Properties.CameraId
                        select Int32.Parse(metaData.Value);
 

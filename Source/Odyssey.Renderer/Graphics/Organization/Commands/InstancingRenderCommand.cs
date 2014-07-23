@@ -10,13 +10,13 @@ using SharpDX.Direct3D11;
 
 namespace Odyssey.Graphics.Organization.Commands
 {
-    public class InstancingRenderCommand : EffectRenderCommand
+    public class InstancingRenderCommand : TechniqueRenderCommand
     {
         private Buffer instanceBuffer;
         private int elementSize;
 
-        public InstancingRenderCommand(IServiceRegistry services, Effect effect, ModelMeshCollection renderables, IEnumerable<IEntity> entities) 
-            : base(services, effect, renderables, entities)
+        public InstancingRenderCommand(IServiceRegistry services, Technique technique, ModelMeshCollection renderables, IEnumerable<IEntity> entities) 
+            : base(services, technique, renderables, entities)
         {
         }
 
@@ -24,8 +24,8 @@ namespace Odyssey.Graphics.Organization.Commands
         {
             DirectXDevice device = DeviceService.DirectXDevice;
             elementSize =
-                Effect[ShaderType.Vertex].SelectBuffers(Effect.Name, Entities.First().Id, UpdateType.InstanceFrame).First().ElementSize;
-            Effect.UpdateBuffers(UpdateType.InstanceFrame);
+                Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, Entities.First().Id, UpdateType.InstanceFrame).First().ElementSize;
+            Technique.UpdateBuffers(UpdateType.InstanceFrame);
             var data = AggregateIntanceData();
 
             instanceBuffer = ToDispose(Buffer.Vertex.New(device,  data, ResourceUsage.Default));
@@ -35,7 +35,7 @@ namespace Odyssey.Graphics.Organization.Commands
         Vector4[] AggregateIntanceData()
         {
             return (from e in Entities
-                    from cb in Effect[ShaderType.Vertex].SelectBuffers(Effect.Name, e.Id, UpdateType.InstanceFrame)
+                    from cb in Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, e.Id, UpdateType.InstanceFrame)
                     select cb).SelectMany(cb => cb.Data).ToArray();
         }
 
@@ -43,15 +43,15 @@ namespace Odyssey.Graphics.Organization.Commands
         {
             DirectXDevice device = DeviceService.DirectXDevice;
 
-            foreach (Shader shader in Effect)
-                shader.Apply(Effect.Name, UpdateType.SceneFrame);
+            foreach (Shader shader in Technique)
+                shader.Apply(Technique.Name, UpdateType.SceneFrame);
 
             var updatedData = AggregateIntanceData();
             instanceBuffer.SetData(device, updatedData);
 
             foreach (ModelMesh modelMesh in Renderables)
             {
-                foreach (ConstantBuffer cb in Effect[ShaderType.Vertex].SelectBuffers(Effect.Name, UpdateType.InstanceFrame))
+                foreach (ConstantBuffer cb in Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, UpdateType.InstanceFrame))
                     device.SetVertexBuffer(cb.Index, instanceBuffer, elementSize);
                 modelMesh.DrawIndexedInstanced(device, EntityCount);
             }

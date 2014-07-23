@@ -70,6 +70,7 @@
     <Compile Include="Talos\Initializers\EffectInitializer.cs" />
     <Compile Include="Talos\Maps\SystemEventArgs.cs" />
     <Compile Include="Talos\Messages\CameraMessage.cs" />
+    <Compile Include="Talos\Messages\ContentMessage.cs" />
     <Compile Include="Talos\Messages\LightMessage.cs" />
     <Compile Include="Talos\Nodes\LightCollection.cs" />
     <Compile Include="Talos\Nodes\ICollectionService.cs" />
@@ -115,7 +116,7 @@
     <Compile Include="Talos\Messages\Messenger.cs" />
     <Compile Include="Talos\Messages\OptimizationCompleteMessage.cs" />
     <Compile Include="Talos\Messages\PropertyChangeMessage.cs" />
-    <Compile Include="Talos\Messages\ContentLoadedMessage.cs" />
+    <Compile Include="Talos\Messages\ComponentMessage.cs" />
     <Compile Include="Talos\Nodes\LightNode.cs" />
     <Compile Include="Talos\Nodes\PointLightNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -12,7 +12,7 @@ namespace Odyssey.Graphics.Organization.Commands
 
     public abstract class RenderCommand : Command, IRenderCommand
     {
-        private Effect effect;
+        private readonly Technique technique;
         private readonly List<IEntity> entities;
         
         protected ModelMeshCollection Renderables { get; set; }
@@ -25,15 +25,15 @@ namespace Odyssey.Graphics.Organization.Commands
             get { return Renderables; }
         }
 
-        public Effect Effect { get { return effect; } }
+        public Technique Technique { get { return technique; } }
 
-        protected RenderCommand(IServiceRegistry services, Effect effect, IEnumerable<IEntity> entities)
+        protected RenderCommand(IServiceRegistry services, Technique effect, IEnumerable<IEntity> entities)
             : base(services, CommandType.Render)
         {
             Contract.Requires<ArgumentNullException>(effect != null, "effect");
             Contract.Requires<ArgumentNullException>(entities != null, "entities");
             Contract.Requires<ArgumentException>(entities.Any(), "[entities] sequence is empty");
-            this.effect = ToDispose(effect);
+            this.technique = ToDispose(effect);
             this.entities = new List<IEntity>(entities);
         }
 
@@ -69,12 +69,5 @@ namespace Odyssey.Graphics.Organization.Commands
         public abstract void PostRender();
         public abstract void Render();
 
-        public override void Unload()
-        {
-            RemoveAndDispose(ref effect);
-            foreach (ModelMesh mesh in Renderables.Where(mesh => mesh != null))
-                mesh.Dispose();
-            Dispose();
-        }
     }
 }

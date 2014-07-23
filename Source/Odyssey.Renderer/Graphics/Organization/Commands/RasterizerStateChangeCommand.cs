@@ -24,14 +24,5 @@ namespace Odyssey.Graphics.Organization.Commands
         {
             DeviceService.DirectXDevice.SetRasterizerState(rasterizerState);
         }
-
-        public override void Unload()
-        {
-            if (rasterizerState != null)
-                rasterizerState.Dispose();
-            IsInited = false;
-        }
-
-        
     }
 }

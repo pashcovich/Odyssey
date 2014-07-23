@@ -72,7 +72,6 @@
     <Compile Include="Graphics\Interop.cs" />
     <Compile Include="Graphics\Models\ModelOperation.cs" />
     <Compile Include="Graphics\PixelFormat.cs" />
-    <Compile Include="Graphics\IInitializable.cs" />
     <Compile Include="Graphics\Shapes\ExtendMode.cs" />
     <Compile Include="Graphics\Shapes\GradientBase.cs" />
     <Compile Include="Graphics\Shapes\GradientStop.cs" />

@@ -75,6 +75,7 @@ namespace Odyssey.Graphics
         {
             var description = RasterizerStateDescription.Default();
             description.CullMode = mode;
+            description.IsFrontCounterClockwise = true;
 
             var state = New(device, description);
             state.Name = name;

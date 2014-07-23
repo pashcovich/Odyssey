@@ -35,7 +35,7 @@ namespace Odyssey.Engine
         internal PixelShaderStage PixelShader;
         internal RasterizerStage RasterizerStage;
         internal VertexShaderStage VertexShader;
-        private readonly EffectPool effectPool;
+        private readonly TechniquePool techniquePool;
         private readonly RenderTargetView[] currentRenderTargetViews;
         private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
 
@@ -61,7 +61,7 @@ namespace Odyssey.Engine
         private VertexInputLayout currentVertexInputLayout;
 
         private int maxSlotCountForVertexBuffer;
-        private Effect currentEffect;
+        private Technique currentTechnique;
 
         protected DirectXDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None,
             params FeatureLevel[] featureLevels)
@@ -126,7 +126,7 @@ namespace Odyssey.Engine
             RasterizerStates = ToDispose(new RasterizerStateCollection(this));
             DepthStencilStates = ToDispose(new DepthStencilStateCollection(this));
             BlendStates = ToDispose(new BlendStateCollection(this));
-            effectPool = ToDispose(new EffectPool(this));
+            techniquePool = ToDispose(new TechniquePool(this));
             Initialize();
         }
 
@@ -147,18 +147,19 @@ namespace Odyssey.Engine
             get { return Presenter != null ? Presenter.DepthStencilBuffer : null; }
         }
 
-        internal Effect CurrentEffect
+        internal Technique CurrentTechnique
         {
-            get { return currentEffect; }
+            get { return currentTechnique; }
         }
 
-        internal void SetCurrentEffect(Effect effect)
+        internal void SetCurrentEffect(Technique technique)
         {
-            Contract.Requires<ArgumentNullException>(effect != null, "effect");
-            currentEffect = effect;
-            SetShader((Graphics.Shaders.VertexShader) currentEffect[ShaderType.Vertex]);
-            if (currentEffect.ContainsShader(ShaderType.Pixel))
-                SetShader((Graphics.Shaders.PixelShader) currentEffect[ShaderType.Pixel]);
+            Contract.Requires<ArgumentNullException>(technique != null, "technique");
+            
+            SetShader((Graphics.Shaders.VertexShader) technique[ShaderType.Vertex]);
+            if (technique.ContainsShader(ShaderType.Pixel))
+                SetShader((Graphics.Shaders.PixelShader) technique[ShaderType.Pixel]);
+            currentTechnique = technique;
         }
 
         /// <summary>
@@ -207,9 +208,9 @@ namespace Odyssey.Engine
             }
         }
 
-        public EffectPool EffectPool
+        public TechniquePool TechniquePool
         {
-            get { return effectPool; }
+            get { return techniquePool; }
         }
 
         public DeviceFeatures Features
@@ -1120,10 +1121,10 @@ namespace Odyssey.Engine
 
         private void SetupInputLayout()
         {
-            if (CurrentEffect == null)
-                throw new InvalidOperationException("Cannot perform a Draw/Dispatch operation without an Effect applied.");
+            if (CurrentTechnique == null)
+                throw new InvalidOperationException("Cannot perform a Draw/Dispatch operation without a Technique applied.");
 
-            var inputLayout = CurrentEffect.InputLayout;
+            var inputLayout = CurrentTechnique.InputLayout;
             InputAssembler.InputLayout = inputLayout;
         }
     }

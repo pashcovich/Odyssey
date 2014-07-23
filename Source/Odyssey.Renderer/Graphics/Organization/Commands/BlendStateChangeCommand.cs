@@ -27,14 +27,6 @@ namespace Odyssey.Graphics.Organization.Commands
         {
             DeviceService.DirectXDevice.SetBlendState(blendState);
         }
-
-        public override void Unload()
-        {
-            if (blendState!=null)
-                blendState.Dispose();
-            IsInited = false;
-        }
-
        
     }
 }

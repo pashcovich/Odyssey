@@ -1,55 +1,93 @@
-﻿using System.Runtime.CompilerServices;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Effects;
-using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
 using Odyssey.Utilities.Logging;
 using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ITextureResource = Odyssey.Talos.Components.ITextureResource;
-using EngineReference = Odyssey.Graphics.Effects.EngineReference;
+
+#endregion
+
 namespace Odyssey.Talos.Initializers
 {
     public class EntityInitializer : Initializer<IEntity>
     {
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
+        {
+            {
+                Reference.Matrix.World, (index, entity, parameters) => new[]
+                {new MatrixParameter(index, Param.Matrices.World, () => entity.GetComponent<TransformComponent>().World)}
+            },
+            {
+                Reference.Matrix.WorldInverse, (index, entity, parameters) => new[]
+                {
+                    new MatrixParameter(index, Param.Matrices.WorldInverse,
+                        () => Matrix.Invert(entity.GetComponent<TransformComponent>().World))
+                }
+            },
+            {
+                Reference.Matrix.WorldInverseTranspose, (index, entity, parameters) => new[]
+                {
+                    new MatrixParameter(index, Param.Matrices.WorldInverseTranspose,
+                        () => Matrix.Transpose(Matrix.Invert(entity.GetComponent<TransformComponent>().World)))
+                }
+            },
+        };
+
         public EntityInitializer(IServiceRegistry services)
             : base(services, Reference.Group.Entity)
         {
-        } 
+        }
 
-        public override void Initialize(DirectXDevice device, Effect effect, IEntity source, InitializerParameters parameters)
+        public override void Initialize(DirectXDevice device, IEntity source, InitializerParameters parameters)
         {
-            base.Initialize(device, effect, source, parameters);
-            if (!effect.UsesProceduralTextures)
-                InitializeTextures(effect, source, parameters);
+            base.Initialize(device, source, parameters);
+            if (!parameters.Technique.UsesProceduralTextures)
+                InitializeTextures(source, parameters);
         }
 
         public override void SetupInitialization(ShaderInitializer initializer)
         {
             var services = initializer.Services;
-            var effect = initializer.Effect;
+            var technique = initializer.Technique;
 
             var scene = services.GetService<IScene>();
 
             var data = from e in scene.Entities
-                        let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
-                        from cTechnique in techniqueComponents
-                        from technique in cTechnique.Techniques
-                        where technique.ActiveTechniqueId == effect.Name
-                        select e.Id;
+                let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
+                from cTechnique in techniqueComponents
+                from t in cTechnique.Techniques
+                where t.Name == technique.Name
+                select e.Id;
 
             foreach (long entityId in data)
             {
-                InitializerParameters parameters = new InitializerParameters(entityId, initializer.Technique, services, InstanceSelector);
+                InitializerParameters parameters = new InitializerParameters(entityId, technique, services, InstanceSelector);
                 initializer.Initialize(this, scene.SelectEntity(entityId), parameters);
             }
         }
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex, string reference, InitializerParameters initializerParameters)
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IEntity entity, int parameterIndex,
+            string reference, InitializerParameters initializerParameters)
         {
             if (!ReferenceActions.ContainsKey(reference))
                 throw new InvalidOperationException(string.Format("[{0}]: Entity parameter not valid", reference));
@@ -78,39 +116,18 @@ namespace Odyssey.Talos.Initializers
             return resource != null ? resource[reference] : null;
         }
 
-        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
-        {
-            {
-                Reference.Matrix.World, (index, entity, parameters) => new[]
-                {new MatrixParameter(index, Param.Matrices.World, () => entity.GetComponent<TransformComponent>().World)}
-            },
-            {
-                Reference.Matrix.WorldInverse, (index, entity, parameters) => new[]
-                {
-                    new MatrixParameter(index, Param.Matrices.WorldInverse,
-                        () => Matrix.Invert(entity.GetComponent<TransformComponent>().World))
-                }
-            },
-            {
-                Reference.Matrix.WorldInverseTranspose, (index, entity, parameters) => new[]
-                {
-                    new MatrixParameter(index, Param.Matrices.WorldInverseTranspose,
-                        () => Matrix.Transpose(Matrix.Invert(entity.GetComponent<TransformComponent>().World)))
-                }
-            },
-        };
 
-
-        private void InitializeTextures(Effect effect, IEntity source, InitializerParameters parameters)
+        private void InitializeTextures(IEntity source, InitializerParameters parameters)
         {
-            var referenceTable = from shaderObject in parameters.Technique.Shaders
-                                 from textures in shaderObject.TextureReferences
-                                 select new { Shader = shaderObject, TextureDesc = textures };
+            var technique = parameters.Technique;
+            var referenceTable = from shaderObject in technique.Mapping.Shaders
+                from textures in shaderObject.TextureReferences
+                select new {Shader = shaderObject, TextureDesc = textures};
 
             foreach (var row in referenceTable)
             {
                 var textureDesc = row.TextureDesc;
-                if (!effect[textureDesc.ShaderType].HasTexture(textureDesc.Index))
+                if (!technique[textureDesc.ShaderType].HasTexture(textureDesc.Index))
                 {
                     Texture texture = FindResource(source.Components, row.Shader.Name, row.TextureDesc.Texture);
                     if (texture == null)
@@ -119,7 +136,7 @@ namespace Odyssey.Talos.Initializers
                             textureDesc.Texture, row.Shader.Name);
                         throw new InvalidOperationException("No suitable textures found.");
                     }
-                    effect[textureDesc.ShaderType].AddTexture(new TextureMapping(texture, textureDesc));
+                    technique[textureDesc.ShaderType].AddTexture(new TextureMapping(texture, textureDesc));
                 }
             }
         }

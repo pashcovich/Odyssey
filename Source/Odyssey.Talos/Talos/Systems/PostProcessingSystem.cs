@@ -61,9 +61,8 @@ namespace Odyssey.Talos.Systems
             {
                 var cPostProcess = entity.GetComponent<PostProcessComponent>();
                 var cModel = entity.GetComponent<ModelComponent>();
-                cPostProcess.Initialize();
 
-                var techniques = cPostProcess.Techniques.ToDictionary(t => t.Effect.Name, t => t);
+                var techniques = cPostProcess.Techniques.ToDictionary(t => t.Name, t => t);
                 for (int i=0; i< cPostProcess.Actions.Count; i++)
                 {
                     PostProcessAction ppAction = cPostProcess.Actions[i];
@@ -80,7 +79,7 @@ namespace Odyssey.Talos.Systems
                     }
                     else
                     {
-                        Effect effect = techniques[string.Format("{0}.{1}", ppAction.AssetName, ppAction.Technique)].Effect;
+                        Technique effect = techniques[string.Format("{0}.{1}", ppAction.AssetName, ppAction.Technique)];
                         newCommands.Add(new PostProcessCommand(Services, effect, cModel.Model.Meshes[0],
                             entity,
                             ppAction.TextureDescription, ppAction.Output) {Name = ppAction.Technique});
@@ -105,10 +104,6 @@ namespace Odyssey.Talos.Systems
             
         }
 
-        public override void Unload()
-        {
-            commandManager.Dispose();
-        }
 
         IEnumerable<Command> FilterCommands(IEnumerable<Command> commands, string tagFilter)
         {
@@ -120,7 +115,7 @@ namespace Odyssey.Talos.Systems
                     where filteredEntities.Any()
                     let tRenderCommand = cRender.GetType()
                     select (RenderCommand) Activator.CreateInstance(tRenderCommand,
-                                new object[] {Services, cRender.Effect, cRender.Items, filteredEntities}))
+                                new object[] { Services, cRender.Technique, cRender.Items, filteredEntities }))
                                 .Cast<Command>().ToList();
 
             StateViewer sv = new StateViewer(Services, filteredCommands);

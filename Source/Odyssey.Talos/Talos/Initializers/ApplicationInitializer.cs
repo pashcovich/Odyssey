@@ -25,7 +25,7 @@ namespace Odyssey.Talos.Initializers
             var services = initializer.Services;
             var settings = services.GetService<IOdysseyDeviceService>();
 
-            InitializerParameters parameters = new InitializerParameters(-1, initializer.Technique, services, StaticSelector);
+            InitializerParameters parameters = new InitializerParameters(-1,initializer.Technique, services, StaticSelector);
             initializer.Initialize(this, settings, parameters);
         }
 

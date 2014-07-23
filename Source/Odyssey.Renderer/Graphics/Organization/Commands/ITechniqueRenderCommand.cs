@@ -2,8 +2,8 @@
 
 namespace Odyssey.Graphics.Organization.Commands
 {
-    public interface IEffectRenderCommand : IRenderCommand
+    public interface ITechniqueRenderCommand : IRenderCommand
     {
-        Effect Effect { get; }
+        Technique Technique { get; }
     }
 }

@@ -1,16 +1,14 @@
 ﻿using System;
 using Odyssey.Content;
 using Odyssey.Engine;
-using Odyssey.Graphics;
 using Odyssey.Utilities.Logging;
 using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
-    public abstract class ContentComponent : Component, IInitializable, IContentComponent, IDisposable
+    public abstract class ContentComponent : Component, IContentComponent
     {
         string assetName;
-        [YamlMember(1)]
         public string AssetName
         {
             get { return assetName; }
@@ -31,6 +29,9 @@ namespace Odyssey.Talos.Components
         {
         }
 
+        /// <summary>
+        /// Initializes the content of this component.
+        /// </summary>
         public abstract void Initialize();
         public abstract bool IsInited { get; }
 
@@ -42,12 +43,5 @@ namespace Odyssey.Talos.Components
             return test;
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected abstract void Dispose(bool disposing);
     }
 }

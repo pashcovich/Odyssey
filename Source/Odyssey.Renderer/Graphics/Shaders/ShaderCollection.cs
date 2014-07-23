@@ -14,7 +14,7 @@ namespace Odyssey.Graphics.Shaders
     [ContentReader(typeof(EffectReader))]
     public class ShaderCollection : IEnumerable<TechniqueMapping>, IDataSerializable
     {
-        public const string OdysseyIdentifier = "OEFX";
+        private const string OdysseyIdentifier = "OEFX";
         public const int Version = 0x100;
 
         private Dictionary<string, TechniqueMapping> techniques;

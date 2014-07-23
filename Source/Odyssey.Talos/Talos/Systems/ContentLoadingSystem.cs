@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Odyssey.Engine;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
 
 namespace Odyssey.Talos.Systems
 {
-    public class ContentLoadingSystem<TComponent> : SystemBase, IUpdateableSystem
-        where TComponent : ContentComponent
+    public class ContentLoadingSystem : SystemBase, IUpdateableSystem
     {
-        public ContentLoadingSystem() : base(Selector.All(typeof(TComponent)))
-        {
+        public ContentLoadingSystem() : base(Selector.One(typeof(ShaderComponent),
+            typeof(PostProcessComponent), typeof(ModelComponent), typeof(DiffuseMappingComponent)))
+        { 
         }
 
         public override void Start()
@@ -26,12 +28,11 @@ namespace Odyssey.Talos.Systems
 
         void SetupEntity(IEntity entity)
         {
-            var component = entity.GetComponent<TComponent>();
-            if (!component.IsInited)
+            var components = entity.Components.OfType<ContentComponent>();
+
+            foreach (var component in components.Where(component => !component.IsInited))
             {
                 component.Initialize();
-                var mContent = new ContentLoadedMessage<TComponent>(component);
-                Messenger.Send(mContent);
             }
         }
 

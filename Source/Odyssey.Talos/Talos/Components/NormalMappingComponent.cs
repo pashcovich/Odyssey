@@ -20,12 +20,6 @@ namespace Odyssey.Talos.Components
         public Texture NormalMap { get; private set; }
         public string NormalMapKey { get; set; }
 
-        public override void Unload()
-        {
-            base.Unload();
-            if (NormalMap != null)
-                NormalMap.Unload();
-        }
 
         public override void Initialize()
         {

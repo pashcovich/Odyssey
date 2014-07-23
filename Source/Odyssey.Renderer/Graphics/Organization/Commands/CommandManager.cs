@@ -103,8 +103,8 @@ namespace Odyssey.Graphics.Organization.Commands
 
         public void Unload()
         {
-            foreach (Command command in commands)
-                command.Unload();
+            foreach (var command in commands)
+                command.Dispose();
             IsInited = false;
         }
     }

@@ -4,6 +4,7 @@ using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
+using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Organization.Commands;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
@@ -13,8 +14,7 @@ using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Systems
 {
-    [YamlTag("Optimization")]
-    public class OptimizationSystem : UpdateableSystemBase, IUpdateableSystem
+    public class OptimizationSystem : UpdateableSystemBase
     {
         private readonly RenderMapper renderMapper;
         readonly ComponentType tShader;
@@ -38,44 +38,36 @@ namespace Odyssey.Talos.Systems
             {
                 var cModel = entity.GetComponent<ModelComponent>(tModel.KeyPart);
                 var cShader = entity.GetComponent<ShaderComponent>(tShader.KeyPart);
-                Effect effect = cShader.Technique.Effect;
-                if (!renderMapper.ContainsKey(effect))
-                    renderMapper.DefineNewEffect(effect);
-                if (!renderMapper.ContainsModel(effect, cModel.Model))
-                    renderMapper.AssociateModel(effect, cModel.Model);
-
-                renderMapper.AddMesh(effect, cModel.Model, entity);
+                
+                renderMapper.AddEntity(cShader.Technique, cModel.Model, entity);
             }
         }
 
         public override void AfterUpdate()
         {
-            CreateCommands(renderMapper.EffectModelsPairs);
+            renderMapper.Group();
+            CreateCommands();
         }
 
-        void CreateCommands(IEnumerable<KeyValuePair<Effect, Dictionary<Model, List<IEntity>>>> effectModelsPairs)
+        void CreateCommands()
         {
             LinkedList<Command> commands = new LinkedList<Command>();
-
-            foreach (var pair in effectModelsPairs)
+            foreach (var renderable in renderMapper)
             {
-                Effect effect = pair.Key;
-                foreach (var effectModelPair in pair.Value)
+                Technique technique = renderable.Technique;
+                Model model = renderable.Model;
+                RenderCommand renderCommand;
+                if (technique.Mapping.Key.Supports(VertexShaderFlags.InstanceWorld))
                 {
-                    Model model = effectModelPair.Key;
-                    RenderCommand renderCommand;
-                    if (effect.TechniqueKey.Supports(VertexShaderFlags.InstanceWorld))
-                    {
-                        renderCommand = new InstancingRenderCommand(Services, effect, model.Meshes, effectModelPair.Value);
-                    }
-                    else
-                    {
-                        renderCommand = new EffectRenderCommand(Services, effect, model.Meshes, effectModelPair.Value);
-                    }
-                    commands.AddLast(renderCommand);
+                    renderCommand = new InstancingRenderCommand(Services, technique, model.Meshes, renderable.Entities);
                 }
+                else
+                {
+                    renderCommand = new TechniqueRenderCommand(Services, technique, model.Meshes, renderable.Entities);
+                }
+                commands.AddLast(renderCommand);
             }
-            
+
 
             StateViewer sv = new StateViewer(Services, commands);
             LinkedList<Command> resultCommands = sv.Analyze();

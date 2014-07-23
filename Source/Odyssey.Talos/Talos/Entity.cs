@@ -143,6 +143,7 @@ namespace Odyssey.Talos
 
         public void RegisterComponent(Component component)
         {
+            Contract.Requires<ArgumentNullException>(component != null, "component");
             key |= component.KeyPart;
             component.AssignToScene(scene);
             scene.AddComponentToEntity(component, this);

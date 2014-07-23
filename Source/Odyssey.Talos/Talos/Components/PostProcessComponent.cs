@@ -3,6 +3,7 @@ using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
+using Odyssey.Talos.Messages;
 using Odyssey.Utilities.Logging;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -56,7 +57,7 @@ namespace Odyssey.Talos.Components
 
         public override void Initialize()
         {
-            var deviceService = Services.GetService<IOdysseyDeviceService>();
+            var techniquePool = DeviceService.DirectXDevice.TechniquePool;
 
             var filteredActions = (from a in actions
                 where a.AssetName != Param.Odyssey
@@ -68,25 +69,19 @@ namespace Odyssey.Talos.Components
                 var action = filteredActions[i];
 
                 ShaderCollection shaderCollection = Content.Get<ShaderCollection>(action.Asset);
-                var technique = new Technique(deviceService.DirectXDevice, shaderCollection, Content);
-                technique.ActivateTechnique(action.Technique);
-                technique.Initialize();
-                technique.Effect.UsesProceduralTextures = true;
-                techniques[i] = technique;
+
+                var mapping = shaderCollection.Get(action.Technique);
+                string techniqueKey = string.Format("{0}.{1}", action.Asset, mapping.Name);
+                
+                if (!techniquePool.ContainsTechnique(techniqueKey))
+                {
+                    techniques[i] = new Technique(DeviceService.DirectXDevice, techniqueKey, mapping);
+                    techniquePool.RegisterTechnique(techniques[i]);
+                    Messenger.Send(new ContentMessage<Technique>(techniques[i]));
+                }
+                else 
+                    techniques[i] = techniquePool.GetTechnique(techniqueKey);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-                foreach (var technique in techniques.Where(technique => technique != null))
-                    technique.Dispose();
-        }
-
-        public virtual void Unload()
-        {
-            foreach (var technique in techniques.Where(technique => technique != null))
-                technique.Dispose();
         }
 
         internal static Texture2DDescription GetTextureDescription(IDirectXDeviceSettings deviceSettings, float scaleFactor = 1)

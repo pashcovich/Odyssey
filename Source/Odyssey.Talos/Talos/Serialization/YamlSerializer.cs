@@ -29,9 +29,9 @@ namespace Odyssey.Talos.Serialization
             settings.RegisterAssembly(this.GetType().GetTypeInfo().Assembly);
             
             //settings.RegisterTagMapping("Entity", typeof(YamlEntity));
-            settings.RegisterTagMapping("ShaderLoadingSystem", typeof(ContentLoadingSystem<ShaderComponent>));
-            settings.RegisterTagMapping("ModelLoadingSystem", typeof(ContentLoadingSystem<ModelComponent>));
-            settings.RegisterTagMapping("TextureLoadingSystem", typeof(ContentLoadingSystem<ContentComponent>));
+            //settings.RegisterTagMapping("ShaderLoadingSystem", typeof(ContentLoadingSystem<ShaderComponent>));
+            //settings.RegisterTagMapping("ModelLoadingSystem", typeof(ContentLoadingSystem<ModelComponent>));
+            //settings.RegisterTagMapping("TextureLoadingSystem", typeof(ContentLoadingSystem<ContentComponent>));
             //settings.RegisterTagMapping("TextureCubeLoadingSystem", typeof(ContentLoadingSystem<TextureCubeComponent>));
             serializer = new Serializer(settings);
         }

@@ -23,18 +23,6 @@ namespace Odyssey.Talos.Components
         public Texture DiffuseMap { get; protected set; }
         public string DiffuseMapKey { get; set; }
 
-        public virtual void Unload()
-        {
-            if (DiffuseMap != null)
-                DiffuseMap.Unload();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-                DiffuseMap.Dispose();
-        }
-
         public override void Initialize()
         {
             Contract.Requires<InvalidOperationException>(DiffuseMapKey != null);

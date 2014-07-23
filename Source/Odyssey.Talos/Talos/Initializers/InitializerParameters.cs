@@ -12,12 +12,12 @@ namespace Odyssey.Talos.Initializers
 
     public class InitializerParameters
     {
-        public TechniqueMapping Technique { get; private set; }
+        public Technique Technique { get; private set; }
         public IServiceRegistry Services { get; private set; }
         public long EntityId { get; private set; }
         public SelectorDelegate Selector { get; private set; }
 
-        public InitializerParameters(long entityId, TechniqueMapping technique, IServiceRegistry services, SelectorDelegate selector)
+        public InitializerParameters(long entityId, Technique technique, IServiceRegistry services, SelectorDelegate selector)
         {
             EntityId = entityId;
             Technique = technique;

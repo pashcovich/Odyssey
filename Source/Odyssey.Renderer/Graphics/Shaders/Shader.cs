@@ -43,14 +43,6 @@ namespace Odyssey.Graphics.Shaders
 
         public abstract void Apply(string technique, long id, UpdateType updateType);
 
-        public void AssembleBuffers()
-        {
-            foreach (ConstantBuffer cb in buffers.Where(cb => !cb.IsInited))
-            {
-                cb.Assemble();
-            }
-        }
-
         public ConstantBuffer GetConstantBuffer(int index, string technique, long id = 0)
         {
             return buffers[id].First(cb => cb.Index == index && cb.Description.ShaderType == type && cb.Technique == technique);

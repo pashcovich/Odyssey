@@ -1,4 +1,5 @@
-﻿using System.ServiceModel.Security;
+﻿using System.Diagnostics;
+using System.ServiceModel.Security;
 using Odyssey.Engine;
 using Odyssey.Utilities.Logging;
 using SharpDX;
@@ -10,6 +11,7 @@ using System.Linq;
 
 namespace Odyssey.Graphics.Shaders
 {
+    [DebuggerDisplay("[{description.ShaderType}] {description.UpdateFrequency} Slot:{description.Index}")]
     public class ConstantBuffer : Component, IEnumerable<IParameter>
     {
         private readonly DirectXDevice device;
@@ -18,7 +20,7 @@ namespace Odyssey.Graphics.Shaders
         private readonly string technique;
         private readonly ConstantBufferDescription description;
 
-        public bool IsInited { get; set; }
+        public bool IsInited { get; private set; }
 
         public int Index { get { return description.Index; } }
         public string Technique { get { return technique; } }
@@ -129,11 +131,6 @@ namespace Odyssey.Graphics.Shaders
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable<IParameter>)this).GetEnumerator();
-        }
-
-        public override string ToString()
-        {
-            return String.Format("[{0}] {1} Slot:{2}", description.ShaderType, description.UpdateFrequency, description.Index);
         }
 
         static Float4Parameter Combine(IEnumerable<IParameter> parameters)

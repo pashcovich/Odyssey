@@ -93,18 +93,6 @@ namespace Odyssey.Graphics.Organization.Commands
             Output = renderTarget;
         }
 
-        public override void Unload()
-        {
-            if (renderTarget != null)
-                renderTarget.Dispose();
-
-            if (depthStencil != null)
-                depthStencil.Dispose();
-
-            if (Output != null)
-                Output.Dispose();
-        }
-
         public override void Execute()
         {
             PreRender();

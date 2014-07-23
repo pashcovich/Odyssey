@@ -19,7 +19,7 @@ namespace Odyssey.Content
             var assetPath = Path.GetDirectoryName(parameters.AssetName);
 
             // Loads the model.
-            var model = Model.Load(device, parameters.Stream);
+            var model = Model.Load(device, parameters.Stream, parameters.AssetName);
 
             if (model == null)
             {

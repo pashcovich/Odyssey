@@ -1,4 +1,5 @@
 ﻿using Odyssey.Graphics.Shaders;
+using Odyssey.Talos.Messages;
 using SharpYaml.Serialization;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,7 @@ namespace Odyssey.Talos.Components
             Key = "Default";
         }
 
-        public override bool IsInited { get { return Technique != null && Technique.IsInited; } }
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-                if (Technique!= null)
-                Technique.Dispose();
-        }
+        public override bool IsInited { get { return Technique != null; } }
 
         IEnumerable<Technique> ITechniqueComponent.Techniques
         {
@@ -41,13 +36,10 @@ namespace Odyssey.Talos.Components
                     return;
                 key = value;
 
-                if (IsInited)
-                    Technique.ActivateTechnique(key);
                 RaisePropertyChange("Key");
             }
         }
 
-        [YamlIgnore]
         public Technique Technique { get; private set; }
 
         public override void Initialize()
@@ -55,12 +47,22 @@ namespace Odyssey.Talos.Components
             Contract.Requires<InvalidOperationException>(AssetName != null);
             ShaderCollection shaderCollection = Content.Get<ShaderCollection>(AssetName);
 
-            Technique = new Technique(DeviceService.DirectXDevice, shaderCollection, Content);
-
-            Technique.ActivateTechnique(Key);
-            Technique.Initialize();
+            var techniquePool = DeviceService.DirectXDevice.TechniquePool;
+            var mapping = shaderCollection.Get(Key);
+            string techniqueKey = string.Format("{0}.{1}", AssetName, mapping.Name);
+            if (!techniquePool.ContainsTechnique(techniqueKey))
+            {
+                Technique = new Technique(DeviceService.DirectXDevice, techniqueKey, mapping);
+                techniquePool.RegisterTechnique(Technique);
+                Messenger.Send(new ContentMessage<Technique>(Technique));
+            }
+            else Technique = techniquePool.GetTechnique(techniqueKey);
+            
         }
 
 
+
     }
+
+
 }

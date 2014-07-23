@@ -20,7 +20,6 @@ namespace Odyssey.Graphics.Organization.Commands
 
         public abstract void Initialize();
         public abstract void Execute();
-        public abstract void Unload();
 
         protected Command(IServiceRegistry services, CommandType type)
         {

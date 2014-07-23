@@ -30,11 +30,11 @@ namespace Odyssey.Talos.Initializers
 
         public EngineReference[] AcceptedReferences { get; private set; }
 
-        public virtual void Initialize(DirectXDevice device, Effect effect, TSource source, InitializerParameters parameters)
+        public virtual void Initialize(DirectXDevice device, TSource source, InitializerParameters parameters)
         {
             LogEvent.Engine.Info("[{0}, {1}] in {2}", GetType().Name, parameters.EntityId, parameters.Technique.Name);
             this.device = device;
-            InitializeConstantBuffers(effect, source, parameters);
+            InitializeConstantBuffers(source, parameters);
         }
 
         public abstract void SetupInitialization(ShaderInitializer initializer);
@@ -43,20 +43,21 @@ namespace Odyssey.Talos.Initializers
 
         protected abstract bool ValidateConstantBuffer(ConstantBufferDescription cb);
 
-        private void InitializeConstantBuffers(Effect effect, TSource source, InitializerParameters parameters)
+        private void InitializeConstantBuffers(TSource source, InitializerParameters parameters)
         {
-            var referenceTable = from shaderObject in parameters.Technique.Shaders
+            var technique = parameters.Technique;
+            var referenceTable = from shaderObject in technique.Mapping.Shaders
                                  from cb in shaderObject.ConstantBuffers
                                  where parameters.Selector(cb) && ValidateConstantBuffer(cb)
                                  select cb;
 
-            string effectName = effect.Name;
+            string effectName = technique.Name;
             foreach (var cbDesc in referenceTable)
             {
-                if (!effect[cbDesc.ShaderType].HasConstantBuffer(cbDesc.Index, effectName, parameters.EntityId))
-                    effect[cbDesc.ShaderType].AddConstantBuffer(parameters.EntityId, new ConstantBuffer(device, cbDesc, effectName));
+                if (!technique[cbDesc.ShaderType].HasConstantBuffer(cbDesc.Index, effectName, parameters.EntityId))
+                    technique[cbDesc.ShaderType].AddConstantBuffer(parameters.EntityId, new ConstantBuffer(device, cbDesc, effectName));
 
-                ConstantBuffer cb = effect[cbDesc.ShaderType].GetConstantBuffer(cbDesc.Index, effectName, parameters.EntityId);
+                ConstantBuffer cb = technique[cbDesc.ShaderType].GetConstantBuffer(cbDesc.Index, effectName, parameters.EntityId);
 
                 var validReferences = from kvp in cbDesc.References
                                       let reference = kvp.Value

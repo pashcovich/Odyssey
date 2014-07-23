@@ -412,15 +412,12 @@ namespace Odyssey.Tools.Compiler.Model
             {
 
                 WriteBarycentricVertices(assimpMesh, meshPart, vertexBuffer, vertexBufferElementSize);
-
-                mesh.IndexBuffers.Clear();
             }
             else
             {
                 WriteVertices(assimpMesh, meshPart, vertexBuffer, vertexBufferElementSize);
-                WriteIndices(assimpMesh, meshPart, indexBuffer);
             }
-
+            WriteIndices(assimpMesh, meshPart, indexBuffer);
             return meshPart;
         }
 

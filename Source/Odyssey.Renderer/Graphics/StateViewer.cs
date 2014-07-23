@@ -40,25 +40,25 @@ namespace Odyssey.Graphics
 
         void SaveState(Command command)
         {
-            var cRender = command as IEffectRenderCommand;
+            var cRender = command as ITechniqueRenderCommand;
             if (cRender == null)
             {
                 AddNewCommand(command);
                 return;
             }
-            Effect effect = cRender.Effect;
+            Technique technique = cRender.Technique;
 
-            PreferredRasterizerState preferredRasterizerState = effect.TechniqueKey.RasterizerState;
-            PreferredBlendState preferredBlendState = effect.TechniqueKey.BlendState;
-            PreferredDepthStencilState preferredDepthStencilState = effect.TechniqueKey.DepthStencilState;
+            PreferredRasterizerState preferredRasterizerState = technique.Mapping.Key.RasterizerState;
+            PreferredBlendState preferredBlendState = technique.Mapping.Key.BlendState;
+            PreferredDepthStencilState preferredDepthStencilState = technique.Mapping.Key.DepthStencilState;
 
-            if (CheckRasterizerState(effect))
+            if (CheckRasterizerState(technique))
                 AddNewCommand(new RasterizerStateChangeCommand(services, device.RasterizerStates[preferredRasterizerState.ToString()]));
 
-            if (CheckBlendState(effect))
+            if (CheckBlendState(technique))
                 AddNewCommand(new BlendStateChangeCommand(services, device.BlendStates[preferredBlendState.ToString()]));
 
-            if (CheckDepthStencilState(effect))
+            if (CheckDepthStencilState(technique))
                 AddNewCommand(new DepthStencilStateChangeCommand(services, device.DepthStencilStates[preferredDepthStencilState.ToString()]));
 
             AddNewCommand(command);
@@ -68,20 +68,20 @@ namespace Odyssey.Graphics
             depthStencilState = preferredDepthStencilState;
         }
 
-        
-        public bool CheckBlendState(Effect effect)
+
+        public bool CheckBlendState(Technique technique)
         {
-            return effect.TechniqueKey.BlendState != blendState;
+            return technique.Mapping.Key.BlendState != blendState;
         }
 
-        public bool CheckRasterizerState(Effect effect)
+        public bool CheckRasterizerState(Technique technique)
         {
-            return effect.TechniqueKey.RasterizerState != rasterizerState;
+            return technique.Mapping.Key.RasterizerState != rasterizerState;
         }
 
-        public bool CheckDepthStencilState(Effect effect)
+        public bool CheckDepthStencilState(Technique technique)
         {
-            return effect.TechniqueKey.DepthStencilState != depthStencilState;
+            return technique.Mapping.Key.DepthStencilState != depthStencilState;
         }
 
         public LinkedList<Command> Analyze()

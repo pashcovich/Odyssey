@@ -24,11 +24,5 @@ namespace Odyssey.Graphics.Organization.Commands
             commands.Run();
         }
 
-        public override void Unload()
-        {
-            base.Unload();
-            foreach (var command in commands)
-                command.Unload();
-        }
     }
 }

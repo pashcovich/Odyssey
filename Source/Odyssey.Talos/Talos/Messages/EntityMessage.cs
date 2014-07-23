@@ -1,7 +1,5 @@
 ﻿
-using Odyssey.Talos.Messages;
-
-namespace Odyssey.Talos
+namespace Odyssey.Talos.Messages
 {
     public abstract class EntityMessage : Message
     {

@@ -28,13 +28,6 @@ namespace Odyssey.Graphics.Organization.Commands
             DeviceService.DirectXDevice.SetDepthStencilState(depthStencilState);
         }
 
-        public override void Unload()
-        {
-            if (depthStencilState != null)
-                depthStencilState.Dispose();
-            IsInited = false;
-        }
-
-       
+        
     }
 }

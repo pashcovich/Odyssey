@@ -20,16 +20,10 @@ namespace Odyssey.Talos.Systems
         {
             // Before each frame we check if a new shader has been added to the scene.
             // If so, we need to initialize it.
-            while (MessageQueue.HasItems<ContentLoadedMessage<ShaderComponent>>())
+            while (MessageQueue.HasItems<ContentMessage<Technique>>())
             {
-                var mShader = MessageQueue.Dequeue<ContentLoadedMessage<ShaderComponent>>();
-                SetupEntity(mShader.Content.Technique);
-            }
-            while (MessageQueue.HasItems<ContentLoadedMessage<PostProcessComponent>>())
-            {
-                var mPostProcess = MessageQueue.Dequeue<ContentLoadedMessage<PostProcessComponent>>();
-                foreach (var technique in mPostProcess.Content.Techniques)
-                    SetupEntity(technique);
+                var mTechnique = MessageQueue.Dequeue<ContentMessage<Technique>>();
+                SetupEntity(mTechnique.Content);
             }
         }
 
@@ -39,35 +33,33 @@ namespace Odyssey.Talos.Systems
                         let techniqueComponents = entity.Components.OfType<ITechniqueComponent>()
                         from techniqueRange in techniqueComponents
                         from technique in techniqueRange.Techniques
-                        select technique.Effect).Distinct();
+                        select technique).Distinct();
             // Update each per frame constant buffer
-            foreach (Effect effect in data)
+            foreach (Technique technique in data)
             {
-                effect.UpdateBuffers(UpdateType.InstanceStatic);
-                effect.UpdateBuffers(UpdateType.SceneFrame);
-                effect.UpdateBuffers(UpdateType.InstanceFrame);
+                technique.UpdateBuffers(UpdateType.InstanceStatic);
+                technique.UpdateBuffers(UpdateType.SceneFrame);
+                technique.UpdateBuffers(UpdateType.InstanceFrame);
             }
         }
 
         public override void Start()
         {
-            Messenger.Register<ContentLoadedMessage<ShaderComponent>>(this);
-            Messenger.Register<ContentLoadedMessage<PostProcessComponent>>(this);
+            Messenger.Register<ContentMessage<Technique>>(this);
         }
 
         public override void Stop()
         {
-            Messenger.Unregister<ContentLoadedMessage<ShaderComponent>>(this);
-            Messenger.Unregister<ContentLoadedMessage<PostProcessComponent>>(this);
+            Messenger.Unregister<ContentMessage<Technique>>(this);
         }
 
         private void SetupEntity(Technique technique)
         {
-            Effect effect = technique.Effect;
-            var shaderInitializer = new ShaderInitializer(Services, effect, technique.ActiveTechnique);
+            Technique effect = technique;
+            var shaderInitializer = new ShaderInitializer(Services, technique);
             shaderInitializer.Initialize();
 
-            if (!technique.ActiveTechnique.Validate())
+            if (!technique.Mapping.Validate())
                 throw new InvalidOperationException(string.Format("[{0}] was not properly initialized.", technique.Name));
 
             effect.AssembleBuffers();

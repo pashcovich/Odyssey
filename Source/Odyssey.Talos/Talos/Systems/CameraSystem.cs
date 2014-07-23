@@ -33,13 +33,11 @@ namespace Odyssey.Talos.Systems
 
         public override void Start()
         {
-            Messenger.Register<ContentLoadedMessage<ShaderComponent>>(this);
             Messenger.Register<EntityChangeMessage>(this);
         }
 
         public override void Stop()
         {
-            Messenger.Unregister<ContentLoadedMessage<ShaderComponent>>(this);
             Messenger.Unregister<EntityChangeMessage>(this);
         }
         

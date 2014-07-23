@@ -5,6 +5,7 @@
         Undefined,
         Added,
         Removed,
+        Loaded,
     }
 
     public enum MessagePriority

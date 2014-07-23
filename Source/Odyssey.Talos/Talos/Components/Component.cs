@@ -15,7 +15,6 @@ namespace Odyssey.Talos.Components
         private readonly long id;
         private readonly ComponentType componentType;
 
-        [YamlMember(0)]
         public string Name { get; set; }
 
         protected Scene Scene { get { return scene; } }
@@ -23,17 +22,13 @@ namespace Odyssey.Talos.Components
         /// <summary>
         /// Returns the progressive id number that identifies this component instance.
         /// </summary>
-        [YamlIgnore]
         public long Id { get { return id; } }
 
-        [YamlIgnore]
         public long KeyPart { get { return componentType.KeyPart; } }
 
-        [YamlIgnore]
         public ComponentType ComponentType { get { return componentType; } }
 
-        [YamlIgnore]
-        public IServiceRegistry Services { get; set; }
+        protected IServiceRegistry Services { get; private set; }
 
         internal Messenger Messenger { get; set; }
 

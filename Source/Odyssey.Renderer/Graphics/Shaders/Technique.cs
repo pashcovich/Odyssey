@@ -1,102 +1,156 @@
-﻿using Odyssey.Content;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using SharpDX;
-using System;
-using System.Diagnostics.Contracts;
-using System.Linq;
+using SharpDX.Direct3D11;
+
+#endregion
 
 namespace Odyssey.Graphics.Shaders
 {
-    public class Technique : Component
+    public class Technique : Component, IEnumerable<Shader>
     {
-        public const string DefaultTechnique = "Default";
+        //private readonly Effect effect;
+        private readonly InputLayout inputLayout;
+        private readonly TechniqueMapping mapping;
+        private readonly Dictionary<ShaderType, Shader> shaders;
+        private readonly TechniqueMapping techniqueMapping;
 
-        private readonly DirectXDevice device;
-        private readonly ShaderCollection shaderCollection;
-        private Effect effect;
-
-        public Technique(DirectXDevice device, ShaderCollection shaderCollection, IAssetProvider assetProvider)
+        public Technique(DirectXDevice device, string techniqueName, TechniqueMapping mapping)
         {
-            Contract.Requires<ArgumentNullException>(shaderCollection != null, "shaderCollection");
-            Contract.Requires<ArgumentNullException>(assetProvider != null, "assetProvider");
-            Contract.Requires<ArgumentException>(shaderCollection.Contains(DefaultTechnique), "Default technique not found");
-            this.device = device;
-            this.shaderCollection = shaderCollection;
-            RemoveAndDispose(ref effect);
-            ActiveTechnique = shaderCollection.Get(DefaultTechnique);
-            Name = shaderCollection.Name;
+            Contract.Requires<ArgumentNullException>(device != null, "device");
+            Contract.Requires<ArgumentNullException>(mapping != null, "mapping");
+            Name = techniqueName;
+            this.mapping = mapping;
+
+            ShaderDescription vsDesc;
+            ShaderDescription psDesc;
+            techniqueMapping = mapping;
+
+            shaders = new Dictionary<ShaderType, Shader>();
+
+            if (mapping.TryGetValue(ShaderType.Vertex, out vsDesc))
+            {
+                VertexShader vertexShader = device.TechniquePool.RegisterShader<VertexShader>(vsDesc.Name, vsDesc.ByteCode);
+                var vertexInputLayout = mapping.GenerateVertexInputLayout();
+                inputLayout = ToDispose(new InputLayout(device, vsDesc.ByteCode, vertexInputLayout.InputElements));
+                shaders.Add(ShaderType.Vertex, vertexShader);
+            }
+            if (mapping.TryGetValue(ShaderType.Pixel, out psDesc))
+            {
+                PixelShader pixelShader = device.TechniquePool.RegisterShader<PixelShader>(psDesc.Name, psDesc.ByteCode);
+                shaders.Add(ShaderType.Pixel, pixelShader);
+            }
         }
 
-        public TechniqueMapping ActiveTechnique { get; protected set; }
-
-        public Effect Effect { get { return effect; } }
+        public TechniqueMapping Mapping
+        {
+            get { return mapping; }
+        }
 
         public bool IsInited { get; private set; }
 
-        internal string ActiveTechniqueId { get { return string.Format("{0}.{1}", Name, ActiveTechnique.Name); } }
+        public bool UsesProceduralTextures { get; set; }
 
-        protected ShaderCollection ShaderCollection { get { return shaderCollection; } }
-
-        public void ActivateTechnique(TechniqueKey key)
+        public IEnumerable<KeyValuePair<string, string>> MetaData
         {
-            Contract.Requires<ArgumentException>(ContainsTechnique(key));
-            ActiveTechnique = ShaderCollection.Get(key);
+            get
+            {
+                return (from shader in techniqueMapping.Shaders
+                    let cBuffers = shader.ConstantBuffers
+                    from cb in cBuffers
+                    from data in cb.Metadata
+                    select data);
+            }
         }
 
-        public void ActivateTechnique(string key)
+        public Shader this[ShaderType type]
         {
-            Contract.Requires<ArgumentException>(ContainsTechnique(key));
-            ActiveTechnique = ShaderCollection.Get(key);
+            get
+            {
+                Contract.Requires<ArgumentException>(ContainsShader(type));
+                return shaders[type];
+            }
+        }
+
+        public InputLayout InputLayout
+        {
+            get { return inputLayout; }
         }
 
         [Pure]
-        public bool ContainsTechnique(TechniqueKey key)
+        public bool ContainsShader(ShaderType type)
         {
-            return ShaderCollection.Contains(key);
+            return shaders.ContainsKey(type);
         }
 
         [Pure]
-        public bool ContainsTechnique(string key)
+        public bool ContainsShader(string shaderName)
         {
-            return ShaderCollection.Contains(key);
+            return shaders.Values.Any(s => s.Name == shaderName);
         }
 
-        public void Initialize()
+        public void AssembleBuffers()
         {
-            effect = ToDispose(new Effect(device, shaderCollection.Name, ActiveTechnique));
-
-            IsInited = true;
+            foreach (ConstantBuffer cb in shaders.Values.SelectMany(shader => shader.Buffers.Where(cb => !cb.IsInited)))
+                cb.Assemble();
         }
+
+        public void UpdateBuffers(UpdateType updateType)
+        {
+            foreach (
+                ConstantBuffer cb in
+                    shaders.Values.SelectMany(shader => shader.Buffers.Where(cb => cb.Description.UpdateFrequency == updateType)))
+                cb.Update();
+        }
+
+        #region IEnumerable
+
+        public IEnumerator<Shader> GetEnumerator()
+        {
+            return ((IEnumerable<Shader>) shaders.Values).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        #endregion IEnumerable
 
         #region Technique Feature Methods
 
         public bool GetFeatureStatus(VertexShaderFlags feature)
         {
-            return ActiveTechnique.Key.Supports(feature);
+            return Mapping.Key.Supports(feature);
         }
 
         public bool GetFeatureStatus(PixelShaderFlags feature)
         {
-            return ActiveTechnique.Key.Supports(feature);
-        }
-
-        public bool SupportsFeature(VertexShaderFlags feature)
-        {
-            return ShaderCollection.Any(t => t.Key.Supports(feature));
-        }
-
-        public bool SupportsFeature(PixelShaderFlags feature)
-        {
-            return ShaderCollection.Any(t => t.Key.Supports(feature));
+            return Mapping.Key.Supports(feature);
         }
 
         #endregion Technique Feature Methods
-
-        public void Unload()
-        {
-            effect.Dispose();
-            IsInited = false;
-        }
     }
 }

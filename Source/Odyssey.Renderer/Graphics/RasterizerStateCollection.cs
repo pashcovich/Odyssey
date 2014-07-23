@@ -51,7 +51,7 @@ namespace Odyssey.Graphics
         internal RasterizerStateCollection(DirectXDevice device)
             : base(device)
         {
-            //CullFront = Add(RasterizerState.New(device, "CullFront", CullMode.Front));
+            CullFront = Add(RasterizerState.New(device, "CullFront", CullMode.Front));
             CullBack = Add(RasterizerState.New(device, "CullBack", CullMode.Back));
             CullNone = Add(RasterizerState.New(device, "CullNone", CullMode.None));
 

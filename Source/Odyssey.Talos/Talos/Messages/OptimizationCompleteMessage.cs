@@ -6,7 +6,7 @@ namespace Odyssey.Talos.Messages
     public class OptimizationCompleteMessage : Message
     {
         private readonly LinkedList<Command> commands;
-        public LinkedList<Command> Commands { get { return commands; } }
+        public IEnumerable<Command> Commands { get { return commands; } }
 
         public OptimizationCompleteMessage(LinkedList<Command> commands, bool isSynchronous = false)
             : base(isSynchronous)

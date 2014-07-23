@@ -22,9 +22,9 @@ namespace Odyssey.Talos.Initializers
         public override void SetupInitialization(ShaderInitializer initializer)
         {
             var services = initializer.Services;
-            var effect = initializer.Effect;
-            InitializerParameters parameters = new InitializerParameters(-1, initializer.Technique, services, StaticSelector);
-            var data = from metaData in effect.MetaData
+            var technique = initializer.Technique;
+            InitializerParameters parameters = new InitializerParameters(-1, technique, services, StaticSelector);
+            var data = from metaData in technique.MetaData
                 where metaData.Key == Param.Properties.LightId
                 select Int32.Parse(metaData.Value);
 

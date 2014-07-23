@@ -14,10 +14,6 @@ namespace Odyssey.Talos.Components
         public Overlay Overlay { get; set; }
 
         public override bool IsInited { get { return Overlay.IsInited; } }
-        protected override void Dispose(bool disposing)
-        {
-            Overlay.Dispose();
-        }
 
         public UserInterfaceComponent()
             : base(ComponentTypeManager.GetType<UserInterfaceComponent>())

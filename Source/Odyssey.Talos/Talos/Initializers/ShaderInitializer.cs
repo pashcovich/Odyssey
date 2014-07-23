@@ -26,30 +26,26 @@ namespace Odyssey.Talos.Initializers
             typeof (MaterialInitializer), typeof (EntityInitializer),typeof(EffectInitializer)
         };
 
-        private readonly Effect effect;
+        private readonly Technique technique;
         private readonly IServiceRegistry services;
-        private readonly TechniqueMapping technique;
 
-        public ShaderInitializer(IServiceRegistry services, Effect effect, TechniqueMapping technique)
+        public ShaderInitializer(IServiceRegistry services, Technique technique)
         {
             this.services = services;
             this.technique = technique;
-            this.effect = effect;
             Device = services.GetService<IOdysseyDeviceService>().DirectXDevice;
             FindRequiredInitializers();
         }
 
-        public Effect Effect { get { return effect; } }
+        public Technique Technique { get { return technique; } }
 
         public IServiceRegistry Services { get { return services; } }
-
-        public TechniqueMapping Technique { get { return technique; } }
 
         protected DirectXDevice Device { get; private set; }
 
         public void Initialize()
         {
-            var initializers = InitializerMap[effect.Name].Keys.ToList();
+            var initializers = InitializerMap[technique.Name].Keys.ToList();
             foreach (Type type in initializers)
             {
                 IInitializer initializer = (IInitializer)Activator.CreateInstance(type, new object[]{services});
@@ -60,7 +56,7 @@ namespace Odyssey.Talos.Initializers
         public void Initialize<TInitializer, TSource>(TInitializer initializer, TSource source, InitializerParameters parameters)
             where TInitializer : Initializer<TSource>
         {
-            var initializerStatus = InitializerMap[effect.Name];
+            var initializerStatus = InitializerMap[technique.Name];
             Type initializerType = typeof(TInitializer);
             bool isInstanceInitializer = InstanceInitializers.Contains(initializerType);
 
@@ -70,7 +66,7 @@ namespace Odyssey.Talos.Initializers
                 return;
             }
 
-            initializer.Initialize(Device, effect, source, parameters);
+            initializer.Initialize(Device, source, parameters);
 
             if (!isInstanceInitializer && initializerStatus.ContainsKey(initializerType))
                 initializerStatus[typeof(TInitializer)] = true;
@@ -78,14 +74,14 @@ namespace Odyssey.Talos.Initializers
 
         private void FindRequiredInitializers()
         {
-            if (InitializerMap.ContainsKey(effect.Name))
+            if (InitializerMap.ContainsKey(technique.Name))
                 return;
 
-            Engine.EngineReference[] references = (from shader in technique.Shaders
+            Engine.EngineReference[] references = (from shader in technique.Mapping.Shaders
                                             from cbDesc in shader.ConstantBuffers
                                             from kvp in cbDesc.References
                                             select kvp.Value).ToArray();
-            InitializerMap.Add(effect.Name, new Dictionary<Type, bool>());
+            InitializerMap.Add(technique.Name, new Dictionary<Type, bool>());
 
             foreach (Type t in from t in RegisteredInitializers
                                let initializer = (IInitializer)Activator.CreateInstance(t, new object[] {services})
@@ -93,7 +89,7 @@ namespace Odyssey.Talos.Initializers
                                where result.Any()
                                select t)
             {
-                InitializerMap[effect.Name].Add(t, false);
+                InitializerMap[technique.Name].Add(t, false);
             }
         }
     }

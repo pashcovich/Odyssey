@@ -19,7 +19,7 @@ namespace Odyssey.Graphics.Models
             Properties = new PropertyCollection();
         }
 
-        internal Model() : this("Undefined")
+        internal Model() : this(string.Empty)
         { }
 
         internal Model(string name, PrimitiveType primitiveType, Buffer verteBuffer, VertexInputLayout layout, Buffer indexBuffer) : this (name)
@@ -28,11 +28,13 @@ namespace Odyssey.Graphics.Models
             Meshes.Add(modelMesh);
         }
 
-        public static Model Load(DirectXDevice graphicsDevice, Stream stream)
+        public static Model Load(DirectXDevice graphicsDevice, Stream stream, string assetName)
         {
             using (var serializer = new ModelReader(graphicsDevice, stream))
             {
                 Model model = serializer.ReadModel();
+                if (string.IsNullOrEmpty(model.Name))
+                    model.Name = assetName;
                 model.RegisterResources();
                 return model;
             }

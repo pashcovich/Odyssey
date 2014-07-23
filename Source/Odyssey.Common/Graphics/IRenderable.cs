@@ -1,6 +1,6 @@
 ﻿namespace Odyssey.Graphics
 {
-    public interface IRenderable : IInitializable
+    public interface IRenderable
     {
         void Render();
     }

@@ -25,9 +25,9 @@ namespace Odyssey.Graphics.Shapes
             shapes.Add(new ShapeMeshDescription() { Vertices = vertices, Indices = indices });
         }
 
-        public void DrawEllipse(Ellipse ellipse, float innerRadiusRatio, IGradient gradient, int slices = 64)
+        public void DrawEllipse(Ellipse ellipse, float ringWidth, IGradient gradient, int slices = 64)
         {
-            Contract.Requires<ArgumentException>(innerRadiusRatio < 1);
+            float innerRadiusRatio = 1 - (ringWidth/ellipse.RadiusX); 
             float[] offsets = gradient.GradientStops.Select(g => (float)MathHelper.ConvertRange(0,1, innerRadiusRatio, 1, g.Offset)).ToArray();
             int segments = offsets.Length;
             EllipseColorShader shader = ChooseEllipseOutlineShader(gradient);

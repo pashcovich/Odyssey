@@ -1,6 +1,5 @@
 ﻿#region Using Directives
 
-using Odyssey.Graphics;
 using SharpDX;
 using SharpDX.Direct2D1;
 using System;
@@ -10,7 +9,7 @@ using System.Diagnostics.Contracts;
 
 namespace Odyssey.Engine
 {
-    public class Direct2DSurface : Direct2DResource, IInitializable
+    public class Direct2DSurface : Direct2DResource
     {
         private readonly Direct2DDevice d2DDevice;
         private readonly IServiceRegistry services;

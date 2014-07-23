@@ -24,15 +24,15 @@ namespace Odyssey.Talos.Initializers
         public override void SetupInitialization(ShaderInitializer initializer)
         {
             var services = initializer.Services;
-            var effect = initializer.Effect;
+            var technique = initializer.Technique;
             
             var scene = services.GetService<IScene>();
             var data = from e in scene.Entities
                 where e.ContainsComponent<MaterialComponent>()
                 let techniqueComponents = e.Components.OfType<ITechniqueComponent>()
                 from techniqueRange in techniqueComponents
-                from technique in techniqueRange.Techniques
-                where technique.ActiveTechniqueId == effect.Name
+                from t in techniqueRange.Techniques
+                       where t.Name == technique.Name
                 group e.Id by e.GetComponent<MaterialComponent>()
                 into materialEntities
                 select new {Material = materialEntities.Key, Entities = materialEntities.ToArray()};
@@ -41,7 +41,7 @@ namespace Odyssey.Talos.Initializers
             {
                 foreach (var entityId in kvp.Entities)
                 {
-                    InitializerParameters parameters = new InitializerParameters(entityId, initializer.Technique, services, InstanceSelector);
+                    InitializerParameters parameters = new InitializerParameters(entityId, technique, services, InstanceSelector);
                     initializer.Initialize(this, (IMaterial) kvp.Material, parameters);
                 }
             }
