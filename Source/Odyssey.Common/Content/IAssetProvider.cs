@@ -1,5 +1,6 @@
 ﻿#region Using Directives
 
+using System.Collections.Generic;
 using SharpDX;
 using System;
 
@@ -13,7 +14,9 @@ namespace Odyssey.Content
 
         bool Contains(string assetName);
 
-        T Get<T>(string assetName, object options = null);
+        T Load<T>(string assetName, object options = null);
+        
+        IEnumerable<T> GetAll<T>();
 
         void Store<T>(string assetName, T asset);
 
@@ -28,5 +31,7 @@ namespace Odyssey.Content
         Type Map(string assetType);
 
         void AddMapping(string key, Type assetType);
+
+        event EventHandler<AssetsLoadedEventArgs> AssetsLoaded;
     }
 }

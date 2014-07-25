@@ -2,6 +2,7 @@
 
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
+using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
@@ -60,7 +61,7 @@ namespace Odyssey.Engine
 
             backBuffer = ToDispose(BackBufferSurface.New(this));
             backBuffer.Initialize();
-
+            
             directWriteFactory = ToDispose(new DWFactory());
         }
 
@@ -134,12 +135,28 @@ namespace Odyssey.Engine
             deviceContext.DrawGeometry(geometry, brush);
         }
 
-        public void DrawRectangle(Shape shape, Brush brush, float strokeWidth = 1.0f)
+        public void DrawRectangle(Shape shape, Brush brush, float strokeThickness = 1.0f)
         {
-            deviceContext.DrawRectangle(shape.BoundingRectangle, brush, strokeWidth);
+            deviceContext.DrawRectangle(shape.BoundingRectangle, brush, strokeThickness);
         }
 
-        public void DrawTest(string text, TextFormat textFormat, RectangleF layoutRect, Brush foregroundBrush,
+        public void DrawEllipse(Graphics.Shapes.Ellipse ellipse, Brush brush, float strokeThickness = 1.0f)
+        {
+            deviceContext.DrawEllipse(ellipse, brush, strokeThickness);
+        }
+
+        public void FillEllipse(Graphics.Shapes.Ellipse ellipse, Brush brush)
+        {
+            deviceContext.FillEllipse(ellipse, brush);
+        }
+
+
+        public void DrawLine(Line line, Brush brush, float strokeThickness = 1.0f)
+        {
+            deviceContext.DrawLine(line.P0, line.P1, brush, strokeThickness);
+        }
+
+        public void DrawText(string text, TextFormat textFormat, RectangleF layoutRect, Brush foregroundBrush,
             DrawTextOptions textOptions = DrawTextOptions.None)
         {
             deviceContext.DrawText(text, textFormat, layoutRect, foregroundBrush, textOptions);
@@ -195,6 +212,9 @@ namespace Odyssey.Engine
             RemoveAndDispose(ref deviceContext);
             RemoveAndDispose(ref device);
             RemoveAndDispose(ref factory);
+
+            // TODO improve FontCollection disposal
+            services.GetService<IStyleService>().FontCollection.Dispose();
         }
 
         #region Operators

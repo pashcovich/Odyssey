@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Odyssey.Engine;
 using Odyssey.Graphics.PostProcessing;
-using Odyssey.Graphics.Shaders;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;

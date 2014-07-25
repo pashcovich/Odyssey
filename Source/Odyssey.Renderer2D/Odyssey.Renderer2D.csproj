@@ -34,6 +34,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\ControlDefinitionsReader.cs" />
+    <Compile Include="Content\Font.cs" />
+    <Compile Include="Content\FontReader.cs" />
+    <Compile Include="Content\NativeFontFileEnumerator.cs" />
+    <Compile Include="Content\NativeFontFileStream.cs" />
+    <Compile Include="Content\NativeFontLoader.cs" />
     <Compile Include="Content\TextDefinitionsReader.cs" />
     <Compile Include="Devices\Enums.cs" />
     <Compile Include="Devices\Key.cs" />
@@ -56,6 +61,8 @@
     <Compile Include="Graphics\Shapes\Ellipse.cs" />
     <Compile Include="Graphics\Shapes\Hexagon.cs" />
     <Compile Include="Graphics\Shapes\IShape.cs" />
+    <Compile Include="Graphics\Shapes\Line.cs" />
+    <Compile Include="UserInterface\Controls\Border.cs" />
     <Compile Include="UserInterface\Style\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Shapes\PolygonBase.cs" />
     <Compile Include="Graphics\Shapes\Rectangle.cs" />

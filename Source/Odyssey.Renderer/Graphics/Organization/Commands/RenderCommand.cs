@@ -9,21 +9,15 @@ using SharpDX;
 
 namespace Odyssey.Graphics.Organization.Commands
 {
-
     public abstract class RenderCommand : Command, IRenderCommand
     {
         private readonly Technique technique;
         private readonly List<IEntity> entities;
         
-        protected ModelMeshCollection Renderables { get; set; }
+        public Model Model { get; protected set; }
         protected int EntityCount { get { return entities.Count(); }}
 
         public IEnumerable<IEntity> Entities { get { return entities; } }
-
-        public IEnumerable<ModelMesh> Items
-        {
-            get { return Renderables; }
-        }
 
         public Technique Technique { get { return technique; } }
 

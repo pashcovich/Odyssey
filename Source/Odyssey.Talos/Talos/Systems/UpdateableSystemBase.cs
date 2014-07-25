@@ -20,17 +20,6 @@ namespace Odyssey.Talos.Systems
 
         public virtual void AfterUpdate()
         {
-            foreach (IEntity entity in Scene.SystemMap.SelectAllEntities(this))
-            {
-                if (!entity.IsEnabled)
-                    continue;
-
-                var cUpdate = entity.GetComponent<UpdateComponent>(tUpdate.KeyPart);
-                if (cUpdate.UpdateFrequency == UpdateFrequency.Static)
-                    cUpdate.RequiresUpdate = false;
-                else if (cUpdate.UpdateFrequency == UpdateFrequency.RealTime)
-                    cUpdate.RequiresUpdate = true;
-            }
         }
 
 

@@ -42,5 +42,12 @@ namespace Odyssey.UserInterface.Controls
             base.OnPointerEnter(e);
             ActiveStyle = ShapeMap.GetShapes(ControlStatus.Highlighted).ToArray();
         }
+
+        public override void Render()
+        {
+            base.Render();
+            if (Content != null)
+                Content.Render();
+        }
     }
 }

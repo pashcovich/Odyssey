@@ -26,7 +26,7 @@ namespace Odyssey.Talos.Components
         public override void Initialize()
         {
             Contract.Requires<InvalidOperationException>(DiffuseMapKey != null);
-            DiffuseMap = Content.Get<Texture>(DiffuseMapKey);
+            DiffuseMap = Content.Load<Texture>(DiffuseMapKey);
             if (!DiffuseMap.IsInited)
                 DiffuseMap.Initialize();
             TextureMap.Add(TextureReference.Diffuse.ToString(), DiffuseMap);

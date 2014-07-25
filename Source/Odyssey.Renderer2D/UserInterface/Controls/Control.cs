@@ -43,7 +43,7 @@ namespace Odyssey.UserInterface.Controls
 
         protected IShape[] ActiveStyle { get; set; }
 
-        protected ShapeMap ShapeMap { get; set; }
+        protected ShapeMap ShapeMap { get; private set; }
 
         #region Events
 
@@ -158,7 +158,7 @@ namespace Odyssey.UserInterface.Controls
                 Padding = description.Padding;
 
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
-            ShapeMap = new ShapeMap(description);
+            ShapeMap = new ShapeMap(this);
             LayoutUpdated += (s, e) => ShapeMap.Update();
             Description = description;
         }
@@ -195,6 +195,12 @@ namespace Odyssey.UserInterface.Controls
         }
 
         #endregion Protected methods
+
+        public override void Render()
+        {
+            foreach (IShape shape in ActiveStyle)
+                shape.Render();
+        }
 
         internal override UIElement Copy()
         {

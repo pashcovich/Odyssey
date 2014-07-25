@@ -1,27 +1,50 @@
 ﻿#region Using Directives
 
 using Odyssey.Content;
+using Odyssey.Engine;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using SharpDX.DirectWrite;
+using Font = Odyssey.Content.Font;
 
 #endregion Using Directives
 
 namespace Odyssey.UserInterface.Style
 {
-    public class StyleManager : IStyleService
+    public class StyleManager : Component, IStyleService
     {
         private readonly IAssetProvider content;
+        private FontCollection fontCollection;
+        private NativeFontLoader fontLoader;
+        private readonly IServiceRegistry services;
+        public FontCollection FontCollection { get { return fontCollection; } }
 
         public StyleManager(IServiceRegistry services)
         {
+            this.services = services;
             content = services.GetService<IAssetProvider>();
 
             content.AddMapping("ControlDefinitions", typeof (ControlDescription));
             content.AddMapping("TextDefinitions", typeof (TextDescription));
+            content.AddMapping("Font", typeof(Font));
+
+            content.AssetsLoaded += InitializeFontCollection;
+        }
+
+        void InitializeFontCollection(object sender, AssetsLoadedEventArgs e)
+        {
+            var assetListName = Path.GetFileNameWithoutExtension(e.AssetListPath);
+            if (!string.Equals(assetListName, "fonts"))
+                return;
+
+            var device = services.GetService<IDirect2DService>().Direct2DDevice;
+            fontLoader = new NativeFontLoader(services);
+            fontCollection = ToDispose(new FontCollection(device.DirectWriteFactory, fontLoader, fontLoader.Key));
+            content.AssetsLoaded -= InitializeFontCollection;
         }
 
         public ControlDescription GetControlDescription(string themeName, string controlClass)
@@ -29,7 +52,7 @@ namespace Odyssey.UserInterface.Style
             if (!content.Contains(themeName))
                 throw new InvalidOperationException(string.Format("[{0}] theme not found.", themeName));
 
-            var theme = content.Get<ControlDescription[]>(themeName);
+            var theme = content.Load<ControlDescription[]>(themeName);
 
             var description = theme.FirstOrDefault(c => c.Name == controlClass);
 
@@ -46,7 +69,7 @@ namespace Odyssey.UserInterface.Style
             if (!content.Contains(themeName))
                 throw new InvalidOperationException(string.Format("[{0}] theme not found.", themeName));
 
-            var theme = content.Get<TextDescription[]>(themeName);
+            var theme = content.Load<TextDescription[]>(themeName);
 
             var description = theme.FirstOrDefault(t => t.Name == controlClass);
 

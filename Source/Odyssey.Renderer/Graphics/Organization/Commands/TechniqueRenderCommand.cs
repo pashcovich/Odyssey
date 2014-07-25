@@ -13,15 +13,15 @@ using System.Linq;
 
 namespace Odyssey.Graphics.Organization.Commands
 {
-    [DebuggerDisplay("{Type}[{Technique.Name}]: {entities.Count} items")]
+    [DebuggerDisplay("{Type}[{Technique.Name}]: {entities.Count} items [{Model.Name}]")]
     public class TechniqueRenderCommand : RenderCommand, ITechniqueRenderCommand
     {
-        public TechniqueRenderCommand(IServiceRegistry services, Technique technique, ModelMeshCollection renderables, IEnumerable<IEntity> entities)
+        public TechniqueRenderCommand(IServiceRegistry services, Technique technique, Model model, IEnumerable<IEntity> entities)
             : base(services, technique, entities)
         {
-            Contract.Requires<ArgumentNullException>(renderables != null);
+            Contract.Requires<ArgumentNullException>(model != null, "model");
 
-            Renderables = renderables;
+            Model = model;
             Name = string.Format("{0}[{1}]", Type, Technique.Name);
         }
 
@@ -80,7 +80,7 @@ namespace Odyssey.Graphics.Organization.Commands
                     shader.Apply(Technique.Name, entity.Id, UpdateType.InstanceFrame);
                 }
 
-                foreach (ModelMesh mesh in Renderables)
+                foreach (ModelMesh mesh in Model.Meshes)
                 {
                     mesh.Draw(device);
                 }

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\AssetIdentifier.cs" />
+    <Compile Include="Content\AssetsLoadedEventArgs.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentReaderAttribute.cs" />
     <Compile Include="Content\ContentReaderParameters.cs" />

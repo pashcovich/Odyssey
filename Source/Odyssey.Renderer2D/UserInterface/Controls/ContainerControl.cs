@@ -146,6 +146,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
+            base.Render();
             foreach (var control in Controls.Where(control => control.IsVisible))
                 control.Render();
         }

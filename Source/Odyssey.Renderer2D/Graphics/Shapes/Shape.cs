@@ -26,6 +26,11 @@ namespace Odyssey.Graphics.Shapes
 {
     public abstract class Shape : UIElement, IShape
     {
+        protected Shape()
+        {
+            StrokeThickness = 1.0f;
+        }
+
         public static Color4 DefaultFillColor = Color.MidnightBlue;
         public static Color4 DefaultStrokeColor = Color.DimGray;
 
@@ -34,6 +39,8 @@ namespace Odyssey.Graphics.Shapes
         internal Brush Stroke { get; set; }
 
         public IGradient FillShader { get; set; }
+
+        public float StrokeThickness { get; set; }
 
         RectangleF IShape.BoundingRectangle
         {
@@ -52,7 +59,6 @@ namespace Odyssey.Graphics.Shapes
                 Height = control.Height,
                 AbsolutePosition = control.AbsolutePosition,
                 Margin = control.Margin,
-                Parent = control
             };
 
             return shape;
@@ -61,7 +67,8 @@ namespace Odyssey.Graphics.Shapes
         protected override void OnLayoutUpdated(System.EventArgs e)
         {
             base.OnLayoutUpdated(e);
-            Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
+            if (Fill != null)
+                Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
         }
     }
 }

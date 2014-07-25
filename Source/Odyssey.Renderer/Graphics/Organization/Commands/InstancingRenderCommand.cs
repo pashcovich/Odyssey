@@ -15,8 +15,8 @@ namespace Odyssey.Graphics.Organization.Commands
         private Buffer instanceBuffer;
         private int elementSize;
 
-        public InstancingRenderCommand(IServiceRegistry services, Technique technique, ModelMeshCollection renderables, IEnumerable<IEntity> entities) 
-            : base(services, technique, renderables, entities)
+        public InstancingRenderCommand(IServiceRegistry services, Technique technique, Model model, IEnumerable<IEntity> entities) 
+            : base(services, technique, model, entities)
         {
         }
 
@@ -29,7 +29,7 @@ namespace Odyssey.Graphics.Organization.Commands
             var data = AggregateIntanceData();
 
             instanceBuffer = ToDispose(Buffer.Vertex.New(device,  data, ResourceUsage.Default));
-            instanceBuffer.DebugName = string.Format("{0}_{1}", "IB", Renderables[0].Name);
+            instanceBuffer.DebugName = string.Format("{0}_{1}", "IB", Model.Name);
         }
 
         Vector4[] AggregateIntanceData()
@@ -49,7 +49,7 @@ namespace Odyssey.Graphics.Organization.Commands
             var updatedData = AggregateIntanceData();
             instanceBuffer.SetData(device, updatedData);
 
-            foreach (ModelMesh modelMesh in Renderables)
+            foreach (ModelMesh modelMesh in Model.Meshes)
             {
                 foreach (ConstantBuffer cb in Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, UpdateType.InstanceFrame))
                     device.SetVertexBuffer(cb.Index, instanceBuffer, elementSize);

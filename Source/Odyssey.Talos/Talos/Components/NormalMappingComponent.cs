@@ -25,7 +25,7 @@ namespace Odyssey.Talos.Components
         {
             Contract.Requires<InvalidOperationException>(NormalMapKey != null);
             base.Initialize();
-            NormalMap = Content.Get<Texture>(NormalMapKey);
+            NormalMap = Content.Load<Texture>(NormalMapKey);
             if (!NormalMap.IsInited)
                 NormalMap.Initialize();
             TextureMap.Add(TextureReference.NormalMap.ToString(), NormalMap);

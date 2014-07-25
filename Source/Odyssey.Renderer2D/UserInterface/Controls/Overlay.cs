@@ -133,8 +133,10 @@ namespace Odyssey.UserInterface.Controls
         {
             base.Dispose(disposeManagedResources);
             if (disposeManagedResources)
+            {
                 foreach (UIElement uiElement in Controls)
                     uiElement.Dispose();
+            }
             IsInited = false;
         }
 

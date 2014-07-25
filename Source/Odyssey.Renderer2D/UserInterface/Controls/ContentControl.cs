@@ -50,7 +50,8 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
-            content.Render();
+            if (Content != null)
+                Content.Render();
         }
 
         protected override void OnInitializing(ControlEventArgs e)
@@ -63,15 +64,18 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnLayoutUpdated(EventArgs e)
         {
             base.OnLayoutUpdated(e);
-
-            Content.Layout();
+            if (Content != null)
+                Content.Layout();
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
-            Content.Width = Width;
-            Content.Height = Height;
+            if (Content != null)
+            {
+                Content.Width = Width;
+                Content.Height = Height;
+            }
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Odyssey.Graphics.Shapes
             set { shape = value; }
         }
 
-        protected Matrix3x2 Transform
+        protected new Matrix3x2 Transform
         {
             get { return transform; }
         }

@@ -29,12 +29,12 @@ namespace Odyssey.Graphics.Shapes
 {
     public class ShapeMap
     {
-        private readonly ControlDescription description;
+        private readonly Control owner;
         private readonly Dictionary<ControlStatus, List<IShape>> map;
 
-        public ShapeMap(ControlDescription description)
+        public ShapeMap(Control owner)
         {
-            this.description = description;
+            this.owner = owner;
             map = new Dictionary<ControlStatus, List<IShape>>();
         }
 
@@ -81,9 +81,10 @@ namespace Odyssey.Graphics.Shapes
 
         private void ProcessInsertion(ControlStatus status, IShape shape)
         {
-            Contract.Requires<NullReferenceException>(shape != null);
-            shape.FillShader = description.GetFillGradient(status);
-            shape.StrokeShader = description.GetStrokeGradient(status);
+            Contract.Requires<NullReferenceException>(shape != null, "shape");
+            shape.FillShader = owner.Description.GetFillGradient(status);
+            shape.StrokeShader = owner.Description.GetStrokeGradient(status);
+            ((UIElement)shape).Parent = owner;
 
             if (!map.ContainsKey(status))
                 map.Add(status, new List<IShape>());

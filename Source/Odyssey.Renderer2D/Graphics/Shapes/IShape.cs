@@ -10,5 +10,7 @@ namespace Odyssey.Graphics.Shapes
         IGradient FillShader { get; set; }
 
         IGradient StrokeShader { get; set; }
+
+        float StrokeThickness { get; set; }
     }
 }

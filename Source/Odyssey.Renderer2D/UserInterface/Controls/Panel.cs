@@ -31,14 +31,6 @@ namespace Odyssey.UserInterface.Controls
             return BoundingRectangle.Contains(cursorLocation);
         }
 
-        public override void Render()
-        {
-            foreach (IShape shape in ActiveStyle)
-                shape.Render();
-
-            base.Render();
-        }
-
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);

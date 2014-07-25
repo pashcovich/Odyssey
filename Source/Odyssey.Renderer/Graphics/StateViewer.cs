@@ -6,6 +6,7 @@ using Odyssey.Engine;
 using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Organization.Commands;
 using Odyssey.Graphics.Shaders;
+using Odyssey.Utilities.Extensions;
 using SharpDX;
 using SharpDX.Direct3D11;
 
@@ -38,16 +39,8 @@ namespace Odyssey.Graphics
             resultCursor=resultCommands.AddLast(command);
         }
 
-        void SaveState(Command command)
+        void SaveState(Technique technique)
         {
-            var cRender = command as ITechniqueRenderCommand;
-            if (cRender == null)
-            {
-                AddNewCommand(command);
-                return;
-            }
-            Technique technique = cRender.Technique;
-
             PreferredRasterizerState preferredRasterizerState = technique.Mapping.Key.RasterizerState;
             PreferredBlendState preferredBlendState = technique.Mapping.Key.BlendState;
             PreferredDepthStencilState preferredDepthStencilState = technique.Mapping.Key.DepthStencilState;
@@ -61,11 +54,24 @@ namespace Odyssey.Graphics
             if (CheckDepthStencilState(technique))
                 AddNewCommand(new DepthStencilStateChangeCommand(services, device.DepthStencilStates[preferredDepthStencilState.ToString()]));
 
-            AddNewCommand(command);
-
             rasterizerState = preferredRasterizerState;
             blendState = preferredBlendState;
             depthStencilState = preferredDepthStencilState;
+        }
+
+        void CheckState(Command command)
+        {
+            var cRender = command as ITechniqueRenderCommand;
+            if (cRender == null)
+            {
+                AddNewCommand(command);
+                return;
+            }
+
+            Technique technique = cRender.Technique;
+
+            SaveState(technique);
+            AddNewCommand(command);
         }
 
 
@@ -92,14 +98,18 @@ namespace Odyssey.Graphics
             cursor = sourceCommands.First;
 
 
-            while (cursor.Next != null)
+            while (cursor != null)
             {
-                SaveState(cursor.Value);
+                CheckState(cursor.Value);
                 cursor = cursor.Next;
             }
-
-            SaveState(cursor.Value);
+            
+            // Go back to first ITechniqueRenderCommand
+            var firstRenderCommand = (ITechniqueRenderCommand)sourceCommands.First(c=> c is ITechniqueRenderCommand);
+            SaveState(firstRenderCommand.Technique);
             return resultCommands;
         }
+
+
     }
 }

@@ -16,9 +16,8 @@ namespace Odyssey.Graphics.Shapes
 
         public override void Render()
         {
-            var context = (DeviceContext)Device;
-            context.FillEllipse(ellipse, Fill);
-            context.DrawEllipse(ellipse, Stroke);
+            Device.FillEllipse(this,Fill);
+            Device.DrawEllipse(this, Stroke);
         }
 
         protected override void OnInitializing(ControlEventArgs e)
@@ -34,13 +33,22 @@ namespace Odyssey.Graphics.Shapes
         protected override void OnPositionChanged(EventArgs e)
         {
             base.OnPositionChanged(e);
-            ellipse.Point = new SharpDX.Vector2(BoundingRectangle.X, BoundingRectangle.Y);
+            ellipse.Point = new Vector2(BoundingRectangle.X, BoundingRectangle.Y);
         }
 
-        protected override void OnSizeChanged(EventArgs e)
+        protected override void OnLayoutUpdated(EventArgs e)
         {
-            base.OnSizeChanged(e);
+            base.OnLayoutUpdated(e);
             ellipse = new SharpDX.Direct2D1.Ellipse(BoundingRectangle.Center, BoundingRectangle.Width / 2, BoundingRectangle.Height / 2);
+        }
+
+        /// <summary>
+        /// <see cref="SharpDX.Direct2D1.Ellipse"/> casting operator.
+        /// </summary>
+        /// <param name="from">From the Texture1D.</param>
+        public static implicit operator SharpDX.Direct2D1.Ellipse(Ellipse from)
+        {
+            return from == null ? default(SharpDX.Direct2D1.Ellipse) : from.ellipse;
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using SharpDX;
+﻿using System.Diagnostics;
+using SharpDX;
 using SharpYaml;
 using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
-    [YamlTag("Rotation")]
+    [DebuggerDisplay("{Rotation}: ({Orientation})")]
     public class RotationComponent : Component
     {
         private Quaternion orientation;

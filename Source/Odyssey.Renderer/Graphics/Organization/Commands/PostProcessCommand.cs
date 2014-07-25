@@ -14,7 +14,7 @@ using SharpDX.Direct3D11;
 
 namespace Odyssey.Graphics.Organization.Commands
 {
-    [DebuggerDisplay("{Type}[{effect.Name}]")]
+    [DebuggerDisplay("{Type}[{technique.Name}]")]
     public class PostProcessCommand : RenderToTextureCommandBase, ITechniqueRenderCommand
     {
         private readonly Technique technique;

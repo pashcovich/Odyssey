@@ -1,18 +1,18 @@
-﻿using SharpDX;
+﻿using System.Diagnostics;
+using SharpDX;
 using SharpYaml;
 using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
-    [YamlTag("Scaling")]
+    [DebuggerDisplay("{Scale}: ({Scaling})")]
     public class ScalingComponent : Component
     {
-        [YamlStyle(YamlStyle.Flow)]
-        public Vector3 Scaling { get; set; }
+        public Vector3 Scale { get; set; }
 
         public ScalingComponent() : base(ComponentTypeManager.GetType<ScalingComponent>())
         {
-            Scaling = new Vector3(1, 1, 1);
+            Scale = new Vector3(1, 1, 1);
         }
     }
 }

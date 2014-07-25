@@ -442,7 +442,7 @@ namespace Odyssey
 
             contentManager.LoadAssetList(filePath);
 
-            var refData = contentManager.Get<EngineReferenceCollection>(references);
+            var refData = contentManager.Load<EngineReferenceCollection>(references);
             services.AddService(typeof(IReferenceService), refData);
             SetupDeviceEvents();
         }

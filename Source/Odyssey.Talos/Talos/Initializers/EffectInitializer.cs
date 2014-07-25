@@ -105,7 +105,7 @@ namespace Odyssey.Talos.Initializers
         private static IEnumerable<IParameter> ComputeBlurOffsetsAndWeights(int index, IEntity entity, InitializerParameters parameters)
         {
             var deviceSettings = parameters.Services.GetService<IDirectXDeviceSettings>();
-            bool isHorizontal = parameters.Technique.Name == "GaussianBlurH";
+            bool isHorizontal = parameters.Technique.Name == "PostProcess.GaussianBlurH";
             float texelWidth;
             float texelHeight;
             var cBlur = entity.GetComponent<BlurComponent>();

@@ -27,7 +27,7 @@ namespace Odyssey.UserInterface.Controls
 
             timer.Measure();
             Device.Transform = Matrix.Identity;
-            Device.DrawTest(string.Format("{0:F2} FPS ({1:F1} ms)", timer.MeasuredFPS, timer.FrameTime * 1000.0), TextFormat, new RectangleF(8, 8, 8 + 256, 8 + 16), sceneColorBrush);
+            Device.DrawText(string.Format("{0:F2} FPS ({1:F1} ms)", timer.MeasuredFPS, timer.FrameTime * 1000.0), TextFormat, new RectangleF(8, 8, 8 + 256, 8 + 16), sceneColorBrush);
         }
 
         protected override void OnInitializing(ControlEventArgs e)

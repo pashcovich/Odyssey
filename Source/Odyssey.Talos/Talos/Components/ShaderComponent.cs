@@ -45,7 +45,7 @@ namespace Odyssey.Talos.Components
         public override void Initialize()
         {
             Contract.Requires<InvalidOperationException>(AssetName != null);
-            ShaderCollection shaderCollection = Content.Get<ShaderCollection>(AssetName);
+            ShaderCollection shaderCollection = Content.Load<ShaderCollection>(AssetName);
 
             var techniquePool = DeviceService.DirectXDevice.TechniquePool;
             var mapping = shaderCollection.Get(Key);
