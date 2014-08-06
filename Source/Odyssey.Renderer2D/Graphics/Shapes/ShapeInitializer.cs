@@ -41,22 +41,26 @@ namespace Odyssey.Graphics.Shapes
 
         public void Initialize(Shape shape)
         {
-            if (shape.FillShader == null)
-                shape.FillShader = LinearGradient.CreateUniform(Shape.DefaultFillColor);
-            if (shape.StrokeShader == null)
-                shape.StrokeShader = LinearGradient.CreateUniform(Shape.DefaultStrokeColor);
+            if (shape.FillGradientClass == null)
+                shape.FillGradientClass = "DefaultFill";
+            if (shape.StrokeGradientClass == null)
+                shape.StrokeGradientClass = "DefaultStroke";
 
-            switch (shape.FillShader.Type)
+            switch (shape.FillGradient.Type)
             {
+                case GradientType.Linear:
+                    shape.Fill = LinearGradientBrush.New(string.Format("LinearFill.{0}", shape.Name), device, (LinearGradient)shape.FillGradient);
+                    break;
+
                 default:
-                    shape.Fill = SolidBrush.New(device, shape.FillShader.GradientStops[0].Color);
+                    shape.Fill = SolidBrush.New(string.Format("UniformFill.{0}", shape.Name), device, ((UniformGradient)shape.FillGradient).Color);
                     break;
             }
 
-            switch (shape.StrokeShader.Type)
+            switch (shape.StrokeGradient.Type)
             {
                 default:
-                    shape.Stroke = SolidBrush.New(device, shape.StrokeShader.GradientStops[0].Color);
+                    shape.Stroke = SolidBrush.New(string.Format("UniformStroke.{0}", shape.Name), device, ((UniformGradient)shape.FillGradient).Color);
                     break;
             }
 
@@ -67,26 +71,26 @@ namespace Odyssey.Graphics.Shapes
         public static IEnumerable<Direct2DResource> CreateResources(Direct2DDevice device, Shape shape)
         {
             var resources = new List<Direct2DResource>();
-            if (shape.FillShader == null)
-                shape.FillShader = LinearGradient.CreateUniform(Shape.DefaultFillColor);
-            if (shape.StrokeShader == null)
-                shape.StrokeShader = LinearGradient.CreateUniform(Shape.DefaultStrokeColor);
+            if (shape.FillGradientClass == null)
+                shape.FillGradientClass = "DefaultFill";
+            if (shape.StrokeGradientClass == null)
+                shape.StrokeGradientClass = "DefaultStroke";
 
-            switch (shape.FillShader.Type)
+            switch (shape.FillGradient.Type)
             {
                 case GradientType.Linear:
-                    shape.Fill = LinearGradientBrush.New(device, shape);
+                    shape.Fill = LinearGradientBrush.New(string.Format("LinearFill.{0}", shape.Name), device, (LinearGradient)shape.FillGradient);
                     break;
 
                 default:
-                    shape.Fill = SolidBrush.New(device, shape.FillShader.GradientStops[0].Color);
+                    shape.Fill = SolidBrush.New(string.Format("UniformFill.{0}", shape.Name), device, ((UniformGradient)shape.FillGradient).Color);
                     break;
             }
 
-            switch (shape.StrokeShader.Type)
+            switch (shape.StrokeGradient.Type)
             {
                 default:
-                    shape.Stroke = SolidBrush.New(device, shape.StrokeShader.GradientStops[0].Color);
+                    shape.Stroke = SolidBrush.New(string.Format("UniformStroke.{0}", shape.Name), device, ((UniformGradient)shape.StrokeGradient).Color);
                     break;
             }
             

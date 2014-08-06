@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Xml;
+using Odyssey.Utilities.Text;
 using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
 {
-    public class LinearGradient : GradientBase
+    public class LinearGradient : Gradient
     {
-        private readonly Vector2 startPoint;
-        private readonly Vector2 endPoint;
+        private Vector2 startPoint;
+        private Vector2 endPoint;
 
         public Vector2 StartPoint
         {
@@ -20,6 +22,9 @@ namespace Odyssey.Graphics.Shapes
             get { return endPoint; }
         }
 
+        public LinearGradient()
+        { }
+
         public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, GradientStopCollection gradientStops) : base(name, gradientStops, GradientType.Linear)
         {
             Contract.Requires<ArgumentNullException>(gradientStops != null, "gradientStops");
@@ -27,12 +32,7 @@ namespace Odyssey.Graphics.Shapes
             this.endPoint = endPoint;
         }
 
-        public static LinearGradient CreateUniform(Color4 color)
-        {
-            return CreateVertical("DefaultUniform", new[] { new GradientStop(color, 0), new GradientStop(color, 1.0f) });
-        }
-
-        public static LinearGradient CreateVertical(string name, IEnumerable<GradientStop> gradientStops)
+        public static LinearGradient Vertical(string name, IEnumerable<GradientStop> gradientStops)
         {
             return new LinearGradient(name, new Vector2(0.5f, 0), new Vector2(0.5f, 1),new GradientStopCollection(gradientStops));
         }
@@ -41,6 +41,20 @@ namespace Odyssey.Graphics.Shapes
         {
             return new LinearGradient(name, new Vector2(0f, 0.5f), new Vector2(1.0f, 0.5f), new GradientStopCollection(gradientStops));
         }
-      
+
+        protected override void OnReadXml(XmlReader reader)
+        {
+            Type = GradientType.Linear;
+            string sStart = reader.GetAttribute("StartPoint");
+            string sEnd = reader.GetAttribute("EndPoint");
+            startPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.DecodeFloatVector2(sStart);
+            endPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.DecodeFloatVector2(sEnd);
+            base.OnReadXml(reader);
+        }
+
+        internal override Gradient Copy()
+        {
+            return new LinearGradient(Name, startPoint, endPoint, GradientStops);
+        }
     }
 }

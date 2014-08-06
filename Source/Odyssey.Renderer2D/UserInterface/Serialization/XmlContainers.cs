@@ -7,17 +7,17 @@ using Odyssey.UserInterface.Controls;
 
 namespace Odyssey.UserInterface.Xml
 {
-    public abstract class XmlContainerControl : XmlBaseControl
+    public abstract class XmlContainerControl : XmlUIElement
     {
-        List<XmlBaseControl> xmlControlList;
+        List<XmlUIElement> xmlControlList;
 
         protected XmlContainerControl(Control control) : base(control)
         {
-            xmlControlList = new List<XmlBaseControl>();
+            xmlControlList = new List<XmlUIElement>();
         }
 
         [XmlArray("Controls")]
-        public virtual List<XmlBaseControl> XmlControlList
+        public virtual List<XmlUIElement> XmlControlList
         {
             get {
                 return xmlControlList.Count > 0 ? xmlControlList : null;
@@ -58,14 +58,9 @@ namespace Odyssey.UserInterface.Xml
         //    }
         //}
 
-        protected override void WriteCustomCsCode(StringBuilder sb)
-        {
-            return;
-        }
-
         public virtual void WriteContainerCSCode(StringBuilder sb)
         {
-            foreach (XmlBaseControl xmlBaseControl in XmlControlList)
+            foreach (XmlUIElement xmlBaseControl in XmlControlList)
             {
                 XmlContainerControl xmlContainerControl = xmlBaseControl as XmlContainerControl;
                 if ( xmlContainerControl!= null)
@@ -153,9 +148,9 @@ namespace Odyssey.UserInterface.Xml
         {
         }
 
-        public override void WriteCSharpCode(StringBuilder sb)
+        public virtual void WriteCSharpCode(StringBuilder sb)
         {
-            sb.AppendLine("Overlay = Overlay.FromDescription(SystemState.DeviceManager.DeviceDirect3D, OverlayDescription);");
+            // TODO Implement export UI to C#
         }
 
 

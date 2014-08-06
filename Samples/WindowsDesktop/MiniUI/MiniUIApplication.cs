@@ -76,7 +76,6 @@ namespace MiniUI
             content.LoadAssetList("Assets/Assets.yaml");
 
             overlay = ToDispose(SampleOverlay.New(services));
-            overlay.Initialize();
             uiManager.Initialize();
             uiManager.CurrentOverlay = overlay;
         }

@@ -14,8 +14,8 @@ namespace Odyssey.UserInterface.Controls
     {
         private IEnumerable itemsSource;
 
-        protected ItemsControl(string descriptionClass)
-            : base(descriptionClass)
+        protected ItemsControl(string styleClass)
+            : base(styleClass)
         {
             Children = new ControlCollection(this);
         }

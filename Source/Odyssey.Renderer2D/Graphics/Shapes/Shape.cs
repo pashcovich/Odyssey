@@ -15,6 +15,9 @@
 
 #region Using Directives
 
+using System;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Style;
@@ -26,21 +29,65 @@ namespace Odyssey.Graphics.Shapes
 {
     public abstract class Shape : UIElement, IShape
     {
+        private string cFillGradient;
+        private string cStrokeGradient;
+
+        protected Shape()
+        {
+            StrokeThickness = 1.0f;
+        }
+
         public static Color4 DefaultFillColor = Color.MidnightBlue;
         public static Color4 DefaultStrokeColor = Color.DimGray;
 
         internal Brush Fill { get; set; }
-
         internal Brush Stroke { get; set; }
 
-        public IGradient FillShader { get; set; }
-
-        RectangleF IShape.BoundingRectangle
+        public string FillGradientClass
         {
-            get { return BoundingRectangle; }
+            get { return cFillGradient; }
+            set
+            {
+                if (string.Equals(cFillGradient, value))
+                    return;
+
+                if (DesignMode)
+                    return;
+
+                cFillGradient = value;
+                FillGradient = Overlay.StyleService.GetGradient(Overlay.ControlTheme, cFillGradient);
+            }
         }
 
-        public IGradient StrokeShader { get; set; }
+        public string StrokeGradientClass
+        {
+            get { return cStrokeGradient; }
+            set
+            {
+                if (string.Equals(cStrokeGradient, value))
+                    return;
+
+                if (DesignMode)
+                    return;
+
+                cStrokeGradient = value;
+                StrokeGradient = Overlay.StyleService.GetGradient(Overlay.ControlTheme, cStrokeGradient);
+            }
+        }
+
+        public Gradient FillGradient { get; set; }
+        public Gradient StrokeGradient { get; set; }
+
+        public float StrokeThickness { get; set; }
+
+        internal override UIElement Copy()
+        {
+            Shape copy = (Shape)base.Copy();
+            copy.FillGradientClass = FillGradientClass;
+            copy.StrokeGradientClass = StrokeGradientClass;
+            copy.StrokeThickness = StrokeThickness;
+            return copy;
+        }
 
         public static TShape FromControl<TShape>(Control control, string shapeName)
             where TShape : UIElement, IShape, new()
@@ -52,7 +99,6 @@ namespace Odyssey.Graphics.Shapes
                 Height = control.Height,
                 AbsolutePosition = control.AbsolutePosition,
                 Margin = control.Margin,
-                Parent = control
             };
 
             return shape;
@@ -61,7 +107,14 @@ namespace Odyssey.Graphics.Shapes
         protected override void OnLayoutUpdated(System.EventArgs e)
         {
             base.OnLayoutUpdated(e);
-            Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
+            if (Fill != null)
+                Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
         }
+
+        protected override void OnReadXml(System.Xml.XmlReader reader)
+        {
+            
+        }
+
     }
 }

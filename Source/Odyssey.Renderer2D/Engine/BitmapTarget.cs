@@ -9,8 +9,8 @@ namespace Odyssey.Engine
 {
     public class BitmapTarget : Bitmap
     {
-        protected BitmapTarget(Direct2DDevice device, Surface surface, BitmapProperties1 description)
-            : base(device, surface, description)
+        protected BitmapTarget(string name, Direct2DDevice device, Surface surface, BitmapProperties1 description)
+            : base(name, device, surface, description)
         {
             Initialize(Resource);
         }
@@ -44,12 +44,12 @@ namespace Odyssey.Engine
             return description;
         }
 
-        public static BitmapTarget New(Direct2DDevice device, Surface surface)
+        public static BitmapTarget New(string name, Direct2DDevice device, Surface surface)
         {
-            return new BitmapTarget(device, surface, CreateDescription(device.HorizontalDpi, device.VerticalDpi, surface.Description.Format));
+            return new BitmapTarget(name, device, surface, CreateDescription(device.HorizontalDpi, device.VerticalDpi, surface.Description.Format));
         }
 
-        public static BitmapTarget New(Direct2DDevice device, int width, int height, PixelFormat format)
+        public static BitmapTarget New(string name, Direct2DDevice device, int width, int height, PixelFormat format)
         {
             Texture2DDescription renderTargetDescription = new Texture2DDescription
                 {
@@ -67,7 +67,7 @@ namespace Odyssey.Engine
 
             Texture2D texture = new Texture2D(device, renderTargetDescription);
 
-            return new BitmapTarget(device, texture.QueryInterface<Surface>(), CreateDescription(device.HorizontalDpi, device.VerticalDpi, format));
+            return new BitmapTarget(name, device, texture.QueryInterface<Surface>(), CreateDescription(device.HorizontalDpi, device.VerticalDpi, format));
         }
 
         private static int CalculateMipMapCount(int width, int height)

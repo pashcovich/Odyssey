@@ -1,59 +1,96 @@
 ﻿#region Using Directives
 
+using System.Diagnostics.Contracts;
 using Odyssey.Content;
+using Odyssey.Engine;
+using Odyssey.Graphics.Shapes;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using SharpDX.DirectWrite;
+using Font = Odyssey.Content.Font;
+using Path = System.IO.Path;
 
 #endregion Using Directives
 
 namespace Odyssey.UserInterface.Style
 {
-    public class StyleManager : IStyleService
+    public class StyleManager : Component, IStyleService
     {
         private readonly IAssetProvider content;
+        private FontCollection fontCollection;
+        private NativeFontLoader fontLoader;
+        private readonly IServiceRegistry services;
+        public FontCollection FontCollection { get { return fontCollection; } }
 
         public StyleManager(IServiceRegistry services)
         {
+            this.services = services;
             content = services.GetService<IAssetProvider>();
 
-            content.AddMapping("ControlDefinitions", typeof (ControlDescription));
+            content.AddMapping("Theme", typeof (Theme));
             content.AddMapping("TextDefinitions", typeof (TextDescription));
+            content.AddMapping("Font", typeof(Font));
+
+            content.AssetsLoaded += InitializeFontCollection;
         }
 
-        public ControlDescription GetControlDescription(string themeName, string controlClass)
+        void InitializeFontCollection(object sender, AssetsLoadedEventArgs e)
         {
-            if (!content.Contains(themeName))
-                throw new InvalidOperationException(string.Format("[{0}] theme not found.", themeName));
+            var assetListName = Path.GetFileNameWithoutExtension(e.AssetListPath);
+            if (!string.Equals(assetListName, "fonts"))
+                return;
 
-            var theme = content.Get<ControlDescription[]>(themeName);
-
-            var description = theme.FirstOrDefault(c => c.Name == controlClass);
-
-            if (description == null)
-            {
-                LogEvent.UserInterface.Warning("[{0}] description not found.", controlClass);
-                return theme.First(c => c.Name == ControlDescription.Error);
-            }
-            else return description;
+            var device = services.GetService<IDirect2DService>().Direct2DDevice;
+            fontLoader = new NativeFontLoader(services);
+            fontCollection = ToDispose(new FontCollection(device.DirectWriteFactory, fontLoader, fontLoader.Key));
+            content.AssetsLoaded -= InitializeFontCollection;
         }
 
-        public TextDescription GetTextDescription(string themeName, string controlClass)
+        [Pure]
+        public bool ContainsTheme(string themeName)
         {
-            if (!content.Contains(themeName))
-                throw new InvalidOperationException(string.Format("[{0}] theme not found.", themeName));
+            return content.Contains(themeName);
+        }
 
-            var theme = content.Get<TextDescription[]>(themeName);
+        void CheckTheme(string themeName)
+        {
+            if (!ContainsTheme(themeName))
+                throw new ArgumentException(string.Format("Theme [{0}] not found.", themeName));
+        }
+
+        public ControlStyle GetControlStyle(string themeName, string controlClass)
+        {
+            CheckTheme(themeName);
+
+            var theme = content.Load<Theme>(themeName);
+
+            var style = theme[controlClass];
+            return style;
+        }
+
+        public Gradient GetGradient(string themeName, string resourceName)
+        {
+            CheckTheme(themeName);
+
+            return content.Load<Theme>(themeName).GetResource(resourceName);
+        }
+
+        public TextDescription GetTextStyle(string themeName, string controlClass)
+        {
+            CheckTheme(themeName);
+
+            var theme = content.Load<TextDescription[]>(themeName);
 
             var description = theme.FirstOrDefault(t => t.Name == controlClass);
 
             if (description == default(TextDescription))
             {
-                LogEvent.UserInterface.Warning("[{0}] description not found.", controlClass);
-                return theme.First(c => c.Name == ControlDescription.Error);
+                LogEvent.UserInterface.Warning("[{0}] Text Style not found.", controlClass);
+                return theme.First(c => c.Name == ControlStyle.Error);
             }
             else return description;
         }

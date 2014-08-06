@@ -47,7 +47,12 @@ namespace Odyssey.Talos.Systems
                 commandManager.Run();
             }
         }
-        
+
+        public override void Unload()
+        {
+            commandManager.Unload();
+        }
+
         public override void Process(ITimeService time)
         {
             if (!MessageQueue.HasItems<OptimizationCompleteMessage>()) return;
@@ -115,7 +120,7 @@ namespace Odyssey.Talos.Systems
                     where filteredEntities.Any()
                     let tRenderCommand = cRender.GetType()
                     select (RenderCommand) Activator.CreateInstance(tRenderCommand,
-                                new object[] { Services, cRender.Technique, cRender.Items, filteredEntities }))
+                                new object[] { Services, cRender.Technique, cRender.Model, filteredEntities }))
                                 .Cast<Command>().ToList();
 
             StateViewer sv = new StateViewer(Services, filteredCommands);

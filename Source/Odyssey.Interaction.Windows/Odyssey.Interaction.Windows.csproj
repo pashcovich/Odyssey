@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+	<Reference Include="System.Runtime" />
     <Reference Include="System.Core" />
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.ObjectModel" />
@@ -28,8 +29,6 @@
     <Compile Include="UserInterface\DesktopUserInterfaceManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Runtime" />
     <Reference Include="SharpDX">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>

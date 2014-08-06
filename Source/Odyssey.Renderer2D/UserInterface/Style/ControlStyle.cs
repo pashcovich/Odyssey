@@ -27,20 +27,25 @@
 
 #region Using directives
 
+using System;
+using System.Collections.Generic;
+using System.Xml;
+using System.Xml.Serialization;
 using Odyssey.Content;
+using Odyssey.Geometry.Primitives;
+using Odyssey.Animation;
 using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Style;
 using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Xml;
 using SharpDX;
 
 #endregion
 
 namespace Odyssey.UserInterface.Style
 {
-    [ContentReader(typeof(ControlDefinitionsReader))]
-    public class ControlDescription
+    public sealed class ControlStyle
     {
-        public const int DefaultBorderSize = 1;
         internal const string Error = "Error";
         internal const string Empty = "Empty";
 
@@ -49,13 +54,13 @@ namespace Odyssey.UserInterface.Style
         public string Name { get; internal set; }
         public string TextStyleClass { get; internal set; }
         public BorderStyle BorderStyle { get; internal set; }
-        public Size2F Size { get; internal set; }
+        public float Width { get; internal set; }
+        public float Height { get; internal set; }
         public Thickness Margin { get; internal set; }
         public Thickness Padding { get; internal set; }
         public IGradient Enabled { get; internal set; }
         public IGradient Highlighted { get; internal set; }
         public IGradient BorderEnabled { get; internal set; }
-
 
         public IGradient GetFillGradient(ControlStatus status)
         {
@@ -81,23 +86,20 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-
-
-
-        public static ControlDescription EmptyDescription
+        public static ControlStyle EmptyStyle
         {
             get
             {
-                return new ControlDescription
+                return new ControlStyle
                            {
-                               BorderStyle = BorderStyle.None,
                                Enabled = null,
                                BorderEnabled = null,
                                Highlighted = null,
                                Name = Empty,
                                Margin = Thickness.Empty,
                                Padding = Thickness.Empty,
-                               Size = default(Size2F),
+                               Height = 0,
+                               Width = 0,
                                TextStyleClass = "Default"
                            };
             }
@@ -105,6 +107,6 @@ namespace Odyssey.UserInterface.Style
 
         #endregion
 
-
+        public IEnumerable<Shape> VisualStateDefinition { get; internal set; }
     }
 }

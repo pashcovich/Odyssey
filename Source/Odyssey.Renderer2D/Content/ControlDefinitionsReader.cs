@@ -8,7 +8,7 @@ namespace Odyssey.Content
     {
         public object ReadContent(IAssetProvider assetManager, ref ContentReaderParameters parameters)
         {
-            return StyleManager.LoadDefinitions<XmlControlDescription>(parameters.Stream).Select(xmlData => xmlData.ToControlDescription()).ToArray();
+            return StyleManager.LoadDefinitions<ControlStyle>(parameters.Stream).ToArray();
         }
     }
 }

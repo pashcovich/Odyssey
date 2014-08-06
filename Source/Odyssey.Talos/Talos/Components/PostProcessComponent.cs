@@ -68,7 +68,7 @@ namespace Odyssey.Talos.Components
             {
                 var action = filteredActions[i];
 
-                ShaderCollection shaderCollection = Content.Get<ShaderCollection>(action.Asset);
+                ShaderCollection shaderCollection = Content.Load<ShaderCollection>(action.Asset);
 
                 var mapping = shaderCollection.Get(action.Technique);
                 string techniqueKey = string.Format("{0}.{1}", action.Asset, mapping.Name);

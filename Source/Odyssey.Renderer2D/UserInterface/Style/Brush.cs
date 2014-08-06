@@ -26,8 +26,8 @@ namespace Odyssey.UserInterface.Style
     {
         protected new readonly SharpDX.Direct2D1.Brush Resource;
 
-        protected Brush(Direct2DDevice device, SharpDX.Direct2D1.Brush brush)
-            : base(device)
+        protected Brush(string name, Direct2DDevice device, SharpDX.Direct2D1.Brush brush)
+            : base(name, device)
         {
             Resource = brush;
         }

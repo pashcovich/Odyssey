@@ -1,5 +1,4 @@
 ﻿using Odyssey.UserInterface.Controls;
-using Odyssey.UserInterface.Style;
 using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
@@ -14,7 +13,7 @@ namespace Odyssey.Graphics.Shapes
         public override void Render()
         {
             Device.FillRectangle(this, Fill);
-            Device.DrawRectangle(this, Stroke);
+            Device.DrawRectangle(this, Stroke, StrokeThickness);
         }
 
         protected override void OnInitializing(ControlEventArgs e)

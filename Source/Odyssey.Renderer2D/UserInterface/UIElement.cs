@@ -15,8 +15,13 @@
 
 #region Using Directives
 
+using System.Xml;
+using System.Xml.Serialization;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
+using Odyssey.UserInterface.Style;
+using Odyssey.UserInterface.Xml;
+using Odyssey.Utilities.Text;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -29,7 +34,7 @@ namespace Odyssey.UserInterface
     /// The <b>UIElement</b> class is the root class of all controls in the library. It provides
     /// inheritors with a comprehensive range of properties and methods common to all controls.
     /// </summary>
-    public abstract partial class UIElement : Component, IUIElement, IComparable<UIElement>
+    public abstract partial class UIElement : Component, IUIElement, IComparable<UIElement>, IXmlSerializable
     {
         protected static Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
 
@@ -137,6 +142,43 @@ namespace Odyssey.UserInterface
 
             boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);
+        }
+
+        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+
+        protected virtual void OnReadXml(XmlReader reader)
+        {
+            Name = reader.GetAttribute("Name");
+            string sPosition = reader.GetAttribute("Position");
+
+            Position = string.IsNullOrEmpty(sPosition) ? Vector2.Zero: Text.DecodeVector2(sPosition);
+
+            string sWidth = reader.GetAttribute("Width");
+            string sHeight = reader.GetAttribute("Height");
+
+            Width = string.IsNullOrEmpty(sWidth) ? 0 : float.Parse(sWidth);
+            Height = string.IsNullOrEmpty(sHeight) ? 0 : float.Parse(sHeight);
+        }
+
+        protected virtual void OnWriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Name", Name);
+            writer.WriteAttributeString("Position", Text.EncodeVector2(Position));
+            writer.WriteAttributeString("Width", Width.ToString("F"));
+            writer.WriteAttributeString("Height", Height.ToString("F"));
+        }
+
+        void IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
+        {
+            OnReadXml(reader);
+        }
+
+        void IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
+        {
+            OnWriteXml(writer);
         }
     }
 }

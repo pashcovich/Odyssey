@@ -9,12 +9,12 @@ namespace Odyssey.Content
     public struct ContentReaderParameters
     {
         /// <summary>
-        /// Name of the asset currently loaded when using <see cref="IAssetProvider.Get{T}"/>.
+        /// Name of the asset currently loaded when using <see cref="IAssetProvider.Load{T}"/>.
         /// </summary>
         public string AssetName;
 
         /// <summary>
-        /// Type of the asset currently loaded when using <see cref="IAssetProvider.Get{T}"/>.
+        /// Type of the asset currently loaded when using <see cref="IAssetProvider.Load{T}"/>.
         /// </summary>
         public Type AssetType;
 
@@ -29,7 +29,7 @@ namespace Odyssey.Content
         public bool KeepStreamOpen;
 
         /// <summary>
-        /// Custom options provided when using <see cref="IAssetProvider.Get{T}"/>.
+        /// Custom options provided when using <see cref="IAssetProvider.Load{T}"/>.
         /// </summary>
         public object Options;
     }

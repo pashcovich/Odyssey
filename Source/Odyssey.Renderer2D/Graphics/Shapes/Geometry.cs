@@ -23,8 +23,8 @@ namespace Odyssey.Graphics.Shapes
 {
     public abstract class Geometry : Direct2DResource
     {
-        protected Geometry(Direct2DDevice device)
-            : base(device)
+        protected Geometry(string name, Direct2DDevice device)
+            : base(name, device)
         {
         }
 

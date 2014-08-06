@@ -73,7 +73,7 @@ namespace Odyssey.UserInterface.Style
 
         #region Equality
 
-        #region IEquatable<ControlDescription>
+        #region IEquatable<ControlStyle>
 
         public static bool operator !=(TextDescription fDesc1, TextDescription fDesc2)
         {
@@ -85,7 +85,7 @@ namespace Odyssey.UserInterface.Style
             return fDesc1.Name == fDesc2.Name;
         }
 
-        #endregion IEquatable<ControlDescription>
+        #endregion IEquatable<ControlStyle>
 
         public bool Equals(TextDescription other)
         {

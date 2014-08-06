@@ -31,11 +31,11 @@ namespace Odyssey.Graphics.Shapes
     {
         protected new readonly SharpDX.Direct2D1.GeometryGroup Resource;
 
-        protected GeometryGroup(Direct2DDevice device, FillMode fillMode, SharpDX.Direct2D1.Geometry[] geometries)
-            : base(device)
+        protected GeometryGroup(string name, Direct2DDevice device, FillMode fillMode, SharpDX.Direct2D1.Geometry[] geometries)
+            : base(name, device)
         {
             Contract.Requires<ArgumentNullException>(geometries!=null, "geometries");
-            Contract.Requires<InvalidOperationException>(geometries.Length>0, "At least one geometry needed.");
+            Contract.Requires<InvalidOperationException>(geometries.Length>0, "At least one geometry needed");
             Resource = new SharpDX.Direct2D1.GeometryGroup(Device, GetD2DFlag(fillMode), geometries.ToArray());
         }
 
@@ -49,10 +49,10 @@ namespace Odyssey.Graphics.Shapes
             return from == null ? null : from.Resource ?? null;
         }
 
-        public static GeometryGroup New(Direct2DDevice device, FillMode fillMode, IEnumerable<Geometry> geometries)
+        public static GeometryGroup New(string name, Direct2DDevice device, FillMode fillMode, IEnumerable<Geometry> geometries)
         {
             var nativeGeometries = geometries.Select(geometry => (SharpDX.Direct2D1.Geometry) geometry).ToArray();
-            return new GeometryGroup(device, fillMode, nativeGeometries);
+            return new GeometryGroup(name, device, fillMode, nativeGeometries);
         }
 
         private static SharpDX.Direct2D1.FillMode GetD2DFlag(FillMode fillMode)

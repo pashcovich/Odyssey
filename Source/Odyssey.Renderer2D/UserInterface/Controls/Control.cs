@@ -30,25 +30,25 @@ namespace Odyssey.UserInterface.Controls
     {
         public const string DefaultText = "Default";
         public const string EmptyStyle = "Empty";
-        private readonly string controlDescriptionClass;
-        private ControlDescription description;
+        private readonly string controlStyleClass;
+        private ControlStyle style;
         private TextDescription textDescription;
-        private string textDescriptionClass;
+        private string textStyleClass;
 
-        protected Control(string descriptionClass, string textDescriptionClass = DefaultText)
+        protected Control(string styleClass, string textStyleClass = DefaultText)
         {
-            controlDescriptionClass = descriptionClass;
-            this.textDescriptionClass = textDescriptionClass;
+            controlStyleClass = styleClass;
+            this.textStyleClass = textStyleClass;
         }
 
-        protected IShape[] ActiveStyle { get; set; }
+        protected ControlStatus ActiveStatus { get; set; }
 
-        protected ShapeMap ShapeMap { get; set; }
+        protected VisualState VisualState { get; private set; }
 
         #region Events
 
         /// <summary>
-        /// Occurs when the <see cref="ControlDescription"/> property value changes.
+        /// Occurs when the <see cref="ControlStyle"/> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> ControlDefinitionChanged;
 
@@ -86,9 +86,9 @@ namespace Odyssey.UserInterface.Controls
 
         #region Properties
 
-        public string DescriptionClass
+        public string StyleClass
         {
-            get { return controlDescriptionClass; }
+            get { return controlStyleClass; }
         }
 
         public Thickness Padding { get; set; }
@@ -109,33 +109,33 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        public string TextDescriptionClass
+        public string TextStyleClass
         {
-            get { return textDescriptionClass; }
+            get { return textStyleClass; }
             set
             {
-                if (string.Equals(textDescriptionClass, value))
+                if (string.Equals(textStyleClass, value))
                     return;
 
-                textDescriptionClass = value;
+                textStyleClass = value;
                 if (!DesignMode)
                     ApplyTextDescription();
             }
         }
 
         /// <summary>
-        /// Gets or sets the <see cref = "Description" /> to use for this control.
+        /// Gets or sets the <see cref = "Style" /> to use for this control.
         /// </summary>
-        /// <value>The <see cref = "Description" /> object that contains information on how to style
+        /// <value>The <see cref = "Style" /> object that contains information on how to style
         /// the text appearance of this control.</value>
-        public ControlDescription Description
+        public ControlStyle Style
         {
-            get { return description; }
+            get { return style; }
             private set
             {
-                if (description == value) return;
+                if (style == value) return;
 
-                description = value;
+                style = value;
                 OnControlDefinitionChanged(EventArgs.Empty);
             }
         }
@@ -146,45 +146,50 @@ namespace Odyssey.UserInterface.Controls
 
         protected virtual void ApplyControlDescription()
         {
-            var description = Overlay.StyleService.GetControlDescription(Overlay.ControlTheme, DescriptionClass);
+            var controlStyle = Overlay.StyleService.GetControlStyle(Overlay.ControlTheme, StyleClass);
 
-            if (Width == 0 && Height == 0 && description.Size != default(Size2F))
+            if (Width == 0 && controlStyle.Width >0)
             {
-                Width = description.Size.Width;
-                Height = description.Size.Height;
+                Width = controlStyle.Width;
             }
 
-            if (Padding.IsEmpty && !description.Padding.IsEmpty)
-                Padding = description.Padding;
+            if (Height == 0 && controlStyle.Height > 0)
+            {
+                Height = controlStyle.Height;
+            }
+
+            if (Padding.IsEmpty && !controlStyle.Padding.IsEmpty)
+                Padding = controlStyle.Padding;
 
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
-            ShapeMap = new ShapeMap(description);
-            LayoutUpdated += (s, e) => ShapeMap.Update();
-            Description = description;
+            VisualState = controlStyle.VisualStateDefinition == null ? null : new VisualState(controlStyle.VisualStateDefinition);
+            LayoutUpdated += (s, e) => VisualState.Update();
+            Style = controlStyle;
         }
 
         protected virtual void ApplyTextDescription()
         {
-            var textDescription = Overlay.StyleService.GetTextDescription(Overlay.TextTheme, TextDescriptionClass);
+            var textDescription = Overlay.StyleService.GetTextStyle(Overlay.TextTheme, TextStyleClass);
             TextDescription = textDescription;
         }
 
         protected override void OnDesignModeChanged(ControlEventArgs e)
         {
             base.OnDesignModeChanged(e);
-            if (ActiveStyle == null)
+            if (ActiveStatus == ControlStatus.None)
                 return;
 
-            foreach (UIElement element in ActiveStyle)
+            foreach (Shape element in VisualState[ActiveStatus])
                 element.DesignMode = e.Control.DesignMode;
         }
 
         protected override void OnInitialized(ControlEventArgs e)
         {
             base.OnInitialized(e);
-            if (string.Equals(DescriptionClass, "Empty")) return;
-            ShapeMap.Initialize();
-            ActiveStyle = ShapeMap.GetShapes(ControlStatus.Enabled).ToArray();
+            if (string.Equals(StyleClass, "Empty")) return;
+            //ShapeMap.Initialize();
+            VisualState.Initialize(this);
+            ActiveStatus = IsEnabled ? ControlStatus.Enabled : ControlStatus.Disabled;
         }
 
         protected override void OnInitializing(ControlEventArgs e)
@@ -196,12 +201,18 @@ namespace Odyssey.UserInterface.Controls
 
         #endregion Protected methods
 
+        public override void Render()
+        {
+            foreach (IShape shape in VisualState[ActiveStatus])
+                shape.Render();
+        }
+
         internal override UIElement Copy()
         {
             Control newControl = (Control) base.Copy();
-            newControl.Description = Description;
+            newControl.Style = Style;
             newControl.Padding = Padding;
-            newControl.TextDescriptionClass = TextDescriptionClass;
+            newControl.TextStyleClass = TextStyleClass;
 
             return newControl;
         }

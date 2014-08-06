@@ -18,7 +18,7 @@ namespace Odyssey.Graphics.Shapes
                 new Vector2(0, CutCornerLength)
             };
 
-            Shape = PolyLine.New(Device, points, FigureBegin.Filled, FigureEnd.Closed);
+            Shape = PolyLine.New(string.Format("PL.{0}", Name), Device, points, FigureBegin.Filled, FigureEnd.Closed);
 
             var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);

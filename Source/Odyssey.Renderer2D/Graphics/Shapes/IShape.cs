@@ -7,8 +7,10 @@ namespace Odyssey.Graphics.Shapes
     {
         RectangleF BoundingRectangle { get; }
 
-        IGradient FillShader { get; set; }
+        string FillGradientClass { get; set; }
 
-        IGradient StrokeShader { get; set; }
+        string StrokeGradientClass { get; set; }
+
+        float StrokeThickness { get; set; }
     }
 }

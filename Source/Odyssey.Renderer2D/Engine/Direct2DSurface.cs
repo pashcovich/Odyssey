@@ -11,7 +11,6 @@ namespace Odyssey.Engine
 {
     public class Direct2DSurface : Direct2DResource
     {
-        private readonly Direct2DDevice d2DDevice;
         private readonly IServiceRegistry services;
 
         private bool isVisible;
@@ -19,14 +18,14 @@ namespace Odyssey.Engine
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DSurface"/> class.
         /// </summary>
+        /// <param name="name"></param>
+        /// <param name="device"></param>
         /// <param name="services">The service provider from where to get <see cref="IDirectXDeviceService"/> and <see cref="IDirect2DDevice"/>.</param>
         /// <exception cref="ArgumentNullException">Is thrown when <paramref name="services"/> is null.</exception>
-        protected Direct2DSurface(Direct2DDevice device, string name)
-            : base(device, name)
+        protected Direct2DSurface(string name, Direct2DDevice device)
+            : base(name, device)
         {
-            Contract.Requires<ArgumentNullException>(device != null, "device");
-            d2DDevice = device;
-            services = device.Services;
+            this.services = device.Services;
 
             IsDirty = true;
             IsVisible = true;
@@ -47,13 +46,6 @@ namespace Odyssey.Engine
         /// </summary>
         public bool IsDirty { get; private set; }
 
-        /// <summary>
-        /// The underlying Direct2D service to create additional resources.
-        /// </summary>
-        protected Direct2DDevice Direct2DDevice
-        {
-            get { return d2DDevice; }
-        }
 
         /// <summary>
         /// Gets of sets the value indicating whether this surface is visible.
@@ -74,7 +66,7 @@ namespace Odyssey.Engine
         public override void Initialize()
         {
             var settings = services.GetService<IDirectXDeviceSettings>();
-            BitmapTarget = ToDispose(BitmapTarget.New(d2DDevice, settings.PreferredBackBufferWidth, settings.PreferredBackBufferHeight, settings.PreferredBackBufferFormat));
+            BitmapTarget = ToDispose(BitmapTarget.New(Name, Device, settings.PreferredBackBufferWidth, settings.PreferredBackBufferHeight, settings.PreferredBackBufferFormat));
 
             Initialize(BitmapTarget);
         }

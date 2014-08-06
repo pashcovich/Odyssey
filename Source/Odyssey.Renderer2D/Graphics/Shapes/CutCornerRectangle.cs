@@ -33,7 +33,7 @@ namespace Odyssey.Graphics.Shapes
             set { shape = value; }
         }
 
-        protected Matrix3x2 Transform
+        protected new Matrix3x2 Transform
         {
             get { return transform; }
         }
@@ -65,7 +65,7 @@ namespace Odyssey.Graphics.Shapes
                 new Vector2(0, CutCornerLength)
             };
 
-            shape = ToDispose(PolyLine.New(Device, points, FigureBegin.Filled, FigureEnd.Closed));
+            shape = ToDispose(PolyLine.New(string.Format("PL.{0}", Name), Device, points, FigureBegin.Filled, FigureEnd.Closed));
 
             var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);

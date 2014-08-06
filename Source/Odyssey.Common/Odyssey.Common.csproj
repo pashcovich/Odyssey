@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\AssetIdentifier.cs" />
+    <Compile Include="Content\AssetsLoadedEventArgs.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentReaderAttribute.cs" />
     <Compile Include="Content\ContentReaderParameters.cs" />
@@ -66,6 +67,14 @@
     <Compile Include="Engine\Reference.cs" />
     <Compile Include="Engine\RequiredServiceAttribute.cs" />
     <Compile Include="Engine\SimpleDeviceManager.cs" />
+    <Compile Include="Animation\Animation.cs" />
+    <Compile Include="Animation\AnimationCurve.cs" />
+    <Compile Include="Animation\FloatKeyFrame.cs" />
+    <Compile Include="Animation\IAnimationCurve.cs" />
+    <Compile Include="Animation\IKeyFrame.cs" />
+    <Compile Include="Animation\Color4KeyFrame.cs" />
+    <Compile Include="Animation\KeyFrame.cs" />
+    <Compile Include="Animation\WrapMode.cs" />
     <Compile Include="Graphics\Effects\Enums.cs" />
     <Compile Include="Graphics\Effects\IMaterial.cs" />
     <Compile Include="Graphics\Effects\ReferenceEnums.cs" />
@@ -73,13 +82,14 @@
     <Compile Include="Graphics\Models\ModelOperation.cs" />
     <Compile Include="Graphics\PixelFormat.cs" />
     <Compile Include="Graphics\Shapes\ExtendMode.cs" />
-    <Compile Include="Graphics\Shapes\GradientBase.cs" />
+    <Compile Include="Graphics\Shapes\Gradient.cs" />
     <Compile Include="Graphics\Shapes\GradientStop.cs" />
     <Compile Include="Graphics\Shapes\GradientStopCollection.cs" />
     <Compile Include="Graphics\Shapes\GradientType.cs" />
     <Compile Include="Graphics\Shapes\IGradient.cs" />
     <Compile Include="Graphics\Shapes\LinearGradient.cs" />
     <Compile Include="Graphics\Shapes\RadialGradient.cs" />
+    <Compile Include="Graphics\Shapes\UniformGradient.cs" />
     <Compile Include="Utilities\Collections\ReadOnlyArray.cs" />
     <Compile Include="Graphics\Organization\IRenderCommand.cs" />
     <Compile Include="Engine\ApplicationContext.cs" />
@@ -125,7 +135,9 @@
     <Compile Include="Utilities\Reflection\ReflectionHelper.cs" />
     <Compile Include="Utilities\Text\Text.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Serialization\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

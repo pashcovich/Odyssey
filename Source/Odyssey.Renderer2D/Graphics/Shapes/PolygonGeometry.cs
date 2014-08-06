@@ -9,8 +9,8 @@ namespace Odyssey.Graphics.Shapes
     {
         private readonly Polygon polygon;
 
-        private PolygonGeometry(Direct2DDevice device, Polygon polygon)
-            : base(device)
+        private PolygonGeometry(string name, Direct2DDevice device, Polygon polygon)
+            : base(name, device)
         {
             this.polygon = polygon;
             Initialize(Resource);
@@ -35,11 +35,11 @@ namespace Odyssey.Graphics.Shapes
             return from == null ? null : from.polygon ?? null;
         }
 
-        public static PolygonGeometry New(Direct2DDevice device, Vector2 center, float circumCircleRadius, int sides, FigureBegin figureBegin)
+        public static PolygonGeometry New(string name, Direct2DDevice device, Vector2 center, float circumCircleRadius, int sides, FigureBegin figureBegin)
         {
             var polygon = Polygon.New(center, circumCircleRadius, sides);
 
-            PolygonGeometry polygonGeometry = new PolygonGeometry(device, polygon);
+            PolygonGeometry polygonGeometry = new PolygonGeometry(name, device, polygon);
             var sink = polygonGeometry.DefineFigure();
             sink.BeginFigure(polygon[0], figureBegin);
             sink.AddLines(polygon.Skip(1));

@@ -60,7 +60,7 @@ namespace Odyssey.UserInterface.Controls
                 ApplyTextDescription();
 
             textBrush = ToDispose(new SolidColorBrush(context, TextDescription.Color));
-            textFormat = ToDispose(TextDescription.ToTextFormat(Device));
+            textFormat = ToDispose(TextDescription.ToTextFormat(Device.Services));
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
             if (string.IsNullOrEmpty(Text))
                 Text = Name;

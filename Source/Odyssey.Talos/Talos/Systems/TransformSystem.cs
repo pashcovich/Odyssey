@@ -37,9 +37,9 @@ namespace Odyssey.Talos.Systems
 
                 Matrix mLocalWorld = Matrix.Identity;
 
-                if (entity.TryGetComponent(out cScaling) && cScaling.Scaling != Vector3.Zero)
+                if (entity.TryGetComponent(out cScaling) && cScaling.Scale != Vector3.Zero)
                 {
-                    cTransform.Scaling = Matrix.Scaling(cScaling.Scaling);
+                    cTransform.Scaling = Matrix.Scaling(cScaling.Scale);
                     mLocalWorld *= cTransform.Scaling;
                 }
 
@@ -72,6 +72,21 @@ namespace Odyssey.Talos.Systems
                 }
                 else
                     cTransform.World = cTransform.Local;
+            }
+        }
+
+        public override void AfterUpdate()
+        {
+            foreach (IEntity entity in Scene.SystemMap.SelectAllEntities(this))
+            {
+                if (!entity.IsEnabled)
+                    continue;
+
+                var cUpdate = entity.GetComponent<UpdateComponent>();
+                if (cUpdate.UpdateFrequency == UpdateFrequency.Static)
+                    cUpdate.RequiresUpdate = false;
+                else if (cUpdate.UpdateFrequency == UpdateFrequency.RealTime)
+                    cUpdate.RequiresUpdate = true;
             }
         }
     }

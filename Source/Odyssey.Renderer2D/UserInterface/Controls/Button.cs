@@ -31,25 +31,20 @@ namespace Odyssey.UserInterface.Controls
             return BoundingRectangle.Contains(cursorLocation);
         }
 
-        public override void Render()
-        {
-            foreach (IShape shape in ActiveStyle)
-                shape.Render();
-            base.Render();
-        }
-
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            Rectangle rEnabled = ToDispose(Shape.FromControl<Rectangle>(this,
-                string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
-            Rectangle rHighlighted = ToDispose(Shape.FromControl<Rectangle>(this,
-                string.Format("{0}_{1}_rectangle", Name, ControlStatus.Highlighted)));
+            //Rectangle rEnabled = ToDispose(Shape.FromControl<Rectangle>(this,
+            //    string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
+            //Rectangle rHighlighted = ToDispose(Shape.FromControl<Rectangle>(this,
+            //    string.Format("{0}_{1}_rectangle", Name, ControlStatus.Highlighted)));
 
-            ShapeMap.Add(ControlStatus.Enabled, new[] {rEnabled});
+            //ShapeMap.Add(ControlStatus.Enabled, new[] {rEnabled});
 
-            if (Description.Highlighted != null)
-                ShapeMap.Add(ControlStatus.Highlighted, new[] {rHighlighted});
+            //ShapeMap.Add(ControlStatus.Enabled, Style.VisualStateDefinition.figures);
+
+            //if (Style.Highlighted != null)
+            //    ShapeMap.Add(ControlStatus.Highlighted, new[] {rHighlighted});
         }
     }
 }

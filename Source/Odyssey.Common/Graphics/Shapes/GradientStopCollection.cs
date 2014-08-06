@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using SharpDX;
@@ -28,6 +30,12 @@ namespace Odyssey.Graphics.Shapes
         {
             from = gradientStops.FindLast(gs => gs.Offset <= offset);
             to = gradientStops.Find(gs => gs.Offset > offset) ?? gradientStops.Find(gs=> MathUtil.NearEqual(gs.Offset,offset));
+        }
+
+        public void Add(GradientStop gradientStop)
+        {
+            Contract.Requires<ArgumentNullException>(gradientStop != null, "gradientStop");
+            gradientStops.Add(gradientStop);
         }
 
         public Color4 Evaluate(float offset)

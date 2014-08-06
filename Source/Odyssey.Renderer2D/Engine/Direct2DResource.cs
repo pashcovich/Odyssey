@@ -14,16 +14,10 @@ namespace Odyssey.Engine
             : base(name)
         { }
 
-        protected Direct2DResource(Direct2DDevice device)
-            : this(device, null)
-        {
-        }
-
-        protected Direct2DResource(Direct2DDevice device, string name)
+        protected Direct2DResource(string name, Direct2DDevice device)
             : base(name)
         {
             Contract.Requires<ArgumentNullException>(device != null, "device");
-
             Device = device;
         }
 
@@ -88,7 +82,7 @@ namespace Odyssey.Engine
             base.OnPropertyChanged(propertyName);
             if (propertyName == "Name")
             {
-                if (Device.IsDebugMode && Resource != null) Resource.Tag = Name;
+                if (Device.IsDebugMode && Resource != null) {Resource.Tag = Name;}
             }
         }
     }

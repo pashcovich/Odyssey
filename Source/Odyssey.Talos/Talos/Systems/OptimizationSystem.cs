@@ -59,11 +59,11 @@ namespace Odyssey.Talos.Systems
                 RenderCommand renderCommand;
                 if (technique.Mapping.Key.Supports(VertexShaderFlags.InstanceWorld))
                 {
-                    renderCommand = new InstancingRenderCommand(Services, technique, model.Meshes, renderable.Entities);
+                    renderCommand = new InstancingRenderCommand(Services, technique, model, renderable.Entities);
                 }
                 else
                 {
-                    renderCommand = new TechniqueRenderCommand(Services, technique, model.Meshes, renderable.Entities);
+                    renderCommand = new TechniqueRenderCommand(Services, technique, model, renderable.Entities);
                 }
                 commands.AddLast(renderCommand);
             }

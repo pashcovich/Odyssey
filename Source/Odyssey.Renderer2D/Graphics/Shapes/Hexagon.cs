@@ -20,7 +20,7 @@ namespace Odyssey.Graphics
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            polygonGeometry = ToDispose(PolygonGeometry.New(Device, BoundingRectangle.Center, BoundingRectangle.Width / 2, Sides,
+            polygonGeometry = ToDispose(PolygonGeometry.New(string.Format("PL.{0}", Name), Device, BoundingRectangle.Center, BoundingRectangle.Width / 2, Sides,
                 FigureBegin.Filled));
 
             var initializer = new ShapeInitializer(Device);

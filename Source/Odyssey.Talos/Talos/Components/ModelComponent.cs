@@ -23,7 +23,7 @@ namespace Odyssey.Talos.Components
         public override void Initialize()
         {
             Contract.Requires<InvalidOperationException>(AssetName != null);
-            Model = Content.Get<Model>(AssetName);
+            Model = Content.Load<Model>(AssetName);
         }
     }
 }

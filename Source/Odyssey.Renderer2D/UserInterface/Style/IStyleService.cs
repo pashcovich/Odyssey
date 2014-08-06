@@ -1,8 +1,13 @@
+using Odyssey.Graphics.Shapes;
+using SharpDX.DirectWrite;
+
 namespace Odyssey.UserInterface.Style
 {
     public interface IStyleService
     {
-        ControlDescription GetControlDescription(string themenName, string id);
-        TextDescription GetTextDescription(string themenName, string id);
+        ControlStyle GetControlStyle(string themenName, string id);
+        TextDescription GetTextStyle(string themenName, string id);
+        FontCollection FontCollection { get; }
+        Gradient GetGradient(string themeName, string resourceName);
     }
 }

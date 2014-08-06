@@ -27,8 +27,8 @@ namespace Odyssey.Graphics.Shapes
     {
         protected new readonly SharpDX.Direct2D1.PathGeometry Resource;
 
-        protected PathGeometry(Direct2DDevice device)
-            : base(device)
+        protected PathGeometry(string name, Direct2DDevice device)
+            : base(name, device)
         {
             Resource = new SharpDX.Direct2D1.PathGeometry(device);
         }
@@ -45,9 +45,9 @@ namespace Odyssey.Graphics.Shapes
             return from == null ? null : from.Resource ?? null;
         }
 
-        public static PathGeometry New(Direct2DDevice device, string pathData)
+        public static PathGeometry New(string name, Direct2DDevice device, string pathData)
         {
-            return new PathGeometry(device) { Figures = VectorArtParser.ParsePathData(pathData) };
+            return new PathGeometry(name, device) { Figures = VectorArtParser.ParsePathData(pathData) };
         }
 
         public override void Initialize()

@@ -7,7 +7,7 @@ using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
 {
-    public class RadialGradient : GradientBase
+    public class RadialGradient : Gradient
     {
         private readonly Vector2 center;
         private readonly Vector2 originOffset;
@@ -50,6 +50,11 @@ namespace Odyssey.Graphics.Shapes
         public static RadialGradient New(string name, IEnumerable<GradientStop> gradientStops)
         {
             return new RadialGradient(name, Vector2.Zero, Vector2.Zero, 1, 1, new GradientStopCollection(gradientStops));
+        }
+
+        internal override Gradient Copy()
+        {
+            return new RadialGradient(Name, Center, OriginOffset, radiusX, radiusY, GradientStops);
         }
     }
 }

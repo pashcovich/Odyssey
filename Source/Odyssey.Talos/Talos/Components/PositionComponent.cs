@@ -1,9 +1,11 @@
-﻿using SharpDX;
+﻿using System.Diagnostics;
+using SharpDX;
 using SharpYaml;
 using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
+    [DebuggerDisplay("{Position}: ({Position})")]
     public class PositionComponent : Component
     {
         private Vector3 position;

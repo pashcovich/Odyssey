@@ -1,6 +1,7 @@
 ﻿#region Using Directives
 
 using Odyssey.Engine;
+using Odyssey.Graphics.Shapes;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -10,10 +11,12 @@ namespace Odyssey.UserInterface.Style
 {
     internal class SolidBrush : Brush
     {
-        private SolidBrush(Direct2DDevice device, SolidColorBrush brush)
-            : base(device, brush)
+        private readonly UniformGradient uniformGradient;
+
+        private SolidBrush(string name, Direct2DDevice device, UniformGradient uniformGradient)
+            : base(name, device, new SolidColorBrush(device, uniformGradient.Color))
         {
-            Initialize(Resource);
+            this.uniformGradient = uniformGradient;
         }
 
         public Color4 Color
@@ -21,9 +24,9 @@ namespace Odyssey.UserInterface.Style
             get { return ((SolidColorBrush)Resource).Color; }
         }
 
-        public static SolidBrush New(Direct2DDevice device, Color4 color)
+        public static SolidBrush New(string name, Direct2DDevice device, Color4 color)
         {
-            return new SolidBrush(device, new SolidColorBrush(device, color));
+            return new SolidBrush(name, device, new UniformGradient(name, color));
         }
     }
 }

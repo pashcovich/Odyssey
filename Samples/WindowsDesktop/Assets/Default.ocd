@@ -1,47 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfControlDescription xmlns:Style="http://www.avengersutd.com">
-  <ControlDescription Name="Button" Size="Width:200 Height:50" BorderSize="1" TextDescriptionClass="Button">
-    <BorderEnabled>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-          <GradientStop Color="#808080FF" Offset="0"/>
-        </Gradient>
-      </LinearGradient>
-    </BorderEnabled>
-    <Enabled>
-      <LinearGradient GradientType="Linear"> <!-- Gradients not yet supported -->
-        <Gradient>
-          <GradientStop Color="#4169E1A0" Offset="0"/> 
-          <GradientStop Color="#00000000" Offset="1.0"/> 
-        </Gradient>
-      </LinearGradient>
-    </Enabled>
-    <Highlighted>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-          <GradientStop Color="#00FFFFFF" Offset="0"/>
-          <GradientStop Color="#00000000" Offset="1.0"/>
-        </Gradient>
-      </LinearGradient>
-    </Highlighted>
-  </ControlDescription>
-  <ControlDescription Name="Panel" BorderSize="2">
-    <BorderEnabled>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-      <GradientStop Color="#808080F0" Offset="0"/>
-        </Gradient>
-      </LinearGradient>
-    </BorderEnabled>
-    <Enabled>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-          <GradientStop Color="#4169E1A0" Offset="0"/>
-          <GradientStop Color="#00000000" Offset="1.0"/>
-        </Gradient>
-      </LinearGradient>
-    </Enabled>
-  </ControlDescription>
-  <ControlDescription Name="Empty" BorderStyle="Raised" BorderSize="2">
-  </ControlDescription>
-</ArrayOfControlDescription>
+<Theme xmlns:Style="http://www.avengersutd.com" Name="Default">
+  <Resources>
+    <LinearGradient Name="DefaultFill" StartPoint="0.5,0" EndPoint="0.5,1">
+      <GradientStop Color="#FF69E1A0" Offset="0"/>
+      <GradientStop Color="#00000000" Offset="1.0"/>
+    </LinearGradient>
+  </Resources>
+  <ControlStyle Name="Button" Width="200" Height="50" TextDescriptionClass="Button">
+    <VisualState>
+      <Shapes>
+        <Rectangle StrokeThickness="1" Width="1" Height="1" Name="Main" Fill="{DefaultFill}"/> 
+      </Shapes>
+      <Status Name="Highlighted">
+        <Animation>
+          <AnimationCurve TargetName="Main" TargetProperty="Fill">
+            <ColorKeyFrame Time="0" Value="{DefaultFill}"/>
+          </AnimationCurve>
+        </Animation>
+      </Status>
+    </VisualState>
+  </ControlStyle>
+  <ControlStyle Name="Panel" BorderSize="2">
+    <VisualState>
+      <Shapes>
+      <Rectangle StrokeThickness="1" Width="1" Height="1" Fill="{DefaultFill}"/>
+      </Shapes>
+    </VisualState>
+  </ControlStyle>
+  <ControlStyle Name="Empty" BorderStyle="Raised" BorderSize="2">
+  </ControlStyle>
+</Theme>

@@ -71,7 +71,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssimpNet">
-      <HintPath>..\..\..\Libraries\Assimp\AssimpNet.dll</HintPath>
+      <HintPath>..\..\..\Libraries\AssimpNet\AssimpNet.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.dll</HintPath>

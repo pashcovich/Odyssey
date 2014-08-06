@@ -14,8 +14,8 @@ namespace Odyssey.UserInterface.Controls
     {
         #region Properties
 
-        protected ContainerControl(string controlDescriptionClass)
-            : base(controlDescriptionClass)
+        protected ContainerControl(string controlStyleClass)
+            : base(controlStyleClass)
         {
             Controls = new ControlCollection(this);
             IsFocusable = false;
@@ -146,6 +146,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
+            base.Render();
             foreach (var control in Controls.Where(control => control.IsVisible))
                 control.Render();
         }

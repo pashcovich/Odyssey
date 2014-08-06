@@ -26,7 +26,10 @@
     <Compile Include="IPolygon.cs" />
     <Compile Include="Primitives\Ellipse.cs" />
     <Compile Include="Primitives\Face.cs" />
+    <Compile Include="Primitives\FigureType.cs" />
+    <Compile Include="Primitives\IFigure.cs" />
     <Compile Include="Primitives\Polygon.cs" />
+    <Compile Include="Primitives\Rectangle.cs" />
     <Compile Include="Primitives\Segment.cs" />
     <Compile Include="Primitives\Triangle.cs" />
     <Compile Include="Primitives\UndirectedEdge.cs" />

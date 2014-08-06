@@ -18,16 +18,16 @@ namespace Odyssey.Engine
 
         private long bitmapId;
 
-        protected Bitmap(Direct2DDevice device, Size2 size, BitmapProperties1 bitmapProperties)
-            : base(device)
+        protected Bitmap(string name, Direct2DDevice device, Size2 size, BitmapProperties1 bitmapProperties)
+            : base(name, device)
         {
             Properties = bitmapProperties;
             Resource = ToDispose(new Bitmap1(device, size, bitmapProperties));
             Size = size;
         }
 
-        protected Bitmap(Direct2DDevice device, Surface surface, BitmapProperties1 bitmapProperties)
-            : base(device)
+        protected Bitmap(string name, Direct2DDevice device, Surface surface, BitmapProperties1 bitmapProperties)
+            : base(name, device)
         {
             Properties = bitmapProperties;
             Resource = ToDispose(new Bitmap1(device, ToDispose(surface), bitmapProperties));

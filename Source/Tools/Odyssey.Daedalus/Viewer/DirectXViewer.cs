@@ -108,8 +108,7 @@ namespace Odyssey.Daedalus.Viewer
             var cube = CubeMesh.New(device, modelOperations: ModelAnalyzer.DetectModelRequirements(vsFlags));
             Content.Store(cube.Name, cube);
 
-            var modelSystem = new ContentLoadingSystem<ModelComponent>();
-            var shaderSystem = new ContentLoadingSystem<ShaderComponent>();
+            var modelSystem = new ContentLoadingSystem();
             var sInitialization = new InitializationSystem();
             var cameraSystem = new PerspectiveCameraSystem();
             var lightSystem = new PointLightSystem();
@@ -121,7 +120,6 @@ namespace Odyssey.Daedalus.Viewer
             scene.BeginDesign();
 
             scene.AddSystem(modelSystem);
-            scene.AddSystem(shaderSystem);
             scene.AddSystem(cameraSystem);
             scene.AddSystem(lightSystem);
             scene.AddSystem(sInitialization);

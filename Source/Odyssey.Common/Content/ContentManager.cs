@@ -42,6 +42,8 @@ namespace Odyssey.Content
         private readonly IServiceRegistry services;
         private string rootDirectory;
 
+        public event EventHandler<AssetsLoadedEventArgs> AssetsLoaded;
+
         public ContentManager(IServiceRegistry services)
         {
             this.services = services;
@@ -120,7 +122,7 @@ namespace Odyssey.Content
         /// <returns>``0.</returns>
         /// <exception cref="InvalidOperationException">If the asset was not found from all <see cref="IResourceResolver" />.</exception>
         /// <exception cref="NotSupportedException">If no content reader was suitable to decode the asset.</exception>
-        public virtual T Get<T>(string assetName, object options = null)
+        public virtual T Load<T>(string assetName, object options = null)
         {
             object result;
 
@@ -157,6 +159,17 @@ namespace Odyssey.Content
             return (T) result;
         }
 
+        /// <summary>
+        /// Returns all loaded assets of type T.
+        /// </summary>
+        /// <typeparam name="T">The asset type to return.</typeparam>
+        /// <returns>A sequence of asset of type T.</returns>
+        public IEnumerable<T> GetAll<T>()
+        {
+            var assets = loadedAssets.Values.OfType<T>();
+            return assets;
+        }
+
         public void LoadAssetList(string assetListFile)
         {
             var serializer = new Serializer();
@@ -170,6 +183,15 @@ namespace Odyssey.Content
             {
                 LoadAsset(assetIdentifier);
             }
+
+            OnAssetsLoaded(new AssetsLoadedEventArgs(assetListFile));
+        }
+
+        private void OnAssetsLoaded(AssetsLoadedEventArgs e)
+        {
+            var handler = AssetsLoaded;
+            if (handler != null)
+                handler(this, e);
         }
 
         public Type Map(string type)

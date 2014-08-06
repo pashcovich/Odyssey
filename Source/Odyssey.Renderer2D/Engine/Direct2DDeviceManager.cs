@@ -32,6 +32,8 @@ namespace Odyssey.Engine
         private IDirectXDeviceService dx11Service;
         private IDirect3DProvider dxDeviceCache;
 
+        public event EventHandler<EventArgs> DeviceCreated;
+
         public Direct2DDeviceManager(IServiceRegistry services)
         {
             this.services = services;
@@ -74,8 +76,11 @@ namespace Odyssey.Engine
                 if (!MathHelper.ScalarNearEqual(deviceSettings.HorizontalDpi, d2dDevice.HorizontalDpi) ||
                     !MathHelper.ScalarNearEqual(deviceSettings.VerticalDpi, d2dDevice.VerticalDpi))
                     throw new InvalidOperationException("Direct2D device DPI values do not match Direct3D device DPI values");
+
+                OnDeviceCreated(EventArgs.Empty);
             }
         }
+
 
         private void DirectXDx11ServiceOnDx11Lost(object sender, EventArgs e)
         {
@@ -110,6 +115,18 @@ namespace Odyssey.Engine
         private void DirectXDx11ServiceOnDx11Disposing(object sender, EventArgs e)
         {
             d2dDevice.DisposeAll();
+        }
+
+        protected virtual void OnDeviceCreated(EventArgs args)
+        {
+            RaiseEvent(DeviceCreated, this, args);
+        }
+
+        private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
+            where T : EventArgs
+        {
+            if (handler != null)
+                handler(sender, args);
         }
     }
 }

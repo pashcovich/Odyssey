@@ -1,7 +1,7 @@
 !Assets
 - name: DefaultTheme
   path: Default.ocd
-  type: ControlDefinitions
+  type: Theme
 - name: DefaultText
   path: Default.otd
   type: TextDefinitions

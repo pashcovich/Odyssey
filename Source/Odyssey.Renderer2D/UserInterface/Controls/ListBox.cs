@@ -31,21 +31,5 @@ namespace Odyssey.UserInterface.Controls
             return BoundingRectangle.Contains(cursorLocation);
         }
 
-        public override void Render()
-        {
-            foreach (IShape shape in ActiveStyle)
-                shape.Render();
-
-            base.Render();
-        }
-
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            base.OnInitializing(e);
-
-            Rectangle rEnabled =
-                ToDispose(Shape.FromControl<Rectangle>(this, string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
-            ShapeMap.Add(ControlStatus.Enabled, new[] {rEnabled});
-        }
     }
 }

@@ -1,9 +1,8 @@
-﻿using Odyssey.Graphics.Shapes;
+﻿using System;
 using Odyssey.UserInterface.Controls;
 using SharpDX;
-using System;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Shapes
 {
     public class CutCornerRectangleOutline : CutCornerRectangleBase
     {
@@ -53,10 +52,10 @@ namespace Odyssey.Graphics
                     new Vector2(innerOffset, 2 * innerOffset)
             };
 
-            PolyLine outerShape = ToDispose(PolyLine.New(Device, innerPoints, FigureBegin.Filled, FigureEnd.Closed));
-            PolyLine innerShape = ToDispose(PolyLine.New(Device, outerPoints, FigureBegin.Filled, FigureEnd.Closed));
+            PolyLine outerShape = ToDispose(PolyLine.New(string.Format("CC.Outer.{0}", Name), Device, innerPoints, FigureBegin.Filled, FigureEnd.Closed));
+            PolyLine innerShape = ToDispose(PolyLine.New(string.Format("CC.Inner.{0}", Name), Device, outerPoints, FigureBegin.Filled, FigureEnd.Closed));
 
-            shape = ToDispose(GeometryGroup.New(Device, FillMode.Alternate, new[] { innerShape, outerShape, }));
+            shape = ToDispose(GeometryGroup.New(string.Format("CC.{0}", Name), Device, FillMode.Alternate, new[] { innerShape, outerShape, }));
 
             var initializer = new ShapeInitializer(Device);
             initializer.Initialize(this);

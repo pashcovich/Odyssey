@@ -1,5 +1,6 @@
 ﻿using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Text;
 using SharpDX;
 using System;
 using System.Globalization;
@@ -21,7 +22,7 @@ namespace Odyssey.UserInterface.Xml
                 Color = Color.Remove(0, 1);
 
             int abgrColor = Int32.Parse(Color, NumberStyles.HexNumber);
-            int rgbaColor = XmlCommon.AbgrToRgba(abgrColor);
+            int rgbaColor = Text.AbgrToRgba(abgrColor);
 
             return new GradientStop(new Color4(rgbaColor), Offset);
         }
@@ -37,16 +38,14 @@ namespace Odyssey.UserInterface.Xml
     /// <summary>
     /// Xml Wrapper class for the LinearShader class.
     /// </summary>
-    [XmlType("Gradient")]
-    public class XmlGradient
+    public abstract class XmlGradient
     {
-        public XmlGradient()
+        protected XmlGradient()
         { }
 
-        public XmlGradient(IGradient cs)
+        protected XmlGradient(IGradient cs)
         {
             Name = cs.Name;
-            GradientType = cs.Type;
             if (cs.GradientStops == null) return;
 
             if (cs.GradientStops[0] == cs.GradientStops[1] || cs.GradientStops.Count == 1)
@@ -66,9 +65,6 @@ namespace Odyssey.UserInterface.Xml
         [XmlAttribute]
         public string Name { get; set; }
 
-        [XmlAttribute]
-        public GradientType GradientType { get; set; }
-
         [XmlAttribute("Color")]
         public string ColorValue { get; set; }
 
@@ -76,7 +72,22 @@ namespace Odyssey.UserInterface.Xml
         [XmlArrayItem("GradientStop")]
         public XmlGradientStop[] XmlGradientArray { get; set; }
 
-        public virtual LinearGradient ToGradient()
+        public abstract Gradient ToGradient();
+
+    }
+
+    [XmlType("LinearGradient")]
+    public class XmlLinearGradient : XmlGradient
+    {
+        [XmlAttribute("StartPoint")]
+        public string StartPointString { get; set; }
+        [XmlAttribute("EndPoint")]
+        public string EndPointString { get; set; }
+
+        public XmlLinearGradient()
+        {}
+
+        public override Gradient ToGradient()
         {
             GradientStop[] gradientColors = null;
 
@@ -96,38 +107,16 @@ namespace Odyssey.UserInterface.Xml
                 gradientColors[0] = new GradientStop(new Color4(rgbaColor), 0);
                 gradientColors[1] = gradientColors[0];
             }
-            Type shaderType;
-            switch (GradientType)
-            {
-                //case GradientType.Radial:
-                //    shaderType = typeof(RadialShader);
-                //    break;
 
-                default:
-                    shaderType = typeof(LinearGradient);
-                    break;
-            }
-
-            return new LinearGradient(Name,Vector2.Zero, new Vector2(1,0), new GradientStopCollection(gradientColors));
+            return new LinearGradient(Name, Text.DecodeVector2(StartPointString), Text.DecodeVector2(EndPointString), new GradientStopCollection(gradientColors));
         }
     }
-    /*
-    
 
-    [XmlType("Radial")]
-    public class XmlRadialShader : XmlGradient
+    [XmlType("RadialGradient")]
+    public class XmlRadialGradient : XmlGradient
     {
-        public XmlRadialShader()
+        public XmlRadialGradient()
         { }
-
-        public XmlRadialShader(RadialShader radialShader)
-            : base(radialShader)
-        {
-            Center = XmlCommon.EncodeVector2(radialShader.Center);
-            GradientType = radialShader.GradientType;
-            RadiusX = radialShader.RadiusX;
-            RadiusY = radialShader.RadiusY;
-        }
 
         [XmlAttribute]
         public string Center { get; set; }
@@ -138,24 +127,10 @@ namespace Odyssey.UserInterface.Xml
         [XmlAttribute]
         public float RadiusY { get; set; }
 
-        public override LinearShader ToColorShader()
+        public override Gradient ToGradient()
         {
-            const float defaultValue = 0.5f;
-            Vector2 defaultCenter = new Vector2(defaultValue, defaultValue);
-            LinearShader linearShader = base.ToColorShader();
-            RadialShader radialShader = new RadialShader
-            {
-                Center = string.IsNullOrEmpty(Center) ? defaultCenter : XmlCommon.DecodeFloatVector2(Center),
-                RadiusX = RadiusX == 0 ? defaultValue : RadiusX,
-                RadiusY = RadiusY == 0 ? defaultValue : RadiusY,
-                Gradient = linearShader.Gradient,
-                GradientType = linearShader.GradientType,
-                Method = linearShader.Method,
-                Name = linearShader.Name
-            };
-            return radialShader;
+            return null;
         }
     }
-     * 
-     */
+
 }

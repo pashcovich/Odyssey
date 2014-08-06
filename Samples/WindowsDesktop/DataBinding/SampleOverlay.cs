@@ -41,7 +41,7 @@ namespace MiniUI
                     Height = 64,
                     Margin = new Thickness(4),
                     Name = "Button",
-                    Content = new Label() { Name = "Label", TextDescriptionClass = "Small" }
+                    Content = new Label() { Name = "Label", TextStyleClass = "Small" }
                 },
                 Bindings = new Dictionary<string, Binding>
                 {
