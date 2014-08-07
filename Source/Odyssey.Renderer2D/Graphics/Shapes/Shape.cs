@@ -20,6 +20,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 
@@ -43,38 +44,6 @@ namespace Odyssey.Graphics.Shapes
         internal Brush Fill { get; set; }
         internal Brush Stroke { get; set; }
 
-        public string FillGradientClass
-        {
-            get { return cFillGradient; }
-            set
-            {
-                if (string.Equals(cFillGradient, value))
-                    return;
-
-                if (DesignMode)
-                    return;
-
-                cFillGradient = value;
-                FillGradient = Overlay.StyleService.GetGradient(Overlay.ControlTheme, cFillGradient);
-            }
-        }
-
-        public string StrokeGradientClass
-        {
-            get { return cStrokeGradient; }
-            set
-            {
-                if (string.Equals(cStrokeGradient, value))
-                    return;
-
-                if (DesignMode)
-                    return;
-
-                cStrokeGradient = value;
-                StrokeGradient = Overlay.StyleService.GetGradient(Overlay.ControlTheme, cStrokeGradient);
-            }
-        }
-
         public Gradient FillGradient { get; set; }
         public Gradient StrokeGradient { get; set; }
 
@@ -83,8 +52,8 @@ namespace Odyssey.Graphics.Shapes
         internal override UIElement Copy()
         {
             Shape copy = (Shape)base.Copy();
-            copy.FillGradientClass = FillGradientClass;
-            copy.StrokeGradientClass = StrokeGradientClass;
+            copy.FillGradient = FillGradient;
+            copy.StrokeGradient = StrokeGradient;
             copy.StrokeThickness = StrokeThickness;
             return copy;
         }
@@ -111,9 +80,31 @@ namespace Odyssey.Graphics.Shapes
                 Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
         }
 
-        protected override void OnReadXml(System.Xml.XmlReader reader)
+        protected override void OnReadXml(XmlDeserializationEventArgs e)
         {
-            
+            base.OnReadXml(e);
+            var reader = e.XmlReader;
+            string strokeThickness = reader.GetAttribute("StrokeThickness");
+            StrokeThickness = string.IsNullOrEmpty(strokeThickness) ? 0 : float.Parse(strokeThickness);
+
+            string sFill = reader.GetAttribute("Fill");
+            string sStroke = reader.GetAttribute("Stroke");
+            Regex resourceRegex = new Regex(@"(?<=\{)\s*(?<name>\w*[^}]*)\s*(?=\})");
+            if (!string.IsNullOrEmpty(sFill))
+            {
+                var match = resourceRegex.Match(sFill);
+                string fillGradient = match.Groups["name"].Value;
+                FillGradient = e.Theme.GetResource(fillGradient);
+            }
+            if (!string.IsNullOrEmpty(sStroke))
+            {
+                var match = resourceRegex.Match(sStroke);
+                string strokeGradient = match.Groups["name"].Value;
+                StrokeGradient = e.Theme.GetResource(strokeGradient);
+            }
+
+            if (!reader.IsEmptyElement)
+                reader.ReadEndElement();
         }
 
     }

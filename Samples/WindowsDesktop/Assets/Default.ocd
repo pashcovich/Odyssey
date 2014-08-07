@@ -9,7 +9,7 @@
   <ControlStyle Name="Button" Width="200" Height="50" TextDescriptionClass="Button">
     <VisualState>
       <Shapes>
-        <Rectangle StrokeThickness="1" Width="1" Height="1" Name="Main" Fill="{DefaultFill}"/> 
+        <Rectangle Position="0,0" StrokeThickness="1" Width="1" Height="1" Name="Main" Fill="{DefaultFill}"/> 
       </Shapes>
       <Status Name="Highlighted">
         <Animation>

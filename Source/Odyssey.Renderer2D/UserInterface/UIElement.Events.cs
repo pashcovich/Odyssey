@@ -18,6 +18,9 @@
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
 using System;
+using Odyssey.UserInterface.Serialization;
+using Odyssey.Utilities.Text;
+using SharpDX;
 
 #endregion Using Directives
 
@@ -478,5 +481,30 @@ namespace Odyssey.UserInterface
         }
 
         #endregion Control Events
+
+        protected virtual void OnReadXml(XmlDeserializationEventArgs e)
+        {
+            var reader = e.XmlReader;
+
+            Name = reader.GetAttribute("Name");
+            
+            string sPosition = reader.GetAttribute("Position");
+            Position = string.IsNullOrEmpty(sPosition) ? Vector2.Zero : Text.DecodeVector2(sPosition);
+
+            string sWidth = reader.GetAttribute("Width");
+            string sHeight = reader.GetAttribute("Height");
+            Width = string.IsNullOrEmpty(sWidth) ? 0 : float.Parse(sWidth);
+            Height = string.IsNullOrEmpty(sHeight) ? 0 : float.Parse(sHeight);
+        }
+
+        protected virtual void OnWriteXml(XmlSerializationEventArgs e)
+        {
+            var writer = e.XmlWriter;
+            writer.WriteAttributeString("Name", Name);
+            writer.WriteAttributeString("Position", Text.EncodeVector2(Position));
+            writer.WriteAttributeString("Width", Width.ToString("F"));
+            writer.WriteAttributeString("Height", Height.ToString("F"));
+        }
+
     }
 }

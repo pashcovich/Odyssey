@@ -1,4 +1,6 @@
-﻿using Odyssey.Engine;
+﻿using System.Xml;
+using Odyssey.Engine;
+using Odyssey.Serialization;
 using Odyssey.Utilities.Reflection;
 using System;
 using System.Collections.Generic;
@@ -11,14 +13,11 @@ namespace Odyssey.Animation
 {
     internal delegate void UpdateMethod(object obj, object value);
 
-    public class AnimationCurve : IAnimationCurve, IXmlSerializable
+    public class AnimationCurve : IAnimationCurve, IStyleSerializable
     {
         public delegate object CurveFunction(IKeyFrame start, IKeyFrame end, TimeSpan time);
 
-        private List<IKeyFrame> keyFrames;
-
-        private string targetName;
-        private string targetPropertyName;
+        private readonly List<IKeyFrame> keyFrames;
 
         private PropertyInfo targetProperty;
         private FieldInfo field;
@@ -115,18 +114,19 @@ namespace Odyssey.Animation
             targetProperty.SetValue(obj, value);
         }
 
-        #region IXmlSerializable
+        #region IStyleSerializable
 
-        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
+        public void SerializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlWriter writer)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
-        void IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
+        public void DeserializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlReader reader)
         {
+
             Name = reader.GetAttribute("Name");
-            targetName = reader.GetAttribute("TargetName");
-            targetPropertyName = reader.GetAttribute("TargetProperty");
+            string targetName = reader.GetAttribute("TargetName");
+            string targetPropertyName = reader.GetAttribute("TargetProperty");
 
             reader.ReadStartElement();
 
@@ -138,11 +138,9 @@ namespace Odyssey.Animation
             }
         }
 
-        void IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
-        {
-            throw new NotImplementedException();
-        }
 
         #endregion IXmlSerializable
+
+
     }
 }

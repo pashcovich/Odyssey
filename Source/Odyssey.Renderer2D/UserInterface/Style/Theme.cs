@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 using Odyssey.Content;
 using Odyssey.Graphics.Shapes;
@@ -11,11 +12,16 @@ using Odyssey.Graphics.Shapes;
 namespace Odyssey.UserInterface.Style
 {
     [ContentReader(typeof(ThemeReader))]
-    public class Theme : IXmlSerializable
+    public sealed class Theme : IXmlSerializable, IResourceProvider
     {
+        const string sControlStyle = "ControlStyle";
+        private const string sResources = "Resources";
+
         private readonly Dictionary<string, ControlStyle> styles;
         private readonly Dictionary<string, Gradient> resources;
+
         public string Name { get; internal set; }
+
         public IEnumerable<ControlStyle> Styles { get { return styles.Values; }}
 
         public Theme()
@@ -37,62 +43,84 @@ namespace Odyssey.UserInterface.Style
             return resources[resourceName];
         }
 
-        public System.Xml.Schema.XmlSchema GetSchema()
+        public ControlStyle GetStyle(string styleName)
+        {
+            if (!ContainsResource(styleName))
+                throw new ArgumentException(string.Format("Style '{0}' not found", styleName));
+            return styles[styleName];
+        }
+
+        public void AddResource(Gradient resource)
+        {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(resource.Name), "Resource name cannot be null");
+            resources.Add(resource.Name, resource);
+        }
+
+        public void AddStyle(ControlStyle style)
+        {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(style.Name), "Style name cannot be null");
+            styles.Add(style.Name, style);
+        }
+
+
+        #region IXmlSerializable
+        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
         {
             return null;
         }
 
-        public void ReadXml(System.Xml.XmlReader reader)
+        public void ReadXml(XmlReader reader)
         {
-            Name = reader.GetAttribute("Name");
+            Name = reader.LocalName;
             reader.ReadStartElement();
             while (reader.IsStartElement())
             {
-                if (reader.Name == "ControlStyle")
+                if (reader.Name == sControlStyle)
                 {
-                    var style = new ControlStyle();
-                    ((IXmlSerializable) style).ReadXml(reader);
-                    styles.Add(style.Name, style);
+                    ParseControlStyles(reader);
                 }
-                else if (reader.Name == "Resources")
+                else if (reader.Name == sResources)
                 {
-                    while (reader.IsStartElement())
-                    {
-                        reader.ReadStartElement();
-                        Type runTimeType;
-                        switch (reader.Name)
-                        {
-                            default:
-                                throw new InvalidOperationException(string.Format("Type '{0}' is not a valid Gradient",
-                                    reader.Name));
-
-                            case "LinearGradient":
-                                runTimeType = typeof (LinearGradient);
-                                break;
-
-                            case "RadialGradient":
-                                runTimeType = typeof (RadialGradient);
-                                break;
-                        }
-
-                        var gradient = (Gradient) Activator.CreateInstance(runTimeType);
-                        ((IXmlSerializable) gradient).ReadXml(reader);
-                        resources.Add(gradient.Name, gradient);
-                    }
-
-                    reader.ReadEndElement();
+                    ParseResources(reader);
                 }
+            }
+        }
+
+        void ParseResources(XmlReader reader)
+        {
+            while (reader.IsStartElement())
+            {
+                reader.ReadStartElement();
+                string typeName = String.Format("Odyssey.Graphics.Shapes.{0}, Odyssey.Common", reader.Name);
+                try
+                {
+                    var gradient = (Gradient)Activator.CreateInstance(Type.GetType(typeName));
+                    gradient.DeserializeXml(this, reader);
+                    AddResource(gradient);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Gradient", typeName));
+                }
+            }
+            reader.ReadEndElement();
+        }
+
+        void ParseControlStyles(XmlReader reader)
+        {
+            while (reader.IsStartElement(sControlStyle))
+            {
+                var style = new ControlStyle();
+                style.DeserializeXml(this, reader);
+                
+                AddStyle(style);
             }
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             throw new NotImplementedException();
-        }
-
-        public ControlStyle this[string key]
-        {
-            get { return styles[key]; }
-        }
+        } 
+        #endregion
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Xml;
+using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
 using SharpDX;
 
@@ -42,14 +43,15 @@ namespace Odyssey.Graphics.Shapes
             return new LinearGradient(name, new Vector2(0f, 0.5f), new Vector2(1.0f, 0.5f), new GradientStopCollection(gradientStops));
         }
 
-        protected override void OnReadXml(XmlReader reader)
+        protected override void OnReadXml(XmlDeserializationEventArgs e)
         {
+            var reader = e.XmlReader;
             Type = GradientType.Linear;
             string sStart = reader.GetAttribute("StartPoint");
             string sEnd = reader.GetAttribute("EndPoint");
             startPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.DecodeFloatVector2(sStart);
             endPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.DecodeFloatVector2(sEnd);
-            base.OnReadXml(reader);
+            base.OnReadXml(e);
         }
 
         internal override Gradient Copy()

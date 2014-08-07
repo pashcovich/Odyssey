@@ -15,9 +15,12 @@
 
 #region Using Directives
 
+using System.Xml;
+using Odyssey.Graphics.Shapes;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
+using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using System;
@@ -53,6 +56,16 @@ namespace Odyssey.UserInterface
             }
 
             OnInitialized(args);
+        }
+
+        public void SerializeXml(IResourceProvider theme, XmlWriter writer)
+        {
+            OnWriteXml(new XmlSerializationEventArgs(theme, writer));
+        }
+
+        public void DeserializeXml(IResourceProvider theme, XmlReader reader)
+        {
+            OnReadXml(new XmlDeserializationEventArgs(theme, reader));
         }
 
         ///// <summary>

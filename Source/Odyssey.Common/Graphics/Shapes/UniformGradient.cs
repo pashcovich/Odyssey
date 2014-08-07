@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
 using SharpDX;
 
@@ -19,8 +14,9 @@ namespace Odyssey.Graphics.Shapes
             this.color = color;
         }
 
-        protected override void OnReadXml(XmlReader reader)
+        protected override void OnReadXml(XmlDeserializationEventArgs e)
         {
+            var reader = e.XmlReader;
             Name = reader.GetAttribute("Name");
             color = Text.DecodeColor4Abgr(reader.GetAttribute("Color"));
             reader.Read();

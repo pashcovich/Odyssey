@@ -35,8 +35,10 @@ using Odyssey.Content;
 using Odyssey.Geometry.Primitives;
 using Odyssey.Animation;
 using Odyssey.Graphics.Shapes;
-using Odyssey.UserInterface.Style;
+using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Serialization;
+using Odyssey.UserInterface.Style;
 using Odyssey.UserInterface.Xml;
 using SharpDX;
 
@@ -44,8 +46,10 @@ using SharpDX;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class ControlStyle
+    public sealed class ControlStyle : IStyleSerializable
     {
+        private const string sShapes = "Shapes";
+        private const string sVisualState = "VisualState";
         internal const string Error = "Error";
         internal const string Empty = "Empty";
 
@@ -53,60 +57,91 @@ namespace Odyssey.UserInterface.Style
 
         public string Name { get; internal set; }
         public string TextStyleClass { get; internal set; }
-        public BorderStyle BorderStyle { get; internal set; }
         public float Width { get; internal set; }
         public float Height { get; internal set; }
         public Thickness Margin { get; internal set; }
         public Thickness Padding { get; internal set; }
-        public IGradient Enabled { get; internal set; }
-        public IGradient Highlighted { get; internal set; }
-        public IGradient BorderEnabled { get; internal set; }
-
-        public IGradient GetFillGradient(ControlStatus status)
-        {
-            switch (status)
-            {
-                default:
-                case ControlStatus.Enabled:
-                    return Enabled;
-
-                case ControlStatus.Highlighted:
-                    return Highlighted;
-            }
-        }
-
-        public IGradient GetStrokeGradient(ControlStatus status)
-        {
-            switch (status)
-            {
-                default:
-                case ControlStatus.Enabled:
-                    return BorderEnabled;
-
-            }
-        }
-
-        public static ControlStyle EmptyStyle
-        {
-            get
-            {
-                return new ControlStyle
-                           {
-                               Enabled = null,
-                               BorderEnabled = null,
-                               Highlighted = null,
-                               Name = Empty,
-                               Margin = Thickness.Empty,
-                               Padding = Thickness.Empty,
-                               Height = 0,
-                               Width = 0,
-                               TextStyleClass = "Default"
-                           };
-            }
-        }
 
         #endregion
 
-        public IEnumerable<Shape> VisualStateDefinition { get; internal set; }
+        public IEnumerable<Shape> VisualStateDefinition { get; private set; }
+
+        public void DeserializeXml(IResourceProvider theme, XmlReader reader)
+        {
+            Name = reader.GetAttribute("Name");
+
+            string margin = reader.GetAttribute("Margin");
+            Margin = String.IsNullOrEmpty(margin) ? Thickness.Empty : StyleHelper.DecodeThickness(margin);
+
+            string textStyleClass = reader.GetAttribute("TextStyleClass");
+            TextStyleClass = String.IsNullOrEmpty(textStyleClass) ? "Default" : textStyleClass;
+
+            string padding = reader.GetAttribute("Padding");
+            Padding = String.IsNullOrEmpty(padding) ? Thickness.Empty : StyleHelper.DecodeThickness(padding);
+
+            string width = reader.GetAttribute("Width");
+            string height = reader.GetAttribute("Height");
+            Width = String.IsNullOrEmpty(width) ? 0 : Single.Parse(width);
+            Height = String.IsNullOrEmpty(height) ? 0 : Single.Parse(height);
+
+            List<Shape> shapes = new List<Shape>();
+
+            if (!reader.ReadToDescendant(sVisualState))
+                throw new InvalidOperationException(String.Format("{0}' element not found", sVisualState));
+
+            if (!reader.ReadToDescendant(sShapes))
+                throw new InvalidOperationException(String.Format("{0}' element not found", sShapes));
+
+            // Advances reader to shape collection
+            reader.ReadStartElement();
+
+            while (reader.IsStartElement())
+            {
+                string typeName = string.Format("Odyssey.Graphics.Shapes.{0}", reader.Name);
+                try
+                {
+                    var shape = (Shape)Activator.CreateInstance(Type.GetType(typeName));
+                    shape.DeserializeXml(theme, reader);
+                    shapes.Add(shape);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Shape", typeName));
+                }
+                reader.Read();
+            }
+            reader.ReadEndElement();
+            VisualStateDefinition = shapes;
+        }
+
+        private void ParseAnimations(XmlReader reader)
+        {
+            const string sAnimation = "Animation";
+            const string sAnimationCurve = "AnimationCurve";
+            string sStatus = reader.GetAttribute("Name");
+            ControlStatus cStatus = (ControlStatus)Enum.Parse(typeof(ControlStatus), sStatus, true);
+            reader.ReadStartElement();
+
+            if (reader.IsStartElement(sAnimation))
+                throw new InvalidOperationException(string.Format("{0} element not found", sAnimation));
+
+            if (!reader.ReadToDescendant(sAnimationCurve))
+                throw new InvalidOperationException(string.Format("{0} element not found", sAnimationCurve));
+
+            //var animation = new Animation();
+            //animation.N
+
+            //while (reader.IsStartElement())
+            //{
+
+            //}
+
+        }
+
+
+        public void SerializeXml(IResourceProvider theme, XmlWriter writer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

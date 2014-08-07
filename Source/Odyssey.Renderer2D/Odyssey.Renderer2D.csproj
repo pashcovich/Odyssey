@@ -64,6 +64,8 @@
     <Compile Include="Graphics\Shapes\IShape.cs" />
     <Compile Include="Graphics\Shapes\Line.cs" />
     <Compile Include="UserInterface\Controls\Border.cs" />
+    <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
+    <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="UserInterface\Style\FigureData.cs" />
     <Compile Include="UserInterface\Style\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Shapes\PolygonBase.cs" />
@@ -148,7 +150,6 @@
     <None Include="UserInterface\Serialization\XmlGradient.cs" />
     <Compile Include="UserInterface\Style\StyleHelper.cs" />
     <None Include="UserInterface\Serialization\XmlShape.cs" />
-    <Compile Include="UserInterface\Serialization\XmlStyleReader.cs" />
     <Compile Include="UserInterface\Serialization\XmlTextDescription.cs" />
   </ItemGroup>
   <ItemGroup>

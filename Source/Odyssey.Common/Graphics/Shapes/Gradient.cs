@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Globalization;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 using Odyssey.Engine;
+using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
 using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
 {
-    public abstract class Gradient : IGradient, IXmlSerializable
+    public abstract class Gradient : IGradient, IStyleSerializable
     {
         public string Name { get; protected set; }
 
@@ -20,31 +22,19 @@ namespace Odyssey.Graphics.Shapes
 
         protected Gradient(string name, GradientStopCollection gradientStops, GradientType type)
         {
-            this.Name = name;
+            Name = name;
             GradientStops = gradientStops;
-            this.Type = type;
+            Type = type;
         }
-
-        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
+        protected virtual void OnReadXml(XmlDeserializationEventArgs e)
         {
-            return null;
-        }
-
-        void IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
-        {
-            OnReadXml(reader);
-        }
-
-        void IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected virtual void OnReadXml(XmlReader reader)
-        {
+            var reader = e.XmlReader;
             Name = reader.GetAttribute("Name");
             if (string.IsNullOrEmpty(Name))
-                throw new InvalidOperationException(string.Format("({0},{1}) 'Name' cannot be null", 0,0));
+            {
+                IXmlLineInfo xmlInfo = (IXmlLineInfo)reader;
+                throw new InvalidOperationException(string.Format("({0},{1}) 'Name' cannot be null", xmlInfo.LineNumber, xmlInfo.LinePosition));
+            }
             GradientStops = new GradientStopCollection();
             reader.ReadStartElement();
             
@@ -67,6 +57,21 @@ namespace Odyssey.Graphics.Shapes
             reader.ReadEndElement();
         }
 
+        protected virtual void OnWriteXml(XmlSerializationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         internal abstract Gradient Copy();
+
+        public void SerializeXml(IResourceProvider theme, XmlWriter xmlWriter)
+        {
+            OnWriteXml(new XmlSerializationEventArgs(theme, xmlWriter));
+        }
+
+        public void DeserializeXml(IResourceProvider theme, XmlReader xmlReader)
+        {
+            OnReadXml(new XmlDeserializationEventArgs(theme, xmlReader));
+        }
     }
 }

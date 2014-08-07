@@ -87,9 +87,13 @@
     <Compile Include="Graphics\Shapes\GradientStopCollection.cs" />
     <Compile Include="Graphics\Shapes\GradientType.cs" />
     <Compile Include="Graphics\Shapes\IGradient.cs" />
+    <Compile Include="Graphics\Shapes\IResourceProvider.cs" />
     <Compile Include="Graphics\Shapes\LinearGradient.cs" />
     <Compile Include="Graphics\Shapes\RadialGradient.cs" />
     <Compile Include="Graphics\Shapes\UniformGradient.cs" />
+    <Compile Include="Serialization\IStyleSerializable.cs" />
+    <Compile Include="Serialization\XmlDeserializationEventArgs.cs" />
+    <Compile Include="Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="Utilities\Collections\ReadOnlyArray.cs" />
     <Compile Include="Graphics\Organization\IRenderCommand.cs" />
     <Compile Include="Engine\ApplicationContext.cs" />
@@ -135,9 +139,7 @@
     <Compile Include="Utilities\Reflection\ReflectionHelper.cs" />
     <Compile Include="Utilities\Text\Text.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Serialization\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

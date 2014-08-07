@@ -41,11 +41,6 @@ namespace Odyssey.Graphics.Shapes
 
         public void Initialize(Shape shape)
         {
-            if (shape.FillGradientClass == null)
-                shape.FillGradientClass = "DefaultFill";
-            if (shape.StrokeGradientClass == null)
-                shape.StrokeGradientClass = "DefaultStroke";
-
             switch (shape.FillGradient.Type)
             {
                 case GradientType.Linear:
@@ -71,10 +66,10 @@ namespace Odyssey.Graphics.Shapes
         public static IEnumerable<Direct2DResource> CreateResources(Direct2DDevice device, Shape shape)
         {
             var resources = new List<Direct2DResource>();
-            if (shape.FillGradientClass == null)
-                shape.FillGradientClass = "DefaultFill";
-            if (shape.StrokeGradientClass == null)
-                shape.StrokeGradientClass = "DefaultStroke";
+            if (shape.FillGradient == null)
+                shape.FillGradient = new UniformGradient("DefaultFill", Shape.DefaultFillColor);
+            if (shape.StrokeGradient== null)
+                shape.StrokeGradient = new UniformGradient("DefaultStroke", Shape.DefaultFillColor);
 
             switch (shape.FillGradient.Type)
             {

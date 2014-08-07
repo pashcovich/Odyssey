@@ -1,10 +1,12 @@
 using System;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Animation
 {
-    public abstract class KeyFrame<T> : IComparable<KeyFrame<T>>, IKeyFrame, IXmlSerializable
+    public abstract class KeyFrame<T> : IComparable<KeyFrame<T>>, IKeyFrame, IStyleSerializable
     {
         public TimeSpan Time { get ; set; }
         public T Value { get; set; }
@@ -28,26 +30,27 @@ namespace Odyssey.Animation
             return (time - low) / (high - low);
         }
 
-        protected virtual void OnReadXml(XmlReader reader)
-        {
-            
-        }
 
-        #region IXmlSerializable
-        System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
-        {
-            return null;
-        }
 
-        void IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
+        #region IStyleSerializable
+        public void SerializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlWriter writer)
         {
             throw new NotImplementedException();
         }
 
-        void IXmlSerializable.WriteXml(System.Xml.XmlWriter writer)
+        public void DeserializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlReader reader)
         {
-            throw new NotImplementedException();
-        } 
+            OnReadXml(new XmlDeserializationEventArgs(resourceProvider, reader));
+        }
+
+        protected virtual void OnReadXml(XmlDeserializationEventArgs e)
+        {
+            string sTime = e.XmlReader.GetAttribute("Time");
+            Time = TimeSpan.FromMilliseconds(double.Parse(sTime));
+        }
+
         #endregion
+
+
     }
 }

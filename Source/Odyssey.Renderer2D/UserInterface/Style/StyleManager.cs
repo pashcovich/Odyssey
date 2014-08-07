@@ -68,7 +68,7 @@ namespace Odyssey.UserInterface.Style
 
             var theme = content.Load<Theme>(themeName);
 
-            var style = theme[controlClass];
+            var style = theme.GetStyle(controlClass);
             return style;
         }
 
