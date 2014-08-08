@@ -1,5 +1,7 @@
-﻿using System.Xml;
+﻿using System.Text.RegularExpressions;
+using System.Xml;
 using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Reflection;
 using System;
@@ -7,13 +9,12 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using System.Xml.Serialization;
 
 namespace Odyssey.Animation
 {
     internal delegate void UpdateMethod(object obj, object value);
 
-    public class AnimationCurve : IAnimationCurve, IStyleSerializable
+    public class AnimationCurve : IAnimationCurve, ISerializableResource
     {
         public delegate object CurveFunction(IKeyFrame start, IKeyFrame end, TimeSpan time);
 
@@ -50,14 +51,17 @@ namespace Odyssey.Animation
 
         internal void SetTargetProperty(Type type, string propertyName)
         {
-            var member = ReflectionHelper.FindMemberPath(type, propertyName, out targetProperty);
-            if ((member as PropertyInfo) != null)
-                updateMethod = UpdateProperty;
-            else
-            {
-                field = (FieldInfo)member;
-                updateMethod = UpdateField;
-            }
+            //var objectWalker = new ObjectWalker(type);
+            //objectWalker.ValidatePath(propertyName);
+
+            //var member = objectWalker.CurrentMember;
+            //if (member as PropertyInfo != null)
+            //    updateMethod = UpdateProperty;
+            //else
+            //{
+            //    field = (FieldInfo)member;
+            //    updateMethod = UpdateField;
+            //}
         }
 
         public void AddKeyFrame(IKeyFrame keyFrame)
@@ -116,25 +120,30 @@ namespace Odyssey.Animation
 
         #region IStyleSerializable
 
-        public void SerializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlWriter writer)
+        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter writer)
         {
             throw new NotImplementedException();
         }
 
-        public void DeserializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlReader reader)
+        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader reader)
         {
-
             Name = reader.GetAttribute("Name");
             string targetName = reader.GetAttribute("TargetName");
+            var resource = resourceProvider.GetResource<IResource>(targetName);
             string targetPropertyName = reader.GetAttribute("TargetProperty");
 
+            var objectWalker = new ObjectWalker(resource.GetType());
+            objectWalker.FollowPath(targetPropertyName);
+
+
+           
             reader.ReadStartElement();
 
             while (reader.IsStartElement())
             {
                 string type = reader.LocalName;
-                var keyFrame = Activator.CreateInstance(Type.GetType("Odyssey.Animation." + type));
-                ((IXmlSerializable)keyFrame).ReadXml(reader);
+                var keyFrame = (ISerializableResource)Activator.CreateInstance(Type.GetType("Odyssey.Animation." + type));
+                keyFrame.DeserializeXml(resourceProvider, reader);
             }
         }
 

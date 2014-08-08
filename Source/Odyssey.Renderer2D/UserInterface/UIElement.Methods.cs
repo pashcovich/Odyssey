@@ -1,4 +1,3 @@
-#region License
 
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
 //
@@ -11,11 +10,8 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
-#endregion License
-
-#region Using Directives
-
 using System.Xml;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
@@ -27,73 +23,12 @@ using System;
 using System.Diagnostics.Contracts;
 using MouseEventArgs = Odyssey.Interaction.PointerEventArgs;
 
-#endregion Using Directives
-
 namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
-        #region Public methods
 
-        /// <summary>
-        /// Programmatically focuses this <see cref="UIElement"/> object, <b>if</b> it is focusable.
-        /// </summary>
-        public void Focus()
-        {
-            if (isFocusable)
-                OnGotFocus(EventArgs.Empty);
-        }
-
-        public void Initialize()
-        {
-            ControlEventArgs args = new ControlEventArgs(this);
-            OnInitializing(args);
-            foreach (var kvp in bindings)
-            {
-                var bindingExpression = kvp.Value;
-                bindingExpression.SourceBinding.Source = DataContext;
-                bindingExpression.Initialize();
-            }
-
-            OnInitialized(args);
-        }
-
-        public void SerializeXml(IResourceProvider theme, XmlWriter writer)
-        {
-            OnWriteXml(new XmlSerializationEventArgs(theme, writer));
-        }
-
-        public void DeserializeXml(IResourceProvider theme, XmlReader reader)
-        {
-            OnReadXml(new XmlDeserializationEventArgs(theme, reader));
-        }
-
-        ///// <summary>
-        ///// Returns the window that this control belongs to, if any.
-        ///// </summary>
-        ///// <returns>The <see cref="Window"/> reference the control belongs to; <c>null</c> if the control doesn't
-        ///// belong to any window.</returns>
-        //public Window FindWindow()
-        //{
-        //    if (depth.WindowLayer == 0)
-        //        return null;
-        //    else
-        //        return UserInterfaceManager.CurrentOverlay.WindowManager[depth.WindowLayer - 1];
-        //}
-
-        public void BringToFront()
-        {
-            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Foreground);
-        }
-
-        public void SendToBack()
-        {
-            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Background);
-        }
-
-        #endregion Public methods
-
-        #region Event Processing methods
+        #region Internal Methods
 
         internal virtual void ProcessKeyDown(KeyEventArgs e)
         {
@@ -160,7 +95,25 @@ namespace Odyssey.UserInterface
             return false;
         }
 
-        #endregion Event Processing methods
+        /// <summary>
+        /// Creates a shallow copy of this object and its children.
+        /// </summary>
+        /// <returns>A new copy of this element.</returns>
+        internal virtual UIElement Copy()
+        {
+            UIElement newElement = (UIElement)Activator.CreateInstance(GetType());
+
+            newElement.Name = Name;
+            newElement.Width = Width;
+            newElement.Height = Height;
+            newElement.Margin = Margin;
+
+            return newElement;
+        }
+
+        #endregion Internal Methods
+
+        #region Public Methods
 
         public static explicit operator RectangleF(UIElement uiElement)
         {
@@ -172,6 +125,61 @@ namespace Odyssey.UserInterface
             return new RectangleF(x, y, width, height);
         }
 
+        public void BringToFront()
+        {
+            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Foreground);
+        }
+
+        public void DeserializeXml(IResourceProvider theme, XmlReader reader)
+        {
+            OnReadXml(new XmlDeserializationEventArgs(theme, reader));
+        }
+
+        /// <summary>
+        /// Programmatically focuses this <see cref="UIElement"/> object, <b>if</b> it is focusable.
+        /// </summary>
+        public void Focus()
+        {
+            if (isFocusable)
+                OnGotFocus(EventArgs.Empty);
+        }
+
+        public void Initialize()
+        {
+            ControlEventArgs args = new ControlEventArgs(this);
+            OnInitializing(args);
+            foreach (var kvp in bindings)
+            {
+                var bindingExpression = kvp.Value;
+                bindingExpression.SourceBinding.Source = DataContext;
+                bindingExpression.Initialize();
+            }
+
+            OnInitialized(args);
+        }
+
+        ///// <summary>
+        ///// Returns the window that this control belongs to, if any.
+        ///// </summary>
+        ///// <returns>The <see cref="Window"/> reference the control belongs to; <c>null</c> if the control doesn't
+        ///// belong to any window.</returns>
+        //public Window FindWindow()
+        //{
+        //    if (depth.WindowLayer == 0)
+        //        return null;
+        //    else
+        //        return UserInterfaceManager.CurrentOverlay.WindowManager[depth.WindowLayer - 1];
+        //}
+        public void SendToBack()
+        {
+            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Background);
+        }
+
+        public void SerializeXml(IResourceProvider theme, XmlWriter writer)
+        {
+            OnWriteXml(new XmlSerializationEventArgs(theme, writer));
+        }
+
         public void SetBinding(Binding binding, string targetProperty)
         {
             Contract.Requires<ArgumentNullException>(binding != null, "binding");
@@ -181,20 +189,8 @@ namespace Odyssey.UserInterface
             bindings.Add(targetProperty, bindingExpression);
         }
 
-        /// <summary>
-        /// Creates a shallow copy of this object and its children.
-        /// </summary>
-        /// <returns>A new copy of this element.</returns>
-        internal virtual UIElement Copy()
-        {
-            UIElement newElement = (UIElement) Activator.CreateInstance(GetType());
+        #endregion Public Methods
 
-            newElement.Name = Name;
-            newElement.Width = Width;
-            newElement.Height = Height;
-            newElement.Margin = Margin;
 
-            return newElement;
-        }
     }
 }

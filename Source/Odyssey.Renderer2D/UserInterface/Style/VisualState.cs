@@ -18,7 +18,7 @@ namespace Odyssey.UserInterface.Style
             shapeCache = new Dictionary<ControlStatus, Shape[]>();
         }
 
-        public void Initialize(Control control)
+        public void Initialize(Controls.Control control)
         {
             var enabledShapes = new Shape[shapes.Length];
 

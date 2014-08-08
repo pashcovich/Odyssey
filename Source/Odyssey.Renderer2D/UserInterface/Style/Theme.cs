@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Odyssey.Animation;
 using Odyssey.Content;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 
 namespace Odyssey.UserInterface.Style
@@ -18,7 +18,7 @@ namespace Odyssey.UserInterface.Style
         private const string sResources = "Resources";
 
         private readonly Dictionary<string, ControlStyle> styles;
-        private readonly Dictionary<string, Gradient> resources;
+        private readonly Dictionary<string, IResource> resources;
 
         public string Name { get; internal set; }
 
@@ -27,7 +27,7 @@ namespace Odyssey.UserInterface.Style
         public Theme()
         {
             styles = new Dictionary<string, ControlStyle>();
-            resources= new Dictionary<string, Gradient>();
+            resources = new Dictionary<string, IResource>();
         }
 
         [Pure]
@@ -36,12 +36,19 @@ namespace Odyssey.UserInterface.Style
             return resources.ContainsKey(resourceName);
         }
 
-        public Gradient GetResource(string resourceName)
+        public IResource GetResource(string resourceName)
         {
-            if (!ContainsResource(resourceName))
-                throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
-            return resources[resourceName];
+            if (ContainsResource(resourceName))
+                return resources[resourceName];
+            else
+            {
+                foreach (var r in styles.Values.Select(s => s.FindResource(resourceName)).Where(r => r != null)) {
+                    return r;
+                }
+            }
+            throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
         }
+
 
         public ControlStyle GetStyle(string styleName)
         {
@@ -61,7 +68,6 @@ namespace Odyssey.UserInterface.Style
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(style.Name), "Style name cannot be null");
             styles.Add(style.Name, style);
         }
-
 
         #region IXmlSerializable
         System.Xml.Schema.XmlSchema IXmlSerializable.GetSchema()
@@ -111,9 +117,8 @@ namespace Odyssey.UserInterface.Style
             while (reader.IsStartElement(sControlStyle))
             {
                 var style = new ControlStyle();
-                style.DeserializeXml(this, reader);
-                
                 AddStyle(style);
+                style.DeserializeXml(this, reader);
             }
         }
 
@@ -122,5 +127,13 @@ namespace Odyssey.UserInterface.Style
             throw new NotImplementedException();
         } 
         #endregion
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            var resource = GetResource(resourceName) as TResource;
+            if (resource == null)
+                throw new InvalidCastException(string.Format("Resource '{0}' cannot be cast to {1}", resourceName, typeof(TResource).Name));
+            return resource;
+        }
     }
 }

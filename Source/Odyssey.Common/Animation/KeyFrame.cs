@@ -2,11 +2,12 @@ using System;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Odyssey.Graphics;
 using Odyssey.Serialization;
 
 namespace Odyssey.Animation
 {
-    public abstract class KeyFrame<T> : IComparable<KeyFrame<T>>, IKeyFrame, IStyleSerializable
+    public abstract class KeyFrame<T> : IComparable<KeyFrame<T>>, IKeyFrame, ISerializableResource
     {
         public TimeSpan Time { get ; set; }
         public T Value { get; set; }
@@ -33,12 +34,12 @@ namespace Odyssey.Animation
 
 
         #region IStyleSerializable
-        public void SerializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlWriter writer)
+        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter writer)
         {
             throw new NotImplementedException();
         }
 
-        public void DeserializeXml(Graphics.Shapes.IResourceProvider resourceProvider, XmlReader reader)
+        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader reader)
         {
             OnReadXml(new XmlDeserializationEventArgs(resourceProvider, reader));
         }

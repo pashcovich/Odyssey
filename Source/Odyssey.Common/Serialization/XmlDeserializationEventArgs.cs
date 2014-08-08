@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 
 namespace Odyssey.Serialization

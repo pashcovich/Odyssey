@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Globalization;
+using System.Linq;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using Odyssey.Engine;
+using Odyssey.Animation;
 using Odyssey.Serialization;
+using Odyssey.Utilities.Reflection;
 using Odyssey.Utilities.Text;
 using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
 {
-    public abstract class Gradient : IGradient, IStyleSerializable
+    public abstract class Gradient : IGradient, IAnimatable, ISerializableResource
     {
+        private static readonly string[] AnimatableProperties = {ReflectionHelper.GetPropertyName<Gradient>(g => g.GradientStops)};
+
         public string Name { get; protected set; }
 
         public GradientType Type { get; protected set; }
@@ -72,6 +73,11 @@ namespace Odyssey.Graphics.Shapes
         public void DeserializeXml(IResourceProvider theme, XmlReader xmlReader)
         {
             OnReadXml(new XmlDeserializationEventArgs(theme, xmlReader));
+        }
+
+        public bool IsAnimatable(string propertyName)
+        {
+            return AnimatableProperties.Contains(propertyName);
         }
     }
 }

@@ -23,6 +23,7 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX;
+using Control = Odyssey.UserInterface.Controls.Control;
 
 #endregion Using Directives
 
@@ -94,13 +95,13 @@ namespace Odyssey.Graphics.Shapes
             {
                 var match = resourceRegex.Match(sFill);
                 string fillGradient = match.Groups["name"].Value;
-                FillGradient = e.Theme.GetResource(fillGradient);
+                FillGradient = e.Theme.GetResource<Gradient>(fillGradient);
             }
             if (!string.IsNullOrEmpty(sStroke))
             {
                 var match = resourceRegex.Match(sStroke);
                 string strokeGradient = match.Groups["name"].Value;
-                StrokeGradient = e.Theme.GetResource(strokeGradient);
+                StrokeGradient = e.Theme.GetResource<Gradient>(strokeGradient);
             }
 
             if (!reader.IsEmptyElement)

@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 #endregion Using Directives
 
@@ -64,19 +66,30 @@ namespace Odyssey.Utilities.Reflection
         public static MemberInfo FindMemberPath(Type type, string path, out PropertyInfo containingProperty)
         {
             Contract.Requires<ArgumentNullException>(type != null, "type");
+            const string rArrayPattern = @"(?<array>\w*)\[(?<index>\d+)\]";
+            Regex rArray = new Regex(rArrayPattern);
+            ;
             TypeInfo currentType = type.GetTypeInfo();
             containingProperty = null;
             MemberInfo member = null;
 
             foreach (string propertyName in path.Split('.'))
             {
+                var match = rArray.Match(propertyName);
+                if (match.Success)
+                {
+                    string array = match.Groups["array"].Value;
+
+                    currentType = (currentType.GetDeclaredProperty(array)).GetType().GetTypeInfo();
+
+                }
 
                 member = currentType.GetDeclaredProperty(propertyName) as MemberInfo ?? currentType.GetDeclaredField(propertyName) as MemberInfo;
 
                 if (member !=null)
                 {
                     currentType = member.GetType().GetTypeInfo();
-                    containingProperty = (PropertyInfo)member ;
+                    containingProperty = (PropertyInfo)member;
                 }
             }
 
@@ -105,6 +118,13 @@ namespace Odyssey.Utilities.Reflection
                         select typeInfo.AsType();
 
             return types;
+        }
+
+        public static string GetPropertyName<TClass>(Expression<Func<TClass, object>> propertyExpression)
+        {
+            var body = propertyExpression.ToString();
+            body = body.Substring(body.IndexOf(".") + 1);
+            return body;
         }
 
         [Pure]

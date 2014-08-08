@@ -31,7 +31,7 @@ namespace Odyssey.UserInterface.Controls
         public const string DefaultText = "Default";
         public const string EmptyStyle = "Empty";
         private readonly string controlStyleClass;
-        private ControlStyle style;
+        private Style.ControlStyle style;
         private TextDescription textDescription;
         private string textStyleClass;
 
@@ -48,7 +48,7 @@ namespace Odyssey.UserInterface.Controls
         #region Events
 
         /// <summary>
-        /// Occurs when the <see cref="ControlStyle"/> property value changes.
+        /// Occurs when the <see cref="UserInterface.Style.ControlStyle"/> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> ControlDefinitionChanged;
 
@@ -128,7 +128,7 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         /// <value>The <see cref = "Style" /> object that contains information on how to style
         /// the text appearance of this control.</value>
-        public ControlStyle Style
+        public Style.ControlStyle Style
         {
             get { return style; }
             private set

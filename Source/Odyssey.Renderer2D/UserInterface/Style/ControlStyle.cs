@@ -29,11 +29,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using Odyssey.Content;
 using Odyssey.Geometry.Primitives;
 using Odyssey.Animation;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
@@ -46,7 +48,7 @@ using SharpDX;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class ControlStyle : IStyleSerializable
+    public sealed class ControlStyle : ISerializableResource
     {
         private const string sShapes = "Shapes";
         private const string sVisualState = "VisualState";
@@ -65,6 +67,11 @@ namespace Odyssey.UserInterface.Style
         #endregion
 
         public IEnumerable<Shape> VisualStateDefinition { get; private set; }
+
+        public IResource FindResource(string resourceName)
+        {
+            return VisualStateDefinition.FirstOrDefault(s => s.Name == resourceName);
+        }
 
         public void DeserializeXml(IResourceProvider theme, XmlReader reader)
         {
@@ -112,9 +119,10 @@ namespace Odyssey.UserInterface.Style
             }
             reader.ReadEndElement();
             VisualStateDefinition = shapes;
+            ParseAnimations(theme, reader);
         }
 
-        private void ParseAnimations(XmlReader reader)
+        private void ParseAnimations(IResourceProvider theme, XmlReader reader)
         {
             const string sAnimation = "Animation";
             const string sAnimationCurve = "AnimationCurve";
@@ -122,14 +130,14 @@ namespace Odyssey.UserInterface.Style
             ControlStatus cStatus = (ControlStatus)Enum.Parse(typeof(ControlStatus), sStatus, true);
             reader.ReadStartElement();
 
-            if (reader.IsStartElement(sAnimation))
+            if (!reader.IsStartElement(sAnimation))
                 throw new InvalidOperationException(string.Format("{0} element not found", sAnimation));
 
             if (!reader.ReadToDescendant(sAnimationCurve))
                 throw new InvalidOperationException(string.Format("{0} element not found", sAnimationCurve));
 
-            //var animation = new Animation();
-            //animation.N
+            var animationCurve = new AnimationCurve();
+            animationCurve.DeserializeXml(theme, reader);
 
             //while (reader.IsStartElement())
             //{

@@ -42,6 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation\IAnimatable.cs" />
     <Compile Include="Content\AssetIdentifier.cs" />
     <Compile Include="Content\AssetsLoadedEventArgs.cs" />
     <Compile Include="Content\ContentManager.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Graphics\Effects\IMaterial.cs" />
     <Compile Include="Graphics\Effects\ReferenceEnums.cs" />
     <Compile Include="Graphics\Interop.cs" />
+    <Compile Include="Graphics\IResource.cs" />
     <Compile Include="Graphics\Models\ModelOperation.cs" />
     <Compile Include="Graphics\PixelFormat.cs" />
     <Compile Include="Graphics\Shapes\ExtendMode.cs" />
@@ -87,11 +89,11 @@
     <Compile Include="Graphics\Shapes\GradientStopCollection.cs" />
     <Compile Include="Graphics\Shapes\GradientType.cs" />
     <Compile Include="Graphics\Shapes\IGradient.cs" />
-    <Compile Include="Graphics\Shapes\IResourceProvider.cs" />
+    <Compile Include="Graphics\IResourceProvider.cs" />
     <Compile Include="Graphics\Shapes\LinearGradient.cs" />
     <Compile Include="Graphics\Shapes\RadialGradient.cs" />
     <Compile Include="Graphics\Shapes\UniformGradient.cs" />
-    <Compile Include="Serialization\IStyleSerializable.cs" />
+    <Compile Include="Serialization\ISerializableResource.cs" />
     <Compile Include="Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="Utilities\Collections\ReadOnlyArray.cs" />
@@ -136,6 +138,7 @@
     <Compile Include="Utilities\Logging\AbstractLogEvent.cs" />
     <Compile Include="Utilities\Logging\LogEvent.cs" />
     <Compile Include="Utilities\Logging\TraceData.cs" />
+    <Compile Include="Utilities\Reflection\ObjectWalker.cs" />
     <Compile Include="Utilities\Reflection\ReflectionHelper.cs" />
     <Compile Include="Utilities\Text\Text.cs" />
   </ItemGroup>

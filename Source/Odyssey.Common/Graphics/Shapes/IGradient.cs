@@ -2,9 +2,8 @@ using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
 {
-    public interface IGradient
+    public interface IGradient : IResource
     {
-        string Name { get;  }
         GradientType Type { get; }
         GradientStopCollection GradientStops { get; }
     }
