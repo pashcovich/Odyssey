@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
@@ -48,7 +49,7 @@ using SharpDX;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class ControlStyle : ISerializableResource
+    public sealed class ControlStyle : ISerializableResource, IResource, IResourceProvider
     {
         private const string sShapes = "Shapes";
         private const string sVisualState = "VisualState";
@@ -67,11 +68,6 @@ namespace Odyssey.UserInterface.Style
         #endregion
 
         public IEnumerable<Shape> VisualStateDefinition { get; private set; }
-
-        public IResource FindResource(string resourceName)
-        {
-            return VisualStateDefinition.FirstOrDefault(s => s.Name == resourceName);
-        }
 
         public void DeserializeXml(IResourceProvider theme, XmlReader reader)
         {
@@ -151,5 +147,19 @@ namespace Odyssey.UserInterface.Style
         {
             throw new NotImplementedException();
         }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            var resource = VisualStateDefinition.FirstOrDefault(s => s.Name == resourceName);
+            if (resource == null)
+                throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
+            TResource resultResource = resource as TResource;
+            if (resultResource == null)
+                throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
+                    resourceName, resource.GetType().Name, typeof(TResource).Name));
+            return resultResource;
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources { get { return VisualStateDefinition; } }
     }
 }

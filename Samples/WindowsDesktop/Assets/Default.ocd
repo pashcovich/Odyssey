@@ -13,7 +13,7 @@
       </Shapes>
       <Status Name="Highlighted">
         <Animation>
-          <AnimationCurve TargetName="Main" TargetProperty="Fill.GradientStops[0].Color">
+          <AnimationCurve TargetName="Main" TargetProperty="FillGradient.GradientStops[0].Color">
             <ColorKeyFrame Time="0" Value="{DefaultFill}"/>
           </AnimationCurve>
         </Animation>

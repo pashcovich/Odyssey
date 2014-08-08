@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Odyssey.Animation;
 
 namespace Odyssey.Graphics
@@ -6,5 +8,7 @@ namespace Odyssey.Graphics
     {
         TResource GetResource<TResource>(string resourceName)
             where TResource : class, IResource;
+
+        IEnumerable<IResource> Resources { get; }
     }
 }

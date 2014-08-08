@@ -17,16 +17,14 @@ namespace Odyssey.UserInterface.Style
         const string sControlStyle = "ControlStyle";
         private const string sResources = "Resources";
 
-        private readonly Dictionary<string, ControlStyle> styles;
         private readonly Dictionary<string, IResource> resources;
 
         public string Name { get; internal set; }
 
-        public IEnumerable<ControlStyle> Styles { get { return styles.Values; }}
+        public IEnumerable<IResource> Resources { get { return resources.Values; } } 
 
         public Theme()
         {
-            styles = new Dictionary<string, ControlStyle>();
             resources = new Dictionary<string, IResource>();
         }
 
@@ -36,40 +34,42 @@ namespace Odyssey.UserInterface.Style
             return resources.ContainsKey(resourceName);
         }
 
-        public IResource GetResource(string resourceName)
+        public TResource GetResource<TResource>(string resourceName)
+            where TResource : class, IResource
         {
-            if (ContainsResource(resourceName))
-                return resources[resourceName];
-            else
+            var resource = PreOrderVisit(this).FirstOrDefault(r => r.Name == resourceName);
+
+            if (resource == null)
+                throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
+
+            TResource resultResource = resource as TResource;
+            if (resultResource == null)
+                throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
+                    resourceName, resource, typeof (TResource).Name));
+            return resultResource;
+        }
+
+        static IEnumerable<IResource> PreOrderVisit(IResourceProvider root)
+        {
+            foreach (var resource in root.Resources)
             {
-                foreach (var s in styles.Values)
+                yield return resource;
+                IResourceProvider resourceProvider = resource as IResourceProvider;
+                if (resourceProvider != null)
                 {
-                    var r = s.FindResource(resourceName);
-                    if (r != null)
-                        return r;
+                    foreach (var childResource in PreOrderVisit(resourceProvider))
+                        yield return childResource;
                 }
             }
-            throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
         }
 
-
-        public ControlStyle GetStyle(string styleName)
+        public void AddResource(string resourceName, IResource resource)
         {
-            if (!ContainsResource(styleName))
-                throw new ArgumentException(string.Format("Style '{0}' not found", styleName));
-            return styles[styleName];
-        }
-
-        public void AddResource(Gradient resource)
-        {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(resource.Name), "Resource name cannot be null");
-            resources.Add(resource.Name, resource);
-        }
-
-        public void AddStyle(ControlStyle style)
-        {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(style.Name), "Style name cannot be null");
-            styles.Add(style.Name, style);
+            Contract.Requires<ArgumentNullException>(resource!= null, "Resource cannot be null");
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(resourceName), "Resource name cannot be null");
+            if (PreOrderVisit(this).Any(r => r == resource || r.Name == resourceName))
+                throw new InvalidOperationException("Resource is already added in the Tree");
+            resources.Add(resourceName, resource);
         }
 
         #region IXmlSerializable
@@ -101,16 +101,18 @@ namespace Odyssey.UserInterface.Style
             {
                 reader.ReadStartElement();
                 string typeName = String.Format("Odyssey.Graphics.Shapes.{0}, Odyssey.Common", reader.Name);
+                Gradient gradient;
+                string resourceName = reader["Name"];
                 try
                 {
-                    var gradient = (Gradient)Activator.CreateInstance(Type.GetType(typeName));
-                    gradient.DeserializeXml(this, reader);
-                    AddResource(gradient);
+                    gradient = (Gradient)Activator.CreateInstance(Type.GetType(typeName));
                 }
                 catch (ArgumentException ex)
                 {
-                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Gradient", typeName));
-                }
+                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Resource", typeName));
+                } 
+                gradient.DeserializeXml(this, reader);
+                AddResource(resourceName, gradient);
             }
             reader.ReadEndElement();
         }
@@ -120,9 +122,9 @@ namespace Odyssey.UserInterface.Style
             while (reader.IsStartElement(sControlStyle))
             {
                 var style = new ControlStyle();
+                AddResource(reader.GetAttribute("Name"), style);
                 style.DeserializeXml(this, reader);
-                
-                AddStyle(style);
+
             }
         }
 
@@ -131,13 +133,5 @@ namespace Odyssey.UserInterface.Style
             throw new NotImplementedException();
         } 
         #endregion
-
-        TResource IResourceProvider.GetResource<TResource>(string resourceName)
-        {
-            var resource = GetResource(resourceName) as TResource;
-            if (resource == null)
-                throw new InvalidCastException(string.Format("Resource '{0}' cannot be cast to {1}", resourceName, typeof(TResource).Name));
-            return resource;
-        }
     }
 }

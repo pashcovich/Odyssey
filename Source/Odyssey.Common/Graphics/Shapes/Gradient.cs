@@ -9,7 +9,7 @@ using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
 {
-    public abstract class Gradient : IGradient, IAnimatable, ISerializableResource
+    public abstract class Gradient : IGradient, IAnimatable, ISerializableResource, IResource
     {
         private static readonly string[] AnimatableProperties = {ReflectionHelper.GetPropertyName<Gradient>(g => g.GradientStops)};
 

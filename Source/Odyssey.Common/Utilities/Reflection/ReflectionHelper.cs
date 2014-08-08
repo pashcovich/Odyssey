@@ -22,9 +22,21 @@ namespace Odyssey.Utilities.Reflection
 
         public static bool ContainsProperty(Type type, string propertyName)
         {
-            Contract.Requires<ArgumentNullException>(type != null, "type");
+            return FindProperty(type, propertyName) != null;
+        }
 
-            return type.GetRuntimeProperties().Any(p => p.Name == propertyName);
+        public static PropertyInfo FindProperty(Type type, string propertyName)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(propertyName));
+            return type.GetRuntimeProperties().FirstOrDefault(p => p.Name == propertyName);
+        }
+
+        public static FieldInfo FindField(Type type, string fieldName)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(fieldName));
+            return type.GetRuntimeFields().FirstOrDefault(f => f.Name == fieldName);
         }
 
         public static FieldInfo FindFieldPath(Type type, string path, out PropertyInfo containingProperty)

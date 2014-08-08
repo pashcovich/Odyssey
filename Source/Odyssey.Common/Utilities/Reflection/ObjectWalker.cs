@@ -11,13 +11,12 @@ namespace Odyssey.Utilities.Reflection
     {
         delegate object ReadMethod();
         private readonly object root;
-        private TypeInfo currentTypeInfo;
+        private Type currentType;
 
         private PropertyInfo currentProperty;
         private FieldInfo currentField;
         private int index;
         private ReadMethod readMethod;
-
         private object currentObject;
 
 
@@ -26,7 +25,10 @@ namespace Odyssey.Utilities.Reflection
             get { return CurrentType.Name; }
         }
 
-        public Type CurrentType { get { return CurrentMember.GetType(); }}
+        public Type CurrentType
+        {
+            get { return currentType; }
+        }
 
         public Type ContainingType { get { return CurrentType.DeclaringType; } }
 
@@ -36,14 +38,14 @@ namespace Odyssey.Utilities.Reflection
         {
             Contract.Requires<ArgumentNullException>(obj != null, "obj");
             this.root = obj;
-            currentTypeInfo = root.GetType().GetTypeInfo();
+            currentType = root.GetType();
             currentObject = root;
-
         }
 
         void Reset()
         {
             CurrentMember = null;
+            currentType = root.GetType();
         }
 
         bool ShouldAdvance(MemberInfo member)
@@ -64,12 +66,13 @@ namespace Odyssey.Utilities.Reflection
                 string arrayName;
 
                 if (IsArray(subPath, out arrayName, out index))
+                {
                     expression = arrayName;
+                }
 
                 if (!AdvanceTo(expression))
                     throw new InvalidOperationException(string.Format("Type '{0}' does not contain a property or field '{1}'", Name, expression));
 
-                currentObject = Read();
             }
         }
 
@@ -81,33 +84,49 @@ namespace Odyssey.Utilities.Reflection
 
         bool AdvanceToProperty(string propertyName)
         {
-            var member = currentTypeInfo.GetDeclaredProperty(propertyName);
+            var member = ReflectionHelper.FindProperty(currentType, propertyName);
             bool result = ShouldAdvance(member);
             if (result)
             {
                 currentProperty = member;
                 currentField = null;
+                
+                currentType = currentProperty.PropertyType;
                 readMethod = ReadPropertyValue;
+                UpdateObject();
+                if (index >= 0 && currentProperty.GetIndexParameters().Length == 0)
+                {
+                    AdvanceToProperty("Item");
+                }
             }
             return result;
         }
 
         bool AdvanceToField(string fieldName)
         {
-            var member = currentTypeInfo.GetDeclaredField(fieldName);
+            var member = ReflectionHelper.FindField(currentType, fieldName);
             bool result = ShouldAdvance(member);
             if (result)
             {
                 currentField = member;
                 currentProperty = null;
                 readMethod = ReadFieldValue;
+                currentType = member.FieldType; 
+                currentObject = Read();
             }
             return result;
         }
 
         object ReadPropertyValue()
         {
-            return index >= 0 ? currentProperty.GetValue(currentObject, new object[] {index}) : currentProperty.GetValue(currentObject);
+            return index >= 0 && currentProperty.GetIndexParameters().Length > 0
+                ? currentProperty.GetValue(currentObject, new object[] {index})
+                : currentProperty.GetValue(currentObject);
+        }
+
+        object ReadPropertyIndexValue()
+        {
+            return currentProperty.GetValue(currentObject, new object[] { index }); 
         }
 
         object ReadFieldValue()
@@ -125,6 +144,11 @@ namespace Odyssey.Utilities.Reflection
         object Read()
         {
             return readMethod();
+        }
+
+        void UpdateObject()
+        {
+            currentObject = Read();
         }
 
         public TValue ReadValue<TValue>()

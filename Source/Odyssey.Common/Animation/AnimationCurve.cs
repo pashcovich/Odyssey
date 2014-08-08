@@ -118,7 +118,7 @@ namespace Odyssey.Animation
             targetProperty.SetValue(obj, value);
         }
 
-        #region IStyleSerializable
+        #region IResourceProvider
 
         public void SerializeXml(IResourceProvider resourceProvider, XmlWriter writer)
         {
@@ -132,11 +132,10 @@ namespace Odyssey.Animation
             var resource = resourceProvider.GetResource<IResource>(targetName);
             string targetPropertyName = reader.GetAttribute("TargetProperty");
 
-            var objectWalker = new ObjectWalker(resource.GetType());
+            var objectWalker = new ObjectWalker(resource);
             objectWalker.FollowPath(targetPropertyName);
-
-
-           
+            var data = objectWalker.ReadValue<SharpDX.Color4>();
+            data.ToString();
             reader.ReadStartElement();
 
             while (reader.IsStartElement())
