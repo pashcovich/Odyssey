@@ -124,7 +124,7 @@
     <Compile Include="UserInterface\Data\UpdateSourceTrigger.cs" />
     <Compile Include="UserInterface\IUIElement.cs" />
     <Compile Include="UserInterface\IUserInterfaceState.cs" />
-    <Compile Include="UserInterface\Style\Control.cs" />
+    <Compile Include="UserInterface\Style\ControlStyle.cs" />
     <Compile Include="UserInterface\Style\Depth.cs" />
     <Compile Include="UserInterface\Style\Enums.cs" />
     <Compile Include="UserInterface\Style\IStyleService.cs" />

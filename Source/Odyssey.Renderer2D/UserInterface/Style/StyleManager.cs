@@ -76,7 +76,7 @@ namespace Odyssey.UserInterface.Style
         {
             CheckTheme(themeName);
 
-            return content.Load<Theme>(themeName).GetResource(resourceName);
+            return (Gradient)content.Load<Theme>(themeName).GetResource(resourceName);
         }
 
         public TextDescription GetTextStyle(string themeName, string controlClass)

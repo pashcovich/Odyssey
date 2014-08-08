@@ -42,8 +42,11 @@ namespace Odyssey.UserInterface.Style
                 return resources[resourceName];
             else
             {
-                foreach (var r in styles.Values.Select(s => s.FindResource(resourceName)).Where(r => r != null)) {
-                    return r;
+                foreach (var s in styles.Values)
+                {
+                    var r = s.FindResource(resourceName);
+                    if (r != null)
+                        return r;
                 }
             }
             throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
@@ -117,8 +120,9 @@ namespace Odyssey.UserInterface.Style
             while (reader.IsStartElement(sControlStyle))
             {
                 var style = new ControlStyle();
-                AddStyle(style);
                 style.DeserializeXml(this, reader);
+                
+                AddStyle(style);
             }
         }
 
