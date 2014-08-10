@@ -16,24 +16,23 @@
 #region Using Directives
 
 using System;
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
+using System.Linq;
+using System.Reflection;
+using Odyssey.Animations;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Reflection;
+using Odyssey.Utilities.Text;
 using SharpDX;
-using Control = Odyssey.UserInterface.Controls.Control;
 
 #endregion Using Directives
 
 namespace Odyssey.Graphics.Shapes
 {
-    public abstract class Shape : UIElement, IShape
+    public abstract class Shape : UIElement, IShape, IRequiresCaching
     {
-        private string cFillGradient;
-        private string cStrokeGradient;
-
         protected Shape()
         {
             StrokeThickness = 1.0f;
@@ -42,19 +41,21 @@ namespace Odyssey.Graphics.Shapes
         public static Color4 DefaultFillColor = Color.MidnightBlue;
         public static Color4 DefaultStrokeColor = Color.DimGray;
 
-        internal Brush Fill { get; set; }
-        internal Brush Stroke { get; set; }
+        internal string FillBrushClass { get; set; }
+        internal string StrokeBrushClass { get; set; }
 
-        public Gradient FillGradient { get; set; }
-        public Gradient StrokeGradient { get; set; }
-
+        [CacheAnimation]
+        public Brush Fill { get; private set; }
+        [CacheAnimation]
+        public Brush Stroke { get; private set; }
+        
         public float StrokeThickness { get; set; }
 
         internal override UIElement Copy()
         {
             Shape copy = (Shape)base.Copy();
-            copy.FillGradient = FillGradient;
-            copy.StrokeGradient = StrokeGradient;
+            copy.FillBrushClass = FillBrushClass;
+            copy.StrokeBrushClass = StrokeBrushClass;
             copy.StrokeThickness = StrokeThickness;
             return copy;
         }
@@ -74,7 +75,36 @@ namespace Odyssey.Graphics.Shapes
             return shape;
         }
 
-        protected override void OnLayoutUpdated(System.EventArgs e)
+        protected override void OnInitializing(ControlEventArgs e)
+        {
+            base.OnInitializing(e);
+            var fillColor = Overlay.Theme.GetResource<ColorResource>(FillBrushClass);
+            var strokeColor = Overlay.Theme.GetResource<ColorResource>(StrokeBrushClass);
+
+            var styleService = Device.Services.GetService<IStyleService>();
+            if (styleService.ContainsResource(FillBrushClass))
+                Fill = styleService.GetResource<Brush>(FillBrushClass);
+            else
+            {
+                Fill = Brush.FromColorResource(Device, fillColor);
+                styleService.AddResource(Fill);
+            }
+
+            if (styleService.ContainsResource(StrokeBrushClass))
+                Stroke = styleService.GetResource<Brush>(StrokeBrushClass);
+            else
+            {
+                Stroke = Brush.FromColorResource(Device, strokeColor);
+                styleService.AddResource(Stroke);
+            }
+
+            Fill.Initialize();
+            Stroke.Initialize();
+
+        }
+
+
+        protected override void OnLayoutUpdated(EventArgs e)
         {
             base.OnLayoutUpdated(e);
             if (Fill != null)
@@ -90,23 +120,57 @@ namespace Odyssey.Graphics.Shapes
 
             string sFill = reader.GetAttribute("Fill");
             string sStroke = reader.GetAttribute("Stroke");
-            Regex resourceRegex = new Regex(@"(?<=\{)\s*(?<name>\w*[^}]*)\s*(?=\})");
             if (!string.IsNullOrEmpty(sFill))
             {
-                var match = resourceRegex.Match(sFill);
-                string fillGradient = match.Groups["name"].Value;
-                FillGradient = e.Theme.GetResource<Gradient>(fillGradient);
+                FillBrushClass = Text.ParseResource(sFill);
             }
             if (!string.IsNullOrEmpty(sStroke))
             {
-                var match = resourceRegex.Match(sStroke);
-                string strokeGradient = match.Groups["name"].Value;
-                StrokeGradient = e.Theme.GetResource<Gradient>(strokeGradient);
+                StrokeBrushClass = Text.ParseResource(sStroke);
             }
 
             if (!reader.IsEmptyElement)
                 reader.ReadEndElement();
         }
+        
+        public void CacheAnimation(string propertyName, IAnimationCurve animationCurve)
+        {
+            var property = (from p in ReflectionHelper.GetProperties(GetType())
+                where p.GetCustomAttribute<CacheAnimationAttribute>() != null
+                && p.Name == propertyName
+                select p).FirstOrDefault();
 
+            if (property != null)
+            {
+                var styleService = Overlay.Services.GetService<IStyleService>();
+                var curve = (Color4Curve) animationCurve;
+                GradientBrush brush = (GradientBrush) property.GetValue(this);
+                var gradientStopCollection = brush.GradientStops.Copy();
+
+                foreach (var gradientStop in brush.GradientStops)
+                {
+                    gradientStop.PropertyChanged += (s, e) => { Fill = styleService.GetResource<Brush>(brush.Name + 0.ToString()); };
+                }
+
+                int index = 0;
+                foreach (var keyframe in curve)
+                {
+                    gradientStopCollection[0].Color = keyframe.Value;
+                    Gradient gradient;
+                    var bLinearGradient = brush as LinearGradientBrush;
+                    if (bLinearGradient != null)
+                    {
+                        gradient = new LinearGradient(brush.Name + index++, bLinearGradient.StartPoint, bLinearGradient.EndPoint,
+                            gradientStopCollection);
+                        var newBrush = Brush.FromColorResource(Device, gradient);
+                        newBrush.Initialize();
+
+                        styleService.AddResource(newBrush);
+                    }
+                }
+
+            }
+
+        }
     }
 }

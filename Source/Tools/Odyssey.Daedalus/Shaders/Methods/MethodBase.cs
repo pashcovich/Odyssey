@@ -1,5 +1,4 @@
-﻿#region License
-
+﻿
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
 // 
 // The Odyssey Engine is free software: you can redistribute it and/or modify
@@ -11,10 +10,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
-#endregion
-
-#region Using Directives
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -25,38 +20,27 @@ using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities.Logging;
 using SharpDX.Serialization;
 
-#endregion
-
 namespace Odyssey.Daedalus.Shaders.Methods
 {
     public abstract partial class MethodBase : IMethod, IDataSerializable
     {
-        #region Private Fields
 
         private bool isIntrinsic;
         private Dictionary<string, MethodReference> methodReferences;
         private Dictionary<TechniqueKey, MethodSignature> methodSignatures;
         private string name;
 
-        #endregion Private Fields
-
-        #region Protected Constructors
+        protected MethodBase(bool isIntrinsic = false)
+            : this()
+        {
+            this.isIntrinsic = isIntrinsic;
+        }
 
         private MethodBase()
         {
             methodSignatures = new Dictionary<TechniqueKey, MethodSignature>();
             methodReferences = new Dictionary<string, MethodReference>();
         }
-
-        protected MethodBase(bool isIntrinsic = false) : this()
-        {
-            this.isIntrinsic = isIntrinsic;
-        }
-
-        #endregion Protected Constructors
-
-        #region Public Properties
-
         public abstract string Body { get; }
 
         public string Definition
@@ -85,34 +69,17 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get { return ActiveSignature.Signature(); }
         }
 
-        #endregion Public Properties
-
-        #region Protected Properties
-
         protected MethodSignature ActiveSignature { get; set; }
-
-        #endregion Protected Properties
-
-        #region Public Methods
-
-        public virtual void Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref name);
-            serializer.Serialize(ref isIntrinsic);
-            serializer.Serialize(ref methodReferences, serializer.Serialize);
-            serializer.Serialize(ref methodSignatures, (ref TechniqueKey key) => serializer.Serialize(ref key),
-                (ref MethodSignature ms) => serializer.Serialize(ref ms));
-        }
 
         public virtual void ActivateSignature(TechniqueKey key)
         {
             try
             {
                 var signatures = from kvp in methodSignatures
-                    where key.Supports(kvp.Key)
-                    let rank = key.Rank(kvp.Key)
-                    orderby rank descending
-                    select new {Rank = rank, Signature = kvp.Value};
+                                 where key.Supports(kvp.Key)
+                                 let rank = key.Rank(kvp.Key)
+                                 orderby rank descending
+                                 select new { Rank = rank, Signature = kvp.Value };
 
                 ActiveSignature = signatures.First().Signature;
             }
@@ -138,15 +105,9 @@ namespace Odyssey.Daedalus.Shaders.Methods
         public string Call(params IVariable[] args)
         {
             var argumentStrings = from variable in args
-                select variable.FullName;
+                                  select variable.FullName;
 
             return ActiveSignature.Call(argumentStrings.ToArray());
-        }
-
-        public void SetFlag(string name, bool value)
-        {
-            System.Type methodType = GetType();
-            methodType.GetProperty(name, BindingFlags.Public | BindingFlags.Instance).SetValue(this, value);
         }
 
         [Pure]
@@ -182,6 +143,19 @@ namespace Odyssey.Daedalus.Shaders.Methods
                 RegisterSignature(signature);
         }
 
+        public virtual void Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref name);
+            serializer.Serialize(ref isIntrinsic);
+            serializer.Serialize(ref methodReferences, serializer.Serialize);
+            serializer.Serialize(ref methodSignatures, (ref TechniqueKey key) => serializer.Serialize(ref key),
+                (ref MethodSignature ms) => serializer.Serialize(ref ms));
+        }
+        public void SetFlag(string name, bool value)
+        {
+            System.Type methodType = GetType();
+            methodType.GetProperty(name, BindingFlags.Public | BindingFlags.Instance).SetValue(this, value);
+        }
         public void SetMethod(string methodName, MethodReference reference)
         {
             System.Type methodType = GetType();
@@ -192,10 +166,6 @@ namespace Odyssey.Daedalus.Shaders.Methods
         {
             return methodSignatures.Any(kvp => kvp.Key.Supports(key));
         }
-
-        #endregion Public Methods
-
-        #region Internal Methods
 
         internal static MethodBase ReadMethod(BinarySerializer serializer)
         {
@@ -222,6 +192,5 @@ namespace Odyssey.Daedalus.Shaders.Methods
             m.Serialize(serializer);
         }
 
-        #endregion Internal Methods
     }
 }

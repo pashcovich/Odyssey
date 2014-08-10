@@ -1,7 +1,6 @@
-﻿using Odyssey.UserInterface.Controls;
+﻿using System;
+using Odyssey.UserInterface.Controls;
 using SharpDX;
-using System;
-using System.Diagnostics.Contracts;
 
 namespace Odyssey.Graphics.Shapes
 {
@@ -25,10 +24,6 @@ namespace Odyssey.Graphics.Shapes
             if (Data == null)
                 throw new InvalidOperationException("'Data' cannot be null");
             ToDispose(Data).Initialize();
-            var initializer = new ShapeInitializer(Device);
-            initializer.Initialize(this);
-            foreach (var resource in initializer.CreatedResources)
-                ToDispose(resource);
         }
     }
 }

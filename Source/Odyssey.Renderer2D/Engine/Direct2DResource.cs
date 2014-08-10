@@ -1,5 +1,6 @@
 ﻿#if !WP8
 
+using Odyssey.Graphics;
 using SharpDX;
 using SharpDX.Direct2D1;
 using System;
@@ -8,11 +9,8 @@ using System.Runtime.InteropServices;
 
 namespace Odyssey.Engine
 {
-    public class Direct2DResource : Component
+    public class Direct2DResource : Component, IResource
     {
-        protected Direct2DResource(string name)
-            : base(name)
-        { }
 
         protected Direct2DResource(string name, Direct2DDevice device)
             : base(name)

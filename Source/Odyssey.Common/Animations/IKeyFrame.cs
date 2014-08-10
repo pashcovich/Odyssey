@@ -2,7 +2,7 @@
 using Odyssey.Graphics;
 using Odyssey.Serialization;
 
-namespace Odyssey.Animation
+namespace Odyssey.Animations
 {
     public interface IKeyFrame
     {

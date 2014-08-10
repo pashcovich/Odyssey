@@ -1,11 +1,29 @@
 ﻿using System;
+using System.ComponentModel;
+using Odyssey.Animations;
+using Odyssey.ViewModel;
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics
 {
-    public class GradientStop : IEquatable<GradientStop>
+    public class GradientStop : ViewModelBase,IEquatable<GradientStop>
     {
-        public Color4 Color { get; set; }
+        private Color4 color;
+
+        internal int Index { get; set; }
+
+        [Animatable]
+        public Color4 Color
+        {
+            get { return color; }
+            set
+            {
+                if (color == value)
+                    return;
+                color = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public float Offset { get; set; }
 
@@ -67,5 +85,6 @@ namespace Odyssey.Graphics.Shapes
         {
             return from == null ? default(SharpDX.Direct2D1.GradientStop) : new SharpDX.Direct2D1.GradientStop() {Color = from.Color, Position = from.Offset};
         }
+
     }
 }

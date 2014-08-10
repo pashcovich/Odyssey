@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Graphics.Shapes
+﻿namespace Odyssey.Graphics
 {
     public enum ExtendMode
     {

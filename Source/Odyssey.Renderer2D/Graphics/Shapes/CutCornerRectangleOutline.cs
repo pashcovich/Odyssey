@@ -56,12 +56,6 @@ namespace Odyssey.Graphics.Shapes
             PolyLine innerShape = ToDispose(PolyLine.New(string.Format("CC.Inner.{0}", Name), Device, outerPoints, FigureBegin.Filled, FigureEnd.Closed));
 
             shape = ToDispose(GeometryGroup.New(string.Format("CC.{0}", Name), Device, FillMode.Alternate, new[] { innerShape, outerShape, }));
-
-            var initializer = new ShapeInitializer(Device);
-            initializer.Initialize(this);
-
-            foreach (var resource in initializer.CreatedResources)
-                ToDispose(resource);
         }
     }
 }

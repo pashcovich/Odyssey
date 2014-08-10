@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Xml;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
 
 namespace Odyssey.Serialization
 {
     public class XmlDeserializationEventArgs : EventArgs
     {
-        public IResourceProvider Theme { get; private set; }
+        public IResourceProvider ResourceProvider { get; private set; }
         public XmlReader XmlReader { get; private set; }
 
-        public XmlDeserializationEventArgs(IResourceProvider theme, XmlReader xmlReader)
+        public XmlDeserializationEventArgs(IResourceProvider resourceProvider, XmlReader xmlReader)
         {
-            Theme = theme;
+            ResourceProvider = resourceProvider;
             XmlReader = xmlReader;
         }
     }

@@ -15,9 +15,9 @@
 
 #region Using Directives
 
+using System.Collections.Generic;
 using Odyssey.Engine;
 using Odyssey.UserInterface.Style;
-using System.Collections.Generic;
 
 #endregion Using Directives
 

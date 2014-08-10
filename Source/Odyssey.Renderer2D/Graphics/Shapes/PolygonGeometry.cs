@@ -1,7 +1,7 @@
-﻿using Odyssey.Engine;
+﻿using System.Linq;
+using Odyssey.Engine;
 using Odyssey.Geometry.Primitives;
 using SharpDX;
-using System.Linq;
 
 namespace Odyssey.Graphics.Shapes
 {

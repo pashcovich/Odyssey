@@ -6,7 +6,7 @@ using Odyssey.Engine;
 using Odyssey.Geometry;
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics
 {
     public class GradientStopCollection : IEnumerable<GradientStop>
     {
@@ -36,6 +36,7 @@ namespace Odyssey.Graphics.Shapes
         {
             Contract.Requires<ArgumentNullException>(gradientStop != null, "gradientStop");
             gradientStops.Add(gradientStop);
+            gradientStop.Index = gradientStops.Count - 1;
         }
 
         public Color4 Evaluate(float offset)
@@ -45,6 +46,16 @@ namespace Odyssey.Graphics.Shapes
             FindStops(offset, out gsFrom, out gsTo);
             
             return Color4.Lerp(gsFrom.Color, gsTo.Color, offset * (gsTo.Offset -gsFrom.Offset));
+        }
+
+        internal GradientStopCollection Copy()
+        {
+            GradientStopCollection collection = new GradientStopCollection();
+            foreach (var gradientStop in gradientStops)
+            {
+                collection.Add(new GradientStop(gradientStop.Color, gradientStop.Offset));
+            }
+            return collection;
         }
 
 

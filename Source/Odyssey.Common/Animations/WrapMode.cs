@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Animation
+namespace Odyssey.Animations
 {
-    public interface IAnimatable
+    public enum WrapMode
     {
-        bool IsAnimatable(string propertyName);
+        Once,
+        Loop
     }
 }

@@ -4,10 +4,9 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using Odyssey.Animation;
+using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
 
 namespace Odyssey.UserInterface.Style
 {
@@ -84,48 +83,47 @@ namespace Odyssey.UserInterface.Style
             reader.ReadStartElement();
             while (reader.IsStartElement())
             {
-                if (reader.Name == sControlStyle)
-                {
-                    ParseControlStyles(reader);
-                }
-                else if (reader.Name == sResources)
+                if (reader.Name == sResources)
                 {
                     ParseResources(reader);
+                }
+                while (reader.IsStartElement(sControlStyle))
+                {
+                    ParseControlStyle(reader);
                 }
             }
         }
 
         void ParseResources(XmlReader reader)
         {
+            reader.ReadStartElement(sResources);
             while (reader.IsStartElement())
             {
-                reader.ReadStartElement();
-                string typeName = String.Format("Odyssey.Graphics.Shapes.{0}, Odyssey.Common", reader.Name);
-                Gradient gradient;
+                string name = reader.Name;
+
+                string typeName = String.Format("Odyssey.Graphics.{0}, Odyssey.Common", name);
+
+                ColorResource colorResource;
                 string resourceName = reader["Name"];
                 try
                 {
-                    gradient = (Gradient)Activator.CreateInstance(Type.GetType(typeName));
+                    colorResource = (ColorResource)Activator.CreateInstance(Type.GetType(typeName));
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentNullException ex)
                 {
                     throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Resource", typeName));
-                } 
-                gradient.DeserializeXml(this, reader);
-                AddResource(resourceName, gradient);
+                }
+                colorResource.DeserializeXml(this, reader);
+                AddResource(resourceName, colorResource);
             }
             reader.ReadEndElement();
         }
 
-        void ParseControlStyles(XmlReader reader)
+        private void ParseControlStyle(XmlReader reader)
         {
-            while (reader.IsStartElement(sControlStyle))
-            {
-                var style = new ControlStyle();
-                AddResource(reader.GetAttribute("Name"), style);
-                style.DeserializeXml(this, reader);
-
-            }
+            var style = new ControlStyle();
+            AddResource(reader.GetAttribute("Name"), style);
+            style.DeserializeXml(this, reader);
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)

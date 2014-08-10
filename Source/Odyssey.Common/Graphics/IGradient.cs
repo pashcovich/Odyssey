@@ -1,6 +1,6 @@
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics
 {
     public interface IGradient 
     {

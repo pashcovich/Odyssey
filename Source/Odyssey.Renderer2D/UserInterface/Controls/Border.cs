@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using SharpDX;
 using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
@@ -24,7 +25,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
-            foreach (IShape shape in VisualState[ActiveStatus])
+            foreach (IShape shape in VisualState)
                 shape.Render();
             base.Render();
         }

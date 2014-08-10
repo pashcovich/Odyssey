@@ -5,17 +5,9 @@ namespace Odyssey.Engine
 {
     public class DeviceInformation
     {
-        #region Fields
-
         private GraphicsAdapter adapter;
-
         private FeatureLevel graphicsProfile;
-
         private PresentationParameters presentationParameters;
-
-        #endregion Fields
-
-        #region Constructors and Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceInformation" /> class.
@@ -25,10 +17,6 @@ namespace Odyssey.Engine
             Adapter = GraphicsAdapter.Default;
             PresentationParameters = new PresentationParameters();
         }
-
-        #endregion Constructors and Destructors
-
-        #region Public Properties
 
         /// <summary>
         /// Gets or sets the adapter.
@@ -47,6 +35,12 @@ namespace Odyssey.Engine
                 adapter = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the creation flags.
+        /// </summary>
+        /// <value>The creation flags.</value>
+        public DeviceCreationFlags DeviceCreationFlags { get; set; }
 
         /// <summary>
         /// Gets or sets the graphics profile.
@@ -83,16 +77,14 @@ namespace Odyssey.Engine
                 presentationParameters = value;
             }
         }
-
         /// <summary>
-        /// Gets or sets the creation flags.
+        /// Clones this instance.
         /// </summary>
-        /// <value>The creation flags.</value>
-        public DeviceCreationFlags DeviceCreationFlags { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods and Operators
+        /// <returns>A new copy-instance of this GraphicsDeviceInformation.</returns>
+        public DeviceInformation Clone()
+        {
+            return new DeviceInformation { Adapter = Adapter, GraphicsProfile = GraphicsProfile, PresentationParameters = PresentationParameters.Clone() };
+        }
 
         /// <summary>Returns a value that indicates whether the current instance is equal to a specified object.</summary>
         /// <param name="obj">The Object to compare with the current GraphicsDeviceInformation.</param>
@@ -144,16 +136,5 @@ namespace Odyssey.Engine
                    ^ presentationParameters.IsFullScreen.GetHashCode()
                    ^ presentationParameters.IsStereo.GetHashCode();
         }
-
-        /// <summary>
-        /// Clones this instance.
-        /// </summary>
-        /// <returns>A new copy-instance of this GraphicsDeviceInformation.</returns>
-        public DeviceInformation Clone()
-        {
-            return new DeviceInformation { Adapter = Adapter, GraphicsProfile = GraphicsProfile, PresentationParameters = PresentationParameters.Clone() };
-        }
-
-        #endregion Public Methods and Operators
     }
 }

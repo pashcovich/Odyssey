@@ -55,15 +55,5 @@ namespace Odyssey.UserInterface
                     yield return contentControl.Content;
             }
         }
-
-        internal static IEnumerable<UIElement> PreOrderContainerVisit(UIElement root)
-        {
-            yield return root;
-            IContainer containerControl = root as IContainer;
-            if (containerControl != null)
-                foreach (UIElement control in containerControl.Controls)
-                    foreach (UIElement ctlChild in PreOrderVisit(control))
-                        yield return ctlChild;
-        }
     }
 }

@@ -67,10 +67,6 @@ namespace Odyssey.Graphics.Shapes
 
             shape = ToDispose(PolyLine.New(string.Format("PL.{0}", Name), Device, points, FigureBegin.Filled, FigureEnd.Closed));
 
-            var initializer = new ShapeInitializer(Device);
-            initializer.Initialize(this);
-            foreach (var resource in initializer.CreatedResources)
-                ToDispose(resource);
         }
     }
 }

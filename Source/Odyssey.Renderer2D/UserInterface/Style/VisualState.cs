@@ -1,56 +1,111 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Odyssey.Animations;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Controls;
+using SharpDX;
 
 namespace Odyssey.UserInterface.Style
 {
-    public class VisualState
+    public sealed class VisualState : Component, IResource, IResourceProvider, IEnumerable<Shape>
     {
-        private readonly Shape[] shapes;
-        private readonly Dictionary<ControlStatus, Shape[]> shapeCache;
+        private Shape[] shapes;
 
-        public IEnumerable<Shape> Shapes { get { return shapes; } }
-
-        public VisualState(IEnumerable<Shape> shapes)
+        private VisualState()
         {
-            this.shapes = shapes.ToArray();
-            shapeCache = new Dictionary<ControlStatus, Shape[]>();
         }
 
-        public void Initialize(Controls.Control control)
+        public void Initialize()
         {
-            var enabledShapes = new Shape[shapes.Length];
-
-            for (int i = 0; i < shapes.Length; i++)
+            foreach (var shape in shapes)
             {
-                var shape = shapes[i];
-                var shapeCopy = (Shape) shape.Copy();
-                shapeCopy.Width = control.Width*shape.Width;
-                shapeCopy.Height = control.Height*shape.Height;
-                shapeCopy.Parent = control;
-                shapeCopy.DesignMode = false;
-                shapeCopy.Initialize();
-                enabledShapes[i] = shapeCopy;
+                ToDispose(shape);
+                shape.Initialize();
             }
+        }
 
-            shapeCache.Add(ControlStatus.Enabled, enabledShapes);
+        internal static VisualState GenerateVisualStateForControl(Control control, VisualStateDefinition visualStateDefinition)
+        {
+            var visualState = new VisualState();
+
+            List<Shape> shapeList = new List<Shape>();
+            foreach (var shape in visualStateDefinition.Shapes)
+            {
+                var newShape = (Shape)shape.Copy();
+                newShape.Width = control.Width * shape.Width;
+                newShape.Height = control.Height * shape.Height;
+                newShape.Parent = control;
+                newShape.DesignMode = false;
+                newShape.Position = new Vector2(control.Width, control.Height) * shape.Position;
+                shapeList.Add(newShape);
+
+                if (!visualStateDefinition.Animations.Any())
+                    continue;
+
+                var attachedAnimations = from animation in visualStateDefinition.Animations
+                    from curve in animation.Curves
+                    where curve.TargetName == newShape.Name
+                    select animation;
+
+                control.AnimationController.AddAnimations(attachedAnimations);
+            }
+            visualState.shapes = shapeList.ToArray();
+            return visualState;
         }
 
         public void Update()
         {
-            foreach (Shape shape in AllShapes)
+            foreach (Shape shape in shapes)
                 shape.Layout();
         }
 
-        public IEnumerable<Shape> this[ControlStatus status]
+        #region IResourceProvider
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
         {
-            get { return shapeCache[status]; }
+            return shapes.FirstOrDefault(s => s.Name == resourceName) as TResource;
         }
 
-        private IEnumerable<Shape> AllShapes
+        IEnumerable<IResource> IResourceProvider.Resources
         {
-            get { return shapeCache.Values.SelectMany(shapeList => shapeList); }
+            get { return shapes; }
         }
+
+        public bool ContainsResource(string resourceName)
+        {
+            return shapes.Any(s=> s.Name == resourceName);
+        }
+        #endregion
+
+        public Shape this[string shapeName]
+        {
+            get { return shapes.FirstOrDefault(s => s.Name == shapeName); }
+        }
+
+        public Shape this[int index]
+        {
+            get { return shapes[index]; }
+        }
+
+
+        #region IEnumerable<Shape>
+
+        public IEnumerator<Shape> GetEnumerator()
+        {
+            foreach (Shape s in shapes)
+                yield return s;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return shapes.GetEnumerator();
+        }
+
+        #endregion
+
+
+        
     }
 }

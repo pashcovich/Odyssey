@@ -61,6 +61,7 @@ namespace Odyssey.Talos.Systems
             {
                 var cUserInterface = entity.GetComponent<UserInterfaceComponent>(tUserInterface.KeyPart);
                 cUserInterface.UserInterfaceState.Update();
+                cUserInterface.Overlay.Update(time);
             }
         }
     }

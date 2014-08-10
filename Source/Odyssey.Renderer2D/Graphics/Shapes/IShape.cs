@@ -7,9 +7,9 @@ namespace Odyssey.Graphics.Shapes
     {
         RectangleF BoundingRectangle { get; }
 
-        Gradient FillGradient { get; set; }
+        Brush Fill { get; }
 
-        Gradient StrokeGradient { get; set; }
+        Brush Stroke { get; }
 
         float StrokeThickness { get; set; }
     }

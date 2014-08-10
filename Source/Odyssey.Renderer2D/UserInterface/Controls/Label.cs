@@ -15,10 +15,13 @@
 
 #region Using Directives
 
+using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using Brush = Odyssey.Graphics.Brush;
+using SolidColorBrush = Odyssey.Graphics.SolidColorBrush;
 using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
 
 #endregion Using Directives
@@ -28,8 +31,9 @@ namespace Odyssey.UserInterface.Controls
     public class Label : LabelBase
     {
         private const string DefaultTextClass = "Default";
-        private SolidColorBrush textBrush;
         private TextFormat textFormat;
+
+        protected Brush Foreground { get; set; }
 
         public Label()
             : base(DefaultTextClass)
@@ -50,7 +54,7 @@ namespace Odyssey.UserInterface.Controls
         public override void Render()
         {
             DeviceContext context = Device;
-            context.DrawText(Text, textFormat, BoundingRectangle, textBrush);
+            context.DrawText(Text, textFormat, BoundingRectangle, Foreground);
         }
 
         protected override void OnInitializing(ControlEventArgs e)
@@ -59,7 +63,8 @@ namespace Odyssey.UserInterface.Controls
             if (TextDescription == default(TextDescription))
                 ApplyTextDescription();
 
-            textBrush = ToDispose(new SolidColorBrush(context, TextDescription.Color));
+            Foreground = ToDispose(SolidColorBrush.New(string.Format("UniformFill.{0}", Name), Device, new SolidColor(string.Format("UniformFill.{0}", Name), TextDescription.Color)));
+            Foreground.Initialize();
             textFormat = ToDispose(TextDescription.ToTextFormat(Device.Services));
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
             if (string.IsNullOrEmpty(Text))

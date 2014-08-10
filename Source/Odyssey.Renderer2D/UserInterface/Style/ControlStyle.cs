@@ -1,165 +1,86 @@
-#region #Disclaimer
+#region License
 
-// /* 
-//  * Timer
-//  *
-//  * Created on 21 August 2007
-//  * Last update on 29 July 2010
-//  * 
-//  * Author: Adalberto L. Simeone (Taranto, Italy)
-//  * E-Mail: avengerdragon@gmail.com
-//  * Website: http://www.avengersutd.com
-//  *
-//  * Part of the Odyssey Engine.
-//  *
-//  * This source code is Intellectual property of the Author
-//  * and is released under the Creative Commons Attribution 
-//  * NonCommercial License, available at:
-//  * http://creativecommons.org/licenses/by-nc/3.0/ 
-//  * You can alter and use this source code as you wish, 
-//  * provided that you do not use the results in commercial
-//  * projects, without the express and written consent of
-//  * the Author.
-//  *
-//  */
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
 
 #endregion
 
-#region Using directives
+#region Using Directives
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Xml;
-using System.Xml.Serialization;
-using Odyssey.Content;
-using Odyssey.Geometry.Primitives;
-using Odyssey.Animation;
+using Odyssey.Animations;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
-using Odyssey.UserInterface.Serialization;
-using Odyssey.UserInterface.Style;
-using Odyssey.UserInterface.Xml;
-using SharpDX;
 
 #endregion
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class ControlStyle : ISerializableResource, IResource, IResourceProvider
+    public sealed class ControlStyle : ISerializableResource, IResource
     {
-        private const string sShapes = "Shapes";
-        private const string sVisualState = "VisualState";
-        internal const string Error = "Error";
         internal const string Empty = "Empty";
+        internal const string Error = "Error";
 
-        #region Properties
+        private VisualStateDefinition visualStateDefinition;
 
-        public string Name { get; internal set; }
-        public string TextStyleClass { get; internal set; }
-        public float Width { get; internal set; }
-        public float Height { get; internal set; }
-        public Thickness Margin { get; internal set; }
-        public Thickness Padding { get; internal set; }
+        public float Width { get; private set; }
+        public float Height { get; private set; }
+        public Thickness Margin { get; private set; }
+        public Thickness Padding { get; private set; }
+        public string TextStyleClass { get; private set; }
 
-        #endregion
+        public string Name { get; private set; }
 
-        public IEnumerable<Shape> VisualStateDefinition { get; private set; }
-
-        public void DeserializeXml(IResourceProvider theme, XmlReader reader)
+        public VisualState CreateVisualState(Control control)
         {
-            Name = reader.GetAttribute("Name");
+            return VisualState.GenerateVisualStateForControl(control, visualStateDefinition);
+        }
 
-            string margin = reader.GetAttribute("Margin");
+        #region ISerializableResource
+        public void DeserializeXml(IResourceProvider theme, XmlReader xmlReader)
+        {
+            const string sVisualState = "VisualState";
+            Name = xmlReader.GetAttribute("Name");
+
+            string margin = xmlReader.GetAttribute("Margin");
             Margin = String.IsNullOrEmpty(margin) ? Thickness.Empty : StyleHelper.DecodeThickness(margin);
 
-            string textStyleClass = reader.GetAttribute("TextStyleClass");
+            string textStyleClass = xmlReader.GetAttribute("TextStyleClass");
             TextStyleClass = String.IsNullOrEmpty(textStyleClass) ? "Default" : textStyleClass;
 
-            string padding = reader.GetAttribute("Padding");
+            string padding = xmlReader.GetAttribute("Padding");
             Padding = String.IsNullOrEmpty(padding) ? Thickness.Empty : StyleHelper.DecodeThickness(padding);
 
-            string width = reader.GetAttribute("Width");
-            string height = reader.GetAttribute("Height");
+            string width = xmlReader.GetAttribute("Width");
+            string height = xmlReader.GetAttribute("Height");
             Width = String.IsNullOrEmpty(width) ? 0 : Single.Parse(width);
             Height = String.IsNullOrEmpty(height) ? 0 : Single.Parse(height);
 
-            List<Shape> shapes = new List<Shape>();
-
-            if (!reader.ReadToDescendant(sVisualState))
+            if (!xmlReader.ReadToDescendant(sVisualState))
                 throw new InvalidOperationException(String.Format("{0}' element not found", sVisualState));
 
-            if (!reader.ReadToDescendant(sShapes))
-                throw new InvalidOperationException(String.Format("{0}' element not found", sShapes));
-
-            // Advances reader to shape collection
-            reader.ReadStartElement();
-
-            while (reader.IsStartElement())
-            {
-                string typeName = string.Format("Odyssey.Graphics.Shapes.{0}", reader.Name);
-                try
-                {
-                    var shape = (Shape)Activator.CreateInstance(Type.GetType(typeName));
-                    shape.DeserializeXml(theme, reader);
-                    shapes.Add(shape);
-                }
-                catch (ArgumentException ex)
-                {
-                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Shape", typeName));
-                }
-                reader.Read();
-            }
-            reader.ReadEndElement();
-            VisualStateDefinition = shapes;
-            ParseAnimations(theme, reader);
+            visualStateDefinition = new VisualStateDefinition();
+            visualStateDefinition.DeserializeXml(theme, xmlReader);
+            xmlReader.ReadEndElement();
         }
 
-        private void ParseAnimations(IResourceProvider theme, XmlReader reader)
-        {
-            const string sAnimation = "Animation";
-            const string sAnimationCurve = "AnimationCurve";
-            string sStatus = reader.GetAttribute("Name");
-            ControlStatus cStatus = (ControlStatus)Enum.Parse(typeof(ControlStatus), sStatus, true);
-            reader.ReadStartElement();
-
-            if (!reader.IsStartElement(sAnimation))
-                throw new InvalidOperationException(string.Format("{0} element not found", sAnimation));
-
-            if (!reader.ReadToDescendant(sAnimationCurve))
-                throw new InvalidOperationException(string.Format("{0} element not found", sAnimationCurve));
-
-            var animationCurve = new AnimationCurve();
-            animationCurve.DeserializeXml(theme, reader);
-
-            //while (reader.IsStartElement())
-            //{
-
-            //}
-
-        }
-
-
-        public void SerializeXml(IResourceProvider theme, XmlWriter writer)
+        public void SerializeXml(IResourceProvider theme, XmlWriter xmlWriter)
         {
             throw new NotImplementedException();
-        }
-
-        TResource IResourceProvider.GetResource<TResource>(string resourceName)
-        {
-            var resource = VisualStateDefinition.FirstOrDefault(s => s.Name == resourceName);
-            if (resource == null)
-                throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
-            TResource resultResource = resource as TResource;
-            if (resultResource == null)
-                throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
-                    resourceName, resource.GetType().Name, typeof(TResource).Name));
-            return resultResource;
-        }
-
-        IEnumerable<IResource> IResourceProvider.Resources { get { return VisualStateDefinition; } }
+        } 
+        #endregion
+       
     }
 }

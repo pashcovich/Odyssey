@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.UserInterface.Controls;
+﻿using Odyssey.UserInterface.Controls;
 using SharpDX;
 
 namespace Odyssey.Graphics.Shapes
@@ -23,10 +18,5 @@ namespace Odyssey.Graphics.Shapes
             Device.DrawLine(this, Stroke, StrokeThickness);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            foreach (var resource in ShapeInitializer.CreateResources(Device, this))
-                ToDispose(resource);
-        }
     }
 }

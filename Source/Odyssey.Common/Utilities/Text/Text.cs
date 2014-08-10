@@ -9,6 +9,8 @@ namespace Odyssey.Utilities.Text
 {
     public static class Text
     {
+        static readonly Regex resourceRegex = new Regex(@"(?<=\{)\s*(?<name>\w*[^}]*)\s*(?=\})");
+
         public static string GetCapitalLetters(string value)
         {
             Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(value));
@@ -40,8 +42,11 @@ namespace Odyssey.Utilities.Text
             return BitConverter.ToInt32(new byte[] { bytes[3], bytes[2], bytes[1], bytes[0] }, 0);
         }
 
-        internal static Color4 DecodeColor4Abgr(string color)
+        internal static Color4 DecodeColor4Abgr(string color, bool stripHashSymbol = true)
         {
+            if (stripHashSymbol)
+                color = color.Substring(1);
+
             return string.IsNullOrEmpty(color)
                 ? new Color4(0, 0, 0, 0)
                 : new Color4(AbgrToRgba(Int32.Parse(color, NumberStyles.HexNumber)));
@@ -85,5 +90,14 @@ namespace Odyssey.Utilities.Text
         {
             return String.Format(CultureInfo.InvariantCulture, "X:{0:F0} Y:{1:F0} Z:{2:F0}", v.X, v.Y, v.Z);
         }
+
+        internal static string ParseResource(string s)
+        {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(s), "String cannot be null");
+           
+            var match = resourceRegex.Match(s);
+            return match.Success ? match.Groups["name"].Value : null;
+        }
+
     }
 }

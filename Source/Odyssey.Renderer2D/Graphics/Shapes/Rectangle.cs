@@ -12,14 +12,9 @@ namespace Odyssey.Graphics.Shapes
 
         public override void Render()
         {
+            Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
             Device.FillRectangle(this, Fill);
             Device.DrawRectangle(this, Stroke, StrokeThickness);
-        }
-
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            foreach (var resource in ShapeInitializer.CreateResources(Device, this))
-                ToDispose(resource);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 using Odyssey.Graphics;
 using Odyssey.Serialization;
 
-namespace Odyssey.Animation
+namespace Odyssey.Animations
 {
     public abstract class KeyFrame<T> : IComparable<KeyFrame<T>>, IKeyFrame, ISerializableResource
     {
@@ -23,25 +23,16 @@ namespace Odyssey.Animation
             set { Value = (T)value; }
         }
 
-        protected static float Map(TimeSpan start, TimeSpan end, TimeSpan value)
-        {
-            float low = (float)(start.TotalMilliseconds);
-            float high = (float)(end.TotalMilliseconds);
-            float time = (float)(value.TotalMilliseconds);
-            return (time - low) / (high - low);
-        }
-
-
 
         #region IStyleSerializable
-        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter writer)
+        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
         {
             throw new NotImplementedException();
         }
 
-        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader reader)
+        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
         {
-            OnReadXml(new XmlDeserializationEventArgs(resourceProvider, reader));
+            OnReadXml(new XmlDeserializationEventArgs(resourceProvider, xmlReader));
         }
 
         protected virtual void OnReadXml(XmlDeserializationEventArgs e)
@@ -51,7 +42,5 @@ namespace Odyssey.Animation
         }
 
         #endregion
-
-
     }
 }

@@ -35,6 +35,7 @@ namespace Odyssey.UserInterface.Controls
                 Content = new Label() { Text = Name };
                 Content.Initialize();
             }
+            ToDispose(Content);
         }
 
         protected override void OnPointerEnter(PointerEventArgs e)

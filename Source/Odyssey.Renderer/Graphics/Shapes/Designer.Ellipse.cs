@@ -5,7 +5,7 @@ using Odyssey.Geometry.Primitives;
 using SharpDX;
 using Odyssey.Geometry;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics
 {
     public partial class Designer
     {
@@ -243,7 +243,7 @@ namespace Odyssey.Graphics.Shapes
             EllipseColorShader shader;
             switch (gradient.Type)
             {
-                case GradientType.Uniform:
+                case GradientType.SolidColor:
                     shader = EllipseUniform;
                     break;
 
@@ -277,7 +277,7 @@ namespace Odyssey.Graphics.Shapes
             EllipseColorShader shader;
             switch (gradient.Type)
             {
-                case GradientType.Uniform:
+                case GradientType.SolidColor:
                     shader = EllipseUniform;
                     break;
                 case GradientType.Radial:

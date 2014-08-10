@@ -6,7 +6,7 @@ using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics
 {
     public class LinearGradient : Gradient
     {
@@ -52,11 +52,6 @@ namespace Odyssey.Graphics.Shapes
             startPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.DecodeFloatVector2(sStart);
             endPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.DecodeFloatVector2(sEnd);
             base.OnReadXml(e);
-        }
-
-        internal override Gradient Copy()
-        {
-            return new LinearGradient(Name, startPoint, endPoint, GradientStops);
         }
     }
 }

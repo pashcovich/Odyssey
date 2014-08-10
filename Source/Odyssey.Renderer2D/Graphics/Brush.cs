@@ -15,12 +15,15 @@
 
 #region Using Directives
 
+using System;
+using System.Linq;
 using Odyssey.Engine;
 using SharpDX;
+using Odyssey.Animations;
 
 #endregion Using Directives
 
-namespace Odyssey.UserInterface.Style
+namespace Odyssey.Graphics
 {
     public abstract class Brush : Direct2DResource
     {
@@ -49,8 +52,23 @@ namespace Odyssey.UserInterface.Style
         /// <param name="from">From the Texture1D.</param>
         public static implicit operator SharpDX.Direct2D1.Brush(Brush from)
         {
-            // Don't bother with multithreading here
             return from == null ? null : from.Resource ?? null;
         }
+
+        internal static Brush FromColorResource(Direct2DDevice device, ColorResource colorResource)
+        {
+            switch (colorResource.Type)
+            {
+                case GradientType.SolidColor:
+                    return SolidColorBrush.New(colorResource.Name, device, (SolidColor)colorResource);
+                case GradientType.Linear:
+                    return LinearGradientBrush.New(colorResource.Name, device, (LinearGradient)colorResource);
+                case GradientType.Radial:
+                default:
+                    throw new ArgumentOutOfRangeException(string.Format("Brush type '{0}' is not valid", colorResource.Type));
+            }
+        }
+
+
     }
 }

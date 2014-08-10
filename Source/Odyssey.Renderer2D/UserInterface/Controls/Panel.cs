@@ -16,7 +16,6 @@
 #region Using Directives
 
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
 using SharpDX;
 using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
 
