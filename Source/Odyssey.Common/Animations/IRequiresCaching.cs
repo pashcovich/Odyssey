@@ -8,6 +8,6 @@ namespace Odyssey.Animations
 {
     public interface IRequiresCaching
     {
-        void CacheAnimation(string property, IAnimationCurve animationCurve);
+        IAnimationCurve CacheAnimation(string property, IAnimationCurve animationCurve);
     }
 }

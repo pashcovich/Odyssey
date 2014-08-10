@@ -45,9 +45,9 @@ namespace Odyssey.Graphics.Shapes
         internal string StrokeBrushClass { get; set; }
 
         [CacheAnimation]
-        public Brush Fill { get; private set; }
+        public Brush Fill { get; set; }
         [CacheAnimation]
-        public Brush Stroke { get; private set; }
+        public Brush Stroke { get; set; }
         
         public float StrokeThickness { get; set; }
 
@@ -78,29 +78,32 @@ namespace Odyssey.Graphics.Shapes
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            var fillColor = Overlay.Theme.GetResource<ColorResource>(FillBrushClass);
-            var strokeColor = Overlay.Theme.GetResource<ColorResource>(StrokeBrushClass);
-
             var styleService = Device.Services.GetService<IStyleService>();
-            if (styleService.ContainsResource(FillBrushClass))
-                Fill = styleService.GetResource<Brush>(FillBrushClass);
-            else
+            if (!string.IsNullOrEmpty(FillBrushClass))
             {
-                Fill = Brush.FromColorResource(Device, fillColor);
-                styleService.AddResource(Fill);
+                var fillColor = Overlay.Theme.GetResource<ColorResource>(FillBrushClass);
+                if (styleService.ContainsResource(FillBrushClass))
+                    Fill = styleService.GetResource<Brush>(FillBrushClass);
+                else
+                {
+                    Fill = Brush.FromColorResource(Device, fillColor);
+                    styleService.AddResource(Fill);
+                }
+                Fill.Initialize();
             }
 
-            if (styleService.ContainsResource(StrokeBrushClass))
-                Stroke = styleService.GetResource<Brush>(StrokeBrushClass);
-            else
+            if (!string.IsNullOrEmpty(StrokeBrushClass))
             {
-                Stroke = Brush.FromColorResource(Device, strokeColor);
-                styleService.AddResource(Stroke);
+                var strokeColor = Overlay.Theme.GetResource<ColorResource>(StrokeBrushClass);
+                if (styleService.ContainsResource(StrokeBrushClass))
+                    Stroke = styleService.GetResource<Brush>(StrokeBrushClass);
+                else
+                {
+                    Stroke = Brush.FromColorResource(Device, strokeColor);
+                    styleService.AddResource(Stroke);
+                }
+                Stroke.Initialize();
             }
-
-            Fill.Initialize();
-            Stroke.Initialize();
-
         }
 
 
@@ -133,7 +136,7 @@ namespace Odyssey.Graphics.Shapes
                 reader.ReadEndElement();
         }
         
-        public void CacheAnimation(string propertyName, IAnimationCurve animationCurve)
+        public IAnimationCurve CacheAnimation(string propertyName, IAnimationCurve animationCurve)
         {
             var property = (from p in ReflectionHelper.GetProperties(GetType())
                 where p.GetCustomAttribute<CacheAnimationAttribute>() != null
@@ -142,34 +145,14 @@ namespace Odyssey.Graphics.Shapes
 
             if (property != null)
             {
-                var styleService = Overlay.Services.GetService<IStyleService>();
-                var curve = (Color4Curve) animationCurve;
-                GradientBrush brush = (GradientBrush) property.GetValue(this);
-                var gradientStopCollection = brush.GradientStops.Copy();
+                object value = property.GetValue(this);
 
-                foreach (var gradientStop in brush.GradientStops)
-                {
-                    gradientStop.PropertyChanged += (s, e) => { Fill = styleService.GetResource<Brush>(brush.Name + 0.ToString()); };
-                }
-
-                int index = 0;
-                foreach (var keyframe in curve)
-                {
-                    gradientStopCollection[0].Color = keyframe.Value;
-                    Gradient gradient;
-                    var bLinearGradient = brush as LinearGradientBrush;
-                    if (bLinearGradient != null)
-                    {
-                        gradient = new LinearGradient(brush.Name + index++, bLinearGradient.StartPoint, bLinearGradient.EndPoint,
-                            gradientStopCollection);
-                        var newBrush = Brush.FromColorResource(Device, gradient);
-                        newBrush.Initialize();
-
-                        styleService.AddResource(newBrush);
-                    }
-                }
-
+                var bLinearGradient = value as LinearGradientBrush;
+                if (bLinearGradient != null)
+                    return LinearGradientBrushCurve.FromColor4Curve(Device, (Color4Curve)animationCurve, bLinearGradient);
             }
+
+            return null;
 
         }
     }

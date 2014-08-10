@@ -58,38 +58,42 @@ namespace Odyssey.Animations
         public void Initialize()
         {
             Contract.Requires<InvalidOperationException>(Target!=null, "Target cannot be null");
-
             foreach (var animation in animations.Values)
             {
-                foreach (var curve in animation.Curves)
+                List<IAnimationCurve> curves = new List<IAnimationCurve>(animation.Curves);
+                foreach (IAnimationCurve curve in curves)
                 {
-                    if (walkers.ContainsKey(curve.TargetProperty))
-                        continue;
+                    object realTarget;
 
-                    ObjectWalker walker;
                     if (string.IsNullOrEmpty(curve.TargetName))
-                        walker = new ObjectWalker(Target, curve.TargetProperty);
+                        realTarget = Target;
                     else
                     {
                         var resourceProvider = Target as IResourceProvider;
                         if (resourceProvider != null)
-                            walker = new ObjectWalker(resourceProvider.GetResource<IResource>(curve.TargetName), curve.TargetProperty);
+                            realTarget = resourceProvider.GetResource<IResource>(curve.TargetName);
                         else
-                            throw new InvalidOperationException(string.Format("`Target` does not implement {0}", typeof(IResourceProvider)));
+                            throw new InvalidOperationException(string.Format("`Target` does not implement {0}", typeof (IResourceProvider)));
                     }
 
-                    if (walker.CurrentMember.GetCustomAttribute<AnimatableAttribute>() == null)
-                        throw new InvalidOperationException(string.Format("Property '{0}' is not marked as Animatable", walker.CurrentMember.Name));
-
-                    walkers.Add(curve.TargetProperty, walker);
-
-                    var requiresCaching = walker.Root as IRequiresCaching;
+                    ObjectWalker walker;
+                    var requiresCaching = realTarget as IRequiresCaching;
                     if (requiresCaching != null)
-                        requiresCaching.CacheAnimation(walker.FirstInstruction.Value.Property.Name, curve);
-                    
+                    {
+                        string propertyName = curve.TargetProperty.Split('.')[0];
+                        var newCurve = requiresCaching.CacheAnimation(propertyName, curve);
+                        animation.RemoveCurve(curve.TargetProperty);
+                        animation.AddCurve(newCurve);
+                        walker = new ObjectWalker(requiresCaching, newCurve.TargetProperty);
+                        walkers.Add(newCurve.TargetProperty, walker);
+                    }
+                    else
+                    {
+                        walker = new ObjectWalker(realTarget, curve.TargetProperty);
+                        walkers.Add(curve.TargetProperty, walker);
+                    }
                 }
             }
-
         }
 
         public void Play()
@@ -131,7 +135,7 @@ namespace Odyssey.Animations
             {
                 foreach (var curve in animation.Curves)
                 {
-                    var value = curve.Evaluate(elapsedTime);
+                    var value = curve.Evaluate(elapsedTime, animation.Speed > 0);
                     var walker = GetWalker(curve.TargetProperty);
                     walker.WriteValue(value);
                     elapsedTime += time.ElapsedApplicationTime;
@@ -144,6 +148,11 @@ namespace Odyssey.Animations
         internal ObjectWalker GetWalker(string targetProperty)
         {
             return walkers[targetProperty];
+        }
+
+        public Animation this[string animationName]
+        {
+            get { return animations[animationName]; }
         }
     }
 }

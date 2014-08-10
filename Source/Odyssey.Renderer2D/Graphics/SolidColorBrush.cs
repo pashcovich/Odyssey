@@ -8,7 +8,7 @@ using SharpDX.Direct2D1;
 
 namespace Odyssey.Graphics
 {
-    internal class SolidColorBrush : Brush
+    public sealed class SolidColorBrush : Brush
     {
         private readonly SolidColor solidColorBrush;
         private new readonly SharpDX.Direct2D1.SolidColorBrush Resource;

@@ -8,16 +8,20 @@ namespace Odyssey.Graphics
 {
     public abstract class ColorResource : ISerializableResource, IResource
     {
-        protected ColorResource() { }
+        private readonly GradientType type;
 
         protected ColorResource(string name, GradientType type)
         {
             Name = name;
-            Type = type;
+            this.type = type;
         }
 
-        public string Name { get; protected set; }
-        public GradientType Type { get; protected set; }
+        public string Name { get; private set; }
+
+        public GradientType Type
+        {
+            get { return type; }
+        }
 
         public void SerializeXml(IResourceProvider theme, XmlWriter xmlWriter)
         {
@@ -38,8 +42,8 @@ namespace Odyssey.Graphics
                 IXmlLineInfo xmlInfo = (IXmlLineInfo)reader;
                 throw new InvalidOperationException(string.Format("({0},{1}) 'Name' cannot be null", xmlInfo.LineNumber, xmlInfo.LinePosition));
             }
-            
-            reader.ReadStartElement();
+
+            // Derived classes will read the other properties
         }
 
         protected virtual void OnWriteXml(XmlSerializationEventArgs e)

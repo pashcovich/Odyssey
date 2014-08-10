@@ -39,7 +39,7 @@ namespace Odyssey.Utilities.Text
         internal static int AbgrToRgba(int abgr)
         {
             byte[] bytes = BitConverter.GetBytes(abgr);
-            return BitConverter.ToInt32(new byte[] { bytes[3], bytes[2], bytes[1], bytes[0] }, 0);
+            return BitConverter.ToInt32(new byte[] { bytes[2], bytes[1], bytes[0], bytes[3]}, 0);
         }
 
         internal static Color4 DecodeColor4Abgr(string color, bool stripHashSymbol = true)

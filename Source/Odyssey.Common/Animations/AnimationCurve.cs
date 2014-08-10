@@ -13,7 +13,7 @@ using Odyssey.Utilities.Text;
 
 namespace Odyssey.Animations
 {
-    public abstract class AnimationCurve<TKeyFrame> : ISerializableResource, IAnimationCurve, IEnumerable<TKeyFrame> 
+    public abstract class AnimationCurve<TKeyFrame> : ISerializableResource, IResource, IAnimationCurve, IEnumerable<TKeyFrame> 
         where TKeyFrame : class, IKeyFrame
     {
         public delegate object CurveFunction(TKeyFrame start, TKeyFrame end, TimeSpan time);
@@ -27,8 +27,9 @@ namespace Odyssey.Animations
 
         /// <inheritdoc/>
         public float Duration { get { return (float)keyFrames.Max().Time.TotalSeconds; } }
-        public string TargetProperty { get; private set; }
-        public string TargetName { get; private set; }
+        public string TargetProperty { get; internal set; }
+        public string TargetName { get; internal set; }
+        public string Name { get; set; }
 
         public CurveFunction Function { get; set; }
 
@@ -49,11 +50,21 @@ namespace Odyssey.Animations
             keyFrames.Clear();
         }
 
-        public object Evaluate(TimeSpan time)
+        public object Evaluate(TimeSpan time, bool forward = true)
         {
             Contract.Requires<InvalidOperationException>(Length > 0, "Animation must contain at least one KeyFrames");
-            var start = keyFrames.Last(kf => kf.Time <= time);
-            var end = keyFrames.FirstOrDefault(kf => kf.Time > time) ?? keyFrames.First(kf => kf.Time == time);
+            TKeyFrame start;
+            TKeyFrame end;
+            if (forward)
+            {
+                start = keyFrames.Last(kf => kf.Time <= time);
+                end = keyFrames.FirstOrDefault(kf => kf.Time > time) ?? keyFrames.First(kf => kf.Time == time);
+            }
+            else
+            {
+                start = keyFrames.LastOrDefault(kf => kf.Time > time) ?? keyFrames.First(kf => kf.Time == time);
+                end = keyFrames.First(kf => kf.Time <= time);
+            }
 
             return Function(start, end, time);
         }

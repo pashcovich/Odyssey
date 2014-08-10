@@ -10,30 +10,37 @@ namespace Odyssey.Animations
 {
     public class Animation : ISerializableResource, IResource
     {
-        readonly Dictionary<string, IAnimationCurve> IAnimationCurves;
+        readonly Dictionary<string, IAnimationCurve> animationCurves;
 
         public string Name { get; set; }
-        public float Duration { get { return IAnimationCurves.Values.Max(a => a.Duration); } }
+        public float Duration { get { return animationCurves.Values.Max(a => a.Duration); } }
         public WrapMode WrapMode { get; set; }
+        public float Speed { get; set; }
 
-        public IEnumerable<IAnimationCurve> Curves { get { return IAnimationCurves.Values; } }
+        public IEnumerable<IAnimationCurve> Curves { get { return animationCurves.Values; } }
 
         public Animation()
         {
-            IAnimationCurves = new Dictionary<string, IAnimationCurve>();
+            animationCurves = new Dictionary<string, IAnimationCurve>();
+            Speed = 1.0f;
         }
 
         [Pure]
         public bool Contains(IAnimationCurve animationCurve)
         {
             Contract.Requires<ArgumentNullException>(animationCurve != null, "animationCurve");
-            return IAnimationCurves.ContainsKey(animationCurve.TargetProperty);
+            return animationCurves.ContainsKey(animationCurve.TargetProperty);
         }
 
         public void AddCurve(IAnimationCurve animationCurve)
         {
-            Contract.Requires<ArgumentException>(!Contains(animationCurve), "curve");
-            IAnimationCurves.Add(animationCurve.TargetProperty, animationCurve);
+            Contract.Requires<ArgumentException>(!Contains(animationCurve), "animationCurve");
+            animationCurves.Add(animationCurve.TargetProperty, animationCurve);
+        }
+
+        public void RemoveCurve(string key)
+        {
+            animationCurves.Remove(key);
         }
 
         #region ISerializableResource
@@ -60,7 +67,9 @@ namespace Odyssey.Animations
                     throw new InvalidOperationException(string.Format("Animation type `{0}` is not valid", animationType));
                 }
                 curve.DeserializeXml(resourceProvider, xmlReader);
-                AddCurve((IAnimationCurve)curve);
+                var animationCurve = (IAnimationCurve)curve;
+                animationCurve.Name = string.Format("{0}Curve{1:D2}", Name, animationCurves.Count-1);
+                AddCurve(animationCurve);
             }
             
             xmlReader.ReadEndElement();

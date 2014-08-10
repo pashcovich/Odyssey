@@ -136,7 +136,6 @@ namespace Odyssey.UserInterface.Controls
                     uiElement.Dispose();
             }
             // TODO improve FontCollection disposal
-            //StyleService.FontCollection.Dispose();
             IsInited = false;
         }
 

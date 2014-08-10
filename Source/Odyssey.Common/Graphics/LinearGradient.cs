@@ -8,29 +8,22 @@ using SharpDX;
 
 namespace Odyssey.Graphics
 {
-    public class LinearGradient : Gradient
+    public sealed class LinearGradient : Gradient, IEquatable<LinearGradient>
     {
-        private Vector2 startPoint;
-        private Vector2 endPoint;
-
-        public Vector2 StartPoint
-        {
-            get { return startPoint; }
-        }
-
-        public Vector2 EndPoint
-        {
-            get { return endPoint; }
-        }
+        private static int count = 0;
+        public Vector2 StartPoint { get; private set; }
+        public Vector2 EndPoint { get; private set; }
 
         public LinearGradient()
-        { }
+            : base(string.Format("{0}{1:D2}", typeof(LinearGradient).Name, ++count), GradientType.Linear)
+        {
+        }
 
-        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, GradientStopCollection gradientStops) : base(name, gradientStops, GradientType.Linear)
+        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode = ExtendMode.Clamp) : base(name, gradientStops, extendMode, GradientType.Linear)
         {
             Contract.Requires<ArgumentNullException>(gradientStops != null, "gradientStops");
-            this.startPoint = startPoint;
-            this.endPoint = endPoint;
+            this.StartPoint = startPoint;
+            this.EndPoint = endPoint;
         }
 
         public static LinearGradient Vertical(string name, IEnumerable<GradientStop> gradientStops)
@@ -46,12 +39,41 @@ namespace Odyssey.Graphics
         protected override void OnReadXml(XmlDeserializationEventArgs e)
         {
             var reader = e.XmlReader;
-            Type = GradientType.Linear;
             string sStart = reader.GetAttribute("StartPoint");
             string sEnd = reader.GetAttribute("EndPoint");
-            startPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.DecodeFloatVector2(sStart);
-            endPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.DecodeFloatVector2(sEnd);
+            StartPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.DecodeFloatVector2(sStart);
+            EndPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.DecodeFloatVector2(sEnd);
             base.OnReadXml(e);
         }
+
+        #region IEquatable<Gradient>
+
+        public bool Equals(LinearGradient other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return StartPoint.Equals(other.StartPoint) && EndPoint.Equals(other.EndPoint) && GradientStops == other.GradientStops;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((LinearGradient) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = Name.GetHashCode();
+                hashCode = (hashCode * 397) ^ Type.GetHashCode();
+                hashCode = (hashCode * 397) ^ GradientStops.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        #endregion
     }
 }

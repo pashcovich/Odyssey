@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Animations
 {
-    public enum WrapMode
+    class FloatCurve
     {
-        Once,
-        Loop,
     }
 }

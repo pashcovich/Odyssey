@@ -34,7 +34,19 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnPointerEnter(PointerEventArgs e)
         {
             base.OnPointerEnter(e);
-            AnimationController.Play(ControlStatus.Highlighted.ToString());
+            string animationName = ControlStatus.Highlighted.ToString();
+            var animation = AnimationController[animationName];
+            animation.Speed = 1.0f;
+            AnimationController.Play(animationName);
+        }
+
+        protected override void OnPointerExited(PointerEventArgs e)
+        {
+            base.OnPointerExited(e);
+            string animationName = ControlStatus.Highlighted.ToString();
+            var animation = AnimationController[animationName];
+            animation.Speed = -1.0f;
+            AnimationController.Play(animationName);
         }
     }
 }

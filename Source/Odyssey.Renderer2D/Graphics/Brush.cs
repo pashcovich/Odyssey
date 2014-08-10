@@ -64,6 +64,7 @@ namespace Odyssey.Graphics
                 case GradientType.Linear:
                     return LinearGradientBrush.New(colorResource.Name, device, (LinearGradient)colorResource);
                 case GradientType.Radial:
+                    return RadialGradientBrush.New(colorResource.Name, device, (RadialGradient) colorResource);
                 default:
                     throw new ArgumentOutOfRangeException(string.Format("Brush type '{0}' is not valid", colorResource.Type));
             }

@@ -20,12 +20,6 @@ namespace Odyssey.Graphics
         public Vector2 StartPoint { get { return linearGradient.StartPoint; } }
         public Vector2 EndPoint { get { return linearGradient.EndPoint; } }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-            ToDispose(Resource.GradientStopCollection);
-        }
-
         public static LinearGradientBrush New(string name, Direct2DDevice device, LinearGradient linearGradient)
         {
            

@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Runtime.InteropServices;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using SharpDX;
 
 namespace Odyssey.Graphics
 {
-    public class GradientStopCollection : IEnumerable<GradientStop>
+    public class GradientStopCollection : IEnumerable<GradientStop>, IEquatable<GradientStopCollection>
     {
         private readonly List<GradientStop> gradientStops;
 
@@ -39,6 +40,16 @@ namespace Odyssey.Graphics
             gradientStop.Index = gradientStops.Count - 1;
         }
 
+
+        public void AddRange(IEnumerable<GradientStop> gradientStops)
+        {
+            Contract.Requires<ArgumentNullException>(gradientStops != null, "gradientStops");
+            foreach (var gradientStop in gradientStops)
+            {
+                Add(gradientStop);
+            }
+        }
+
         public Color4 Evaluate(float offset)
         {
             GradientStop gsFrom;
@@ -59,6 +70,7 @@ namespace Odyssey.Graphics
         }
 
 
+        #region IEnumerable<GradientStop>
         public IEnumerator<GradientStop> GetEnumerator()
         {
             return gradientStops.GetEnumerator();
@@ -67,7 +79,8 @@ namespace Odyssey.Graphics
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
+        } 
+        #endregion
 
         public GradientStop this[int index]
         {
@@ -75,5 +88,39 @@ namespace Odyssey.Graphics
         }
 
 
+        #region IEquatable<GradientStopCollection>
+        public bool Equals(GradientStopCollection other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(gradientStops, other.gradientStops) && ExtendMode == other.ExtendMode;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((GradientStopCollection)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((gradientStops != null ? gradientStops.GetHashCode() : 0) * 397);
+            }
+        }
+
+        public static bool operator ==(GradientStopCollection left, GradientStopCollection right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(GradientStopCollection left, GradientStopCollection right)
+        {
+            return !Equals(left, right);
+        } 
+        #endregion
     }
 }

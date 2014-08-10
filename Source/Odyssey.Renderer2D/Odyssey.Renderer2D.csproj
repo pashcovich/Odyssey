@@ -33,6 +33,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animations\LinearGradientBrushCurve.cs" />
+    <Compile Include="Animations\LinearGradientBrushKeyFrame.cs" />
     <Compile Include="Content\ControlDefinitionsReader.cs" />
     <Compile Include="Content\Font.cs" />
     <Compile Include="Content\FontReader.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="Engine\Direct2DSurface.cs" />
     <Compile Include="Engine\IDirect2DService.cs" />
     <Compile Include="Graphics\GradientBrush.cs" />
+    <Compile Include="Graphics\RadialGradientBrush.cs" />
     <Compile Include="Graphics\Shapes\CutCornerRectangle.cs" />
     <Compile Include="Graphics\Shapes\CutCornerRectangleBase.cs" />
     <Compile Include="Graphics\Shapes\CutCornerRectangleOutline.cs" />
