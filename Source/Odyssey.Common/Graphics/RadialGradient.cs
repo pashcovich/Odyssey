@@ -85,5 +85,10 @@ namespace Odyssey.Graphics
             }
         }
         #endregion
+
+        internal override Gradient CopyAs(string newResourceName)
+        {
+            return new RadialGradient(newResourceName, Center, OriginOffset, RadiusX, RadiusY, GradientStops, GradientStops.ExtendMode);
+        }
     }
 }

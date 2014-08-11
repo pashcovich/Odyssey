@@ -36,7 +36,7 @@
       </Shapes>
       <Animations>
         <Animation Name="Highlighted">
-          <Color4Curve TargetName="{Foreground}" TargetProperty="Fill.GradientStops[0].Color">
+          <Color4Curve TargetName="{GlowEffect}" TargetProperty="Fill.GradientStops[0].Color">
             <Color4KeyFrame Time="0" Value="{DarkBlue}"/>
             <Color4KeyFrame Time="1" Value="{Red}"/>
           </Color4Curve>

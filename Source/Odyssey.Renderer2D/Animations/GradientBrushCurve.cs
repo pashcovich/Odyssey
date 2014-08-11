@@ -6,37 +6,37 @@ using Odyssey.UserInterface.Style;
 
 namespace Odyssey.Animations
 {
-    public class LinearGradientBrushCurve : AnimationCurve<LinearGradientBrushKeyFrame>
+    public class GradientBrushCurve : AnimationCurve<GradientBrushKeyFrame>
     {
-        public LinearGradientBrushCurve()
+        public GradientBrushCurve()
         {
             Function = Discrete;
         }
 
-        public static object Discrete(LinearGradientBrushKeyFrame start, LinearGradientBrushKeyFrame end, TimeSpan time)
+        public static object Discrete(GradientBrushKeyFrame start, GradientBrushKeyFrame end, TimeSpan time)
         {
             return end.Value;
         }
 
-        internal static LinearGradientBrushCurve FromColor4Curve(Direct2DDevice device, Color4Curve originalCurve, LinearGradientBrush originalBrush)
+        internal static IAnimationCurve FromColor4Curve<TGradientBrush>(Direct2DDevice device, Color4Curve originalCurve,
+            TGradientBrush originalBrush)
+            where TGradientBrush : GradientBrush
         {
             var styleService = device.Services.GetService<IStyleService>();
-            
+
             var match = Regex.Match(originalCurve.TargetProperty, @"\w*\[(?<index>\d+)\]");
             int index = int.Parse(match.Groups["index"].Value);
-            var newCurve = new LinearGradientBrushCurve() {Name = originalCurve.Name};
+            var newCurve = new GradientBrushCurve() { Name = originalCurve.Name };
             int keyFrameIndex = 0;
             foreach (var keyframe in originalCurve)
             {
-                var gStopCollection = originalBrush.GradientStops.Copy();
-                gStopCollection[index].Color = keyframe.Value;
-                var newGradient = new LinearGradient(string.Format("{0}.Keyframe{1:D2}", newCurve.Name, keyFrameIndex++),
-                    originalBrush.StartPoint, originalBrush.EndPoint, gStopCollection);
+                var newGradient = originalBrush.Gradient.CopyAs(string.Format("{0}.Keyframe{1:D2}", newCurve.Name, keyFrameIndex++));
+                newGradient.GradientStops[index].Color = keyframe.Value;
                 var newBrush = Brush.FromColorResource(device, newGradient);
                 newBrush.Initialize();
                 styleService.AddResource(newBrush);
 
-                var newKeyFrame = new LinearGradientBrushKeyFrame() { Time = keyframe.Time, Value = (LinearGradientBrush)newBrush };
+                var newKeyFrame = new GradientBrushKeyFrame() { Time = keyframe.Time, Value = (TGradientBrush)newBrush };
                 newCurve.AddKeyFrame(newKeyFrame);
             }
             newCurve.TargetName = originalCurve.TargetName;

@@ -33,8 +33,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animations\LinearGradientBrushCurve.cs" />
-    <Compile Include="Animations\LinearGradientBrushKeyFrame.cs" />
+    <Compile Include="Animations\GradientBrushCurve.cs" />
+    <Compile Include="Animations\GradientBrushKeyFrame.cs" />
     <Compile Include="Content\ControlDefinitionsReader.cs" />
     <Compile Include="Content\Font.cs" />
     <Compile Include="Content\FontReader.cs" />

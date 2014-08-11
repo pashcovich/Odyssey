@@ -20,6 +20,8 @@ namespace Odyssey.Graphics
             get { return gradient.GradientStops; }
         }
 
+        internal Gradient Gradient { get { return gradient; } }
+
        
     }
 }
