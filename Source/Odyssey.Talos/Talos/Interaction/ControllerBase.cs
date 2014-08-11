@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.Contracts;
 using SharpDX;
 
-namespace Odyssey.Interaction.Controllers
+namespace Odyssey.Talos.Interaction
 {
     public abstract class ControllerBase : IEntityController
     {

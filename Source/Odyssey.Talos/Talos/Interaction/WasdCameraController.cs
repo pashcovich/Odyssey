@@ -1,11 +1,11 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Geometry;
-using Odyssey.Talos;
+using Odyssey.Interaction;
 using Odyssey.Talos.Components;
 using SharpDX;
 using System;
 
-namespace Odyssey.Interaction.Controllers
+namespace Odyssey.Talos.Interaction
 {
     public class WasdCameraController : ControllerBase
     {

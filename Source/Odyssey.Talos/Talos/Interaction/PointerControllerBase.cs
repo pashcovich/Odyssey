@@ -16,12 +16,13 @@
 #region Using Directives
 
 using Odyssey.Engine;
+using Odyssey.Interaction;
 using Odyssey.Talos;
 using SharpDX;
 
 #endregion
 
-namespace Odyssey.Interaction.Controllers
+namespace Odyssey.Talos.Interaction
 {
     public abstract class PointerControllerBase : ControllerBase
     {

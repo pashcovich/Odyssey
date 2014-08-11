@@ -17,11 +17,12 @@
 
 using System;
 using Odyssey.Engine;
+using Odyssey.Interaction;
 using SharpDX;
 
 #endregion
 
-namespace Odyssey.Interaction.Controllers
+namespace Odyssey.Talos.Interaction
 {
     public class ArcBallModelController : PointerControllerBase
     {

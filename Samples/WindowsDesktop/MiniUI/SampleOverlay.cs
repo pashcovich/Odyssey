@@ -26,7 +26,7 @@ namespace MiniUI
             Label label = new Label { Position = new Vector2(8, 8), Text = "I'm a label and this is a Panel control.", Width = 400, Height = 48 };
             Button button = new Button { Position = new Vector2(16, 64), Content = new Label { Text = "Button", TextStyleClass = "Small" } };
             FpsCounter fpsCounter = new FpsCounter { Position = new Vector2(16, 16) };
-            button.Tap += (s, eventArgs) => ((Label)button.Content).Text = "It works";
+            button.Tap += (s, eventArgs) => ((Label)button.Content).Text = "It works!";
 
             panel1.Add(label);
             //panel1.Add(button);

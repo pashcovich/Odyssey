@@ -1,4 +1,6 @@
-﻿namespace Odyssey.Interaction.Controllers
+﻿using Odyssey.Interaction;
+
+namespace Odyssey.Talos.Interaction
 {
     public class KeyBinding : Binding<Keys, CameraAction>
     {

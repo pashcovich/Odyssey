@@ -43,11 +43,6 @@
     <Compile Include="Content\NativeFontLoader.cs" />
     <Compile Include="Content\TextDefinitionsReader.cs" />
     <Compile Include="Content\ThemeReader.cs" />
-    <Compile Include="Devices\Enums.cs" />
-    <Compile Include="Devices\Key.cs" />
-    <Compile Include="Devices\PointerDevice.cs" />
-    <Compile Include="Devices\PointerPoint.cs" />
-    <Compile Include="Devices\PointerProperties.cs" />
     <Compile Include="Engine\BackBufferSurface.cs" />
     <Compile Include="Engine\Bitmap.cs" />
     <Compile Include="Engine\BitmapTarget.cs" />
@@ -91,10 +86,7 @@
     <Compile Include="Graphics\Shapes\PolygonGeometry.cs" />
     <Compile Include="Graphics\Shapes\PolyLine.cs" />
     <Compile Include="Graphics\SolidColorBrush.cs" />
-    <Compile Include="Interaction\PointerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Talos\Components\UserInterfaceComponent.cs" />
-    <Compile Include="Talos\Systems\UserInterfaceSystem.cs" />
     <Compile Include="UserInterface\Controls\IOverlay.cs" />
     <Compile Include="UserInterface\Style\Exensions.cs" />
     <Compile Include="UserInterface\Controls\Button.cs" />
@@ -168,11 +160,8 @@
       <Project>{7740a46f-0809-49d2-bd34-71f6d8b6d2cc}</Project>
       <Name>Odyssey.Interaction</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Odyssey.Talos\Odyssey.Talos.csproj">
-      <Project>{7e2bc73b-cb14-4d62-89ae-a0eb5a1eaf93}</Project>
-      <Name>Odyssey.Talos</Name>
-    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

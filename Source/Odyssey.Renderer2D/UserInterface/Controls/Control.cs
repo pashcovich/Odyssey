@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
-using Odyssey.Talos.Systems;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 

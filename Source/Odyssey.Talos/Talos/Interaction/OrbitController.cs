@@ -17,13 +17,14 @@
 
 using System;
 using Odyssey.Engine;
+using Odyssey.Interaction;
 using Odyssey.Talos;
 using Odyssey.Talos.Components;
 using SharpDX;
 
 #endregion
 
-namespace Odyssey.Interaction.Controllers
+namespace Odyssey.Talos.Interaction
 {
     public class OrbitController : PointerControllerBase
     {

@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Interaction.Controllers
+﻿namespace Odyssey.Talos.Interaction
 {
     public enum CameraAction
     {
