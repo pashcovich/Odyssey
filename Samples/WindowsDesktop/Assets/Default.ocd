@@ -34,14 +34,14 @@
         <Rectangle Name="Foreground" Position="0,0" Width="1" Height="1" Fill="{ButtonFillForeground}" Stroke="{DarkGray}"/>
         <Rectangle Name="GlassEffect" Position="0,0" Width="1" Height="0.5" Fill="{ButtonFillShine}"/>
       </Shapes>
-      <!--<Animations>
+      <Animations>
         <Animation Name="Highlighted">
-          <Color4Curve TargetName="{Main}" TargetProperty="Fill.GradientStops[0].Color">
+          <Color4Curve TargetName="{Foreground}" TargetProperty="Fill.GradientStops[0].Color">
             <Color4KeyFrame Time="0" Value="{DarkBlue}"/>
             <Color4KeyFrame Time="1" Value="{Red}"/>
           </Color4Curve>
         </Animation>
-      </Animations>-->
+      </Animations>
     </VisualState>
   </ControlStyle>
   <ControlStyle Name="Panel" BorderSize="2">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Odyssey.Animations;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
 using SharpDX;
@@ -15,6 +16,7 @@ namespace Odyssey.Graphics
 
         public Vector2 OriginOffset { get; private set; }
 
+        [Animatable]
         public float RadiusX { get; private set; }
 
         public float RadiusY { get; private set; }

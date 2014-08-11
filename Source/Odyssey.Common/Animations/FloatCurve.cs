@@ -1,12 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpDX;
 
 namespace Odyssey.Animations
 {
-    class FloatCurve
+    public class FloatCurve : AnimationCurve<FloatKeyFrame>
     {
+        public static float Linear(KeyFrame<float> start, KeyFrame<float> end, TimeSpan time)
+        {
+            float newValue = Map(start.Time, end.Time, time);
+
+            return MathUtil.Lerp(start.Value, end.Value, newValue);
+        }
     }
 }

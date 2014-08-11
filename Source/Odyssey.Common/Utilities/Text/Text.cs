@@ -36,10 +36,10 @@ namespace Odyssey.Utilities.Text
             return Char.ToUpperInvariant(s[0]) + s.Substring(1);
         }
 
-        internal static int AbgrToRgba(int abgr)
+        internal static int ArgbToRgba(int abgr)
         {
             byte[] bytes = BitConverter.GetBytes(abgr);
-            return BitConverter.ToInt32(new byte[] { bytes[2], bytes[1], bytes[0], bytes[3]}, 0);
+            return BitConverter.ToInt32(new[] { bytes[2], bytes[1], bytes[0], bytes[3]}, 0);
         }
 
         internal static Color4 DecodeColor4Abgr(string color, bool stripHashSymbol = true)
@@ -49,7 +49,7 @@ namespace Odyssey.Utilities.Text
 
             return string.IsNullOrEmpty(color)
                 ? new Color4(0, 0, 0, 0)
-                : new Color4(AbgrToRgba(Int32.Parse(color, NumberStyles.HexNumber)));
+                : new Color4(ArgbToRgba(Int32.Parse(color, NumberStyles.HexNumber)));
         }
 
         internal static Vector2 DecodeFloatVector2(string s)

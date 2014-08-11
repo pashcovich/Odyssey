@@ -42,10 +42,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animations\CacheAnimationAttribute.cs" />
     <Compile Include="Animations\AnimatableAttribute.cs" />
     <Compile Include="Animations\AnimationController.cs" />
+    <Compile Include="Animations\CacheAnimationAttribute.cs" />
     <Compile Include="Animations\Color4Curve.cs" />
+    <Compile Include="Animations\FloatCurve.cs" />
     <Compile Include="Animations\IAnimationCurve.cs" />
     <Compile Include="Animations\IRequiresCaching.cs" />
     <Compile Include="Content\AssetIdentifier.cs" />

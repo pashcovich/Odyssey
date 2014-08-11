@@ -33,20 +33,15 @@ namespace Odyssey.Graphics.Shapes
 {
     public abstract class Shape : UIElement, IShape, IRequiresCaching
     {
-        protected Shape()
-        {
-            StrokeThickness = 1.0f;
-        }
-
         public static Color4 DefaultFillColor = Color.MidnightBlue;
         public static Color4 DefaultStrokeColor = Color.DimGray;
 
-        internal string FillBrushClass { get; set; }
-        internal string StrokeBrushClass { get; set; }
+        private string fillBrushClass;
+        private string strokeBrushClass;
 
-        [CacheAnimation]
+        [CacheAnimation(typeof(GradientStop), "Color")]
         public Brush Fill { get; set; }
-        [CacheAnimation]
+        [CacheAnimation(typeof(GradientStop), "Color")]
         public Brush Stroke { get; set; }
         
         public float StrokeThickness { get; set; }
@@ -54,8 +49,8 @@ namespace Odyssey.Graphics.Shapes
         internal override UIElement Copy()
         {
             Shape copy = (Shape)base.Copy();
-            copy.FillBrushClass = FillBrushClass;
-            copy.StrokeBrushClass = StrokeBrushClass;
+            copy.fillBrushClass = fillBrushClass;
+            copy.strokeBrushClass = strokeBrushClass;
             copy.StrokeThickness = StrokeThickness;
             return copy;
         }
@@ -79,11 +74,11 @@ namespace Odyssey.Graphics.Shapes
         {
             base.OnInitializing(e);
             var styleService = Device.Services.GetService<IStyleService>();
-            if (!string.IsNullOrEmpty(FillBrushClass))
+            if (!string.IsNullOrEmpty(fillBrushClass))
             {
-                var fillColor = Overlay.Theme.GetResource<ColorResource>(FillBrushClass);
-                if (styleService.ContainsResource(FillBrushClass))
-                    Fill = styleService.GetResource<Brush>(FillBrushClass);
+                var fillColor = Overlay.Theme.GetResource<ColorResource>(fillBrushClass);
+                if (styleService.ContainsResource(fillBrushClass))
+                    Fill = styleService.GetResource<Brush>(fillBrushClass);
                 else
                 {
                     Fill = Brush.FromColorResource(Device, fillColor);
@@ -92,11 +87,11 @@ namespace Odyssey.Graphics.Shapes
                 Fill.Initialize();
             }
 
-            if (!string.IsNullOrEmpty(StrokeBrushClass))
+            if (!string.IsNullOrEmpty(strokeBrushClass))
             {
-                var strokeColor = Overlay.Theme.GetResource<ColorResource>(StrokeBrushClass);
-                if (styleService.ContainsResource(StrokeBrushClass))
-                    Stroke = styleService.GetResource<Brush>(StrokeBrushClass);
+                var strokeColor = Overlay.Theme.GetResource<ColorResource>(strokeBrushClass);
+                if (styleService.ContainsResource(strokeBrushClass))
+                    Stroke = styleService.GetResource<Brush>(strokeBrushClass);
                 else
                 {
                     Stroke = Brush.FromColorResource(Device, strokeColor);
@@ -125,22 +120,23 @@ namespace Odyssey.Graphics.Shapes
             string sStroke = reader.GetAttribute("Stroke");
             if (!string.IsNullOrEmpty(sFill))
             {
-                FillBrushClass = Text.ParseResource(sFill);
+                fillBrushClass = Text.ParseResource(sFill);
             }
             if (!string.IsNullOrEmpty(sStroke))
             {
-                StrokeBrushClass = Text.ParseResource(sStroke);
+                strokeBrushClass = Text.ParseResource(sStroke);
             }
 
             if (!reader.IsEmptyElement)
                 reader.ReadEndElement();
         }
         
-        public IAnimationCurve CacheAnimation(string propertyName, IAnimationCurve animationCurve)
+        public IAnimationCurve CacheAnimation(Type type, string propertyName, IAnimationCurve animationCurve)
         {
+            // Checks whether the curve affects a property marked with the CacheAnimationAttribute
             var property = (from p in ReflectionHelper.GetProperties(GetType())
-                where p.GetCustomAttribute<CacheAnimationAttribute>() != null
-                && p.Name == propertyName
+                let attribute = p.GetCustomAttribute<CacheAnimationAttribute>()
+                where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
                 select p).FirstOrDefault();
 
             if (property != null)
@@ -153,7 +149,6 @@ namespace Odyssey.Graphics.Shapes
             }
 
             return null;
-
         }
     }
 }

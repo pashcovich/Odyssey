@@ -57,7 +57,6 @@ namespace Odyssey.Animations
 
         public void Initialize()
         {
-            Contract.Requires<InvalidOperationException>(Target!=null, "Target cannot be null");
             foreach (var animation in animations.Values)
             {
                 List<IAnimationCurve> curves = new List<IAnimationCurve>(animation.Curves);
@@ -73,15 +72,18 @@ namespace Odyssey.Animations
                         if (resourceProvider != null)
                             realTarget = resourceProvider.GetResource<IResource>(curve.TargetName);
                         else
-                            throw new InvalidOperationException(string.Format("`Target` does not implement {0}", typeof (IResourceProvider)));
+                            throw new InvalidOperationException(string.Format("'Target' does not implement {0}", typeof (IResourceProvider)));
                     }
 
-                    ObjectWalker walker;
+                    if (realTarget == null)
+                        throw new InvalidOperationException("'Target' cannot be null");
+
+                    ObjectWalker walker = new ObjectWalker(realTarget, curve.TargetProperty);
+
                     var requiresCaching = realTarget as IRequiresCaching;
                     if (requiresCaching != null)
                     {
-                        string propertyName = curve.TargetProperty.Split('.')[0];
-                        var newCurve = requiresCaching.CacheAnimation(propertyName, curve);
+                        var newCurve = requiresCaching.CacheAnimation(walker.CurrentMember.DeclaringType, walker.CurrentMember.Name, curve);
                         animation.RemoveCurve(curve.TargetProperty);
                         animation.AddCurve(newCurve);
                         walker = new ObjectWalker(requiresCaching, newCurve.TargetProperty);
@@ -89,9 +91,10 @@ namespace Odyssey.Animations
                     }
                     else
                     {
-                        walker = new ObjectWalker(realTarget, curve.TargetProperty);
                         walkers.Add(curve.TargetProperty, walker);
                     }
+
+
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Odyssey.Animations;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
@@ -8,7 +9,7 @@ using Odyssey.UserInterface.Controls;
 
 namespace Odyssey.UserInterface.Style
 {
-    internal sealed class VisualStateDefinition : ISerializableResource
+    internal sealed class VisualStateDefinition : ISerializableResource, IResourceProvider
     {
         private readonly List<Shape> shapes;
         private readonly List<Animation> animations;
@@ -90,6 +91,34 @@ namespace Odyssey.UserInterface.Style
 
         }
 
+        #endregion
+
+        #region IResourceProvider
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+           return Shapes.Any(s => s.Name == resourceName) || Animations.Any(a => a.Name == resourceName);
+        }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            return Shapes.FirstOrDefault(s => s.Name == resourceName) as TResource ??
+                   Animations.FirstOrDefault(s => s.Name == resourceName) as TResource;
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get
+            {
+                foreach (var shape in shapes)
+                {
+                    yield return shape;
+                }
+                foreach (var animation in animations)
+                {
+                    yield return animation;
+                }
+            }
+        } 
         #endregion
     }
 }

@@ -30,7 +30,7 @@ namespace Odyssey.UserInterface.Style
         [Pure]
         public bool ContainsResource(string resourceName)
         {
-            return resources.ContainsKey(resourceName);
+            return PreOrderVisit(this).Any(r => r.Name == resourceName);
         }
 
         public TResource GetResource<TResource>(string resourceName)

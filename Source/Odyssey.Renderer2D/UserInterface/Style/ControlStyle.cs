@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Odyssey.Animations;
 using Odyssey.Graphics;
@@ -28,7 +29,7 @@ using Odyssey.UserInterface.Controls;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class ControlStyle : ISerializableResource, IResource
+    public sealed class ControlStyle : ISerializableResource, IResource, IResourceProvider
     {
         internal const string Empty = "Empty";
         internal const string Error = "Error";
@@ -81,6 +82,22 @@ namespace Odyssey.UserInterface.Style
             throw new NotImplementedException();
         } 
         #endregion
-       
+
+        #region IResourceProvider
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+            return ((IResourceProvider) visualStateDefinition).ContainsResource(resourceName);
+        }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            return ((IResourceProvider) visualStateDefinition).GetResource<TResource>(resourceName);
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return ((IResourceProvider) visualStateDefinition).Resources; }
+        } 
+        #endregion
     }
 }
