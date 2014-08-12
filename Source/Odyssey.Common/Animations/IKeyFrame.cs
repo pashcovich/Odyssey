@@ -1,12 +1,13 @@
 ﻿using System;
-using Odyssey.Graphics;
-using Odyssey.Serialization;
 
 namespace Odyssey.Animations
 {
     public interface IKeyFrame
     {
-        TimeSpan Time { get; set; }
+        /// <summary>
+        /// The time of the keyframe, expressed in seconds.
+        /// </summary>
+        float Time { get; set; }
         object Value { get; set; }
     }
 }

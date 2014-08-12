@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Odyssey.Animations;
@@ -66,8 +67,8 @@ namespace Odyssey.UserInterface.Style
 
             string width = xmlReader.GetAttribute("Width");
             string height = xmlReader.GetAttribute("Height");
-            Width = String.IsNullOrEmpty(width) ? 0 : Single.Parse(width);
-            Height = String.IsNullOrEmpty(height) ? 0 : Single.Parse(height);
+            Width = String.IsNullOrEmpty(width) ? 0 : Single.Parse(width, CultureInfo.InvariantCulture);
+            Height = String.IsNullOrEmpty(height) ? 0 : Single.Parse(height, CultureInfo.InvariantCulture);
 
             if (!xmlReader.ReadToDescendant(sVisualState))
                 throw new InvalidOperationException(String.Format("{0}' element not found", sVisualState));

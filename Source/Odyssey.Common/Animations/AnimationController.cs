@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Graphics;
+using Odyssey.Utilities.Logging;
 using Odyssey.Utilities.Reflection;
 using Odyssey.Engine;
 
@@ -25,7 +26,7 @@ namespace Odyssey.Animations
         public bool HasAnimations { get { return animations.Count > 0; } }
 
         public bool IsPlaying { get; private set; }
-        private TimeSpan elapsedTime;
+        private float elapsedTime;
 
         public AnimationController(object target)
         {
@@ -81,20 +82,23 @@ namespace Odyssey.Animations
                     ObjectWalker walker = new ObjectWalker(realTarget, curve.TargetProperty);
 
                     var requiresCaching = realTarget as IRequiresCaching;
+                    string curveKey = curve.TargetProperty;
                     if (requiresCaching != null)
                     {
                         var newCurve = requiresCaching.CacheAnimation(walker.CurrentMember.DeclaringType, walker.CurrentMember.Name, curve);
-                        animation.RemoveCurve(curve.TargetProperty);
-                        animation.AddCurve(newCurve);
-                        walker = new ObjectWalker(requiresCaching, newCurve.TargetProperty);
-                        walkers.Add(newCurve.TargetProperty, walker);
+                        if (newCurve != null)
+                        {
+                            animation.RemoveCurve(curve.TargetProperty);
+                            animation.AddCurve(newCurve);
+                            walker = new ObjectWalker(requiresCaching, newCurve.TargetProperty);
+                            curveKey = newCurve.TargetProperty;
+                        }
                     }
-                    else
-                    {
-                        walkers.Add(curve.TargetProperty, walker);
-                    }
+                    var animatable = walker.CurrentMember.GetCustomAttribute<AnimatableAttribute>();
+                    if (animatable == null)
+                        throw new InvalidOperationException(string.Format("'{0}' is not marked as {1}", walker.CurrentMember.Name, typeof(AnimatableAttribute).Name));
 
-
+                    walkers.Add(curveKey, walker);
                 }
             }
         }
@@ -108,14 +112,18 @@ namespace Odyssey.Animations
         public void Play(string animationName)
         {
             Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
+            
+            var animation = animations[animationName];
+            if (playingAnimations.Contains(animation))
+                Stop(animationName);
+            playingAnimations.Add(animation);
             IsPlaying = true;
-            playingAnimations.Add(animations[animationName]);
         }
 
         public void Stop()
         {
             IsPlaying = false;
-            elapsedTime = default(TimeSpan);
+            elapsedTime = 0;
             playingAnimations.Clear();
         }
 
@@ -126,25 +134,30 @@ namespace Odyssey.Animations
             if (playingAnimations.Count == 0)
             {
                 IsPlaying = false;
-                elapsedTime = default (TimeSpan);
+                elapsedTime = 0;
             }
         }
 
         public void Update(ITimeService time)
         {
             var currentlyPlayingAnimations = new List<Animation>(playingAnimations);
+            elapsedTime += time.FrameTime;
+
 
             foreach (var animation in currentlyPlayingAnimations)
             {
+                animation.Time = animation.Speed >= 0 ? elapsedTime : animation.Duration - elapsedTime;
+
                 foreach (var curve in animation.Curves)
                 {
-                    var value = curve.Evaluate(elapsedTime, animation.Speed > 0);
+                    var value = curve.Evaluate(animation.Time);
                     var walker = GetWalker(curve.TargetProperty);
                     walker.WriteValue(value);
-                    elapsedTime += time.ElapsedApplicationTime;
-                    if (elapsedTime.TotalSeconds > animation.Duration)
-                        Stop(animation.Name);
                 }
+
+                if (elapsedTime > animation.Duration)
+                    Stop(animation.Name);
+
             }
         }
 

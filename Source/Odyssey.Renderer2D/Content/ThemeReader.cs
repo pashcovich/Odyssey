@@ -1,4 +1,6 @@
-﻿using System.Xml.Serialization;
+﻿using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 using Odyssey.UserInterface.Style;
 
 namespace Odyssey.Content
@@ -8,7 +10,12 @@ namespace Odyssey.Content
         public object ReadContent(IAssetProvider assetManager, ref ContentReaderParameters parameters)
         {
             var serializer = new XmlSerializer(typeof (Theme));
-            Theme theme = (Theme)serializer.Deserialize(parameters.Stream);
+            var xmlReaderSettings = new XmlReaderSettings()
+            {
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+            };
+            Theme theme = (Theme)serializer.Deserialize(XmlReader.Create(parameters.Stream, xmlReaderSettings));
             return theme;
         }
     }

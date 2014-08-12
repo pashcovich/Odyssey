@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX;
 
 namespace Odyssey.Animations
@@ -14,13 +10,13 @@ namespace Odyssey.Animations
             Function = Discrete;
         }
 
-        public static object Linear(Color4KeyFrame start, Color4KeyFrame end, TimeSpan time)
+        public static object Linear(Color4KeyFrame start, Color4KeyFrame end, float time)
         {
             float newValue = Map(start.Time, end.Time, time);
             return Color4.Lerp(start.Value, end.Value, newValue);
         }
 
-        public static object Discrete(Color4KeyFrame start, Color4KeyFrame end, TimeSpan time)
+        public static object Discrete(Color4KeyFrame start, Color4KeyFrame end, float time)
         {
             return end.Value;
         }

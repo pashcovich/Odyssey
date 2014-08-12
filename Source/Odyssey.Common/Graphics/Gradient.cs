@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
 using SharpDX;
@@ -47,7 +48,7 @@ namespace Odyssey.Graphics
                 var gradientStop = new GradientStop
                 {
                     Color = color,
-                    Offset = string.IsNullOrEmpty(offset) ? 0 : float.Parse(offset)
+                    Offset = string.IsNullOrEmpty(offset) ? 0 : float.Parse(offset, CultureInfo.InvariantCulture)
                 };
                 reader.ReadStartElement();
                 GradientStops.Add(gradientStop);

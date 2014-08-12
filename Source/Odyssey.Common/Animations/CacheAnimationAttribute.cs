@@ -2,7 +2,7 @@
 
 namespace Odyssey.Animations
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class CacheAnimationAttribute : Attribute
     {
         public Type Type { get; private set; }

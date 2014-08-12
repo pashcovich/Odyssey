@@ -16,6 +16,7 @@
 #region Using Directives
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Odyssey.Animations;
@@ -114,7 +115,7 @@ namespace Odyssey.Graphics.Shapes
             base.OnReadXml(e);
             var reader = e.XmlReader;
             string strokeThickness = reader.GetAttribute("StrokeThickness");
-            StrokeThickness = string.IsNullOrEmpty(strokeThickness) ? 0 : float.Parse(strokeThickness);
+            StrokeThickness = string.IsNullOrEmpty(strokeThickness) ? 0 : float.Parse(strokeThickness, CultureInfo.InvariantCulture);
 
             string sFill = reader.GetAttribute("Fill");
             string sStroke = reader.GetAttribute("Stroke");
@@ -130,14 +131,16 @@ namespace Odyssey.Graphics.Shapes
             if (!reader.IsEmptyElement)
                 reader.ReadEndElement();
         }
-        
+
+        #region IRequiresCaching
         public IAnimationCurve CacheAnimation(Type type, string propertyName, IAnimationCurve animationCurve)
         {
             // Checks whether the curve affects a property marked with the CacheAnimationAttribute
             var property = (from p in ReflectionHelper.GetProperties(GetType())
-                let attribute = p.GetCustomAttribute<CacheAnimationAttribute>()
-                where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
-                select p).FirstOrDefault();
+                    let attributes = p.GetCustomAttributes<CacheAnimationAttribute>()
+                    from attribute in attributes
+                    where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
+                    select p).FirstOrDefault();
 
             if (property != null)
             {
@@ -150,5 +153,6 @@ namespace Odyssey.Graphics.Shapes
 
             return null;
         }
+        #endregion
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using Odyssey.Graphics;
 using Odyssey.Serialization;
 
@@ -9,7 +7,7 @@ namespace Odyssey.Animations
 {
     public abstract class KeyFrame<T> : IComparable<KeyFrame<T>>, IKeyFrame, ISerializableResource
     {
-        public TimeSpan Time { get ; set; }
+        public float Time { get ; set; }
         public T Value { get; set; }
 
         public int CompareTo(KeyFrame<T> other)
@@ -22,7 +20,6 @@ namespace Odyssey.Animations
             get { return Value; }
             set { Value = (T)value; }
         }
-
 
         #region IStyleSerializable
         public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
@@ -38,7 +35,7 @@ namespace Odyssey.Animations
         protected virtual void OnReadXml(XmlDeserializationEventArgs e)
         {
             string sTime = e.XmlReader.GetAttribute("Time");
-            Time = TimeSpan.FromMilliseconds(double.Parse(sTime));
+            Time = float.Parse(sTime);
         }
 
         #endregion

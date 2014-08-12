@@ -1,8 +1,6 @@
 using System;
 using System.Xml;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
-using SharpDX;
 
 namespace Odyssey.Graphics
 {

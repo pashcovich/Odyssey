@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System.Globalization;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
 using System;
@@ -463,8 +464,8 @@ namespace Odyssey.UserInterface
 
             string sWidth = reader.GetAttribute("Width");
             string sHeight = reader.GetAttribute("Height");
-            Width = string.IsNullOrEmpty(sWidth) ? 0 : float.Parse(sWidth);
-            Height = string.IsNullOrEmpty(sHeight) ? 0 : float.Parse(sHeight);
+            Width = string.IsNullOrEmpty(sWidth) ? 0 : float.Parse(sWidth, CultureInfo.InvariantCulture);
+            Height = string.IsNullOrEmpty(sHeight) ? 0 : float.Parse(sHeight, CultureInfo.InvariantCulture);
         }
 
         protected virtual void OnWriteXml(XmlSerializationEventArgs e)

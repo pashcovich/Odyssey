@@ -5,7 +5,12 @@ namespace Odyssey.Animations
 {
     public class FloatCurve : AnimationCurve<FloatKeyFrame>
     {
-        public static float Linear(KeyFrame<float> start, KeyFrame<float> end, TimeSpan time)
+        public FloatCurve()
+        {
+            Function = Linear;
+        }
+
+        public static object Linear(FloatKeyFrame start, FloatKeyFrame end, float time)
         {
             float newValue = Map(start.Time, end.Time, time);
 

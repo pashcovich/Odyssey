@@ -13,7 +13,7 @@ namespace Odyssey.Animations
             Function = Discrete;
         }
 
-        public static object Discrete(LinearGradientBrushKeyFrame start, LinearGradientBrushKeyFrame end, TimeSpan time)
+        public static object Discrete(LinearGradientBrushKeyFrame start, LinearGradientBrushKeyFrame end, float time)
         {
             return end.Value;
         }

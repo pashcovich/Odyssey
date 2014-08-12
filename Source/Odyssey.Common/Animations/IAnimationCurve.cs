@@ -8,6 +8,6 @@ namespace Odyssey.Animations
         string Name { get; set; }
 
         float Duration { get; }
-        object Evaluate(TimeSpan elapsedTime, bool forward = true);
+        object Evaluate(float elapsedTime);
     }
 }

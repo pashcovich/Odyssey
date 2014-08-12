@@ -10,10 +10,23 @@ namespace Odyssey.Animations
 {
     public class Animation : ISerializableResource, IResource
     {
+        private float time;
         readonly Dictionary<string, IAnimationCurve> animationCurves;
 
         public string Name { get; set; }
-        public float Duration { get { return animationCurves.Values.Max(a => a.Duration); } }
+        public float Duration { get; private set; }
+
+        public float Time
+        {
+            get { return time; }
+            set
+            {
+                time = value;
+                NormalizedTime = time/Duration;
+            }
+        }
+
+        public float NormalizedTime { get; private set; }
         public WrapMode WrapMode { get; set; }
         public float Speed { get; set; }
 
@@ -36,6 +49,7 @@ namespace Odyssey.Animations
         {
             Contract.Requires<ArgumentException>(!Contains(animationCurve), "animationCurve");
             animationCurves.Add(animationCurve.TargetProperty, animationCurve);
+            Duration = animationCurves.Values.Max(a => a.Duration);
         }
 
         public void RemoveCurve(string key)
@@ -53,10 +67,10 @@ namespace Odyssey.Animations
         {
             Name = xmlReader.GetAttribute("Name");
             xmlReader.ReadStartElement();
-            string animationType = string.Format("Odyssey.Animations.{0}", xmlReader.LocalName);
 
             while (xmlReader.IsStartElement())
             {
+                string animationType = string.Format("Odyssey.Animations.{0}", xmlReader.LocalName);
                 ISerializableResource curve;
                 try
                 {
@@ -68,7 +82,7 @@ namespace Odyssey.Animations
                 }
                 curve.DeserializeXml(resourceProvider, xmlReader);
                 var animationCurve = (IAnimationCurve)curve;
-                animationCurve.Name = string.Format("{0}Curve{1:D2}", Name, animationCurves.Count-1);
+                animationCurve.Name = string.Format("{0}Curve{1:D2}", Name, animationCurves.Count+1);
                 AddCurve(animationCurve);
             }
             

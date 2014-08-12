@@ -1,8 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Odyssey.Engine;
+using Odyssey.Geometry;
 using Odyssey.Graphics;
 using Odyssey.Serialization;
+using Odyssey.Utilities.Logging;
 using Odyssey.Utilities.Reflection;
 using System;
 using System.Collections.Generic;
@@ -16,17 +19,18 @@ namespace Odyssey.Animations
     public abstract class AnimationCurve<TKeyFrame> : ISerializableResource, IResource, IAnimationCurve, IEnumerable<TKeyFrame> 
         where TKeyFrame : class, IKeyFrame
     {
-        public delegate object CurveFunction(TKeyFrame start, TKeyFrame end, TimeSpan time);
+        public delegate object CurveFunction(TKeyFrame start, TKeyFrame end, float time);
 
         private readonly List<TKeyFrame> keyFrames;
-
         private TimeSpan elapsedTime;
         private object target;
+
+        internal Animation Animation { get; set; }
 
         public int Length { get { return keyFrames.Count; } }
 
         /// <inheritdoc/>
-        public float Duration { get { return (float)keyFrames.Max().Time.TotalSeconds; } }
+        public float Duration { get { return keyFrames.Max(kf => kf.Time); }}
         public string TargetProperty { get; internal set; }
         public string TargetName { get; internal set; }
         public string Name { get; set; }
@@ -50,23 +54,22 @@ namespace Odyssey.Animations
             keyFrames.Clear();
         }
 
-        public object Evaluate(TimeSpan time, bool forward = true)
+        public object Evaluate(float time)
         {
             Contract.Requires<InvalidOperationException>(Length > 0, "Animation must contain at least one KeyFrames");
-            TKeyFrame start;
-            TKeyFrame end;
-            if (forward)
-            {
-                start = keyFrames.Last(kf => kf.Time <= time);
-                end = keyFrames.FirstOrDefault(kf => kf.Time > time) ?? keyFrames.First(kf => kf.Time == time);
-            }
-            else
-            {
-                start = keyFrames.LastOrDefault(kf => kf.Time > time) ?? keyFrames.First(kf => kf.Time == time);
-                end = keyFrames.First(kf => kf.Time <= time);
-            }
+            TKeyFrame start = keyFrames.First();
+            TKeyFrame end = keyFrames.Last();
+            if (time <= start.Time)
+                return start.Value;
+            else if (time > end.Time)
+                return end.Value;
 
-            return Function(start, end, time);
+            start = keyFrames.FirstOrDefault(kf => kf.Time < time) ?? start;
+            end = keyFrames.First(kf => kf.Time > start.Time);
+            object result = Function(start, end, time);
+
+            LogEvent.Engine.Info("{0}-{1}-{2} : {3}", start.Time, time, end.Time, result);
+            return result;
         }
 
         #region IResourceProvider
@@ -98,12 +101,14 @@ namespace Odyssey.Animations
 
         #endregion IXmlSerializable
 
-        protected static float Map(TimeSpan start, TimeSpan end, TimeSpan value)
+        protected static float Map(float start, float end, float time)
         {
-            float low = (float)(start.TotalMilliseconds);
-            float high = (float)(end.TotalMilliseconds);
-            float time = (float)(value.TotalMilliseconds);
-            return (time - low) / (high - low);
+            float denominator = end - start;
+            if (MathHelper.ScalarNearEqual(denominator, 0))
+                return 0;
+
+            float result = (time - start) / denominator;
+            return MathHelper.Clamp(result, 0, 1);
         }
 
         #region IEnumerable<TKeyFrame>

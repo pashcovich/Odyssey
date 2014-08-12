@@ -1,5 +1,8 @@
 ﻿using System.Linq;
+using Odyssey.Animations;
 using Odyssey.Engine;
+using Odyssey.Geometry;
+using Odyssey.Utilities.Reflection;
 using SharpDX;
 using SharpDX.Direct2D1;
 
@@ -19,8 +22,32 @@ namespace Odyssey.Graphics
 
         public Vector2 Center { get { return radialGradient.Center; } }
         public Vector2 OriginOffset { get { return radialGradient.OriginOffset; } }
-        public float RadiusX { get { return radialGradient.RadiusX; } }
-        public float RadiusY { get { return radialGradient.RadiusY; } }
+
+        [Animatable]
+        public float RadiusX
+        {
+            get { return radialGradient.RadiusX; }
+            set
+            {
+                if (MathHelper.ScalarNearEqual(radialGradient.RadiusX, value))
+                    return;
+                radialGradient.RadiusX = value;
+                Resource.RadiusX = value;
+            }
+        }
+
+        [Animatable]
+        public float RadiusY
+        {
+            get { return radialGradient.RadiusY; }
+            set
+            {
+                if (MathHelper.ScalarNearEqual(radialGradient.RadiusY, value))
+                    return;
+                radialGradient.RadiusY = value;
+                Resource.RadiusY = value;
+            }
+        }
 
         public static RadialGradientBrush New(string name, Direct2DDevice device, RadialGradient radialGradient)
         {

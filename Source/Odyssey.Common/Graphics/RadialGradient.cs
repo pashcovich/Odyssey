@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Expressions;
 using Odyssey.Animations;
+using Odyssey.Geometry;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
 using SharpDX;
@@ -11,15 +13,15 @@ namespace Odyssey.Graphics
     public class RadialGradient : Gradient, IEquatable<RadialGradient>
     {
         private static int count;
+        private float radiusX;
 
         public Vector2 Center { get; private set; }
 
         public Vector2 OriginOffset { get; private set; }
 
-        [Animatable]
-        public float RadiusX { get; private set; }
+        public float RadiusX { get; set; }
 
-        public float RadiusY { get; private set; }
+        public float RadiusY { get; set; }
 
         public RadialGradient()
             : base(string.Format("{0}{1:D2}", typeof(RadialGradient).Name, ++count), GradientType.Radial)
@@ -43,7 +45,6 @@ namespace Odyssey.Graphics
             return new RadialGradient(name, Vector2.Zero, Vector2.Zero, 1, 1, new GradientStopCollection(gradientStops));
         }
 
-
         protected override void OnReadXml(XmlDeserializationEventArgs e)
         {
             var reader = e.XmlReader;
@@ -53,8 +54,8 @@ namespace Odyssey.Graphics
             string sRadiusY = reader.GetAttribute("RadiusY");
             Center = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.DecodeFloatVector2(sStart);
             OriginOffset = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.DecodeFloatVector2(sEnd);
-            RadiusX = string.IsNullOrEmpty(sRadiusX) ? 0 : float.Parse(sRadiusX);
-            RadiusY = string.IsNullOrEmpty(sRadiusY) ? 0 : float.Parse(sRadiusY);
+            RadiusX = string.IsNullOrEmpty(sRadiusX) ? 0 : float.Parse(sRadiusX, CultureInfo.InvariantCulture);
+            RadiusY = string.IsNullOrEmpty(sRadiusY) ? 0 : float.Parse(sRadiusY, CultureInfo.InvariantCulture);
             base.OnReadXml(e);
         }
 

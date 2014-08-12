@@ -1,29 +1,16 @@
 ﻿using System;
-using System.ComponentModel;
 using Odyssey.Animations;
 using Odyssey.ViewModel;
 using SharpDX;
 
 namespace Odyssey.Graphics
 {
-    public class GradientStop : ViewModelBase,IEquatable<GradientStop>
+    public class GradientStop : IEquatable<GradientStop>
     {
-        private Color4 color;
-
         internal int Index { get; set; }
 
         [Animatable]
-        public Color4 Color
-        {
-            get { return color; }
-            set
-            {
-                if (color == value)
-                    return;
-                color = value;
-                RaisePropertyChanged();
-            }
-        }
+        public Color4 Color { get; set; }
 
         public float Offset { get; set; }
 

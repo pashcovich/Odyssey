@@ -43,10 +43,10 @@ namespace Odyssey.UserInterface.Style
                 if (!visualStateDefinition.Animations.Any())
                     continue;
 
-                var attachedAnimations = from animation in visualStateDefinition.Animations
+                var attachedAnimations = (from animation in visualStateDefinition.Animations
                     from curve in animation.Curves
                     where curve.TargetName == newShape.Name
-                    select animation;
+                    select animation).Distinct();
 
                 control.AnimationController.AddAnimations(attachedAnimations);
             }
