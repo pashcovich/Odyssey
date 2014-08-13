@@ -1,97 +1,74 @@
-﻿#region License
-
+﻿
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
-//
+// 
 // The Odyssey Engine is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License Version 3 as published by
 // the Free Software Foundation.
-//
+// 
 // The Odyssey Engine is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
-#endregion License
-
-#region Using Directives
-
+using System;
+using System.Collections.Generic;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Style;
 using SharpDX;
-using System;
-using System.Linq;
-
-#endregion Using Directives
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class Control : UIElement, IControl
+    public abstract class Control : UIElement, IControl, IResourceProvider
     {
         public const string DefaultText = "Default";
         public const string EmptyStyle = "Empty";
-        private readonly string controlDescriptionClass;
-        private ControlDescription description;
+
+        private readonly string controlStyleClass;
+        private ControlStyle style;
         private TextDescription textDescription;
-        private string textDescriptionClass;
-
-        protected Control(string descriptionClass, string textDescriptionClass = DefaultText)
-        {
-            controlDescriptionClass = descriptionClass;
-            this.textDescriptionClass = textDescriptionClass;
-        }
-
-        protected IShape[] ActiveStyle { get; set; }
-
-        protected ShapeMap ShapeMap { get; private set; }
-
-        #region Events
+        private string textStyleClass;
+        private VisualState visualState;
 
         /// <summary>
-        /// Occurs when the <see cref="ControlDescription"/> property value changes.
+        /// Occurs when the <see cref="UserInterface.Style.ControlStyle"/> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> ControlDefinitionChanged;
 
         /// <summary>
-        /// Occurs when the <see cref="TextDefinition"/> property value changes.
+        /// Occurs when the <see cref="UserInterface.Style.TextStyle"/> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> TextStyleChanged;
 
-        /// <summary>
-        /// Raises the <see cref="ControlDefinitionChanged"/> event.
-        /// </summary>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event
-        /// data.</param>
-        protected virtual void OnControlDefinitionChanged(EventArgs e)
+        protected Control(string styleClass, string textStyleClass = DefaultText)
         {
-            if (!DesignMode)
-                OnUpdate(e);
-
-            RaiseEvent(ControlDefinitionChanged, this, e);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="TextStyleChanged"/> event.
-        /// </summary>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event
-        /// data.</param>
-        protected virtual void OnTextDefinitionChanged(EventArgs e)
-        {
-            RaiseEvent(TextStyleChanged, this, e);
-            if (!DesignMode)
-                OnUpdate(e);
-        }
-
-        #endregion Events
-
-        #region Properties
-
-        public string DescriptionClass
-        {
-            get { return controlDescriptionClass; }
+            controlStyleClass = styleClass;
+            this.textStyleClass = textStyleClass;
         }
 
         public Thickness Padding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref = "Style" /> to use for this control.
+        /// </summary>
+        /// <value>The <see cref = "Style" /> object that contains information on how to style
+        /// the text appearance of this control.</value>
+        public ControlStyle Style
+        {
+            get { return style; }
+            private set
+            {
+                if (style == value) return;
+
+                style = value;
+                OnControlDefinitionChanged(EventArgs.Empty);
+            }
+        }
+
+        public string StyleClass
+        {
+            get { return controlStyleClass; }
+        }
 
         /// <summary>
         /// Gets or sets the <see cref = "TextDescription" /> to use for this control.
@@ -109,82 +86,103 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        public string TextDescriptionClass
+        public string TextStyleClass
         {
-            get { return textDescriptionClass; }
+            get { return textStyleClass; }
             set
             {
-                if (string.Equals(textDescriptionClass, value))
+                if (string.Equals(textStyleClass, value))
                     return;
 
-                textDescriptionClass = value;
+                textStyleClass = value;
                 if (!DesignMode)
                     ApplyTextDescription();
             }
         }
+        protected ControlStatus ActiveStatus { get; set; }
 
-        /// <summary>
-        /// Gets or sets the <see cref = "Description" /> to use for this control.
-        /// </summary>
-        /// <value>The <see cref = "Description" /> object that contains information on how to style
-        /// the text appearance of this control.</value>
-        public ControlDescription Description
+        protected VisualState VisualState
         {
-            get { return description; }
-            private set
-            {
-                if (description == value) return;
-
-                description = value;
-                OnControlDefinitionChanged(EventArgs.Empty);
-            }
+            get { return visualState; }
         }
 
-        #endregion Properties
+        public override void Render()
+        {
+            foreach (IShape shape in VisualState)
+                shape.Render();
+        }
 
-        #region Protected methods
+        internal override UIElement Copy()
+        {
+            Control newControl = (Control)base.Copy();
+            newControl.Style = Style;
+            newControl.Padding = Padding;
+            newControl.TextStyleClass = TextStyleClass;
+
+            return newControl;
+        }
 
         protected virtual void ApplyControlDescription()
         {
-            var description = Overlay.StyleService.GetControlDescription(Overlay.ControlTheme, DescriptionClass);
+            if (StyleClass == ControlStyle.Empty)
+                return;
 
-            if (Width == 0 && Height == 0 && description.Size != default(Size2F))
+            var controlStyle = Overlay.Theme.GetResource<ControlStyle>(StyleClass);
+
+            if (Width == 0 && controlStyle.Width > 0)
             {
-                Width = description.Size.Width;
-                Height = description.Size.Height;
+                Width = controlStyle.Width;
             }
 
-            if (Padding.IsEmpty && !description.Padding.IsEmpty)
-                Padding = description.Padding;
+            if (Height == 0 && controlStyle.Height > 0)
+            {
+                Height = controlStyle.Height;
+            }
+
+            if (Padding.IsEmpty && !controlStyle.Padding.IsEmpty)
+                Padding = controlStyle.Padding;
 
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
-            ShapeMap = new ShapeMap(this);
-            LayoutUpdated += (s, e) => ShapeMap.Update();
-            Description = description;
+            RemoveAndDispose(ref visualState);
+            visualState = ToDispose(controlStyle.CreateVisualState(this));
+            visualState.Initialize();
+            LayoutUpdated += (s, e) => VisualState.Update();
+            Style = controlStyle;
         }
 
         protected virtual void ApplyTextDescription()
         {
-            var textDescription = Overlay.StyleService.GetTextDescription(Overlay.TextTheme, TextDescriptionClass);
+            // Todo refactor text themes
+            var textDescription = Overlay.Services.GetService<IStyleService>().GetTextStyle(Overlay.TextTheme, TextStyleClass);
             TextDescription = textDescription;
+        }
+
+        /// <summary>
+        /// Raises the <see cref="ControlDefinitionChanged"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event
+        /// data.</param>
+        protected virtual void OnControlDefinitionChanged(EventArgs e)
+        {
+            if (!DesignMode)
+                RaiseEvent(ControlDefinitionChanged, this, e);
         }
 
         protected override void OnDesignModeChanged(ControlEventArgs e)
         {
             base.OnDesignModeChanged(e);
-            if (ActiveStyle == null)
+            if (ActiveStatus == ControlStatus.None)
                 return;
 
-            foreach (UIElement element in ActiveStyle)
+            foreach (Shape element in VisualState)
                 element.DesignMode = e.Control.DesignMode;
         }
 
         protected override void OnInitialized(ControlEventArgs e)
         {
             base.OnInitialized(e);
-            if (string.Equals(DescriptionClass, "Empty")) return;
-            ShapeMap.Initialize();
-            ActiveStyle = ShapeMap.GetShapes(ControlStatus.Enabled).ToArray();
+            if (string.Equals(StyleClass, "Empty")) return;
+            ActiveStatus = IsEnabled ? ControlStatus.Enabled : ControlStatus.Disabled;
         }
 
         protected override void OnInitializing(ControlEventArgs e)
@@ -194,22 +192,40 @@ namespace Odyssey.UserInterface.Controls
             ApplyTextDescription();
         }
 
-        #endregion Protected methods
-
-        public override void Render()
+        /// <summary>
+        /// Raises the <see cref="TextStyleChanged"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event
+        /// data.</param>
+        protected virtual void OnTextDefinitionChanged(EventArgs e)
         {
-            foreach (IShape shape in ActiveStyle)
-                shape.Render();
+            if (!DesignMode)
+                RaiseEvent(TextStyleChanged, this, e);
         }
 
-        internal override UIElement Copy()
+        public Shape GetShape(string shapeName)
         {
-            Control newControl = (Control) base.Copy();
-            newControl.Description = Description;
-            newControl.Padding = Padding;
-            newControl.TextDescriptionClass = TextDescriptionClass;
-
-            return newControl;
+            return VisualState[shapeName];
         }
+
+        #region IResourceProvider
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            return GetShape(resourceName) as TResource;
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return VisualState; }
+        }
+
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+            return VisualState.ContainsResource(resourceName);
+        }
+
+        #endregion
+
     }
 }

@@ -9,7 +9,7 @@ using System;
 
 namespace Odyssey.UserInterface
 {
-    public interface IUIElement : IRenderable
+    public interface IUIElement : IRenderable, IResource
     {
         Vector2 AbsolutePosition { get; }
 
@@ -22,8 +22,6 @@ namespace Odyssey.UserInterface
         bool IsHighlighted { get; set; }
 
         bool IsVisible { get; set; }
-
-        string Name { get; set; }
 
         UIElement Parent { get; }
 

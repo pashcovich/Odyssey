@@ -8,9 +8,10 @@ using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using System;
 using System.Diagnostics.Contracts;
-using Brush = Odyssey.UserInterface.Style.Brush;
+using Brush = Odyssey.Graphics.Brush;
 using D2DFactory = SharpDX.Direct2D1.Factory1;
 using DWFactory = SharpDX.DirectWrite.Factory1;
+using Ellipse = Odyssey.Graphics.Shapes.Ellipse;
 using FactoryType = SharpDX.Direct2D1.FactoryType;
 
 #endregion Using Directives
@@ -140,12 +141,12 @@ namespace Odyssey.Engine
             deviceContext.DrawRectangle(shape.BoundingRectangle, brush, strokeThickness);
         }
 
-        public void DrawEllipse(Graphics.Shapes.Ellipse ellipse, Brush brush, float strokeThickness = 1.0f)
+        public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeThickness = 1.0f)
         {
             deviceContext.DrawEllipse(ellipse, brush, strokeThickness);
         }
 
-        public void FillEllipse(Graphics.Shapes.Ellipse ellipse, Brush brush)
+        public void FillEllipse(Ellipse ellipse, Brush brush)
         {
             deviceContext.FillEllipse(ellipse, brush);
         }
@@ -212,9 +213,6 @@ namespace Odyssey.Engine
             RemoveAndDispose(ref deviceContext);
             RemoveAndDispose(ref device);
             RemoveAndDispose(ref factory);
-
-            // TODO improve FontCollection disposal
-            services.GetService<IStyleService>().FontCollection.Dispose();
         }
 
         #region Operators

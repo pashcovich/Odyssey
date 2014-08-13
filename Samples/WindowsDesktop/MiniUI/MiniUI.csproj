@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(SolutionDir)\Odyssey.proj" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,40 +13,30 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'net45|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Direct2D1.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.DXGI.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.ObjectModel" />
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.XmlSerializer" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
@@ -70,6 +61,7 @@
     <Content Include="..\Assets\Default.ocd">
       <Link>Assets\Default.ocd</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="..\Assets\Default.otd">
       <Link>Assets\Default.otd</Link>

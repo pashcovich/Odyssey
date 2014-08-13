@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using Odyssey.Content;
 using Odyssey.Daedalus.Shaders;
 using Odyssey.Daedalus.Shaders.Methods;
 using Odyssey.Daedalus.Shaders.Nodes;
-using Odyssey.Graphics.Shaders;
 using SharpDX.Serialization;
 
 namespace Odyssey.Daedalus.Serialization

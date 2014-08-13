@@ -35,21 +35,18 @@ namespace Odyssey.Engine
         internal PixelShaderStage PixelShader;
         internal RasterizerStage RasterizerStage;
         internal VertexShaderStage VertexShader;
-        private readonly TechniquePool techniquePool;
-        private readonly RenderTargetView[] currentRenderTargetViews;
         private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
-
-#if DIRECTX11_1
         private readonly DeviceContext1 context;
+        private readonly RenderTargetView[] currentRenderTargetViews;
         private readonly Device1 device;
+        private readonly DeviceFeatures features;
+        private readonly bool isDebugMode;
+        private readonly TechniquePool techniquePool;
+#if DIRECTX11_1
 #else
         SharpDX.Direct3D11.DeviceContext context;
         SharpDX.Direct3D11.Device device;
 #endif
-        private readonly DeviceFeatures features;
-
-        private readonly bool isDebugMode;
-
         private readonly ViewportF[] viewports;
 
         private int actualRenderTargetViewCount;
@@ -58,11 +55,10 @@ namespace Odyssey.Engine
 
         private RenderTargetView currentRenderTargetView;
 
+        private Technique currentTechnique;
         private VertexInputLayout currentVertexInputLayout;
 
         private int maxSlotCountForVertexBuffer;
-        private Technique currentTechnique;
-
         protected DirectXDevice(DriverType type, DeviceCreationFlags flags = DeviceCreationFlags.None,
             params FeatureLevel[] featureLevels)
             : this((featureLevels != null && featureLevels.Length > 0)
@@ -147,21 +143,6 @@ namespace Odyssey.Engine
             get { return Presenter != null ? Presenter.DepthStencilBuffer : null; }
         }
 
-        internal Technique CurrentTechnique
-        {
-            get { return currentTechnique; }
-        }
-
-        internal void SetCurrentEffect(Technique technique)
-        {
-            Contract.Requires<ArgumentNullException>(technique != null, "technique");
-            
-            SetShader((Graphics.Shaders.VertexShader) technique[ShaderType.Vertex]);
-            if (technique.ContainsShader(ShaderType.Pixel))
-                SetShader((Graphics.Shaders.PixelShader) technique[ShaderType.Pixel]);
-            currentTechnique = technique;
-        }
-
         /// <summary>
         /// Gets the status of this device.
         /// </summary>
@@ -208,11 +189,6 @@ namespace Odyssey.Engine
             }
         }
 
-        public TechniquePool TechniquePool
-        {
-            get { return techniquePool; }
-        }
-
         public DeviceFeatures Features
         {
             get { return features; }
@@ -239,10 +215,10 @@ namespace Odyssey.Engine
             get { return Presenter != null ? Presenter.BackBuffer : null; }
         }
 
-        internal SamplerStateCollection SamplerStates { get; private set; }
-        internal RasterizerStateCollection RasterizerStates { get; private set; }
-        internal BlendStateCollection BlendStates { get; private set; }
-        internal DepthStencilStateCollection DepthStencilStates { get; private set; }
+        public TechniquePool TechniquePool
+        {
+            get { return techniquePool; }
+        }
 
         /// <summary>
         /// Gets the main viewport.
@@ -259,21 +235,20 @@ namespace Odyssey.Engine
             set { SetViewport(value); }
         }
 
+        internal BlendStateCollection BlendStates { get; private set; }
+
+        internal Technique CurrentTechnique
+        {
+            get { return currentTechnique; }
+        }
+
+        internal DepthStencilStateCollection DepthStencilStates { get; private set; }
+
+        internal RasterizerStateCollection RasterizerStates { get; private set; }
+
         internal IntPtr ResetSlotsPointers { get; private set; }
 
-        #region IDirect3DProvider
-
-        DeviceContext1 IDirect3DProvider.Context
-        {
-            get { return context; }
-        }
-
-        Device1 IDirect3DProvider.Device
-        {
-            get { return device; }
-        }
-
-        #endregion IDirect3DProvider
+        internal SamplerStateCollection SamplerStates { get; private set; }
 
         private PrimitiveTopology PrimitiveType
         {
@@ -1027,6 +1002,28 @@ namespace Odyssey.Engine
             RasterizerStage.SetViewport(viewport);
         }
 
+        internal void SetCurrentEffect(Technique technique)
+        {
+            Contract.Requires<ArgumentNullException>(technique != null, "technique");
+            
+            SetShader((Graphics.Shaders.VertexShader) technique[ShaderType.Vertex]);
+            if (technique.ContainsShader(ShaderType.Pixel))
+                SetShader((Graphics.Shaders.PixelShader) technique[ShaderType.Pixel]);
+            currentTechnique = technique;
+        }
+        #region IDirect3DProvider
+
+        DeviceContext1 IDirect3DProvider.Context
+        {
+            get { return context; }
+        }
+
+        Device1 IDirect3DProvider.Device
+        {
+            get { return device; }
+        }
+
+        #endregion IDirect3DProvider
         protected override void Dispose(bool disposeManagedResources)
         {
             if (disposeManagedResources)
@@ -1042,7 +1039,7 @@ namespace Odyssey.Engine
                     Presenter.Dispose();
                     Presenter = null;
                     GraphicsAdapter.Dispose();
-                    WICHelper.Factory.Dispose();
+                    WICHelper.Dispose();
                 }
 
             }

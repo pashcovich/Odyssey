@@ -37,16 +37,12 @@ namespace Odyssey.UserInterface.Controls
         private readonly Direct2DDevice device;
         private readonly IServiceRegistry services;
         private readonly IStyleService styleService;
+        private Theme theme;
         private UIElement captureElement;
 
         #region Properties
 
-        public string ControlTheme { get; private set; }
-
-        public IStyleService StyleService
-        {
-            get { return styleService; }
-        }
+        public Theme Theme { get { return theme; } }
 
         public string TextTheme { get; private set; }
 
@@ -87,9 +83,10 @@ namespace Odyssey.UserInterface.Controls
             IsFocusable = true;
 
             TextTheme = DefaultTextTheme;
-            ControlTheme = DefaultControlTheme;
+            styleService = ToDispose(services.GetService<IStyleService>());
+            theme = styleService.GetTheme(DefaultControlTheme);
 
-            styleService = services.GetService<IStyleService>();
+            
             EnteredElement = this;
             FocusedElement = this;
             Overlay = this;
@@ -120,6 +117,7 @@ namespace Odyssey.UserInterface.Controls
 
         public void EndDesign()
         {
+            Initialize();
             DesignMode = false;
         }
 
@@ -137,6 +135,7 @@ namespace Odyssey.UserInterface.Controls
                 foreach (UIElement uiElement in Controls)
                     uiElement.Dispose();
             }
+            // TODO improve FontCollection disposal
             IsInited = false;
         }
 
@@ -202,6 +201,12 @@ namespace Odyssey.UserInterface.Controls
 
             ProcessPointerRelease(e);
             e.Handled = true;
+        }
+
+        public override void Update(ITimeService time)
+        {
+            foreach (var control in TreeTraversal.PreOrderVisit(this).Where(c => c.AnimationController.IsPlaying))
+                control.Update(time);
         }
     }
 }

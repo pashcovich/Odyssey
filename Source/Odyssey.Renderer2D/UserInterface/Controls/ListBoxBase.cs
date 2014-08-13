@@ -23,7 +23,7 @@ namespace Odyssey.UserInterface.Controls
             if (Children.IsEmpty)
                 return;
 
-            Style.Layout.UpdateLayoutHorizontal(this, Children);
+            UserInterface.Style.Layout.UpdateLayoutHorizontal(this, Children);
         }
     }
 }

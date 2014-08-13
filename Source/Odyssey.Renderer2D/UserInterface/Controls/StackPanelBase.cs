@@ -35,9 +35,9 @@ namespace Odyssey.UserInterface.Controls
                 return;
 
             if (Orientation == Orientation.Horizontal)
-                Style.Layout.UpdateLayoutHorizontal(this, Children);
+                UserInterface.Style.Layout.UpdateLayoutHorizontal(this, Children);
             else
-                Style.Layout.UpdateLayoutVertical(this, Children);
+                UserInterface.Style.Layout.UpdateLayoutVertical(this, Children);
         }
     }
 }

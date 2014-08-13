@@ -1,7 +1,10 @@
 ﻿#region Using Directives
 
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Odyssey.Content;
 using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 using System;
@@ -10,6 +13,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using SharpDX.DirectWrite;
 using Font = Odyssey.Content.Font;
+using Path = System.IO.Path;
 
 #endregion Using Directives
 
@@ -18,6 +22,7 @@ namespace Odyssey.UserInterface.Style
     public class StyleManager : Component, IStyleService
     {
         private readonly IAssetProvider content;
+        private readonly Dictionary<string, IResource> resources;
         private FontCollection fontCollection;
         private NativeFontLoader fontLoader;
         private readonly IServiceRegistry services;
@@ -28,11 +33,12 @@ namespace Odyssey.UserInterface.Style
             this.services = services;
             content = services.GetService<IAssetProvider>();
 
-            content.AddMapping("ControlDefinitions", typeof (ControlDescription));
+            content.AddMapping("Theme", typeof (Theme));
             content.AddMapping("TextDefinitions", typeof (TextDescription));
             content.AddMapping("Font", typeof(Font));
 
             content.AssetsLoaded += InitializeFontCollection;
+            resources = new Dictionary<string, IResource>();
         }
 
         void InitializeFontCollection(object sender, AssetsLoadedEventArgs e)
@@ -47,27 +53,53 @@ namespace Odyssey.UserInterface.Style
             content.AssetsLoaded -= InitializeFontCollection;
         }
 
-        public ControlDescription GetControlDescription(string themeName, string controlClass)
+        [Pure]
+        public bool ContainsTheme(string themeName)
         {
-            if (!content.Contains(themeName))
-                throw new InvalidOperationException(string.Format("[{0}] theme not found.", themeName));
-
-            var theme = content.Load<ControlDescription[]>(themeName);
-
-            var description = theme.FirstOrDefault(c => c.Name == controlClass);
-
-            if (description == null)
-            {
-                LogEvent.UserInterface.Warning("[{0}] description not found.", controlClass);
-                return theme.First(c => c.Name == ControlDescription.Error);
-            }
-            else return description;
+            return content.Contains(themeName);
         }
 
-        public TextDescription GetTextDescription(string themeName, string controlClass)
+        void CheckTheme(string themeName)
         {
-            if (!content.Contains(themeName))
-                throw new InvalidOperationException(string.Format("[{0}] theme not found.", themeName));
+            if (!ContainsTheme(themeName))
+                throw new ArgumentException(string.Format("Theme [{0}] not found.", themeName));
+        }
+
+        [Pure]
+        public bool ContainsResource(string resourceName)
+        {
+            return resources.ContainsKey(resourceName);
+        }
+
+        public void AddResource(IResource resource)
+        {
+            Contract.Requires<ArgumentException>(!ContainsResource(resource.Name), "A resource with the same name is already in the collection");
+
+            resources.Add(resource.Name, resource); 
+            var disposableResource = resource as IDisposable;
+            if (disposableResource != null)
+                ToDispose(disposableResource);
+        }
+
+        public Theme GetTheme(string themeName)
+        {
+            CheckTheme(themeName);
+            return content.Load<Theme>(themeName);
+        }
+
+        public ControlStyle GetControlStyle(string themeName, string controlClass)
+        {
+            CheckTheme(themeName);
+
+            var theme = content.Load<Theme>(themeName);
+
+            var style = theme.GetResource<ControlStyle>(controlClass);
+            return style;
+        }
+
+        public TextDescription GetTextStyle(string themeName, string controlClass)
+        {
+            CheckTheme(themeName);
 
             var theme = content.Load<TextDescription[]>(themeName);
 
@@ -75,8 +107,8 @@ namespace Odyssey.UserInterface.Style
 
             if (description == default(TextDescription))
             {
-                LogEvent.UserInterface.Warning("[{0}] description not found.", controlClass);
-                return theme.First(c => c.Name == ControlDescription.Error);
+                LogEvent.UserInterface.Warning("[{0}] Text Style not found.", controlClass);
+                return theme.First(c => c.Name == ControlStyle.Error);
             }
             else return description;
         }
@@ -86,6 +118,24 @@ namespace Odyssey.UserInterface.Style
             XmlSerializer xmlSerializer = new XmlSerializer(typeof (T[]));
             T[] definitions = (T[]) xmlSerializer.Deserialize(stream);
             return definitions;
+        }
+
+        public TResource GetResource<TResource>(string resourceName) where TResource : class, IResource
+        {
+            if (!ContainsResource(resourceName)) 
+                throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
+
+            var resource = resources[resourceName];
+            TResource resultResource = resource as TResource;
+            if (resultResource == null)
+                throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
+                    resourceName, resource, typeof(TResource).Name));
+            return resultResource;
+        }
+
+        public IEnumerable<IResource> Resources
+        {
+            get { throw new NotImplementedException(); }
         }
     }
 }

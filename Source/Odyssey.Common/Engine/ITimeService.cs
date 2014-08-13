@@ -27,8 +27,6 @@ namespace Odyssey.Engine
         /// </summary>
         int FrameCount { get; }
 
-        void Update(TimeSpan totalapplicationTime, TimeSpan elapsedApplicationTime, bool isRunningSlowly);
-
         /// <summary>
         /// Gets a value indicating the time (in seconds) this frame took to render.
         /// </summary>

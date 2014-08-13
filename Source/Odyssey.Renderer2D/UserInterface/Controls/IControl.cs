@@ -5,6 +5,6 @@ namespace Odyssey.UserInterface.Controls
 {
     public interface IControl : IUIElement
     {
-        ControlDescription Description { get; }
+        Style.ControlStyle Style { get; }
     }
 }

@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using Odyssey.Animations;
 using Odyssey.Engine;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
@@ -29,15 +30,9 @@ namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
-        #region Private Fields
-
         private float height;
         private Matrix3x2 transform;
         private float width;
-
-        #endregion Private Fields
-
-        #region Public Properties
 
         public RectangleF BoundingRectangle
         {
@@ -108,6 +103,8 @@ namespace Odyssey.UserInterface
             internal set { isFocusable = value; }
         }
 
+        public bool IsInited { get; protected set; }
+
         public Thickness Margin { get; set; }
 
         /// <summary>
@@ -118,6 +115,11 @@ namespace Odyssey.UserInterface
         public Size2F Size
         {
             get { return new Size2F(Width, Height); }
+        }
+
+        public Matrix3x2 Transform
+        {
+            get { return transform; }
         }
 
         public float Width
@@ -133,6 +135,71 @@ namespace Odyssey.UserInterface
                 if (DesignMode) return;
                 OnSizeChanged(EventArgs.Empty);
             }
+        }
+
+        public AnimationController AnimationController
+        {
+            get { return animationController; }
+        }
+
+        internal IEnumerable<BindingExpression> Bindings
+        {
+            get { return bindings.Values; }
+        }
+
+        internal bool IsBeingRemoved { get; set; }
+
+        protected internal virtual Depth Depth { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the mouse cursor is currently inside.
+        /// </summary>
+        /// <value><c>true</c> if the mouse pointer is currently inside; otherwise,
+        /// <c>false</c>.</value>
+        protected internal bool IsInside
+        {
+            get { return isInside && canRaiseEvents; }
+            set { isInside = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this control is clicked.
+        /// </summary>
+        /// <value><c>true</c> if this control is clicked; otherwise, <c>false</c>.</value>
+        /// <remarks>
+        /// This value stays <c>true</c> for as long as the user presses the mouse button.
+        /// </remarks>
+        protected internal bool IsPressed { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this control is selected.
+        /// </summary>
+        /// <value><c>true</c> if this control is selected; otherwise, <c>false</c>.</value>
+        protected internal bool IsSelected
+        {
+            get { return isSelected; }
+            set
+            {
+                isSelected = value;
+                OnSelectedChanged(EventArgs.Empty);
+            }
+        }
+
+        protected internal Overlay Overlay { get; internal set; }
+
+        /// <summary>
+        /// Gets the top left position in the client area of the control.
+        /// </summary>
+        /// <value>The top left position.</value>
+        /// <remarks>
+        /// The top left position is computed considering the <see cref = "BorderSize" /> value and
+        /// the <see cref = "Thickness" />value.
+        /// </remarks>
+        protected internal Vector2 TopLeftPosition { get; set; }
+
+        protected Direct2DDevice Device
+        {
+            get { return Overlay.Device; }
         }
 
         /// <summary>
@@ -192,8 +259,6 @@ namespace Odyssey.UserInterface
                 }
             }
         }
-
-        public bool IsInited { get; protected set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the control is visible or not.
@@ -272,86 +337,5 @@ namespace Odyssey.UserInterface
                 OnMove(EventArgs.Empty);
             }
         }
-
-        #endregion Public Properties
-
-        #region Internal Properties
-
-        internal Vector3 AbsoluteOrthoPosition { get; set; }
-
-        internal IEnumerable<BindingExpression> Bindings
-        {
-            get { return bindings.Values; }
-        }
-
-        internal bool IsBeingRemoved { get; set; }
-
-        #endregion Internal Properties
-
-        #region Protected Internal Properties
-
-        protected internal virtual Depth Depth { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the mouse cursor is currently inside.
-        /// </summary>
-        /// <value><c>true</c> if the mouse pointer is currently inside; otherwise,
-        /// <c>false</c>.</value>
-        protected internal bool IsInside
-        {
-            get { return isInside && canRaiseEvents; }
-            set { isInside = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this control is clicked.
-        /// </summary>
-        /// <value><c>true</c> if this control is clicked; otherwise, <c>false</c>.</value>
-        /// <remarks>
-        /// This value stays <c>true</c> for as long as the user presses the mouse button.
-        /// </remarks>
-        protected internal bool IsPressed { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this control is selected.
-        /// </summary>
-        /// <value><c>true</c> if this control is selected; otherwise, <c>false</c>.</value>
-        protected internal bool IsSelected
-        {
-            get { return isSelected; }
-            set
-            {
-                isSelected = value;
-                OnSelectedChanged(EventArgs.Empty);
-            }
-        }
-
-        protected internal Overlay Overlay { get; internal set; }
-
-        /// <summary>
-        /// Gets the top left position in the client area of the control.
-        /// </summary>
-        /// <value>The top left position.</value>
-        /// <remarks>
-        /// The top left position is computed considering the <see cref = "BorderSize" /> value and
-        /// the <see cref = "Thickness" />value.
-        /// </remarks>
-        protected internal Vector2 TopLeftPosition { get; set; }
-
-        #endregion Protected Internal Properties
-
-        #region Protected Properties
-
-        public Matrix3x2 Transform
-        {
-            get { return transform; }
-        }
-
-        protected Direct2DDevice Device
-        {
-            get { return Overlay.Device; }
-        }
-
-        #endregion Protected Properties
     }
 }

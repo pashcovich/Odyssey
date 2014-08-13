@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.WIC;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics
 {
     public partial class Designer
     {

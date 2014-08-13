@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System;
 using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.UserInterface;
@@ -38,7 +39,10 @@ namespace MiniUI
         private readonly RenderForm form;
         private readonly Overlay overlay;
         private readonly UserInterfaceManager uiManager;
-
+        private ApplicationTime applicationTime;
+        private readonly TimerTick timerTick;
+        private TimeSpan totalTime;
+        
         public MiniUIApplication()
         {
             var services = new ServiceRegistry();
@@ -67,6 +71,8 @@ namespace MiniUI
             var content = new ContentManager(services);
             var styleManager = new StyleManager(services);
             uiManager = new DesktopUserInterfaceManager(services);
+            applicationTime = new ApplicationTime();
+            timerTick = new TimerTick();
 
             services.AddService(typeof (IStyleService), styleManager);
             services.AddService(typeof (IUserInterfaceState), uiManager);
@@ -76,7 +82,6 @@ namespace MiniUI
             content.LoadAssetList("Assets/Assets.yaml");
 
             overlay = ToDispose(SampleOverlay.New(services));
-            overlay.Initialize();
             uiManager.Initialize();
             uiManager.CurrentOverlay = overlay;
         }
@@ -92,15 +97,24 @@ namespace MiniUI
             d3dDeviceManager.Context.OutputMerger.SetTargets(d3dDeviceManager.BackBuffer);
             RenderLoop.Run(form, () =>
             {
+                Update();
                 d3dDeviceManager.Context.ClearRenderTargetView(d3dDeviceManager.BackBuffer, Color.Black);
                 Render();
                 d3dDeviceManager.SwapChain.Present(0, PresentFlags.None);
             });
         }
 
-        private void Render()
+        private void Update()
         {
             uiManager.Update();
+            timerTick.Tick();
+            applicationTime.Update(totalTime, timerTick.ElapsedTime, false);
+            overlay.Update(applicationTime);
+            totalTime += timerTick.ElapsedTime;
+        }
+
+        private void Render()
+        {
             overlay.Display();
         }
     }

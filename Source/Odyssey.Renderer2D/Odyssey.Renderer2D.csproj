@@ -33,6 +33,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animations\GradientBrushCurve.cs" />
+    <Compile Include="Animations\GradientBrushKeyFrame.cs" />
     <Compile Include="Content\ControlDefinitionsReader.cs" />
     <Compile Include="Content\Font.cs" />
     <Compile Include="Content\FontReader.cs" />
@@ -40,11 +42,7 @@
     <Compile Include="Content\NativeFontFileStream.cs" />
     <Compile Include="Content\NativeFontLoader.cs" />
     <Compile Include="Content\TextDefinitionsReader.cs" />
-    <Compile Include="Devices\Enums.cs" />
-    <Compile Include="Devices\Key.cs" />
-    <Compile Include="Devices\PointerDevice.cs" />
-    <Compile Include="Devices\PointerPoint.cs" />
-    <Compile Include="Devices\PointerProperties.cs" />
+    <Compile Include="Content\ThemeReader.cs" />
     <Compile Include="Engine\BackBufferSurface.cs" />
     <Compile Include="Engine\Bitmap.cs" />
     <Compile Include="Engine\BitmapTarget.cs" />
@@ -53,6 +51,8 @@
     <Compile Include="Engine\Direct2DDevice.cs" />
     <Compile Include="Engine\Direct2DSurface.cs" />
     <Compile Include="Engine\IDirect2DService.cs" />
+    <Compile Include="Graphics\GradientBrush.cs" />
+    <Compile Include="Graphics\RadialGradientBrush.cs" />
     <Compile Include="Graphics\Shapes\CutCornerRectangle.cs" />
     <Compile Include="Graphics\Shapes\CutCornerRectangleBase.cs" />
     <Compile Include="Graphics\Shapes\CutCornerRectangleOutline.cs" />
@@ -63,13 +63,17 @@
     <Compile Include="Graphics\Shapes\IShape.cs" />
     <Compile Include="Graphics\Shapes\Line.cs" />
     <Compile Include="UserInterface\Controls\Border.cs" />
-    <Compile Include="UserInterface\Style\LinearGradientBrush.cs" />
+    <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
+    <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
+    <Compile Include="UserInterface\Style\FigureData.cs" />
+    <Compile Include="Graphics\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Shapes\PolygonBase.cs" />
     <Compile Include="Graphics\Shapes\Rectangle.cs" />
+    <Compile Include="UserInterface\Style\Theme.cs" />
+    <None Include="UserInterface\Serialization\XmlVisualState.cs" />
     <None Include="Graphics\StereoRenderer.cs" />
     <Compile Include="Graphics\Shapes\Shape.cs" />
-    <Compile Include="Graphics\Shapes\ShapeInitializer.cs" />
-    <Compile Include="UserInterface\Style\Brush.cs" />
+    <Compile Include="Graphics\Brush.cs" />
     <Compile Include="Graphics\Shapes\FigureBegin.cs" />
     <Compile Include="Graphics\Shapes\FigureDesigner.cs" />
     <Compile Include="Graphics\Shapes\FigureEnd.cs" />
@@ -81,11 +85,8 @@
     <Compile Include="Graphics\Shapes\PathGeometry.cs" />
     <Compile Include="Graphics\Shapes\PolygonGeometry.cs" />
     <Compile Include="Graphics\Shapes\PolyLine.cs" />
-    <Compile Include="UserInterface\Style\SolidBrush.cs" />
-    <Compile Include="Interaction\PointerService.cs" />
+    <Compile Include="Graphics\SolidColorBrush.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Talos\Components\UserInterfaceComponent.cs" />
-    <Compile Include="Talos\Systems\UserInterfaceSystem.cs" />
     <Compile Include="UserInterface\Controls\IOverlay.cs" />
     <Compile Include="UserInterface\Style\Exensions.cs" />
     <Compile Include="UserInterface\Controls\Button.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="UserInterface\Controls\IContainer.cs" />
     <Compile Include="UserInterface\Controls\IContentControl.cs" />
     <Compile Include="UserInterface\Controls\IControl.cs" />
-    <Compile Include="UserInterface\Controls\InteractionPanel.cs" />
     <Compile Include="UserInterface\Controls\ItemsControl.cs" />
     <Compile Include="UserInterface\Controls\Label.cs" />
     <Compile Include="UserInterface\Controls\LabelBase.cs" />
@@ -118,32 +118,34 @@
     <Compile Include="UserInterface\Data\UpdateSourceTrigger.cs" />
     <Compile Include="UserInterface\IUIElement.cs" />
     <Compile Include="UserInterface\IUserInterfaceState.cs" />
-    <Compile Include="UserInterface\Style\ControlDescription.cs" />
+    <Compile Include="UserInterface\Style\ControlStyle.cs" />
     <Compile Include="UserInterface\Style\Depth.cs" />
     <Compile Include="UserInterface\Style\Enums.cs" />
     <Compile Include="UserInterface\Style\IStyleService.cs" />
     <Compile Include="UserInterface\Style\Layout.cs" />
     <Compile Include="UserInterface\Style\VectorArtParser.cs" />
-    <Compile Include="Graphics\Shapes\ShapeMap.cs" />
     <Compile Include="UserInterface\Style\StyleManager.cs" />
     <Compile Include="UserInterface\Style\TextDescription.cs" />
     <Compile Include="UserInterface\Style\TextEnums.cs" />
     <Compile Include="UserInterface\Style\Thickness.cs" />
     <Compile Include="UserInterface\Style\VectorCommand.cs" />
+    <Compile Include="UserInterface\Style\VisualState.cs" />
+    <Compile Include="UserInterface\Style\VisualStateDefinition.cs" />
     <Compile Include="UserInterface\TreeTraversal.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElement.Events.cs" />
     <Compile Include="UserInterface\UIElement.Methods.cs" />
     <Compile Include="UserInterface\UIElement.Properties.cs" />
     <Compile Include="UserInterface\UserInterfaceManager.cs" />
-    <Compile Include="UserInterface\Xml\UIParser.cs" />
-    <Compile Include="UserInterface\Xml\XmlBasicControls.cs" />
-    <Compile Include="UserInterface\Xml\XmlColor.cs" />
-    <Compile Include="UserInterface\Xml\XmlCommon.cs" />
-    <Compile Include="UserInterface\Xml\XmlContainers.cs" />
-    <Compile Include="UserInterface\Xml\XmlControlDescription.cs" />
-    <Compile Include="UserInterface\Xml\XmlGradient.cs" />
-    <Compile Include="UserInterface\Xml\XmlTextDescription.cs" />
+    <Compile Include="UserInterface\Serialization\XmlColor.cs" />
+    <None Include="UserInterface\Serialization\XmlControl.cs" />
+    <None Include="UserInterface\Serialization\XmlUIElement.cs" />
+    <None Include="UserInterface\Serialization\XmlContainers.cs" />
+    <None Include="UserInterface\Serialization\XmlControlStyle.cs" />
+    <None Include="UserInterface\Serialization\XmlGradient.cs" />
+    <Compile Include="UserInterface\Style\StyleHelper.cs" />
+    <None Include="UserInterface\Serialization\XmlShape.cs" />
+    <Compile Include="UserInterface\Serialization\XmlTextDescription.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
@@ -158,11 +160,8 @@
       <Project>{7740a46f-0809-49d2-bd34-71f6d8b6d2cc}</Project>
       <Name>Odyssey.Interaction</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Odyssey.Talos\Odyssey.Talos.csproj">
-      <Project>{7e2bc73b-cb14-4d62-89ae-a0eb5a1eaf93}</Project>
-      <Name>Odyssey.Talos</Name>
-    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

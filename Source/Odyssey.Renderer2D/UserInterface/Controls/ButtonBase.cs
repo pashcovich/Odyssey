@@ -16,15 +16,15 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected ButtonBase(string controlDescriptionClass, string textDescriptionClass = ControlTag)
-            : base(controlDescriptionClass, textDescriptionClass)
+        protected ButtonBase(string controlStyleClass, string textStyleClass = ControlTag)
+            : base(controlStyleClass, textStyleClass)
         {
         }
 
         protected override void OnPointerExited(PointerEventArgs e)
         {
             base.OnPointerExited(e);
-            ActiveStyle = ShapeMap.GetShapes(ControlStatus.Enabled).ToArray();
+            ActiveStatus = ControlStatus.Enabled;
         }
 
         protected override void OnInitializing(ControlEventArgs e)
@@ -35,12 +35,20 @@ namespace Odyssey.UserInterface.Controls
                 Content = new Label() { Text = Name };
                 Content.Initialize();
             }
+            ToDispose(Content);
         }
 
         protected override void OnPointerEnter(PointerEventArgs e)
         {
             base.OnPointerEnter(e);
-            ActiveStyle = ShapeMap.GetShapes(ControlStatus.Highlighted).ToArray();
+            ActiveStatus = ControlStatus.Highlighted;
+        }
+
+        public override void Render()
+        {
+            base.Render();
+            if (Content != null)
+                Content.Render();
         }
 
         public override void Render()

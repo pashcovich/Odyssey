@@ -1,5 +1,4 @@
-﻿#region License
-
+﻿
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
 //
 // The Odyssey Engine is free software: you can redistribute it and/or modify
@@ -11,30 +10,17 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
-#endregion License
-
-#region Using Directives
-
 using Odyssey.Graphics;
 using SharpDX;
 using System;
 using System.Diagnostics.Contracts;
 
-#endregion Using Directives
-
 namespace Odyssey.Engine
 {
     public abstract class ApplicationWindow : Component
     {
-        #region Fields
-
+        internal bool Exiting;
         private string title;
-
-        internal ApplicationContext ApplicationContext { get; set; }
-
-        #endregion Fields
-
-        #region Public Events
 
         /// <summary>
         /// Occurs when this window is activated.
@@ -61,10 +47,6 @@ namespace Odyssey.Engine
         public event EventHandler<EventArgs> Shutdown;
 
         public event EventHandler<EventArgs> Tick;
-
-        #endregion Public Events
-
-        #region Public Properties
 
         /// <summary>
         /// Gets or sets, user possibility to resize this window.
@@ -126,11 +108,10 @@ namespace Odyssey.Engine
         /// <value><c>true</c> if visible; otherwise, <c>false</c>.</value>
         public abstract bool Visible { get; set; }
 
+        internal ApplicationContext ApplicationContext { get; set; }
         internal abstract bool IsBlockingRun { get; }
 
-        #endregion Public Properties
-
-        #region Public Methods and Operators
+        internal IServiceRegistry Services { get; set; }
 
         public abstract void BeginScreenDeviceChange(bool willBeFullScreen);
 
@@ -140,15 +121,6 @@ namespace Odyssey.Engine
         }
 
         public abstract void EndScreenDeviceChange(int clientWidth, int clientHeight);
-
-        #endregion Public Methods and Operators
-
-        #region Methods
-
-        internal bool Exiting;
-
-        internal IServiceRegistry Services { get; set; }
-
         /// <summary>
         /// Initializes the ApplicationWindow with the specified window context.
         /// </summary>
@@ -231,6 +203,5 @@ namespace Odyssey.Engine
 
         protected abstract void SetTitle(string title);
 
-        #endregion Methods
     }
 }

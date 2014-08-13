@@ -20,13 +20,6 @@
   <ItemGroup>
     <Compile Include="Interaction\ButtonState.cs" />
     <Compile Include="Interaction\ButtonStateFlags.cs" />
-    <Compile Include="Interaction\Controllers\OrbitController.cs" />
-    <Compile Include="Interaction\Controllers\ArcBallModelController.cs" />
-    <Compile Include="Interaction\Controllers\CameraAction.cs" />
-    <Compile Include="Interaction\Controllers\ControllerBase.cs" />
-    <Compile Include="Interaction\Controllers\KeyBinding.cs" />
-    <Compile Include="Interaction\Controllers\PointerControllerBase.cs" />
-    <Compile Include="Interaction\Controllers\WasdCameraController.cs" />
     <Compile Include="Interaction\Enums.cs" />
     <Compile Include="Interaction\IKeyboardService.cs" />
     <Compile Include="Interaction\IPointerService.cs" />
@@ -63,10 +56,6 @@
     <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
       <Project>{26FD6C22-2141-4994-85CB-5A730C910AA2}</Project>
       <Name>Odyssey.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Odyssey.Talos\Odyssey.Talos.csproj">
-      <Project>{7e2bc73b-cb14-4d62-89ae-a0eb5a1eaf93}</Project>
-      <Name>Odyssey.Talos</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

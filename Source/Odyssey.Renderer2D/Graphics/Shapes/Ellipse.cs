@@ -1,7 +1,6 @@
 ﻿using System;
 using Odyssey.UserInterface.Controls;
 using SharpDX;
-using SharpDX.Direct2D1;
 
 namespace Odyssey.Graphics.Shapes
 {
@@ -18,16 +17,6 @@ namespace Odyssey.Graphics.Shapes
         {
             Device.FillEllipse(this,Fill);
             Device.DrawEllipse(this, Stroke);
-        }
-
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            base.OnInitializing(e);
-            var initializer = new ShapeInitializer(Device);
-            initializer.Initialize(this);
-
-            foreach (var resource in initializer.CreatedResources)
-                ToDispose(resource);
         }
 
         protected override void OnPositionChanged(EventArgs e)

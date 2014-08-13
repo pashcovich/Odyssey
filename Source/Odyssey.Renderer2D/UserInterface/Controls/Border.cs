@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using SharpDX;
 using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
@@ -22,19 +23,9 @@ namespace Odyssey.UserInterface.Controls
             return BoundingRectangle.Contains(cursorLocation);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            base.OnInitializing(e);
-            Rectangle rEnabled = ToDispose(Shape.FromControl<Rectangle>(this,
-                string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
-
-            ShapeMap.Add(ControlStatus.Enabled, new[] { rEnabled });
-
-        }
-
         public override void Render()
         {
-            foreach (IShape shape in ActiveStyle)
+            foreach (IShape shape in VisualState)
                 shape.Render();
             base.Render();
         }

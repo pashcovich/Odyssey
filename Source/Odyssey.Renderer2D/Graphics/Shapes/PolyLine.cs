@@ -15,12 +15,12 @@
 
 #region Using Directives
 
-using Odyssey.Engine;
-using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Engine;
+using SharpDX;
 
 #endregion Using Directives
 
@@ -28,13 +28,13 @@ namespace Odyssey.Graphics.Shapes
 {
     public class PolyLine : PathGeometry
     {
-        internal PolyLine(Direct2DDevice device)
-            : base(device)
+        internal PolyLine(string name, Direct2DDevice device)
+            : base(name, device)
         {
             Initialize(Resource);
         }
 
-        public static PolyLine New(Direct2DDevice device, IEnumerable<Vector2> points, FigureBegin figureBegin,
+        public static PolyLine New(string name, Direct2DDevice device, IEnumerable<Vector2> points, FigureBegin figureBegin,
             FigureEnd figureEnd)
         {
             Contract.Requires<ArgumentNullException>(points != null);
@@ -42,7 +42,7 @@ namespace Odyssey.Graphics.Shapes
             if (array.Length < 2)
                 throw new ArgumentException("Figure needs at least two points");
             
-            PolyLine polyLine = new PolyLine(device);
+            PolyLine polyLine = new PolyLine(name, device);
             var sink = polyLine.DefineFigure();
             sink.BeginFigure(array[0], figureBegin);
             sink.AddLines(array.Skip(1));

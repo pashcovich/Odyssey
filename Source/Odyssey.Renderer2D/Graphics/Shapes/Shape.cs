@@ -15,39 +15,48 @@
 
 #region Using Directives
 
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using Odyssey.Animations;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Reflection;
+using Odyssey.Utilities.Text;
 using SharpDX;
 
 #endregion Using Directives
 
 namespace Odyssey.Graphics.Shapes
 {
-    public abstract class Shape : UIElement, IShape
+    public abstract class Shape : UIElement, IShape, IRequiresCaching
     {
-        protected Shape()
-        {
-            StrokeThickness = 1.0f;
-        }
-
         public static Color4 DefaultFillColor = Color.MidnightBlue;
         public static Color4 DefaultStrokeColor = Color.DimGray;
 
-        internal Brush Fill { get; set; }
+        private string fillBrushClass;
+        private string strokeBrushClass;
 
-        internal Brush Stroke { get; set; }
-
-        public IGradient FillShader { get; set; }
-
+        [Animatable]
+        [CacheAnimation(typeof(GradientStop), "Color")]
+        public Brush Fill { get; set; }
+        [Animatable]
+        [CacheAnimation(typeof(GradientStop), "Color")]
+        public Brush Stroke { get; set; }
+        
         public float StrokeThickness { get; set; }
 
-        RectangleF IShape.BoundingRectangle
+        internal override UIElement Copy()
         {
-            get { return BoundingRectangle; }
+            Shape copy = (Shape)base.Copy();
+            copy.fillBrushClass = fillBrushClass;
+            copy.strokeBrushClass = strokeBrushClass;
+            copy.StrokeThickness = StrokeThickness;
+            return copy;
         }
-
-        public IGradient StrokeShader { get; set; }
 
         public static TShape FromControl<TShape>(Control control, string shapeName)
             where TShape : UIElement, IShape, new()
@@ -64,11 +73,89 @@ namespace Odyssey.Graphics.Shapes
             return shape;
         }
 
-        protected override void OnLayoutUpdated(System.EventArgs e)
+        protected override void OnInitializing(ControlEventArgs e)
+        {
+            base.OnInitializing(e);
+            var styleService = Device.Services.GetService<IStyleService>();
+            if (!string.IsNullOrEmpty(fillBrushClass))
+            {
+                var fillColor = Overlay.Theme.GetResource<ColorResource>(fillBrushClass);
+                if (styleService.ContainsResource(fillBrushClass))
+                    Fill = styleService.GetResource<Brush>(fillBrushClass);
+                else
+                {
+                    Fill = Brush.FromColorResource(Device, fillColor);
+                    styleService.AddResource(Fill);
+                }
+                Fill.Initialize();
+            }
+
+            if (!string.IsNullOrEmpty(strokeBrushClass))
+            {
+                var strokeColor = Overlay.Theme.GetResource<ColorResource>(strokeBrushClass);
+                if (styleService.ContainsResource(strokeBrushClass))
+                    Stroke = styleService.GetResource<Brush>(strokeBrushClass);
+                else
+                {
+                    Stroke = Brush.FromColorResource(Device, strokeColor);
+                    styleService.AddResource(Stroke);
+                }
+                Stroke.Initialize();
+            }
+        }
+
+
+        protected override void OnLayoutUpdated(EventArgs e)
         {
             base.OnLayoutUpdated(e);
             if (Fill != null)
                 Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
         }
+
+        protected override void OnReadXml(XmlDeserializationEventArgs e)
+        {
+            base.OnReadXml(e);
+            var reader = e.XmlReader;
+            string strokeThickness = reader.GetAttribute("StrokeThickness");
+            StrokeThickness = string.IsNullOrEmpty(strokeThickness) ? 0 : float.Parse(strokeThickness, CultureInfo.InvariantCulture);
+
+            string sFill = reader.GetAttribute("Fill");
+            string sStroke = reader.GetAttribute("Stroke");
+            if (!string.IsNullOrEmpty(sFill))
+            {
+                fillBrushClass = Text.ParseResource(sFill);
+            }
+            if (!string.IsNullOrEmpty(sStroke))
+            {
+                strokeBrushClass = Text.ParseResource(sStroke);
+            }
+
+            if (!reader.IsEmptyElement)
+                reader.ReadEndElement();
+        }
+
+        #region IRequiresCaching
+        public IAnimationCurve CacheAnimation(Type type, string propertyName, IAnimationCurve animationCurve)
+        {
+            // Checks whether the curve affects a property marked with the CacheAnimationAttribute
+            var property = (from p in ReflectionHelper.GetProperties(GetType())
+                    let attributes = p.GetCustomAttributes<CacheAnimationAttribute>()
+                    from attribute in attributes
+                    where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
+                    select p).FirstOrDefault();
+
+            if (property != null)
+            {
+                object value = property.GetValue(this);
+
+                var bGradient = value as GradientBrush;
+                if (value == null)
+                    throw new NotImplementedException("Solid Color animation not yet supported");
+                return GradientBrushCurve.FromColor4Curve(Device, (Color4Curve) animationCurve, bGradient);
+            }
+
+            return null;
+        }
+        #endregion
     }
 }

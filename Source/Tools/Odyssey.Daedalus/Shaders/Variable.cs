@@ -26,21 +26,16 @@ namespace Odyssey.Daedalus.Shaders
     [DataContract(IsReference = true)]
     public abstract partial class Variable : IEquatable<Variable>, IVariable, IDataSerializable
     {
-        #region Private Fields
 
         internal static readonly Dictionary<string, int> VariableCounter = new Dictionary<string, int>();
-        private string id;
         private string comments;
         private EngineReference engineReference;
+        private string id;
         private bool isConstant;
         private Dictionary<string, string> markupData;
         private string name;
         private string semantic;
         private Type type;
-
-        #endregion Private Fields
-
-        #region Protected Constructors
 
         protected Variable()
         {
@@ -52,12 +47,6 @@ namespace Odyssey.Daedalus.Shaders
             id = String.Format("{0}{1}", type, VariableCounter[type]++);
             name = id;
         }
-
-        #endregion Protected Constructors
-
-        #region Public Properties
-
-        public string Id { get { return id; } }
 
         public string Comments
         {
@@ -114,6 +103,7 @@ namespace Odyssey.Daedalus.Shaders
             get { return markupData.Any(); }
         }
 
+        public string Id { get { return id; } }
         public int? Index { get; set; }
 
         public bool IsConstant
@@ -152,10 +142,6 @@ namespace Odyssey.Daedalus.Shaders
             get { return type; }
             set { type = value; }
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public static int ComponentsFromType(Type type)
         {
@@ -269,10 +255,6 @@ namespace Odyssey.Daedalus.Shaders
         {
             return Definition;
         }
-
-        #endregion Public Methods
-
-        #region Internal Methods
 
         internal static string GetPrefix(Type type)
         {
@@ -421,6 +403,5 @@ namespace Odyssey.Daedalus.Shaders
 
         }
 
-        #endregion Internal Methods
     }
 }

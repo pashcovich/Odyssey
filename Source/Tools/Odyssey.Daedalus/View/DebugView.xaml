@@ -22,7 +22,7 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Row="0">
                 <TextBlock Text="effect" FontSize="16" FontStyle="Italic" Foreground="Silver" Margin="96 0 0 0" Width="128"/>
-                <TextBlock Text="Description" FontSize="16" FontStyle="Italic" Foreground="Silver" Width="92"/>
+                <TextBlock Text="Style" FontSize="16" FontStyle="Italic" Foreground="Silver" Width="92"/>
             </StackPanel>
             <ListBox ItemsSource="{Binding Errors}" Grid.Row="1">
                 <ListBox.ItemTemplate>

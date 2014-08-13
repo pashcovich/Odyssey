@@ -16,7 +16,6 @@
 #region Using Directives
 
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
 using SharpDX;
 using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
 
@@ -35,9 +34,9 @@ namespace Odyssey.UserInterface.Controls
         {
             base.OnInitializing(e);
 
-            Rectangle rEnabled =
-                ToDispose(Shape.FromControl<Rectangle>(this, string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
-            ShapeMap.Add(ControlStatus.Enabled, new[] {rEnabled});
+            //Rectangle rEnabled =
+            //    ToDispose(Shape.FromControl<Rectangle>(this, string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
+            //ShapeMap.Add(ControlStatus.Enabled, Style.VisualStateDefinition.figures);
         }
     }
 }

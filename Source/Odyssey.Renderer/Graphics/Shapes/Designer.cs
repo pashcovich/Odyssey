@@ -7,7 +7,7 @@ using Odyssey.Engine;
 using Odyssey.Graphics.Models;
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics
 {
     public partial class Designer
     {

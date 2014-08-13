@@ -16,12 +16,11 @@
 #region Using Directives
 
 using Odyssey.Geometry.Primitives;
-using Odyssey.Graphics.Shapes;
 using SharpDX;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Shapes
 {
     public abstract class PolygonBase : Shape
     {

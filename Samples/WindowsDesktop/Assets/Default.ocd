@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfControlDescription xmlns:Style="http://www.avengersutd.com">
-  <ControlDescription Name="Button" Size="Width:200 Height:50" BorderSize="1" TextDescriptionClass="Button">
-    <BorderEnabled>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-          <GradientStop Color="#808080FF" Offset="0"/>
-        </Gradient>
-      </LinearGradient>
-    </BorderEnabled>
-    <Enabled>
-      <LinearGradient GradientType="Linear"> <!-- Gradients not yet supported -->
-        <Gradient>
-          <GradientStop Color="#4169E1A0" Offset="0"/> 
-          <GradientStop Color="#00000000" Offset="1.0"/> 
-        </Gradient>
-      </LinearGradient>
-    </Enabled>
-    <Highlighted>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-          <GradientStop Color="#00FFFFFF" Offset="0"/>
-          <GradientStop Color="#00000000" Offset="1.0"/>
-        </Gradient>
-      </LinearGradient>
-    </Highlighted>
-  </ControlDescription>
-  <ControlDescription Name="Panel" BorderSize="2">
-    <BorderEnabled>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-      <GradientStop Color="#808080F0" Offset="0"/>
-        </Gradient>
-      </LinearGradient>
-    </BorderEnabled>
-    <Enabled>
-      <LinearGradient GradientType="Linear">
-        <Gradient>
-          <GradientStop Color="#4169E1A0" Offset="0"/>
-          <GradientStop Color="#00000000" Offset="1.0"/>
-        </Gradient>
-      </LinearGradient>
-    </Enabled>
-  </ControlDescription>
-  <ControlDescription Name="Empty" BorderStyle="Raised" BorderSize="2">
-  </ControlDescription>
-</ArrayOfControlDescription>
+<Theme xmlns:Style="http://www.avengersutd.com" Name="Default">
+  <Resources>
+    <SolidColor Name="Transparent" Color="#00000000"/>
+    <SolidColor Name="Black" Color="#FF000000"/>
+    <SolidColor Name="DarkBlue" Color="#FF4169E1"/>
+    <SolidColor Name="White" Color="#FFFFFFFF"/>
+    <SolidColor Name="Red" Color="#FFFF0000"/>
+    <SolidColor Name="DimGray" Color="#FF0A0A0A"/>
+    <SolidColor Name="DarkGray" Color="#FF303030"/>
+    <RadialGradient Name="ButtonFillGlow" RadiusX="0" RadiusY="0" Center="0.5, 0.75">
+      <GradientStop Color="{Red}" Offset="0"/>
+      <GradientStop Color="{Transparent}" Offset="1.0"/>
+    </RadialGradient>
+    <LinearGradient Name="ButtonFillShine" StartPoint="0.5,0" EndPoint="0.5,1" Opacity="0.09">
+      <GradientStop Color="{Black}" Offset="0"/>
+      <GradientStop Color="{White}" Offset="0.6"/>
+    </LinearGradient>
+    <LinearGradient Name="ButtonFillForeground" StartPoint="0.5,1" EndPoint="0.5,0">
+      <GradientStop Color="#35000000" Offset="0"/>
+      <GradientStop Color="#CE101010" Offset="0.5"/>
+      <GradientStop Color="#FF262626" Offset="1.0"/>
+    </LinearGradient>
+    <RadialGradient Name="DefaultPanel" RadiusX="1" RadiusY="1" Center="0.5, 0.5">
+      <GradientStop Color="{DarkBlue}" Offset="0"/>
+      <GradientStop Color="{Transparent}" Offset="1.0"/>
+    </RadialGradient>
+  </Resources>
+  <ControlStyle Name="Button" Width="200" Height="50" TextDescriptionClass="Button">
+    <VisualState>
+      <Shapes>
+        <Rectangle Name="Main" Position="0,0" StrokeThickness="1" Width="1" Height="1" Fill="{DimGray}" />
+        <Rectangle Name="GlowEffect" Position="0,0" Width="1" Height="1" Fill="{ButtonFillGlow}"/>
+        <Rectangle Name="Foreground" Position="0,0" Width="1" Height="1" Fill="{ButtonFillForeground}" Stroke="{DarkGray}"/>
+        <Rectangle Name="GlassEffect" Position="0,0" Width="1" Height="0.5" Fill="{ButtonFillShine}"/>
+      </Shapes>
+      <Animations>
+        <Animation Name="Highlighted">
+          <FloatCurve TargetName="{GlowEffect}" TargetProperty="Fill.RadiusX">
+            <FloatKeyFrame Time="0" Value="0"/>
+            <FloatKeyFrame Time="1.0" Value="1.5"/>
+          </FloatCurve>
+          <FloatCurve TargetName="{GlowEffect}" TargetProperty="Fill.RadiusY">
+            <FloatKeyFrame Time="0" Value="0"/>
+            <FloatKeyFrame Time="0.250" Value="1.5"/>
+          </FloatCurve>
+        </Animation>
+      </Animations>
+    </VisualState>
+  </ControlStyle>
+  <ControlStyle Name="Panel" BorderSize="2">
+    <VisualState>
+      <Shapes>
+        <Rectangle StrokeThickness="1" Width="1" Height="1" Fill="{DefaultPanel}" Stroke="{DarkGray}"/>
+      </Shapes>
+    </VisualState>
+  </ControlStyle>
+</Theme>

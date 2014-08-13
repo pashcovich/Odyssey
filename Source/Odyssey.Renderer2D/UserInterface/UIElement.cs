@@ -15,11 +15,20 @@
 
 #region Using Directives
 
+using System.Xml;
+using System.Xml.Serialization;
+using Odyssey.Animations;
+using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
+using Odyssey.UserInterface.Serialization;
+using Odyssey.UserInterface.Style;
+using Odyssey.UserInterface.Xml;
+using Odyssey.Utilities.Text;
 using SharpDX;
 using System;
 using System.Collections.Generic;
+using Control = Odyssey.UserInterface.Controls.Control;
 
 #endregion Using Directives
 
@@ -29,13 +38,14 @@ namespace Odyssey.UserInterface
     /// The <b>UIElement</b> class is the root class of all controls in the library. It provides
     /// inheritors with a comprehensive range of properties and methods common to all controls.
     /// </summary>
-    public abstract partial class UIElement : Component, IUIElement, IComparable<UIElement>
+    public abstract partial class UIElement : Component, IUIElement, IComparable<UIElement>, ISerializableResource
     {
-        protected static Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
+        protected static readonly Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
 
         #region Private fields
 
         private readonly Dictionary<string, BindingExpression> bindings;
+        private readonly AnimationController animationController;
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
         private bool designMode = true;
@@ -70,6 +80,7 @@ namespace Odyssey.UserInterface
 
             Name = string.Format("{0}{1}", type, TypeCounter[type]);
             bindings = new Dictionary<string, BindingExpression>();
+            animationController = new AnimationController(this);
         }
 
         #endregion Constructors
@@ -138,5 +149,7 @@ namespace Odyssey.UserInterface
             boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);
         }
+
+
     }
 }

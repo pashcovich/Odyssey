@@ -1,21 +1,34 @@
+#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
 #region Using Directives
 
-using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using SharpDX;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {
     public abstract class ContainerControl : Control, IContainer
     {
-        #region Properties
-
-        protected ContainerControl(string controlDescriptionClass)
-            : base(controlDescriptionClass)
+        protected ContainerControl(string controlStyleClass)
+            : base(controlStyleClass)
         {
             Controls = new ControlCollection(this);
             IsFocusable = false;
@@ -26,8 +39,6 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         public virtual ControlCollection Controls { get; private set; }
 
-        #endregion Properties
-
         #region IContainer Members
 
         /// <summary>
@@ -37,10 +48,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override bool DesignMode
         {
-            get
-            {
-                return base.DesignMode;
-            }
+            get { return base.DesignMode; }
             protected internal set
             {
                 base.DesignMode = value;
@@ -70,10 +78,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override UIElement Parent
         {
-            get
-            {
-                return base.Parent;
-            }
+            get { return base.Parent; }
             internal set
             {
                 if (base.Parent == value) return;
@@ -154,7 +159,7 @@ namespace Odyssey.UserInterface.Controls
         internal override UIElement Copy()
         {
             UIElement copy = base.Copy();
-            IContainer containerCopy = (IContainer)copy;
+            IContainer containerCopy = (IContainer) copy;
             foreach (UIElement child in Controls)
                 containerCopy.Controls.Add(child.Copy());
 
@@ -183,6 +188,7 @@ namespace Odyssey.UserInterface.Controls
 
         #region Debug
 
+#if DEBUG
         internal static void Debug(IEnumerable<UIElement> iterator)
         {
             System.Diagnostics.Debug.WriteLine("---------");
@@ -192,6 +198,7 @@ namespace Odyssey.UserInterface.Controls
             }
             System.Diagnostics.Debug.WriteLine("---------");
         }
+#endif
 
         #endregion Debug
     }

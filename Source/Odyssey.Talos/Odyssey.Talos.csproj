@@ -24,6 +24,14 @@
       <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
       <Name>Odyssey.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Interaction\Odyssey.Interaction.csproj">
+      <Project>{7740a46f-0809-49d2-bd34-71f6d8b6d2cc}</Project>
+      <Name>Odyssey.Interaction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Odyssey.Renderer2D\Odyssey.Renderer2D.csproj">
+      <Project>{8cc127c8-19f0-42df-8454-129b3566ef54}</Project>
+      <Name>Odyssey.Renderer2D</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Odyssey.Renderer\Odyssey.Renderer.csproj">
       <Project>{018ff216-7048-4b2f-a193-d2f8b20fb03d}</Project>
       <Name>Odyssey.Renderer</Name>
@@ -63,11 +71,19 @@
     <Compile Include="Talos\Components\SpriteComponent.cs" />
     <Compile Include="Talos\Components\TagComponent.cs" />
     <Compile Include="Talos\Components\TargetComponent.cs" />
+    <Compile Include="Talos\Components\UserInterfaceComponent.cs" />
     <Compile Include="Talos\IEntityController.cs" />
     <Compile Include="Talos\Initializers\ApplicationInitializer.cs" />
     <Compile Include="Talos\Initializers\IInitializer.cs" />
     <Compile Include="Talos\Initializers\InitializerParameters.cs" />
     <Compile Include="Talos\Initializers\EffectInitializer.cs" />
+    <Compile Include="Talos\Interaction\ArcBallModelController.cs" />
+    <Compile Include="Talos\Interaction\CameraAction.cs" />
+    <Compile Include="Talos\Interaction\ControllerBase.cs" />
+    <Compile Include="Talos\Interaction\KeyBinding.cs" />
+    <Compile Include="Talos\Interaction\OrbitController.cs" />
+    <Compile Include="Talos\Interaction\PointerControllerBase.cs" />
+    <Compile Include="Talos\Interaction\WasdCameraController.cs" />
     <Compile Include="Talos\Maps\SystemEventArgs.cs" />
     <Compile Include="Talos\Messages\CameraMessage.cs" />
     <Compile Include="Talos\Messages\ContentMessage.cs" />
@@ -135,6 +151,7 @@
     <Compile Include="Talos\Systems\SystemBase.cs" />
     <Compile Include="Talos\Scene.cs" />
     <Compile Include="Talos\Systems\UpdateableSystemBase.cs" />
+    <Compile Include="Talos\Systems\UserInterfaceSystem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

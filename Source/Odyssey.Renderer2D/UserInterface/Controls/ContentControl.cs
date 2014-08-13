@@ -6,8 +6,8 @@ namespace Odyssey.UserInterface.Controls
     {
         private UIElement content;
 
-        protected ContentControl(string controlDescriptionClass, string textDescriptionClass)
-            : base(controlDescriptionClass, textDescriptionClass)
+        protected ContentControl(string controlStyleClass, string textStyleClass)
+            : base(controlStyleClass, textStyleClass)
         {
         }
 
@@ -50,6 +50,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
+            base.Render();
             if (Content != null)
                 Content.Render();
         }

@@ -16,7 +16,7 @@
 #region Using Directives
 
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
+using Odyssey.Interaction;
 using SharpDX;
 using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
 
@@ -31,18 +31,22 @@ namespace Odyssey.UserInterface.Controls
             return BoundingRectangle.Contains(cursorLocation);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnPointerEnter(PointerEventArgs e)
         {
-            base.OnInitializing(e);
-            Rectangle rEnabled = ToDispose(Shape.FromControl<Rectangle>(this,
-                string.Format("{0}_{1}_rectangle", Name, ControlStatus.Enabled)));
-            Rectangle rHighlighted = ToDispose(Shape.FromControl<Rectangle>(this,
-                string.Format("{0}_{1}_rectangle", Name, ControlStatus.Highlighted)));
+            base.OnPointerEnter(e);
+            string animationName = ControlStatus.Highlighted.ToString();
+            var animation = AnimationController[animationName];
+            animation.Speed = 1.0f;
+            AnimationController.Play(animationName);
+        }
 
-            ShapeMap.Add(ControlStatus.Enabled, new[] {rEnabled});
-
-            if (Description.Highlighted != null)
-                ShapeMap.Add(ControlStatus.Highlighted, new[] {rHighlighted});
+        protected override void OnPointerExited(PointerEventArgs e)
+        {
+            base.OnPointerExited(e);
+            string animationName = ControlStatus.Highlighted.ToString();
+            var animation = AnimationController[animationName];
+            animation.Speed = -1.0f;
+            AnimationController.Play(animationName);
         }
     }
 }

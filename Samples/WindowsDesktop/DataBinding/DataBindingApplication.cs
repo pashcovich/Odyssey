@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System;
 using MiniUI;
 using Odyssey.Content;
 using Odyssey.Engine;
@@ -82,6 +83,8 @@ namespace DataBinding
             uiManager.Initialize();
             uiManager.CurrentOverlay = overlay;
         }
+
+        public event EventHandler<EventArgs> DeviceCreated;
 
         public Direct2DDevice Direct2DDevice
         {

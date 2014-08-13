@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using SharpDX;
 using Real = System.Single;
 using Point = SharpDX.Vector2;
 
 namespace Odyssey.Geometry.Primitives
 {
-    public struct Ellipse : IEquatable<Ellipse>
+    public struct Ellipse : IEquatable<Ellipse>, IFigure
     {
         public readonly Point Center;
         public readonly Real RadiusX;
@@ -18,12 +19,46 @@ namespace Odyssey.Geometry.Primitives
             RadiusY = radiusY;
         }
 
+        public Ellipse(Real radiusX, Real radiusY) : this(Point.Zero, radiusX, radiusY)
+        {
+        }
+
+        #region IEquatable<Ellipse>
+
         public bool Equals(Ellipse other)
         {
-            return (Center == other.Center) &&
-                   (Math.Abs(RadiusX - other.RadiusX) < MathHelper.EpsilonD) &&
-                    (Math.Abs(RadiusY - other.RadiusY) < MathHelper.EpsilonD);
+            return Center == other.Center && MathUtil.NearEqual(RadiusX, other.RadiusX) &&
+                   MathUtil.NearEqual(RadiusY, other.RadiusY);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Ellipse && Equals((Ellipse) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = Center.GetHashCode();
+                hashCode = (hashCode*397) ^ RadiusX.GetHashCode();
+                hashCode = (hashCode*397) ^ RadiusY.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(Ellipse left, Ellipse right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Ellipse left, Ellipse right)
+        {
+            return !left.Equals(right);
+        }
+
+        #endregion
 
         public Real HorizontalAxis
         {
@@ -57,6 +92,28 @@ namespace Odyssey.Geometry.Primitives
             }
             return vertices;
         }
-         
+
+        #region IFigure
+
+        Point IFigure.TopLeft
+        {
+            get { return Center - new Vector2(RadiusX, RadiusY); }
+        }
+
+        Real IFigure.Width
+        {
+            get { return HorizontalAxis; }
+        }
+
+        Real IFigure.Height
+        {
+            get { return VerticalAxis; }
+        }
+
+        FigureType IFigure.FigureType
+        {
+            get { return FigureType.Ellipse; }
+        }
+        #endregion
     }
 }

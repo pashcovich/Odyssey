@@ -15,9 +15,13 @@
 
 #region Using Directives
 
+using System.Globalization;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
 using System;
+using Odyssey.UserInterface.Serialization;
+using Odyssey.Utilities.Text;
+using SharpDX;
 
 #endregion Using Directives
 
@@ -121,8 +125,7 @@ namespace Odyssey.UserInterface
                 }
             }
 
-            if (PointerEntered != null)
-                PointerEntered(this, e);
+            RaiseEvent(PointerEntered, this, e);
         }
 
         /// <summary>
@@ -130,10 +133,9 @@ namespace Odyssey.UserInterface
         /// </summary>
         /// <param name="e">The <see cref="PointerEventArgs"/> instance containing the event
         /// data.</param>
-        protected virtual void OnPointerMove(PointerEventArgs e)
+        protected virtual void OnPointerMoved(PointerEventArgs e)
         {
-            if (PointerMoved != null)
-                PointerMoved(this, e);
+            RaiseEvent(PointerMoved, this, e);
         }
 
         /// <summary>
@@ -143,13 +145,10 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnPointerPressed(PointerEventArgs e)
         {
-            //if (UserInterfaceManager.CurrentOverlay.FocusedControl != this)
-            //    UserInterfaceManager.CurrentOverlay.FocusedControl.OnLostFocus(e);
-
-            OnUpdate(e);
-
-            if (PointerPressed != null)
-                PointerPressed(this, e);
+            if (Overlay.FocusedElement != this)
+                Overlay.FocusedElement.OnLostFocus(EventArgs.Empty);
+            
+            RaiseEvent(PointerPressed, this, e);
         }
 
         /// <summary>
@@ -160,11 +159,7 @@ namespace Odyssey.UserInterface
         protected virtual void OnPointerReleased(PointerEventArgs e)
         {
             //UserInterfaceManager.CurrentOverlay.PressedControl = null;
-
-            OnUpdate(e);
-
-            if (PointerReleased != null)
-                PointerReleased(this, e);
+            RaiseEvent(PointerReleased, this, e);
         }
 
         /// <summary>
@@ -174,8 +169,7 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnPointerWheelChanged(PointerEventArgs e)
         {
-            if (PointerWheelChanged != null)
-                PointerWheelChanged(this, e);
+            RaiseEvent(PointerWheelChanged, this, e);
         }
 
         /// <summary>
@@ -185,10 +179,7 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnTap(PointerEventArgs e)
         {
-            OnUpdate(e);
-
-            if (Tap != null)
-                Tap(this, e);
+            RaiseEvent(Tap, this, e);
         }
 
         #endregion PointerEvents
@@ -306,8 +297,6 @@ namespace Odyssey.UserInterface
         /// </summary>
         public event EventHandler<EventArgs> ParentChanged;
 
-        public event EventHandler<EventArgs> Update;
-
         /// <summary>
         /// Occurs when the <see cref="IsSelected"/> property value changes.
         /// </summary>
@@ -335,8 +324,7 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnDesignModeChanged(ControlEventArgs e)
         {
-            if (DesignModeChanged != null)
-                DesignModeChanged(this, e);
+            RaiseEvent(DesignModeChanged, this,e );
         }
 
         /// <summary>
@@ -355,7 +343,6 @@ namespace Odyssey.UserInterface
             IsFocused = true;
 
             RaiseEvent(GotFocus, this, e);
-            RaiseEvent(Update, this, e);
         }
 
         /// <summary>
@@ -366,7 +353,6 @@ namespace Odyssey.UserInterface
         protected virtual void OnHighlightedChanged(EventArgs e)
         {
             RaiseEvent(HighlightedChanged, this, e);
-            RaiseEvent(Update, this, e);
         }
 
         protected virtual void OnInitialized(ControlEventArgs e)
@@ -393,7 +379,7 @@ namespace Odyssey.UserInterface
         {
             IsFocused = IsPressed = false;
             RaiseEvent(LostFocus, this, e);
-            RaiseEvent(Update, this, e);
+            
         }
 
         /// <summary>
@@ -415,8 +401,6 @@ namespace Odyssey.UserInterface
         protected virtual void OnParentChanged(EventArgs e)
         {
             RaiseEvent(ParentChanged, this, e);
-            if (DesignMode) return;
-            RaiseEvent(Update, this, e);
         }
 
         /// <summary>
@@ -427,7 +411,6 @@ namespace Odyssey.UserInterface
         protected virtual void OnPositionChanged(EventArgs e)
         {
             RaiseEvent(PositionChanged, this, e);
-            RaiseEvent(Update, this, e);
         }
 
         /// <summary>
@@ -438,7 +421,6 @@ namespace Odyssey.UserInterface
         protected virtual void OnSelectedChanged(EventArgs e)
         {
             RaiseEvent(SelectedChanged, this, e);
-            RaiseEvent(Update, this, e);
         }
 
         /// <summary>
@@ -450,12 +432,6 @@ namespace Odyssey.UserInterface
         {
             Layout();
             RaiseEvent(SizeChanged, this, e);
-            RaiseEvent(Update, this, e);
-        }
-
-        protected virtual void OnUpdate(EventArgs e)
-        {
-            RaiseEvent(Update, this, e);
         }
 
         /// <summary>
@@ -466,8 +442,6 @@ namespace Odyssey.UserInterface
         protected virtual void OnVisibleChanged(EventArgs e)
         {
             RaiseEvent(VisibleChanged, this, e);
-            if (!DesignMode)
-                RaiseEvent(Update, this, e);
         }
 
         protected void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
@@ -478,5 +452,30 @@ namespace Odyssey.UserInterface
         }
 
         #endregion Control Events
+
+        protected virtual void OnReadXml(XmlDeserializationEventArgs e)
+        {
+            var reader = e.XmlReader;
+
+            Name = reader.GetAttribute("Name");
+            
+            string sPosition = reader.GetAttribute("Position");
+            Position = string.IsNullOrEmpty(sPosition) ? Vector2.Zero : Text.DecodeVector2(sPosition);
+
+            string sWidth = reader.GetAttribute("Width");
+            string sHeight = reader.GetAttribute("Height");
+            Width = string.IsNullOrEmpty(sWidth) ? 0 : float.Parse(sWidth, CultureInfo.InvariantCulture);
+            Height = string.IsNullOrEmpty(sHeight) ? 0 : float.Parse(sHeight, CultureInfo.InvariantCulture);
+        }
+
+        protected virtual void OnWriteXml(XmlSerializationEventArgs e)
+        {
+            var writer = e.XmlWriter;
+            writer.WriteAttributeString("Name", Name);
+            writer.WriteAttributeString("Position", Text.EncodeVector2(Position));
+            writer.WriteAttributeString("Width", Width.ToString("F"));
+            writer.WriteAttributeString("Height", Height.ToString("F"));
+        }
+
     }
 }
