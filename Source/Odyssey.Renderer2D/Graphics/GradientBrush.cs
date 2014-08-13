@@ -21,6 +21,5 @@ namespace Odyssey.Graphics
         }
 
         internal Gradient Gradient { get { return ColorResource; } }
-       
     }
 }
