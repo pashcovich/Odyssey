@@ -1,0 +1,31 @@
+﻿Merge branch 'experimental' of https://github.com/AvengerDr/Odyssey into experimental
+
+Conflicts:
+	Samples/WindowsDesktop/Assets/Default.ocd
+	Samples/WindowsDesktop/MiniUI/SampleOverlay.cs
+	Source/Odyssey.Renderer2D/Animations/GradientBrushCurve.cs
+	Source/Odyssey.Renderer2D/Graphics/GradientBrush.cs
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch experimental
+# Your branch and 'origin/experimental' have diverged,
+# and have 3 and 2 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	modified:   Samples/WindowsDesktop/Assets/Default.ocd
+#	renamed:    Source/Odyssey.Renderer2D/Animations/LinearGradientBrushCurve.cs -> Source/Odyssey.Renderer2D/Animations/GradientBrushCurve.cs~HEAD_0
+#	modified:   Source/Odyssey.Renderer2D/Graphics/GradientBrush.cs
+#
+

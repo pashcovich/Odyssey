@@ -20,12 +20,6 @@ namespace Odyssey.Graphics
             get { return ColorResource.GradientStops; }
         }
 
-<<<<<<< HEAD
         internal Gradient Gradient { get { return ColorResource; } }
-=======
-        internal Gradient Gradient { get { return gradient; } }
-
-       
->>>>>>> f72d6706922fc28ded402ed2e8adac271a46849a
     }
 }
