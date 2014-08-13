@@ -51,11 +51,5 @@ namespace Odyssey.UserInterface.Controls
                 Content.Render();
         }
 
-        public override void Render()
-        {
-            base.Render();
-            if (Content != null)
-                Content.Render();
-        }
     }
 }
