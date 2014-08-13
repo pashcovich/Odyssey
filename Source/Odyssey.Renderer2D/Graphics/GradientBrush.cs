@@ -7,19 +7,20 @@ namespace Odyssey.Graphics
 {
     public abstract class GradientBrush : Brush
     {
-        private readonly Gradient gradient;
+        protected new readonly Gradient ColorResource;
 
         protected GradientBrush(string name, Direct2DDevice device, Gradient gradient, SharpDX.Direct2D1.Brush brush)
-            : base(name, device, brush)
+            : base(name, device, gradient,brush)
         {
-            this.gradient = gradient;
+            ColorResource = gradient;
         }
 
         public GradientStopCollection GradientStops
         {
-            get { return gradient.GradientStops; }
+            get { return ColorResource.GradientStops; }
         }
 
+        internal Gradient Gradient { get { return ColorResource; } }
        
     }
 }

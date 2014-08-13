@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Runtime.InteropServices;
-using Odyssey.Engine;
-using Odyssey.Geometry;
 using SharpDX;
 
 namespace Odyssey.Graphics
@@ -39,8 +36,7 @@ namespace Odyssey.Graphics
             gradientStops.Add(gradientStop);
             gradientStop.Index = gradientStops.Count - 1;
         }
-
-
+        
         public void AddRange(IEnumerable<GradientStop> gradientStops)
         {
             Contract.Requires<ArgumentNullException>(gradientStops != null, "gradientStops");
@@ -48,6 +44,11 @@ namespace Odyssey.Graphics
             {
                 Add(gradientStop);
             }
+        }
+
+        public void Clear()
+        {
+            gradientStops.Clear();
         }
 
         public Color4 Evaluate(float offset)

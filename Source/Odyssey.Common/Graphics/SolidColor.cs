@@ -8,16 +8,16 @@ namespace Odyssey.Graphics
     public sealed class SolidColor : ColorResource, IEquatable<SolidColor>
     {
         private static int count;
-        private Color4 color;
-        public Color4 Color { get { return color; } }
+        public Color4 Color { get; set; }
 
         public SolidColor()
-            : base(string.Format("{0}{1:D2}", typeof(SolidColor).Name, ++count), GradientType.SolidColor)
+            : this(string.Format("{0}{1:D2}", typeof(SolidColor).Name, ++count), Color4.Black)
         { }
 
-        public SolidColor(string name, Color4 color) : base(name,  GradientType.SolidColor)
+        public SolidColor(string name, Color4 color, float opacity = 1.0f) : base(name,  GradientType.SolidColor)
         {
-            this.color = color;
+            Color = color;
+            Opacity = opacity;
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)
@@ -25,7 +25,7 @@ namespace Odyssey.Graphics
             base.OnReadXml(e);
             var reader = e.XmlReader;
             string colorValue = reader.GetAttribute("Color");
-            color = Text.DecodeColor4Abgr(colorValue);
+            Color = Text.DecodeColor4Abgr(colorValue);
             reader.ReadStartElement();
         }
 
@@ -35,7 +35,7 @@ namespace Odyssey.Graphics
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return color.Equals(other.color);
+            return Color.Equals(other.Color);
         }
 
         public override bool Equals(object obj)

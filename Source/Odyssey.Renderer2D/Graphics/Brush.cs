@@ -18,6 +18,7 @@
 using System;
 using System.Linq;
 using Odyssey.Engine;
+using Odyssey.Geometry;
 using SharpDX;
 using Odyssey.Animations;
 
@@ -27,12 +28,27 @@ namespace Odyssey.Graphics
 {
     public abstract class Brush : Direct2DResource
     {
+        protected readonly ColorResource ColorResource;
         protected new readonly SharpDX.Direct2D1.Brush Resource;
 
-        protected Brush(string name, Direct2DDevice device, SharpDX.Direct2D1.Brush brush)
+        protected Brush(string name, Direct2DDevice device, ColorResource colorResource, SharpDX.Direct2D1.Brush brush)
             : base(name, device)
         {
+            ColorResource = colorResource;
             Resource = brush;
+        }
+
+        [Animatable]
+        public float Opacity
+        {
+            get { return ColorResource.Opacity; }
+            set
+            {
+                if (MathHelper.ScalarNearEqual(Resource.Opacity, value))
+                    return;
+                ColorResource.Opacity = value;
+                Resource.Opacity = value;
+            }
         }
 
         public override void Initialize()

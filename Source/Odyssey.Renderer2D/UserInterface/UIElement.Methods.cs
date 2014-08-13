@@ -21,7 +21,6 @@ using System.Xml;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Interaction;
-using Odyssey.Interaction.Controllers;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;

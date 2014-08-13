@@ -68,7 +68,6 @@ namespace Odyssey.Animations
             end = keyFrames.First(kf => kf.Time > start.Time);
             object result = Function(start, end, time);
 
-            LogEvent.Engine.Info("{0}-{1}-{2} : {3}", start.Time, time, end.Time, result);
             return result;
         }
 

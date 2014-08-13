@@ -2,19 +2,19 @@
 <Theme xmlns:Style="http://www.avengersutd.com" Name="Default">
   <Resources>
     <SolidColor Name="Transparent" Color="#00000000"/>
+    <SolidColor Name="Black" Color="#FF000000"/>
     <SolidColor Name="DarkBlue" Color="#FF4169E1"/>
     <SolidColor Name="White" Color="#FFFFFFFF"/>
     <SolidColor Name="Red" Color="#FFFF0000"/>
     <SolidColor Name="DimGray" Color="#FF0A0A0A"/>
     <SolidColor Name="DarkGray" Color="#FF303030"/>
-    <RadialGradient Name="ButtonFillGlow" RadiusX="0" RadiusY="0" Center="0.5, 0.8">
+    <RadialGradient Name="ButtonFillGlow" RadiusX="0" RadiusY="0" Center="0.5, 0.75">
       <GradientStop Color="{Red}" Offset="0"/>
       <GradientStop Color="{Transparent}" Offset="1.0"/>
     </RadialGradient>
-    <LinearGradient Name="ButtonFillShine" StartPoint="0.5,0" EndPoint="0.5,1">
-      <GradientStop Color="{Transparent}" Offset="0"/>
-      <GradientStop Color="#20FFFFFF" Offset="0.6"/>
-      <GradientStop Color="#20FFFFFF" Offset="1.0"/>
+    <LinearGradient Name="ButtonFillShine" StartPoint="0.5,0" EndPoint="0.5,1" Opacity="0.09">
+      <GradientStop Color="{Black}" Offset="0"/>
+      <GradientStop Color="{White}" Offset="0.6"/>
     </LinearGradient>
     <LinearGradient Name="ButtonFillForeground" StartPoint="0.5,1" EndPoint="0.5,0">
       <GradientStop Color="#35000000" Offset="0"/>
@@ -36,10 +36,6 @@
       </Shapes>
       <Animations>
         <Animation Name="Highlighted">
-          <Color4Curve TargetName="{GlowEffect}" TargetProperty="Fill.GradientStops[0].Color">
-            <Color4KeyFrame Time="0" Value="{DarkBlue}"/>
-            <Color4KeyFrame Time="1" Value="{DarkBlue}"/>
-          </Color4Curve>
           <FloatCurve TargetName="{GlowEffect}" TargetProperty="Fill.RadiusX">
             <FloatKeyFrame Time="0" Value="0"/>
             <FloatKeyFrame Time="1.0" Value="1.5"/>

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Xml;
 using Odyssey.Serialization;
 
@@ -21,6 +22,8 @@ namespace Odyssey.Graphics
             get { return type; }
         }
 
+        public float Opacity { get; set; }
+
         public void SerializeXml(IResourceProvider theme, XmlWriter xmlWriter)
         {
             OnWriteXml(new XmlSerializationEventArgs(theme, xmlWriter));
@@ -35,6 +38,9 @@ namespace Odyssey.Graphics
         {
             var reader = e.XmlReader;
             Name = reader.GetAttribute("Name");
+            string sOpacity = reader.GetAttribute("Opacity");
+            Opacity = string.IsNullOrEmpty(sOpacity) ? 1 : float.Parse(sOpacity, CultureInfo.InvariantCulture);
+
             if (string.IsNullOrEmpty(Name))
             {
                 IXmlLineInfo xmlInfo = (IXmlLineInfo)reader;

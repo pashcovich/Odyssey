@@ -57,6 +57,6 @@ namespace Odyssey.Graphics
             reader.ReadEndElement();
         }
 
-
+        internal abstract Gradient CopyAs(string newResourceName);
     }
 }

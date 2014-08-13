@@ -10,28 +10,28 @@ namespace Odyssey.Graphics
 {
     public sealed class RadialGradientBrush : GradientBrush
     {
-        private readonly RadialGradient radialGradient;
+        protected new readonly RadialGradient ColorResource;
         private new readonly SharpDX.Direct2D1.RadialGradientBrush Resource;
 
         private RadialGradientBrush(string name, Direct2DDevice device, RadialGradient radialGradient, SharpDX.Direct2D1.RadialGradientBrush brush)
             : base(name, device, radialGradient, brush)
         {
             Resource = brush;
-            this.radialGradient = radialGradient;
+            ColorResource = radialGradient;
         }
 
-        public Vector2 Center { get { return radialGradient.Center; } }
-        public Vector2 OriginOffset { get { return radialGradient.OriginOffset; } }
+        public Vector2 Center { get { return ColorResource.Center; } }
+        public Vector2 OriginOffset { get { return ColorResource.OriginOffset; } }
 
         [Animatable]
         public float RadiusX
         {
-            get { return radialGradient.RadiusX; }
+            get { return ColorResource.RadiusX; }
             set
             {
-                if (MathHelper.ScalarNearEqual(radialGradient.RadiusX, value))
+                if (MathHelper.ScalarNearEqual(ColorResource.RadiusX, value))
                     return;
-                radialGradient.RadiusX = value;
+                ColorResource.RadiusX = value;
                 Resource.RadiusX = value;
             }
         }
@@ -39,12 +39,12 @@ namespace Odyssey.Graphics
         [Animatable]
         public float RadiusY
         {
-            get { return radialGradient.RadiusY; }
+            get { return ColorResource.RadiusY; }
             set
             {
-                if (MathHelper.ScalarNearEqual(radialGradient.RadiusY, value))
+                if (MathHelper.ScalarNearEqual(ColorResource.RadiusY, value))
                     return;
-                radialGradient.RadiusY = value;
+                ColorResource.RadiusY = value;
                 Resource.RadiusY = value;
             }
         }
@@ -62,7 +62,8 @@ namespace Odyssey.Graphics
                     RadiusX = radialGradient.RadiusX,
                     RadiusY = radialGradient.RadiusY
                 };
-                var brush = new SharpDX.Direct2D1.RadialGradientBrush(device, rgbProperties, d2dGradientStopCollection);
+                var brushProperties = new BrushProperties() {Opacity = radialGradient.Opacity};
+                var brush = new SharpDX.Direct2D1.RadialGradientBrush(device, rgbProperties, brushProperties, d2dGradientStopCollection);
                 return new RadialGradientBrush(name, device, radialGradient, brush);
             }
             

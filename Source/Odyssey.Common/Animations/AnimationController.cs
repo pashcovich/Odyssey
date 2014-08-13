@@ -60,6 +60,7 @@ namespace Odyssey.Animations
         {
             foreach (var animation in animations.Values)
             {
+                int cachedAnimations = 0;
                 List<IAnimationCurve> curves = new List<IAnimationCurve>(animation.Curves);
                 foreach (IAnimationCurve curve in curves)
                 {
@@ -92,6 +93,7 @@ namespace Odyssey.Animations
                             animation.AddCurve(newCurve);
                             walker = new ObjectWalker(requiresCaching, newCurve.TargetProperty);
                             curveKey = newCurve.TargetProperty;
+                            cachedAnimations++;
                         }
                     }
                     var animatable = walker.CurrentMember.GetCustomAttribute<AnimatableAttribute>();
@@ -100,6 +102,9 @@ namespace Odyssey.Animations
 
                     walkers.Add(curveKey, walker);
                 }
+
+                if (cachedAnimations > 0 && cachedAnimations != curves.Count)
+                    throw new InvalidOperationException(string.Format("Mixing cached and uncached animations is not supported"));
             }
         }
 
@@ -142,7 +147,6 @@ namespace Odyssey.Animations
         {
             var currentlyPlayingAnimations = new List<Animation>(playingAnimations);
             elapsedTime += time.FrameTime;
-
 
             foreach (var animation in currentlyPlayingAnimations)
             {

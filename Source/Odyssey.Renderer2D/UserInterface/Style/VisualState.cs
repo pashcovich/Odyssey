@@ -40,16 +40,8 @@ namespace Odyssey.UserInterface.Style
                 newShape.Position = new Vector2(control.Width, control.Height) * shape.Position;
                 shapeList.Add(newShape);
 
-                if (!visualStateDefinition.Animations.Any())
-                    continue;
-
-                var attachedAnimations = (from animation in visualStateDefinition.Animations
-                    from curve in animation.Curves
-                    where curve.TargetName == newShape.Name
-                    select animation).Distinct();
-
-                control.AnimationController.AddAnimations(attachedAnimations);
             }
+            control.AnimationController.AddAnimations(visualStateDefinition.Animations);
             visualState.shapes = shapeList.ToArray();
             return visualState;
         }

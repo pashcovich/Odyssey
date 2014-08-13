@@ -46,6 +46,11 @@ namespace Odyssey.Graphics
             base.OnReadXml(e);
         }
 
+        internal override Gradient CopyAs(string newResourceName)
+        {
+            return new LinearGradient(newResourceName, StartPoint, EndPoint, GradientStops, GradientStops.ExtendMode);
+        }
+
         #region IEquatable<Gradient>
 
         public bool Equals(LinearGradient other)

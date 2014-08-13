@@ -40,8 +40,10 @@ namespace Odyssey.Graphics.Shapes
         private string fillBrushClass;
         private string strokeBrushClass;
 
+        [Animatable]
         [CacheAnimation(typeof(GradientStop), "Color")]
         public Brush Fill { get; set; }
+        [Animatable]
         [CacheAnimation(typeof(GradientStop), "Color")]
         public Brush Stroke { get; set; }
         
@@ -146,9 +148,10 @@ namespace Odyssey.Graphics.Shapes
             {
                 object value = property.GetValue(this);
 
-                var bLinearGradient = value as LinearGradientBrush;
-                if (bLinearGradient != null)
-                    return LinearGradientBrushCurve.FromColor4Curve(Device, (Color4Curve)animationCurve, bLinearGradient);
+                var bGradient = value as GradientBrush;
+                if (value == null)
+                    throw new NotImplementedException("Solid Color animation not yet supported");
+                return GradientBrushCurve.FromColor4Curve(Device, (Color4Curve) animationCurve, bGradient);
             }
 
             return null;
