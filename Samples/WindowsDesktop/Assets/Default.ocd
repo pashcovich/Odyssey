@@ -36,6 +36,7 @@
       </Shapes>
       <Animations>
         <Animation Name="Highlighted">
+<<<<<<< HEAD
           <FloatCurve TargetName="{GlowEffect}" TargetProperty="Fill.RadiusX">
             <FloatKeyFrame Time="0" Value="0"/>
             <FloatKeyFrame Time="1.0" Value="1.5"/>
@@ -44,6 +45,12 @@
             <FloatKeyFrame Time="0" Value="0"/>
             <FloatKeyFrame Time="0.250" Value="1.5"/>
           </FloatCurve>
+=======
+          <Color4Curve TargetName="{GlowEffect}" TargetProperty="Fill.GradientStops[0].Color">
+            <Color4KeyFrame Time="0" Value="{DarkBlue}"/>
+            <Color4KeyFrame Time="1" Value="{Red}"/>
+          </Color4Curve>
+>>>>>>> f72d6706922fc28ded402ed2e8adac271a46849a
         </Animation>
       </Animations>
     </VisualState>
