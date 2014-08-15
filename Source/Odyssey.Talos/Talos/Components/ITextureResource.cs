@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Odyssey.Graphics;
-using Odyssey.Graphics.Effects;
+﻿using Odyssey.Graphics;
 
 namespace Odyssey.Talos.Components
 {

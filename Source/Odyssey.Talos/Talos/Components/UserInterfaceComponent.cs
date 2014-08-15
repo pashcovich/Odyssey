@@ -3,6 +3,7 @@ using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using System;
 using System.Diagnostics.Contracts;
+using Odyssey.Utilities.Reflection;
 
 namespace Odyssey.Talos.Components
 {
@@ -23,13 +24,13 @@ namespace Odyssey.Talos.Components
         public override void Initialize()
         {
             if (Overlay == null)
-            throw new InvalidOperationException("'Overlay' cannot be null");
+                throw new InvalidOperationException(string.Format("'{0}' cannot be null",
+                    ReflectionHelper.GetPropertyName((UserInterfaceComponent c) => c.Overlay)));
             UserInterfaceState = Services.GetService<IUserInterfaceState>();
             if (UserInterfaceState == null)
                 throw new InvalidOperationException("UserInterfaceState");
             UserInterfaceState.Initialize();
             UserInterfaceState.SetOverlay(Overlay);
-            Overlay.Initialize();
         }
 
         public override bool Validate()

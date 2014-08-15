@@ -11,7 +11,7 @@ using Odyssey.Graphics;
 namespace Odyssey.UserInterface.Style
 {
     [ContentReader(typeof(ThemeReader))]
-    public sealed class Theme : IXmlSerializable, IResourceProvider
+    public sealed class Theme : IXmlSerializable, IResourceProvider, IResource
     {
         const string sControlStyle = "ControlStyle";
         private const string sResources = "Resources";
@@ -69,6 +69,12 @@ namespace Odyssey.UserInterface.Style
             if (PreOrderVisit(this).Any(r => r == resource || r.Name == resourceName))
                 throw new InvalidOperationException("Resource is already added in the Tree");
             resources.Add(resourceName, resource);
+        }
+
+        public void AddResources(IEnumerable<IResource> resources)
+        {
+            foreach (var resource in resources)
+                AddResource(resource.Name, resource);
         }
 
         #region IXmlSerializable

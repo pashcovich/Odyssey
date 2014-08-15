@@ -887,12 +887,12 @@ namespace Odyssey.Engine
 
             directXDevice = deviceFactory.CreateDevice(newInfo);
 
-            DirectXDevice.Disposing += GraphicsDevice_Disposing;
+            DirectXDevice.Disposing += DirectXDevice_Disposing;
 
             OnDeviceCreated(this, EventArgs.Empty);
         }
 
-        private void GraphicsDevice_Disposing(object sender, EventArgs e)
+        private void DirectXDevice_Disposing(object sender, EventArgs e)
         {
             // Clears the Device
             directXDevice = null;

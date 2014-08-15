@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using Odyssey.Content;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Style;
@@ -24,7 +25,7 @@ namespace Odyssey.UserInterface.Controls
         public const string DefaultText = "Default";
         public const string EmptyStyle = "Empty";
 
-        private readonly string controlStyleClass;
+        private string controlStyleClass;
         private ControlStyle style;
         private TextDescription textDescription;
         private string textStyleClass;
@@ -68,6 +69,14 @@ namespace Odyssey.UserInterface.Controls
         public string StyleClass
         {
             get { return controlStyleClass; }
+            set
+            {
+                if (string.Equals(controlStyleClass, value))
+                    return;
+                controlStyleClass = value;
+                if (!DesignMode)
+                    ApplyControlDescription();
+            }
         }
 
         /// <summary>

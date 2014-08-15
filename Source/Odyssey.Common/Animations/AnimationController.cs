@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Graphics;
-using Odyssey.Utilities.Logging;
+using Odyssey.Content;
 using Odyssey.Utilities.Reflection;
 using Odyssey.Engine;
 
@@ -21,19 +17,40 @@ namespace Odyssey.Animations
 
         public IEnumerable<Animation> Animations { get { return animations.Values; } }
 
-        public object Target { get; private set; }
+        public object Target
+        {
+            get { return target; }
+            set
+            {
+                if (target == value)
+                    return;
+                target = value;
+                foreach (var kvp in walkers)
+                {
+                    var targetPropertyName = kvp.Key;
+                    var walker = kvp.Value;
+                    walker.SetTarget(target, targetPropertyName);
+                }
+            }
+        }
 
         public bool HasAnimations { get { return animations.Count > 0; } }
 
         public bool IsPlaying { get; private set; }
         private float elapsedTime;
+        private object target;
 
-        public AnimationController(object target)
+        public AnimationController(object target) : this()
+        {
+            this.target = target;
+        }
+
+
+        public AnimationController()
         {
             animations = new Dictionary<string, Animation>();
             walkers = new Dictionary<string, ObjectWalker>();
             playingAnimations = new List<Animation>();
-            Target = target;
         }
 
         [Pure]
@@ -67,10 +84,10 @@ namespace Odyssey.Animations
                     object realTarget;
 
                     if (string.IsNullOrEmpty(curve.TargetName))
-                        realTarget = Target;
+                        realTarget = target;
                     else
                     {
-                        var resourceProvider = Target as IResourceProvider;
+                        var resourceProvider = target as IResourceProvider;
                         if (resourceProvider != null)
                             realTarget = resourceProvider.GetResource<IResource>(curve.TargetName);
                         else
@@ -91,7 +108,7 @@ namespace Odyssey.Animations
                         {
                             animation.RemoveCurve(curve.TargetProperty);
                             animation.AddCurve(newCurve);
-                            walker = new ObjectWalker(requiresCaching, newCurve.TargetProperty);
+                            walker.SetTarget(requiresCaching, newCurve.TargetProperty);
                             curveKey = newCurve.TargetProperty;
                             cachedAnimations++;
                         }

@@ -1,5 +1,5 @@
-﻿#if !WP8
-
+﻿using Odyssey.Content;
+#if !WP8
 using Odyssey.Graphics;
 using SharpDX;
 using SharpDX.Direct2D1;

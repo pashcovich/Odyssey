@@ -374,6 +374,9 @@ namespace Odyssey.Content
                 // Cache the loaded assets
                 lock (loadedAssets)
                 {
+                    if (loadedAssets.ContainsKey(asset.Name) && asset.Operation.HasFlag(AssetOperation.Merge))
+                        return;
+
                     loadedAssets.Add(asset.Name, result);
                 }
             }
@@ -393,7 +396,8 @@ namespace Odyssey.Content
                 AssetName = assetName,
                 AssetType = type,
                 Stream = stream,
-                Options = options
+                Options = options,
+                Services = services
             };
 
             try

@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Xml;
+using Odyssey.Content;
 using Odyssey.Serialization;
 
 namespace Odyssey.Graphics
@@ -13,6 +14,7 @@ namespace Odyssey.Graphics
         {
             Name = name;
             this.type = type;
+            Opacity = 1.0f;
         }
 
         public string Name { get; private set; }

@@ -50,10 +50,12 @@
     <Compile Include="Animations\IAnimationCurve.cs" />
     <Compile Include="Animations\IRequiresCaching.cs" />
     <Compile Include="Content\AssetIdentifier.cs" />
+    <Compile Include="Content\AssetOperation.cs" />
     <Compile Include="Content\AssetsLoadedEventArgs.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentReaderAttribute.cs" />
     <Compile Include="Content\ContentReaderParameters.cs" />
+    <Compile Include="Content\IInitializable.cs" />
     <Compile Include="Content\ReferenceReader.cs" />
     <Compile Include="Content\FileSystemResourceResolver.cs" />
     <Compile Include="Content\IAssetProvider.cs" />
@@ -87,7 +89,7 @@
     <Compile Include="Graphics\Effects\ReferenceEnums.cs" />
     <Compile Include="Graphics\GradientStopChanged.cs" />
     <Compile Include="Graphics\Interop.cs" />
-    <Compile Include="Graphics\IResource.cs" />
+    <Compile Include="Content\IResource.cs" />
     <Compile Include="Graphics\Models\ModelOperation.cs" />
     <Compile Include="Graphics\PixelFormat.cs" />
     <Compile Include="Graphics\ExtendMode.cs" />
@@ -96,7 +98,7 @@
     <Compile Include="Graphics\GradientStopCollection.cs" />
     <Compile Include="Graphics\GradientType.cs" />
     <Compile Include="Graphics\IGradient.cs" />
-    <Compile Include="Graphics\IResourceProvider.cs" />
+    <Compile Include="Content\IResourceProvider.cs" />
     <Compile Include="Graphics\LinearGradient.cs" />
     <Compile Include="Graphics\RadialGradient.cs" />
     <Compile Include="Graphics\SolidColor.cs" />

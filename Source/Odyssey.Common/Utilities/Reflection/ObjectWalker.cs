@@ -11,7 +11,7 @@ namespace Odyssey.Utilities.Reflection
         internal delegate object ReadMethod();
 
         internal delegate void WriteMethod(object value);
-        private readonly object root;
+        private object root;
 
         private object objectValue;
         private readonly LinkedList<WalkerInstruction> instructions;
@@ -22,6 +22,10 @@ namespace Odyssey.Utilities.Reflection
         }
 
         public MemberInfo CurrentMember { get; private set; }
+
+        public ObjectWalker()
+        {
+        }
 
         public ObjectWalker(object obj, string path) : this(obj)
         {
@@ -36,14 +40,22 @@ namespace Odyssey.Utilities.Reflection
         public ObjectWalker(object obj)
         {
             Contract.Requires<ArgumentNullException>(obj != null, "obj");
-            this.root = obj;
-            objectValue = root;
             instructions = new LinkedList<WalkerInstruction>();
+            Reset(obj);
         }
 
-        void Reset()
+        void Reset(object obj)
         {
             CurrentMember = null;
+            root = obj;
+            objectValue = root;
+            instructions.Clear();
+        }
+
+        public void SetTarget(object obj, string path)
+        {
+            Reset(obj);
+            FollowPath(path);
         }
 
         bool ShouldAdvance(MemberInfo member)
@@ -56,7 +68,7 @@ namespace Odyssey.Utilities.Reflection
             else return false;
         }
 
-        public void FollowPath(string propertyPath)
+        void FollowPath(string propertyPath)
         {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(propertyPath), "Path cannot be null");
             foreach (string subPath in propertyPath.Split('.'))

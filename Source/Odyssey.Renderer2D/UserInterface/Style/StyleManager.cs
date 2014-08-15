@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Content;
 using Odyssey.Engine;
-using Odyssey.Graphics;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 using System;
@@ -47,22 +46,12 @@ namespace Odyssey.UserInterface.Style
             if (!string.Equals(assetListName, "fonts"))
                 return;
 
-            var device = services.GetService<IDirect2DService>().Direct2DDevice;
+            var d2DService = services.GetService<IDirect2DService>();
+            d2DService.DeviceDisposing += (s, args) => Unload();
+
             fontLoader = new NativeFontLoader(services);
-            fontCollection = ToDispose(new FontCollection(device.DirectWriteFactory, fontLoader, fontLoader.Key));
+            fontCollection = new FontCollection(d2DService.Direct2DDevice, fontLoader, fontLoader.Key);
             content.AssetsLoaded -= InitializeFontCollection;
-        }
-
-        [Pure]
-        public bool ContainsTheme(string themeName)
-        {
-            return content.Contains(themeName);
-        }
-
-        void CheckTheme(string themeName)
-        {
-            if (!ContainsTheme(themeName))
-                throw new ArgumentException(string.Format("Theme [{0}] not found.", themeName));
         }
 
         [Pure]
@@ -83,24 +72,11 @@ namespace Odyssey.UserInterface.Style
 
         public Theme GetTheme(string themeName)
         {
-            CheckTheme(themeName);
             return content.Load<Theme>(themeName);
-        }
-
-        public ControlStyle GetControlStyle(string themeName, string controlClass)
-        {
-            CheckTheme(themeName);
-
-            var theme = content.Load<Theme>(themeName);
-
-            var style = theme.GetResource<ControlStyle>(controlClass);
-            return style;
         }
 
         public TextDescription GetTextStyle(string themeName, string controlClass)
         {
-            CheckTheme(themeName);
-
             var theme = content.Load<TextDescription[]>(themeName);
 
             var description = theme.FirstOrDefault(t => t.Name == controlClass);
@@ -137,5 +113,17 @@ namespace Odyssey.UserInterface.Style
         {
             get { throw new NotImplementedException(); }
         }
+
+        void Unload()
+        {
+            // FontCollection and FontLoader have to be unregistered and disposed before
+            // the DirectWriteFactory is disposed
+            var dwFactory = services.GetService<IDirect2DService>().Direct2DDevice.DirectWriteFactory;
+            dwFactory.UnregisterFontCollectionLoader(fontLoader);
+            dwFactory.UnregisterFontFileLoader(fontLoader);
+            SharpDX.Utilities.Dispose(ref fontCollection);
+            SharpDX.Utilities.Dispose(ref fontLoader);
+        }
+
     }
 }

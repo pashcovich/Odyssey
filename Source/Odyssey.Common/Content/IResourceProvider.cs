@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using Odyssey.Animations;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Content
 {
     public interface IResourceProvider
     {

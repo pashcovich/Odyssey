@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Xml;
+using Odyssey.Content;
 using Odyssey.Graphics;
 using Odyssey.Serialization;
 

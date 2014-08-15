@@ -71,7 +71,7 @@ namespace Odyssey.Graphics
             return from == null ? null : from.Resource ?? null;
         }
 
-        internal static Brush FromColorResource(Direct2DDevice device, ColorResource colorResource)
+        public static Brush FromColorResource(Direct2DDevice device, ColorResource colorResource)
         {
             switch (colorResource.Type)
             {

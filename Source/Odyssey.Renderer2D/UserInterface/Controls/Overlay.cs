@@ -85,7 +85,6 @@ namespace Odyssey.UserInterface.Controls
             TextTheme = DefaultTextTheme;
             styleService = ToDispose(services.GetService<IStyleService>());
             theme = styleService.GetTheme(DefaultControlTheme);
-
             
             EnteredElement = this;
             FocusedElement = this;
@@ -135,7 +134,6 @@ namespace Odyssey.UserInterface.Controls
                 foreach (UIElement uiElement in Controls)
                     uiElement.Dispose();
             }
-            // TODO improve FontCollection disposal
             IsInited = false;
         }
 

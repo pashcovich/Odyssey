@@ -21,6 +21,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Odyssey.Animations;
+using Odyssey.Content;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.Serialization;

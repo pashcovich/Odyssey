@@ -6,7 +6,7 @@ using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
-    public abstract class ContentComponent : Component, IContentComponent
+    public abstract class ContentComponent : Component, IContentComponent, IInitializable
     {
         string assetName;
         public string AssetName

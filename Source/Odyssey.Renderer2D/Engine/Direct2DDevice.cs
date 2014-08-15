@@ -1,15 +1,19 @@
 ﻿#region Using Directives
 
+using Odyssey.Content;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shapes;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using System;
 using System.Diagnostics.Contracts;
 using Brush = Odyssey.Graphics.Brush;
 using D2DFactory = SharpDX.Direct2D1.Factory1;
+using Device = SharpDX.Direct2D1.Device;
+using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using DWFactory = SharpDX.DirectWrite.Factory1;
 using Ellipse = Odyssey.Graphics.Shapes.Ellipse;
 using FactoryType = SharpDX.Direct2D1.FactoryType;
@@ -27,7 +31,6 @@ namespace Odyssey.Engine
         private Device device;
         private DeviceContext deviceContext;
         private DWFactory directWriteFactory;
-        
         private D2DFactory factory;
         private Direct2DSurface target;
 
@@ -206,13 +209,16 @@ namespace Odyssey.Engine
         /// </summary>
         public void DisposeAll()
         {
+            device.ClearResources(0);
+
             if (target != backBuffer)
                 RemoveAndDispose(ref target);
             RemoveAndDispose(ref backBuffer);
+            
             RemoveAndDispose(ref directWriteFactory);
+            RemoveAndDispose(ref factory);
             RemoveAndDispose(ref deviceContext);
             RemoveAndDispose(ref device);
-            RemoveAndDispose(ref factory);
         }
 
         #region Operators

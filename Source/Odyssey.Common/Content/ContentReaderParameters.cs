@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using SharpDX;
 
 namespace Odyssey.Content
 {
@@ -27,6 +28,8 @@ namespace Odyssey.Content
         /// This parameter is an out parameter for <see cref="IContentReader.ReadContent"/>. Set to true to let the ContentManager close the stream once the reader is done.
         /// </summary>
         public bool KeepStreamOpen;
+
+        public IServiceRegistry Services;
 
         /// <summary>
         /// Custom options provided when using <see cref="IAssetProvider.Load{T}"/>.

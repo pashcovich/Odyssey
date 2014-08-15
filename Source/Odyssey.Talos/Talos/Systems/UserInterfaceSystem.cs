@@ -64,5 +64,10 @@ namespace Odyssey.Talos.Systems
                 cUserInterface.Overlay.Update(time);
             }
         }
+
+        public override void Unload()
+        {
+            Overlay.Dispose();
+        }
     }
 }

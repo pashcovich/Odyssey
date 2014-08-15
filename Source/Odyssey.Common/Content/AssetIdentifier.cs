@@ -15,14 +15,19 @@ namespace Odyssey.Content
         [YamlMember("type")]
         public string Type { get; set; }
 
+        [YamlMember("operation")]
+        [DefaultValue(null)]
+        public AssetOperation Operation { get; set; }
+
         public AssetIdentifier()
         { }
 
-        public AssetIdentifier(string name, string path, string type)
+        public AssetIdentifier(string name, string path, string type, AssetOperation assetOperation = AssetOperation.None)
         {
             Name = name;
             Path = path;
             Type = type;
+            Operation = assetOperation;
         }
     }
 }

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Content
 {
-    public interface IResource
+    [Flags]
+    public enum AssetOperation
     {
-        string Name { get; }
+        None = 0,
+        Merge = 1 << 0,
     }
 }

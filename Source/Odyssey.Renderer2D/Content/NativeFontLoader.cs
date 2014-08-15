@@ -1,4 +1,5 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿#region Original License
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -16,7 +17,8 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// THE SOFTWARE. 
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -40,7 +42,7 @@ namespace Odyssey.Content
         /// <summary>
         ///     Initializes a new instance of the <see cref="NativeFontLoader" /> class.
         /// </summary>
-        /// <param name="factory">The factory.</param>
+        /// <param name="service">The service registry.</param>
         public NativeFontLoader(IServiceRegistry services)
         {
             var device = services.GetService<IDirect2DService>().Direct2DDevice;
@@ -130,7 +132,7 @@ namespace Odyssey.Content
             {
                 foreach (var enumerator in _enumerators)
                 {
-                    ((FontFileEnumerator) enumerator).CurrentFontFile.Dispose();
+                    ((FontFileEnumerator)enumerator).CurrentFontFile.Dispose();
                 }
             }
         }

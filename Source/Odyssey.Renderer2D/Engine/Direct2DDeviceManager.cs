@@ -16,10 +16,12 @@
 #region Using Directives
 
 using System;
+using Odyssey.Content;
 using Odyssey.Geometry;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
+using SharpDX.DirectWrite;
 
 #endregion
 
@@ -33,6 +35,7 @@ namespace Odyssey.Engine
         private IDirect3DProvider dxDeviceCache;
 
         public event EventHandler<EventArgs> DeviceCreated;
+        public event EventHandler<EventArgs> DeviceDisposing;
 
         public Direct2DDeviceManager(IServiceRegistry services)
         {
@@ -70,8 +73,9 @@ namespace Odyssey.Engine
                     d2dDevice.DisposeAll();
 
                 var d3dDevice = dxDeviceCache.Device;
-                d2dDevice = ToDispose(new Direct2DDevice(services, d3dDevice,
-                        d3dDevice.CreationFlags.HasFlag(DeviceCreationFlags.Debug) ? DebugLevel.Warning : DebugLevel.None));
+                d2dDevice = new Direct2DDevice(services, d3dDevice,
+                        d3dDevice.CreationFlags.HasFlag(DeviceCreationFlags.Debug) ? DebugLevel.Warning : DebugLevel.None);
+
                 var deviceSettings = services.GetService<IDirectXDeviceSettings>();
                 if (!MathHelper.ScalarNearEqual(deviceSettings.HorizontalDpi, d2dDevice.HorizontalDpi) ||
                     !MathHelper.ScalarNearEqual(deviceSettings.VerticalDpi, d2dDevice.VerticalDpi))
@@ -114,6 +118,7 @@ namespace Odyssey.Engine
         /// <param name="e">Ignored.</param>
         private void DirectXDx11ServiceOnDx11Disposing(object sender, EventArgs e)
         {
+            RaiseEvent(DeviceDisposing, this, e);
             d2dDevice.DisposeAll();
         }
 

@@ -18,6 +18,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Xml;
+using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Interaction;

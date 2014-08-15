@@ -35,7 +35,6 @@
   <ItemGroup>
     <Compile Include="Animations\GradientBrushCurve.cs" />
     <Compile Include="Animations\GradientBrushKeyFrame.cs" />
-    <Compile Include="Content\ControlDefinitionsReader.cs" />
     <Compile Include="Content\Font.cs" />
     <Compile Include="Content\FontReader.cs" />
     <Compile Include="Content\NativeFontFileEnumerator.cs" />

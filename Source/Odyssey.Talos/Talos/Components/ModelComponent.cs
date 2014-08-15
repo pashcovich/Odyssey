@@ -1,7 +1,6 @@
 ﻿using Odyssey.Graphics.Models;
 using System;
 using System.Diagnostics.Contracts;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
@@ -18,7 +17,6 @@ namespace Odyssey.Talos.Components
             : base(ComponentTypeManager.GetType<ModelComponent>())
         {
         }
-
 
         public override void Initialize()
         {

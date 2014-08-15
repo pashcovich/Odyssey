@@ -16,7 +16,15 @@ namespace Odyssey.Content
                 IgnoreWhitespace = true,
             };
             Theme theme = (Theme)serializer.Deserialize(XmlReader.Create(parameters.Stream, xmlReaderSettings));
-            return theme;
+            var content = parameters.Services.GetService<IAssetProvider>();
+            if (content.Contains(parameters.AssetName))
+            {
+                var existingTheme = content.Load<Theme>(parameters.AssetName);
+                existingTheme.AddResources(theme.Resources);
+                return existingTheme;
+            }
+            else
+                return theme;
         }
     }
 }

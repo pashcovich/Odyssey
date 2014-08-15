@@ -16,6 +16,7 @@
 #region Using Directives
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -39,14 +40,28 @@ namespace Odyssey.Graphics.Shapes
 
         private string fillBrushClass;
         private string strokeBrushClass;
+        private Brush fill;
+        private Brush stroke;
 
         [Animatable]
-        [CacheAnimation(typeof(GradientStop), "Color")]
-        public Brush Fill { get; set; }
+        [CacheAnimation(typeof (GradientStop), "Color")]
+        public Brush Fill
+        {
+            get { return fill; }
+            set
+            {
+                fill = value;
+            }
+        }
+
         [Animatable]
-        [CacheAnimation(typeof(GradientStop), "Color")]
-        public Brush Stroke { get; set; }
-        
+        [CacheAnimation(typeof (GradientStop), "Color")]
+        public Brush Stroke
+        {
+            get { return stroke; }
+            set { stroke = value; }
+        }
+
         public float StrokeThickness { get; set; }
 
         internal override UIElement Copy()
@@ -58,52 +73,48 @@ namespace Odyssey.Graphics.Shapes
             return copy;
         }
 
-        public static TShape FromControl<TShape>(Control control, string shapeName)
-            where TShape : UIElement, IShape, new()
+        private bool CreateOrRetrieveBrush(IStyleService styleService, string brushClass, out Brush brush)
         {
-            TShape shape = new TShape()
+            if (string.IsNullOrEmpty(brushClass))
             {
-                Name = shapeName,
-                Width = control.Width,
-                Height = control.Height,
-                AbsolutePosition = control.AbsolutePosition,
-                Margin = control.Margin,
-            };
+                brush = null;
+                return false;
+            }
 
-            return shape;
+            var brushColor = Overlay.Theme.GetResource<ColorResource>(brushClass);
+
+            if (styleService.ContainsResource(brushClass))
+            {
+                brush = styleService.GetResource<Brush>(brushClass);
+                return false;
+            }
+            else
+            {
+                brush = Brush.FromColorResource(Device, brushColor);
+                return true;
+            }
+
         }
 
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
             var styleService = Device.Services.GetService<IStyleService>();
-            if (!string.IsNullOrEmpty(fillBrushClass))
+
+            bool cacheBrush = fill!= null || CreateOrRetrieveBrush(styleService, fillBrushClass, out fill);
+            if (cacheBrush)
             {
-                var fillColor = Overlay.Theme.GetResource<ColorResource>(fillBrushClass);
-                if (styleService.ContainsResource(fillBrushClass))
-                    Fill = styleService.GetResource<Brush>(fillBrushClass);
-                else
-                {
-                    Fill = Brush.FromColorResource(Device, fillColor);
-                    styleService.AddResource(Fill);
-                }
-                Fill.Initialize();
+                fill.Initialize();
+                styleService.AddResource(fill);
             }
 
-            if (!string.IsNullOrEmpty(strokeBrushClass))
+            cacheBrush = stroke != null || CreateOrRetrieveBrush(styleService, strokeBrushClass, out stroke);;
+            if (cacheBrush)
             {
-                var strokeColor = Overlay.Theme.GetResource<ColorResource>(strokeBrushClass);
-                if (styleService.ContainsResource(strokeBrushClass))
-                    Stroke = styleService.GetResource<Brush>(strokeBrushClass);
-                else
-                {
-                    Stroke = Brush.FromColorResource(Device, strokeColor);
-                    styleService.AddResource(Stroke);
-                }
-                Stroke.Initialize();
+                stroke.Initialize();
+                styleService.AddResource(stroke);
             }
         }
-
 
         protected override void OnLayoutUpdated(EventArgs e)
         {
