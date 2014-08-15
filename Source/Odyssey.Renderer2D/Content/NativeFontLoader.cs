@@ -42,7 +42,7 @@ namespace Odyssey.Content
         /// <summary>
         ///     Initializes a new instance of the <see cref="NativeFontLoader" /> class.
         /// </summary>
-        /// <param name="service">The service registry.</param>
+        /// <param name="services">The service registry.</param>
         public NativeFontLoader(IServiceRegistry services)
         {
             var device = services.GetService<IDirect2DService>().Direct2DDevice;
@@ -93,7 +93,7 @@ namespace Odyssey.Content
         ///     HRESULT IDWriteFontCollectionLoader::CreateEnumeratorFromKey([None] IDWriteFactory* factory,[In, Buffer]
         ///     const void* collectionKey,[None] int collectionKeySize,[Out] IDWriteFontFileEnumerator** fontFileEnumerator)
         /// </unmanaged>
-        SharpDX.DirectWrite.FontFileEnumerator FontCollectionLoader.CreateEnumeratorFromKey(Factory factory, DataPointer collectionKey)
+        FontFileEnumerator FontCollectionLoader.CreateEnumeratorFromKey(Factory factory, DataPointer collectionKey)
         {
             var enumerator = new NativeFontFileEnumerator(factory, this, collectionKey);
             _enumerators.Add(enumerator);
@@ -119,7 +119,7 @@ namespace Odyssey.Content
         ///     HRESULT IDWriteFontFileLoader::CreateStreamFromKey([In, Buffer] const void* fontFileReferenceKey,[None] int
         ///     fontFileReferenceKeySize,[Out] IDWriteFontFileStream** fontFileStream)
         /// </unmanaged>
-        SharpDX.DirectWrite.FontFileStream FontFileLoader.CreateStreamFromKey(DataPointer fontFileReferenceKey)
+        FontFileStream FontFileLoader.CreateStreamFromKey(DataPointer fontFileReferenceKey)
         {
             var index = SharpDX.Utilities.Read<int>(fontFileReferenceKey.Pointer);
             return _fontStreams[index];
