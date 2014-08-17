@@ -1,0 +1,112 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using Real = System.Single;
+using Point = SharpDX.Vector2;
+
+namespace Odyssey.Geometry.Primitives
+{
+    public class BSpline : CurveBase
+    {
+        private bool isClamped;
+        private readonly List<Real> knotVector;
+
+        public BSpline(int degree = 2) : base(degree)
+        {
+            knotVector = new List<Real>();
+        }
+
+        public override Point[] Calculate(Real alpha)
+        {
+            if (Count <= Degree+1)
+                throw new InvalidOperationException("Insufficient number of control points");
+            if (knotVector.Count ==0)
+                throw new InvalidOperationException("Must calculate a knot vector before generating BSpline");
+            
+            List<Point> points = new List<Point>();
+
+            float start;
+            float end;
+            if (isClamped)
+            {
+                start = alpha;
+                end = 1 - alpha;
+            }
+            else
+            {
+                start = Degree * 1/((Real) knotVector.Count - 1);
+                end = 1-start;
+            }
+
+            for (float t = start; t < end; t += alpha)
+            {
+                int j = WhichInterval(t);
+                Point p = DeBoor(Degree, j, t);
+                points.Add(p);
+            }
+            return points.ToArray();
+        }
+
+        public void CalculateUniformKnotVector()
+        {
+            isClamped = false;
+
+            float[] x = new float[Count+Degree+1];
+            float grad = 1/(Real)(x.Length-1);
+            for (int i = 1; i < x.Length; i++)
+            {
+                x[i] = i*grad;
+            }
+            knotVector.AddRange(x);
+        }
+
+
+        public void CalculateClampedUniformKnotVector()
+        {
+            int n = Count - 1;
+            int d = Degree + 1;
+
+            float[] x = new float[n + d + 1];
+            for (int i = 0; i < x.Length; i++)
+            {
+                if (i < d)
+                    x[i] = 0;
+                else if (i > n)
+                    x[i] = 1;
+                else
+                    x[i] = (i-Degree) / (float)(n - Degree + 1);
+            }
+            knotVector.AddRange(x);
+            isClamped = true;
+        }
+
+       
+        Point DeBoor(int k, int i, Real t)
+        {
+            if (k == 0)
+            {
+                return this[i];
+            }
+            else
+            {
+                double alpha = (t - knotVector[i])/(knotVector[i + Degree + 1 - k] - knotVector[i]);
+                return DeBoor(k - 1, i - 1, t)*(1 - (Real) alpha) + DeBoor(k - 1, i, t)*(Real) alpha;
+            }
+
+        }
+        
+        int WhichInterval(Real x)
+        {
+            int ti = knotVector.Count;
+            for (int i = 1; i < ti - 1; i++)
+            {
+                if (x < knotVector[i])
+                    return (i - 1);
+                else if (MathHelper.ScalarNearEqual(x, knotVector[ti - 1]))
+                    return (ti - 1);
+            }
+            return -1;
+        }
+
+    }
+}

@@ -3,7 +3,7 @@ using System.Linq;
 using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
+using Odyssey.Graphics.Drawing;
 using System.Collections.Generic;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
@@ -52,7 +52,7 @@ namespace Odyssey.UserInterface.Style
 
             while (xmlReader.IsStartElement())
             {
-                string typeName = string.Format("Odyssey.Graphics.Shapes.{0}", xmlReader.Name);
+                string typeName = string.Format("Odyssey.Graphics.Drawing.{0}", xmlReader.Name);
                 try
                 {
                     var shape = (Shape) Activator.CreateInstance(Type.GetType(typeName));

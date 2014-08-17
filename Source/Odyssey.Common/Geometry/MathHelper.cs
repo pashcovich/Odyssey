@@ -1,4 +1,5 @@
 ﻿using System;
+using SharpDX;
 
 namespace Odyssey.Geometry
 {
@@ -102,6 +103,11 @@ namespace Odyssey.Geometry
             if (Math.Abs(value) < EpsilonD)
                 return true;
             return false;
+        }
+
+        public static int Mod(int value, int modulo)
+        {
+             return (value%modulo + modulo)%modulo;
         }
 
         public static bool ScalarNearEqual(float s1, float s2, float tolerance = Epsilon)
