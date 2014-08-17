@@ -11,7 +11,7 @@ namespace Odyssey.Geometry.Primitives
         private readonly int degree;
         private readonly List<Point> controlPoints;
         public Point FirstControlPoint { get { return controlPoints[0]; } }
-        public Point End { get { return controlPoints[controlPoints.Count - 1]; } }
+        public Point LastControlPoint { get { return controlPoints[controlPoints.Count - 1]; } }
 
         public int Degree
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using Real = System.Single;
 using Point = SharpDX.Vector2;
 
@@ -44,13 +43,18 @@ namespace Odyssey.Geometry.Primitives
                 Point p = DeBoor(Degree, j, t);
                 points.Add(p);
             }
+
+            if (isClamped)
+            {
+                points.Insert(0, FirstControlPoint);
+                points.Add(LastControlPoint);
+            }
             return points.ToArray();
         }
 
         public void CalculateUniformKnotVector()
         {
-            isClamped = false;
-
+            knotVector.Clear();
             float[] x = new float[Count+Degree+1];
             float grad = 1/(Real)(x.Length-1);
             for (int i = 1; i < x.Length; i++)
@@ -58,11 +62,13 @@ namespace Odyssey.Geometry.Primitives
                 x[i] = i*grad;
             }
             knotVector.AddRange(x);
+            isClamped = false;
         }
 
 
         public void CalculateClampedUniformKnotVector()
         {
+            knotVector.Clear();
             int n = Count - 1;
             int d = Degree + 1;
 
