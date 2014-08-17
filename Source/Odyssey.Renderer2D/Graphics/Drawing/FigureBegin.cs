@@ -1,5 +1,5 @@
 ﻿#if !WP8
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     /// <summary>
     /// <p>Indicates whether a specific <strong><see cref="GeometrySink"/></strong> figure is filled or hollow. </p>

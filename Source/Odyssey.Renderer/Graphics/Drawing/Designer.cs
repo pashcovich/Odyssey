@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Odyssey.Engine;
 using Odyssey.Graphics.Models;
 using SharpDX;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Drawing
 {
     public partial class Designer
     {

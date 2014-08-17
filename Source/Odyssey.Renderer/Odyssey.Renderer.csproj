@@ -172,10 +172,10 @@
     <Compile Include="Graphics\Shaders\TechniqueKey.cs" />
     <Compile Include="Graphics\Shaders\TechniqueMapping.cs" />
     <Compile Include="Graphics\Shaders\TextureDescription.cs" />
-    <Compile Include="Graphics\Shapes\Designer.cs" />
-    <Compile Include="Graphics\Shapes\Designer.Ellipse.cs" />
-    <Compile Include="Graphics\Shapes\Designer.Rectangle.cs" />
-    <Compile Include="Graphics\Shapes\ShapeMeshDescription.cs" />
+    <Compile Include="Graphics\Drawing\Designer.cs" />
+    <Compile Include="Graphics\Drawing\Designer.Ellipse.cs" />
+    <Compile Include="Graphics\Drawing\Designer.Rectangle.cs" />
+    <Compile Include="Graphics\Drawing\ShapeMeshDescription.cs" />
     <Compile Include="Graphics\StateCollectionBase.cs" />
     <Compile Include="Graphics\StateViewer.cs" />
     <Compile Include="Graphics\Texture.cs" />
@@ -228,7 +228,9 @@
   <ItemGroup>
     <Compile Include="Graphics\Buffer.Typed.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Graphics\Drawing\Designer.Polyline.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

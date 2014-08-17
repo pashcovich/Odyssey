@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Graphics
+﻿namespace Odyssey.Graphics.Drawing
 {
     public class ShapeMeshDescription
     {

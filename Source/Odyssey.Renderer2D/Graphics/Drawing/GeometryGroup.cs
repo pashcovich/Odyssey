@@ -25,7 +25,7 @@ using System.Linq;
 
 #if !WP8
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public class GeometryGroup : Geometry
     {

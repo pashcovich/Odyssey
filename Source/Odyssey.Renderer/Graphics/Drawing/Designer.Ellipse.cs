@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Geometry;
 using Odyssey.Geometry.Primitives;
 using SharpDX;
-using Odyssey.Geometry;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Drawing
 {
     public partial class Designer
     {

@@ -31,7 +31,7 @@ using SharpDX;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public abstract class Shape : UIElement, IShape, IRequiresCaching
     {

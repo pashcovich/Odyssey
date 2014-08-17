@@ -2,7 +2,7 @@
 using Odyssey.Geometry.Primitives;
 using Odyssey.UserInterface.Controls;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public class Hexagon : PolygonBase
     {

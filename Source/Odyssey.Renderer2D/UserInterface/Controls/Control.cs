@@ -14,7 +14,7 @@ using System;
 using System.Collections.Generic;
 using Odyssey.Content;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Shapes;
+using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 

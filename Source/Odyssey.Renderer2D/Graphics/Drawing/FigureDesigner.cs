@@ -2,7 +2,7 @@
 using Odyssey.UserInterface.Style;
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public class FigureDesigner
     {

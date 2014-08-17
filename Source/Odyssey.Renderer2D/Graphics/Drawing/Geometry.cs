@@ -19,7 +19,7 @@ using Odyssey.Engine;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public abstract class Geometry : Direct2DResource
     {

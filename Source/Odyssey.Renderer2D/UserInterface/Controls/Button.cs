@@ -18,7 +18,7 @@
 using Odyssey.Graphics;
 using Odyssey.Interaction;
 using SharpDX;
-using Rectangle = Odyssey.Graphics.Shapes.Rectangle;
+using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
 #endregion Using Directives
 

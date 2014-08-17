@@ -13,18 +13,28 @@
 
 #endregion License
 
-#if !WP8
+#region Using Directives
 
-namespace Odyssey.Graphics.Shapes
+using SharpDX;
+
+#endregion Using Directives
+
+namespace Odyssey.Graphics.Drawing
 {
-    /// <summary>
-    /// <p>Indicates whether a specific  <strong><see cref="T:SharpDX.Direct2D1.SimplifiedGeometrySink"/></strong> figure is open or closed. </p>
-    /// </summary>
-    public enum FigureEnd
+    public abstract class CutCornerRectangleBase : Shape
     {
-        Open,
-        Closed,
+        private const float DefaultCornerLength = 16;
+
+        protected CutCornerRectangleBase()
+        {
+            CutCornerLength = DefaultCornerLength;
+        }
+
+        public float CutCornerLength { get; set; }
+
+        public override bool Contains(Vector2 cursorLocation)
+        {
+            return BoundingRectangle.Contains(cursorLocation);
+        }
     }
 }
-
-#endif

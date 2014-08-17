@@ -13,22 +13,18 @@
 
 #endregion License
 
-#region Using Directives
+#if !WP8
 
-using Odyssey.Geometry.Primitives;
-using SharpDX;
-
-#endregion Using Directives
-
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
-    public abstract class PolygonBase : Shape
+    /// <summary>
+    /// <p>Indicates whether a specific  <strong><see cref="T:SharpDX.Direct2D1.SimplifiedGeometrySink"/></strong> figure is open or closed. </p>
+    /// </summary>
+    public enum FigureEnd
     {
-        protected abstract Polygon Polygon { get; set; }
-
-        public override bool Contains(Vector2 cursorLocation)
-        {
-            return Polygon.Contains(cursorLocation);
-        }
+        Open,
+        Closed,
     }
 }
+
+#endif

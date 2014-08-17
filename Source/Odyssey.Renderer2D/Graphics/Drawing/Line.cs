@@ -1,7 +1,7 @@
 ﻿using Odyssey.UserInterface.Controls;
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public class Line : Shape
     {

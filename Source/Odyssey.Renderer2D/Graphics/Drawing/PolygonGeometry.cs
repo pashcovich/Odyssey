@@ -3,7 +3,7 @@ using Odyssey.Engine;
 using Odyssey.Geometry.Primitives;
 using SharpDX;
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public class PolygonGeometry : PathGeometry
     {

@@ -21,7 +21,7 @@ using Odyssey.UserInterface.Style;
 
 #endregion Using Directives
 
-namespace Odyssey.Graphics.Shapes
+namespace Odyssey.Graphics.Drawing
 {
     public class PathGeometry : Geometry
     {
