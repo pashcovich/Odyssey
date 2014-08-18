@@ -53,7 +53,7 @@ namespace Odyssey.Graphics.Drawing
                 for (int i = 0; i < indexArray.Length; i++)
                     indexArray[i] += index;
                 indexList.AddRange(indexArray);
-                index += indexArray.Length;
+                index += shape.Vertices.Length;
             }
             
             model = GeometricPrimitive.New(device, "ShapeMesh", vertexList.ToArray(), indexList.ToArray());

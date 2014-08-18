@@ -229,7 +229,7 @@
     <Compile Include="Graphics\Buffer.Typed.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphics\Drawing\Designer.Polyline.cs" />
+    <Compile Include="Graphics\Drawing\Designer.Line.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SolutionDir)\Odyssey.PostSettings.targets" />

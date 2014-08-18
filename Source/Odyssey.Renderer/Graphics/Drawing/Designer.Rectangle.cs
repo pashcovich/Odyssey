@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Geometry;
 using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
@@ -9,7 +10,29 @@ namespace Odyssey.Graphics.Drawing
     {
         private delegate Color4[] RectangleColorShader(GradientStopCollection gradientStops, int widthSegments, int heightSegments);
 
-        public void FillRectangle(RectangleF rectangle, IGradient gradient)
+        public void DrawRectangle(RectangleF rectangle, float strokeThickness, IGradient gradient, Matrix transform)
+        {
+            Contract.Requires<ArgumentException>(!rectangle.IsEmpty, "rectangle");
+            var outline = new[]
+            {
+                // Top
+                new RectangleF(rectangle.X, rectangle.Y, rectangle.Width, strokeThickness),
+                // Bottom 
+                new RectangleF(rectangle.X, rectangle.Y + rectangle.Height - strokeThickness, rectangle.Width, strokeThickness),
+                // Left
+                new RectangleF(rectangle.X, rectangle.Y, strokeThickness, rectangle.Height),
+                // Right
+                new RectangleF(rectangle.X + rectangle.Width - strokeThickness, rectangle.Y, strokeThickness, rectangle.Height)
+            };
+
+            foreach (var r in outline)
+            {
+                FillRectangle(r, gradient, transform);
+            }
+
+        }
+
+        public void FillRectangle(RectangleF rectangle, IGradient gradient, Matrix transform)
         {
             Contract.Requires<ArgumentException>(!rectangle.IsEmpty, "rectangle");
             Contract.Requires<ArgumentException>(gradient != null, "gradient");
@@ -20,7 +43,7 @@ namespace Odyssey.Graphics.Drawing
             RectangleColorShader shader = ChooseShader(gradient, out widthSegments, out heightSegments);
 
             int[] indices;
-            Vector3[] vertices = CreateRectangleMesh(rectangle, widthSegments, heightSegments, out indices);
+            Vector3[] vertices = CreateRectangleMesh(rectangle, widthSegments, heightSegments, transform, out indices);
             Color4[] colors = shader(gradient.GradientStops, widthSegments.Length, heightSegments.Length);
 
             var vertexArray = new VertexPositionColor[vertices.Length];
@@ -58,7 +81,7 @@ namespace Odyssey.Graphics.Drawing
             return colors;
         }
 
-        private static Vector3[] CreateRectangleMesh(RectangleF rectangle, float[] widthSegments, float[] heightSegments, out int[] indices)
+        private static Vector3[] CreateRectangleMesh(RectangleF rectangle, float[] widthSegments, float[] heightSegments, Matrix transform, out int[] indices)
         {
             Contract.Requires<ArgumentException>(widthSegments != null);
             Contract.Requires<ArgumentException>(heightSegments != null);
@@ -95,8 +118,8 @@ namespace Odyssey.Graphics.Drawing
                         indices[indexCount + 2] = vertexCount;
 
                         indices[indexCount + 3] = indices[indexCount];
-                        indices[indexCount + 4] = indices[indexCount]+1;
-                        indices[indexCount + 5] = indices[indexCount+1];
+                        indices[indexCount + 4] = indices[indexCount] + 1;
+                        indices[indexCount + 5] = indices[indexCount + 1];
                         indexCount += 6;
                     }
 
@@ -104,6 +127,14 @@ namespace Odyssey.Graphics.Drawing
                 }
             }
 
+            if (!transform.IsIdentity)
+            {
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    var vertex = vertices[i];
+                    vertices[i] = Vector3.Transform(vertex, transform).ToVector3();
+                }
+            }
             return vertices;
         }
 

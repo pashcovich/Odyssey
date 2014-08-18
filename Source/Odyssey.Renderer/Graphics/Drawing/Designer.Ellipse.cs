@@ -188,6 +188,12 @@ namespace Odyssey.Graphics.Drawing
 
             TriangulateEllipseFirstRing(slices, ref indices);
 
+            if (rings == 1)
+            {
+                //SharpDX.Utilities.Swap(ref indices[baseIndex + indexCount - 1], ref indices[baseIndex + indexCount - 2]);
+                return vertices;
+            }
+
             int indexCount = 0;
             int baseIndex = 3 * slices;
             for (int r = 1; r < rings - 1; r++)
@@ -230,11 +236,13 @@ namespace Odyssey.Graphics.Drawing
             // First ring indices
             for (int i = 0; i < slices; i++)
             {
-                indices[startIndex + (3 * i)] = 0;
-                indices[startIndex + (3 * i) + 1] = (ushort)(i + 2);
-                indices[startIndex + (3 * i) + 2] = (ushort)(i + 1);
+                indices[startIndex + (3*i)] = 0;
+                indices[startIndex + (3*i) + 1] = i + 2;
+                indices[startIndex + (3*i) + 2] = i + 1;
             }
-            indices[(slices * 3) - 2] = 1;
+            indices[startIndex + 3*slices - 2] = 1;
+            SharpDX.Utilities.Swap(ref indices[startIndex + 3 * slices - 2], ref indices[startIndex + 3 * slices - 1]);
+            
         }
 
         static EllipseColorShader ChooseEllipseShader(IGradient gradient)
