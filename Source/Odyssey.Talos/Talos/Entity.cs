@@ -40,6 +40,8 @@ namespace Odyssey.Talos
         private long key;
         private Scene scene;
 
+        public IEnumerable<IEntity> Children { get { return scene.GetChildren(this); } }
+
         public Entity() : this("Untitled")
         {
         }
@@ -122,6 +124,11 @@ namespace Odyssey.Talos
             Contract.Requires<ArgumentNullException>(componentType!= null, "componentType");
             Contract.Requires<ArithmeticException>(ReflectionHelper.IsTypeDerived(componentType, typeof(IComponent)));
             return Scene.GetEntityComponent<IComponent>(this, ComponentTypeManager.GetKeyPart(componentType));
+        }
+
+        public IEntity FindChild(string name)
+        {
+            return scene.FindChild(this, name);
         }
 
         public bool Validate()

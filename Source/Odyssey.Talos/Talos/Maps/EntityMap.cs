@@ -1,4 +1,5 @@
-﻿using Odyssey.Graphics;
+﻿using System.Runtime.InteropServices;
+using Odyssey.Graphics;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
 using Odyssey.Utilities.Logging;
@@ -123,24 +124,51 @@ namespace Odyssey.Talos.Maps
             return test;
         }
 
-        internal IEnumerable<TComponent> SelectComponents<TComponent>()
+        public IEnumerable<IEntity> SelectChildren(IEntity parent)
+        {
+            Contract.Requires<ArgumentNullException>(parent!=null, "parent");
+            var childEntities = from e in Entities
+                where e.ContainsComponent<ParentComponent>()
+                let cParent = e.GetComponent<ParentComponent>()
+                where cParent.Entity == parent
+                select e;
+            return childEntities;
+        }
+
+        public IEnumerable<IEntity> PreOrderVisit(IEntity root)
+        {
+            foreach (var entity in SelectChildren(root))
+            {
+                yield return entity;
+                foreach (var childEntity in SelectChildren(entity))
+                    yield return childEntity;
+            }
+        }
+
+        public IEntity FindChild(IEntity parent, string name)
+        {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(name), "name");
+            return PreOrderVisit(parent).FirstOrDefault(e => string.Equals(e.Name, name));
+        }
+
+        public IEnumerable<TComponent> SelectComponents<TComponent>()
             where TComponent : IComponent
         {
             return components.Values.OfType<TComponent>();
         }
 
-        internal IEnumerable<IComponent> GetEntityComponents(IEntity entity)
+        public IEnumerable<IComponent> GetEntityComponents(IEntity entity)
         {
             return componentsByEntity[entity.Id].Values;
         }
 
-        internal TComponent GetEntityComponent<TComponent>(IEntity entity, long keyPart)
+        public TComponent GetEntityComponent<TComponent>(IEntity entity, long keyPart)
             where TComponent : IComponent
         {
             return (TComponent)componentsByEntity[entity.Id][keyPart];
         }
 
-        internal bool TryGetEntityComponent<TComponent>(IEntity entity, long keyPart, out TComponent component)
+        public bool TryGetEntityComponent<TComponent>(IEntity entity, long keyPart, out TComponent component)
             where TComponent : IComponent
         {
             IComponent componentTemp;
@@ -149,17 +177,17 @@ namespace Odyssey.Talos.Maps
             return test;
         }
 
-        internal int CountEntities(Func<IEntity, bool> function)
+        public int CountEntities(Func<IEntity, bool> function)
         {
             return entities.Count(kvp => function(kvp.Value));
         }
 
-        internal bool EntityHasComponent(IEntity entity, long keyPart)
+        public bool EntityHasComponent(IEntity entity, long keyPart)
         {
             return componentsByEntity[entity.Id].ContainsKey(keyPart);
         }
 
-        internal void AddComponentToEntity(IComponent component, IEntity entity)
+        public void AddComponentToEntity(IComponent component, IEntity entity)
         {
             componentsByEntity[entity.Id].Add(component.KeyPart, component);
             if (!components.ContainsKey(component.Id))
@@ -167,7 +195,7 @@ namespace Odyssey.Talos.Maps
             OnEntityComponentAdded(new EntityChangedEventArgs(entity, component));
         }
 
-        internal void RemoveComponentFromEntity(IComponent component, IEntity entity)
+        public void RemoveComponentFromEntity(IComponent component, IEntity entity)
         {
             componentsByEntity[entity.Id].Remove(component.KeyPart);
             components.Remove(component.Id);

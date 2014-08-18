@@ -63,7 +63,6 @@
     <Compile Include="Talos\Components\IContentComponent.cs" />
     <Compile Include="Talos\Components\ITextureResource.cs" />
     <Compile Include="Talos\Components\OptionalComponentAttribute.cs" />
-    <Compile Include="Talos\Components\OrbitBehaviourComponent.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.Bloom.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.Glow.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.cs" />
@@ -139,7 +138,6 @@
     <Compile Include="Talos\Systems\Selector.cs" />
     <Compile Include="Talos\Systems\CameraSystem.cs" />
     <Compile Include="Talos\Systems\IUpdateableSystem.cs" />
-    <Compile Include="Talos\Systems\OrbitSystem.cs" />
     <Compile Include="Talos\Systems\OptimizationSystem.cs" />
     <Compile Include="Talos\Systems\ContentLoadingSystem.cs" />
     <Compile Include="Talos\Systems\ISystem.cs" />

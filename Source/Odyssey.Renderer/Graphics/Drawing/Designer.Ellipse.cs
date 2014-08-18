@@ -16,12 +16,15 @@ namespace Odyssey.Graphics.Drawing
             int segments = offsets.Length;
 
             EllipseColorShader shader = ChooseEllipseShader(gradient);
-            
             Color4[] colors = shader(ellipse, gradient.GradientStops, (segments - 1) * (slices) + 1, slices);
             int[] indices;
-            VertexPositionColor[] vertices = CreateEllipseMesh(ellipse, slices, colors, out indices, offsets);
+            Vector3[] vertices = CreateEllipseMesh(ellipse, offsets, slices, Transform, out indices);
+            
+            var vertexArray = new VertexPositionColor[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+                vertexArray[i] = new VertexPositionColor() { Position = vertices[i], Color = colors[i] };
 
-            shapes.Add(new ShapeMeshDescription() { Vertices = vertices, Indices = indices });
+            shapes.Add(new ShapeMeshDescription() { Vertices = vertexArray, Indices = indices });
         }
 
         public void DrawEllipse(Ellipse ellipse, float ringWidth, IGradient gradient, int slices = 64)
@@ -29,13 +32,20 @@ namespace Odyssey.Graphics.Drawing
             float innerRadiusRatio = 1 - (ringWidth/ellipse.RadiusX); 
             float[] offsets = gradient.GradientStops.Select(g => (float)MathHelper.ConvertRange(0,1, innerRadiusRatio, 1, g.Offset)).ToArray();
             int segments = offsets.Length;
+
             EllipseColorShader shader = ChooseEllipseOutlineShader(gradient);
             Color4[] colors = shader(ellipse, gradient.GradientStops, segments * slices, slices);
             int[] indices;
-            VertexPositionColor[] vertices = CreateEllipseRing(ellipse, slices, colors, out indices, offsets);
-            shapes.Add(new ShapeMeshDescription() { Vertices = vertices, Indices = indices });
+            Vector3[] vertices = CreateEllipseRing(ellipse, offsets, slices, Transform, out indices);
+
+            var vertexArray = new VertexPositionColor[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+                vertexArray[i] = new VertexPositionColor() { Position = vertices[i], Color = colors[i] };
+
+            shapes.Add(new ShapeMeshDescription() { Vertices = vertexArray, Indices = indices });
         }
 
+        #region Color Shaders
         private static Color4[] EllipseRadial(Ellipse ellipse, GradientStopCollection gradientStops, int numVertex, int slices)
         {
             Color4[] colors = new Color4[numVertex];
@@ -44,7 +54,7 @@ namespace Odyssey.Graphics.Drawing
             for (int i = 1; i < colors.Length; i++)
             {
 
-                if (i > 1 && (i - 1)%slices == 0)
+                if (i > 1 && (i - 1) % slices == 0)
                     k++;
                 colors[i] = gradientStops[k].Color;
             }
@@ -67,7 +77,7 @@ namespace Odyssey.Graphics.Drawing
 
             for (int i = 0; i < colors.Length; i++)
             {
-                if (i>0 && i % slices == 0)
+                if (i > 0 && i % slices == 0)
                     k++;
                 colors[i] = gradientStops[k].Color;
             }
@@ -85,8 +95,8 @@ namespace Odyssey.Graphics.Drawing
 
             for (int i = 0; i < vertices.Length; i++)
             {
-                float r = Math.Abs(vertices[i].Y - ellipse.Center.Y - ellipse.RadiusY)/verticalAxis;
-                colors[i+1] = gradientStops.Evaluate(r);
+                float r = Math.Abs(vertices[i].Y - ellipse.Center.Y - ellipse.RadiusY) / verticalAxis;
+                colors[i + 1] = gradientStops.Evaluate(r);
             }
 
             // Color of the center vertex is equal to the color of one of the sides
@@ -111,22 +121,22 @@ namespace Odyssey.Graphics.Drawing
             }
 
             // Color of the center vertex is equal to the color of the top or bottom vertex
-            colors[0] = colors[slices/4+1];
+            colors[0] = colors[slices / 4 + 1];
 
             return colors;
-        }
+        } 
+        #endregion
 
-
-        static VertexPositionColor[] CreateEllipseRing(Ellipse ellipse, int slices, Color4[] colors, out int[] indices, float[] ringOffsets)
+        static Vector3[] CreateEllipseRing(Ellipse ellipse, float[] ringOffsets, int slices, Matrix transform, out int[] indices)
         {
             int rings = ringOffsets.Length;
-            VertexPositionColor[] vertices = new VertexPositionColor[rings * slices];
+            Vector3[] vertices = new Vector3[rings * slices];
             indices = new int[3 * slices * 2 * (rings - 1)];
 
             var innerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[0], ellipse.RadiusY * ringOffsets[0], slices).ToArray();
             for (int i = 0; i < slices; i++)
             {
-                vertices[i] = new VertexPositionColor(innerRingVertices[i].ToVector3(), colors[i]);
+                vertices[i] = innerRingVertices[i].ToVector3();
             }
             
             int indexCount = 0;
@@ -136,7 +146,7 @@ namespace Odyssey.Graphics.Drawing
                 var outerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[r], ellipse.RadiusY * ringOffsets[r], slices).ToArray();
                 for (int i = 0; i < slices; i++)
                 {
-                    vertices[(r * slices) + i] = new VertexPositionColor(outerRingVertices[i].ToVector3(), colors[(r * slices) + i]);
+                    vertices[(r*slices)+i] = outerRingVertices[i].ToVector3();
                 }
 
                 // Other rings indices
@@ -162,18 +172,24 @@ namespace Odyssey.Graphics.Drawing
                 indices[indexCount - 5] = (r -1)* slices;
                 indices[indexCount - 1] = (r + 1)*slices - 1;
             }
-            
 
+            if (!transform.IsIdentity)
+            {
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    var vertex = vertices[i];
+                    vertices[i] = Vector3.Transform(vertex, transform).ToVector3();
+                }
+            }
             return vertices;
 
         }
-        static VertexPositionColor[] CreateEllipseMesh(Ellipse ellipse, int slices, Color4[] colors,
-            out int[] indices, float[] ringOffsets)
+        static Vector3[] CreateEllipseMesh(Ellipse ellipse, float[] ringOffsets, int slices, Matrix transform, out int[] indices)
         {
             int rings = ringOffsets.Length;
-            VertexPositionColor[] vertices = new VertexPositionColor[((rings - 1) * slices) + 1];
+            Vector3[] vertices = new Vector3[((rings - 1) * slices) + 1];
 
-            vertices[0] = new VertexPositionColor(ellipse.Center.ToVector3(), colors[0]);
+            vertices[0] = ellipse.Center.ToVector3();
 
             // First ring vertices
             // ringOffsets[0] is assumed to be the center
@@ -181,7 +197,7 @@ namespace Odyssey.Graphics.Drawing
             var innerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[1], ellipse.RadiusY* ringOffsets[1], slices).ToArray();
             for (int i = 0; i < slices; i++)
             {
-                vertices[i + 1] = new VertexPositionColor(innerRingVertices[i].ToVector3(), colors[i + 1]);
+                vertices[i + 1] = innerRingVertices[i].ToVector3();
             }
 
             indices = new int[3 * slices * ((2 * (rings - 2)) + 1)];
@@ -190,7 +206,6 @@ namespace Odyssey.Graphics.Drawing
 
             if (rings == 1)
             {
-                //SharpDX.Utilities.Swap(ref indices[baseIndex + indexCount - 1], ref indices[baseIndex + indexCount - 2]);
                 return vertices;
             }
 
@@ -202,7 +217,7 @@ namespace Odyssey.Graphics.Drawing
                 var outerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[r+1], ellipse.RadiusY * ringOffsets[r+1], slices).ToArray();
                 for (int i = 0; i < slices; i++)
                 {
-                    vertices[(r * slices) + i + 1] = new VertexPositionColor(outerRingVertices[i].ToVector3(), colors[(r * slices) + i + 1]);
+                    vertices[(r * slices) + i + 1] =outerRingVertices[i].ToVector3();
                 }
 
                 // Other rings indices
@@ -228,6 +243,15 @@ namespace Odyssey.Graphics.Drawing
                 indices[baseIndex + indexCount - 6] = r*slices + 1;
             }
             SharpDX.Utilities.Swap(ref indices[baseIndex+indexCount -1], ref indices[baseIndex+indexCount-2]);
+            if (!transform.IsIdentity)
+            {
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    var vertex = vertices[i];
+                    vertices[i] = Vector3.Transform(vertex, transform).ToVector3();
+                }
+            }
+
             return vertices;
         }
 

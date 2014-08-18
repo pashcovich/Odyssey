@@ -18,7 +18,7 @@ namespace Odyssey.Geometry
         /// <summary>
         /// A value specifying the approximation of π/2 which is 90 degrees.
         /// </summary>
-        public const float PiOver2 = 1.570796326794896619f;
+        public const float PiOverTwo = 1.570796326794896619f;
 
         /// <summary>
         /// A value specifying the approximation of π/4 which is 45 degrees.

@@ -62,7 +62,8 @@ namespace Odyssey.Animations
         public void AddAnimation(Animation animation)
         {
             Contract.Requires<ArgumentNullException>(animation != null, "animation");
-            Contract.Requires<ArgumentException>(!ContainsAnimation(animation.Name), "Cannot add unnamed animation");
+            Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(animation.Name), "Cannot add an unnamed animation");
+            Contract.Requires<ArgumentException>(!ContainsAnimation(animation.Name), "An animation with the same name alrady exists in the collection");
             animations.Add(animation.Name, animation);
         }
 

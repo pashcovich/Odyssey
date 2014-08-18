@@ -26,9 +26,11 @@ namespace Odyssey.Graphics.Drawing
                     angle = 0;
                 else
                     angle = (float)Math.Atan2(yDiff, xDiff);
-                Matrix transform = Matrix.RotationYawPitchRoll(0, 0, -angle) * Matrix.Translation(p0);
+                Matrix previousTransform = Transform;
 
-                FillRectangle(new RectangleF(-strokeThickness/2, 0, strokeThickness, d), gradient, transform);
+                Transform *= Matrix.RotationYawPitchRoll(0, 0, -angle) * Matrix.Translation(p0);
+                FillRectangle(new RectangleF(-strokeThickness/2, 0, strokeThickness, d), gradient);
+                Transform = previousTransform;
             }
         }
     }

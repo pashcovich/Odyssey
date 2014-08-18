@@ -65,7 +65,7 @@ namespace Odyssey.Talos.Systems
 
                 cTransform.Local = mLocalWorld;
 
-                if (entity.TryGetComponent(out cParent) && cParent.Entity != null)
+                if (entity.TryGetComponent(out cParent) && cParent.Entity != null && cParent.Entity.ContainsComponent<TransformComponent>())
                 {
                     var cParentTransform = cParent.Entity.GetComponent<TransformComponent>();
                     cTransform.World = cTransform.Local*cParentTransform.World;

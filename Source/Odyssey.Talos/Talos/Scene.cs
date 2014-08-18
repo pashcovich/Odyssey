@@ -80,11 +80,6 @@ namespace Odyssey.Talos
             get { return systemMap.Systems; }
         }
 
-        internal EntityMap EntityMap
-        {
-            get { return entityMap; }
-        }
-
         internal Messenger Messenger
         {
             get { return messenger; }
@@ -231,6 +226,16 @@ namespace Odyssey.Talos
             Entity entity = new Entity(name);
             AddEntity(entity);
             return entity;
+        }
+
+        public IEnumerable<IEntity> GetChildren(IEntity parent)
+        {
+            return entityMap.SelectChildren(parent);
+        }
+
+        public IEntity FindChild(IEntity parent, string name)
+        {
+            return entityMap.FindChild(parent, name);
         }
 
         public void RemoveComponentFromEntity(IComponent component, IEntity entity)

@@ -10,7 +10,7 @@ namespace Odyssey.Graphics.Drawing
     {
         private delegate Color4[] RectangleColorShader(GradientStopCollection gradientStops, int widthSegments, int heightSegments);
 
-        public void DrawRectangle(RectangleF rectangle, float strokeThickness, IGradient gradient, Matrix transform)
+        public void DrawRectangle(RectangleF rectangle, float strokeThickness, IGradient gradient)
         {
             Contract.Requires<ArgumentException>(!rectangle.IsEmpty, "rectangle");
             var outline = new[]
@@ -27,12 +27,12 @@ namespace Odyssey.Graphics.Drawing
 
             foreach (var r in outline)
             {
-                FillRectangle(r, gradient, transform);
+                FillRectangle(r, gradient);
             }
 
         }
 
-        public void FillRectangle(RectangleF rectangle, IGradient gradient, Matrix transform)
+        public void FillRectangle(RectangleF rectangle, IGradient gradient)
         {
             Contract.Requires<ArgumentException>(!rectangle.IsEmpty, "rectangle");
             Contract.Requires<ArgumentException>(gradient != null, "gradient");
@@ -43,7 +43,7 @@ namespace Odyssey.Graphics.Drawing
             RectangleColorShader shader = ChooseShader(gradient, out widthSegments, out heightSegments);
 
             int[] indices;
-            Vector3[] vertices = CreateRectangleMesh(rectangle, widthSegments, heightSegments, transform, out indices);
+            Vector3[] vertices = CreateRectangleMesh(rectangle, widthSegments, heightSegments, Transform, out indices);
             Color4[] colors = shader(gradient.GradientStops, widthSegments.Length, heightSegments.Length);
 
             var vertexArray = new VertexPositionColor[vertices.Length];

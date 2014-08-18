@@ -12,7 +12,7 @@ namespace Odyssey.Graphics.Drawing
         private Model model;
         private readonly List<ShapeMeshDescription> shapes;
         private readonly DirectXDevice device;
-
+        
         public Model Result
         {
             get
@@ -23,6 +23,8 @@ namespace Odyssey.Graphics.Drawing
             }
         }
 
+        public Matrix Transform { get; set; }
+
         public Designer(IServiceRegistry services)
         {
             this.services = services;
@@ -32,6 +34,7 @@ namespace Odyssey.Graphics.Drawing
 
         public void Begin()
         {
+            Transform = Matrix.Identity;
             shapes.Clear();
         }
 
