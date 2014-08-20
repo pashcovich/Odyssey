@@ -80,6 +80,8 @@ namespace Odyssey.UserInterface
                 bindingExpression.Initialize();
             }
 
+            behaviors.Attach(this);
+
             if (AnimationController.HasAnimations)
                 AnimationController.Initialize();
 
@@ -142,7 +144,7 @@ namespace Odyssey.UserInterface
         internal virtual bool ProcessPointerMovement(MouseEventArgs e)
         {
             Vector2 location = e.CurrentPoint.Position;
-            if (!HasCaptured && !Contains(location))
+            if (!IsPointerCaptured && !Contains(location))
                 return false;
 
             if (canRaiseEvents)
@@ -178,7 +180,7 @@ namespace Odyssey.UserInterface
         internal virtual bool ProcessPointerRelease(MouseEventArgs e)
         {
             Vector2 location = e.CurrentPoint.Position;
-            if (canRaiseEvents && (HasCaptured || Contains(location)))
+            if (canRaiseEvents && (IsPointerCaptured || Contains(location)))
             {
                 if (IsPressed && e.CurrentPoint.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
                 {
@@ -198,6 +200,27 @@ namespace Odyssey.UserInterface
         {
             if (AnimationController.HasAnimations)
                 AnimationController.Update(time);
+        }
+
+        public bool CapturePointer()
+        {
+            if (CanRaiseEvents && IsEnabled)
+            {
+                Overlay.CaptureElement = this;
+                return true;
+            }
+            return false;
+        }
+
+        public void ReleaseCapture()
+        {
+            Overlay.CaptureElement = null;
+        }
+
+        public static Vector2 ScreenToLocalCoordinates(UIElement element, Vector2 screenCoordinates)
+        {
+            Vector2 offset =screenCoordinates - element.AbsolutePosition;
+            return element.Position + offset;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected PanelBase(string tag, string controlClass)
+        protected PanelBase(string controlClass)
             : base(controlClass)
         {}
 

@@ -19,6 +19,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Odyssey.Animations;
 using Odyssey.Serialization;
+using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
@@ -45,6 +46,7 @@ namespace Odyssey.UserInterface
         #region Private fields
 
         private readonly Dictionary<string, BindingExpression> bindings;
+        private readonly BehaviorCollection behaviors;
         private readonly AnimationController animationController;
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
@@ -80,6 +82,7 @@ namespace Odyssey.UserInterface
 
             Name = string.Format("{0}{1}", type, TypeCounter[type]);
             bindings = new Dictionary<string, BindingExpression>();
+            behaviors = new BehaviorCollection();
             animationController = new AnimationController(this);
         }
 
@@ -115,7 +118,7 @@ namespace Odyssey.UserInterface
         {
             if (parent != null)
             {
-                Vector2 oldAbsolutePosition = AbsolutePosition;
+                 Vector2 oldAbsolutePosition = AbsolutePosition;
                 Vector2 newAbsolutePosition = new Vector2(parent.AbsolutePosition.X + position.X,
                     parent.AbsolutePosition.Y + position.Y);
 

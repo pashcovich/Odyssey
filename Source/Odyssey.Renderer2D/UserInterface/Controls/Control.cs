@@ -16,6 +16,7 @@ using Odyssey.Content;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Logging;
 using SharpDX;
 
 namespace Odyssey.UserInterface.Controls
@@ -79,6 +80,8 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
+        protected bool IsVisual { get { return VisualState != null; } }
+
         /// <summary>
         /// Gets or sets the <see cref = "TextDescription" /> to use for this control.
         /// </summary>
@@ -117,6 +120,9 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
+            if (!IsVisual)
+                return;
+
             foreach (IShape shape in VisualState)
                 shape.Render();
         }
@@ -136,6 +142,11 @@ namespace Odyssey.UserInterface.Controls
             if (StyleClass == ControlStyle.Empty)
                 return;
 
+            if (!Overlay.Theme.ContainsResource(StyleClass))
+            {
+                LogEvent.UserInterface.Warning("Style '{0}' not found", StyleClass);
+                return;
+            }
             var controlStyle = Overlay.Theme.GetResource<ControlStyle>(StyleClass);
 
             if (Width == 0 && controlStyle.Width > 0)
@@ -180,7 +191,7 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnDesignModeChanged(ControlEventArgs e)
         {
             base.OnDesignModeChanged(e);
-            if (ActiveStatus == ControlStatus.None)
+            if (!IsVisual || ActiveStatus == ControlStatus.None)
                 return;
 
             foreach (Shape element in VisualState)

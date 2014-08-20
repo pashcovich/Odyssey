@@ -44,7 +44,7 @@ namespace Odyssey.Graphics.Drawing
         private Brush stroke;
 
         [Animatable]
-        [CacheAnimation(typeof (GradientStop), "Color")]
+        [CacheAnimation(typeof(GradientStop), "Color")]
         public Brush Fill
         {
             get { return fill; }
@@ -55,7 +55,7 @@ namespace Odyssey.Graphics.Drawing
         }
 
         [Animatable]
-        [CacheAnimation(typeof (GradientStop), "Color")]
+        [CacheAnimation(typeof(GradientStop), "Color")]
         public Brush Stroke
         {
             get { return stroke; }
@@ -73,54 +73,37 @@ namespace Odyssey.Graphics.Drawing
             return copy;
         }
 
-        private bool CreateOrRetrieveBrush(IStyleService styleService, string brushClass, out Brush brush)
+        private Brush CreateOrRetrieveBrush(string brushClass)
         {
+            var styleService = Device.Services.GetService<IStyleService>();
             if (string.IsNullOrEmpty(brushClass))
             {
-                brush = null;
-                return false;
+                return null;
             }
 
-            var brushColor = Overlay.Theme.GetResource<ColorResource>(brushClass);
+            var brushResource = Overlay.Theme.GetResource<ColorResource>(brushClass);
 
-            if (styleService.ContainsResource(brushClass))
-            {
-                brush = styleService.GetResource<Brush>(brushClass);
-                return false;
-            }
-            else
-            {
-                brush = Brush.FromColorResource(Device, brushColor);
-                return true;
-            }
+            return styleService.ContainsResource(brushClass) ? styleService.GetResource<Brush>(brushClass) : Overlay.StyleService.CreateColorResource(Device, brushResource);
 
         }
 
         protected override void OnInitializing(ControlEventArgs e)
         {
             base.OnInitializing(e);
-            var styleService = Device.Services.GetService<IStyleService>();
 
-            bool cacheBrush = fill!= null || CreateOrRetrieveBrush(styleService, fillBrushClass, out fill);
-            if (cacheBrush)
-            {
-                fill.Initialize();
-                styleService.AddResource(fill);
-            }
+            if (fill == null)
+                fill = CreateOrRetrieveBrush(fillBrushClass);
 
-            cacheBrush = stroke != null || CreateOrRetrieveBrush(styleService, strokeBrushClass, out stroke);;
-            if (cacheBrush)
-            {
-                stroke.Initialize();
-                styleService.AddResource(stroke);
-            }
+            if (stroke == null)
+                stroke = CreateOrRetrieveBrush(strokeBrushClass);
+
         }
 
         protected override void OnLayoutUpdated(EventArgs e)
         {
             base.OnLayoutUpdated(e);
-            if (Fill != null)
-                Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
+            if (fill != null)
+                fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)
@@ -150,10 +133,10 @@ namespace Odyssey.Graphics.Drawing
         {
             // Checks whether the curve affects a property marked with the CacheAnimationAttribute
             var property = (from p in ReflectionHelper.GetProperties(GetType())
-                    let attributes = p.GetCustomAttributes<CacheAnimationAttribute>()
-                    from attribute in attributes
-                    where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
-                    select p).FirstOrDefault();
+                            let attributes = p.GetCustomAttributes<CacheAnimationAttribute>()
+                            from attribute in attributes
+                            where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
+                            select p).FirstOrDefault();
 
             if (property != null)
             {
@@ -162,7 +145,7 @@ namespace Odyssey.Graphics.Drawing
                 var bGradient = value as GradientBrush;
                 if (value == null)
                     throw new NotImplementedException("Solid Color animation not yet supported");
-                return GradientBrushCurve.FromColor4Curve(Device, (Color4Curve) animationCurve, bGradient);
+                return GradientBrushCurve.FromColor4Curve(Device, (Color4Curve)animationCurve, bGradient);
             }
 
             return null;

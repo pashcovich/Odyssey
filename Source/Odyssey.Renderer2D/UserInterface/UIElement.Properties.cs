@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using Odyssey.Animations;
 using Odyssey.Engine;
+using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
@@ -69,7 +70,7 @@ namespace Odyssey.UserInterface
         /// <remarks>
         /// When a control captures the mouse pointer, events are only sent to that control.
         /// </remarks>
-        public bool HasCaptured { get; internal set; }
+        public bool IsPointerCaptured { get; internal set; }
 
         public float Height
         {
@@ -147,6 +148,8 @@ namespace Odyssey.UserInterface
             get { return bindings.Values; }
         }
 
+        public BehaviorCollection Behaviors { get { return behaviors; } }
+
         internal bool IsBeingRemoved { get; set; }
 
         protected internal virtual Depth Depth { get; set; }
@@ -191,11 +194,7 @@ namespace Odyssey.UserInterface
         /// Gets the top left position in the client area of the control.
         /// </summary>
         /// <value>The top left position.</value>
-        /// <remarks>
-        /// The top left position is computed considering the <see cref = "BorderSize" /> value and
-        /// the <see cref = "Thickness" />value.
-        /// </remarks>
-        protected internal Vector2 TopLeftPosition { get; set; }
+        protected internal Vector2 TopLeftPosition { get; protected set; }
 
         protected Direct2DDevice Device
         {
@@ -206,9 +205,9 @@ namespace Odyssey.UserInterface
         /// Gets the absolute position in screen coordinates of the upper-left corner of this
         /// control.
         /// </summary>
-        /// <value>A <see cref = "Microsoft.DirectX.Vector2" /> that represents the absolute
+        /// <value>A <see cref = "SharpDX.Vector2" /> that represents the absolute
         /// position of the upper-left corner in screen coordinates for this control.</value>
-        public Vector2 AbsolutePosition { get; internal set; }
+        public Vector2 AbsolutePosition { get; private set; }
 
         /// <summary>
         /// Gets or sets a value that will be used by the interface to know whether that control can

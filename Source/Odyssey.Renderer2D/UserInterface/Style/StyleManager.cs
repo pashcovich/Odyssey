@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Content;
 using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 using System;
@@ -109,9 +110,44 @@ namespace Odyssey.UserInterface.Style
             return resultResource;
         }
 
+        public bool TryGetResource<TResource>(string resourceName, out TResource resource) where TResource : class, IResource
+        {
+            if (ContainsResource(resourceName))
+            {
+                resource = GetResource<TResource>(resourceName) as TResource;
+                return true;
+            }
+            resource = null;
+            return false;
+        }
+
+        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
+        {
+            return resources.Values.OfType<TResource>();
+        }
+
         public IEnumerable<IResource> Resources
         {
             get { throw new NotImplementedException(); }
+        }
+
+        public Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource)
+        {
+            Brush result=null;
+            if (TryGetResource(colorResource.Name, out result))
+                return result;
+            
+            var solidColor = colorResource as SolidColor;
+            if (solidColor != null)
+            {
+                var brushes = GetResources<SolidColorBrush>();
+                result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color));
+            }
+            if (result == null)
+                result = Brush.FromColorResource(device, colorResource);
+            result.Initialize();
+            AddResource(result);
+            return result;
         }
 
         void Unload()

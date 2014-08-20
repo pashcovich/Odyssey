@@ -31,13 +31,12 @@ namespace Odyssey.UserInterface.Controls
 {
     public sealed class Overlay : ContainerControl, IOverlay
     {
-        private const string ControlTag = "Overlay";
         private const string DefaultControlTheme = "DefaultTheme";
         private const string DefaultTextTheme = "DefaultText";
         private readonly Direct2DDevice device;
         private readonly IServiceRegistry services;
         private readonly IStyleService styleService;
-        private Theme theme;
+        private readonly Theme theme;
         private UIElement captureElement;
 
         #region Properties
@@ -48,16 +47,18 @@ namespace Odyssey.UserInterface.Controls
 
         public new Direct2DDevice Device { get { return device; } }
 
+        public IStyleService StyleService { get { return styleService; } }
+
         internal UIElement CaptureElement
         {
             get { return captureElement; }
             set
             {
                 if (value != null)
-                    value.HasCaptured = true;
+                    value.IsPointerCaptured = true;
                 else if (captureElement != null)
                 {
-                    captureElement.HasCaptured = false;
+                    captureElement.IsPointerCaptured = false;
                     captureElement.OnPointerCaptureChanged(UserInterfaceManager.LastPointerEvent);
                 }
                 captureElement = value;
@@ -151,14 +152,19 @@ namespace Odyssey.UserInterface.Controls
 
         void IOverlay.ProcessPointerMovement(PointerEventArgs e)
         {
+            // If an element as captured the pointer, send the event to it first
+            if (CaptureElement != null)
+                e.Handled = CaptureElement.ProcessPointerMovement(e);
+
+            if (e.Handled)
+                return;
+
             //Proceeds with the rest
             foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(this))
             {
                 e.Handled = control.ProcessPointerMovement(e);
                 if (e.Handled)
-                {
                     break;
-                }
             }
 
             if (e.Handled) return;
@@ -169,6 +175,12 @@ namespace Odyssey.UserInterface.Controls
 
         void IOverlay.ProcessPointerPress(PointerEventArgs e)
         {
+            // If an element as captured the pointer, send the event to it first
+            if (CaptureElement != null)
+                e.Handled = CaptureElement.ProcessPointerPressed(e);
+
+            if (e.Handled)
+                return;
             //Proceeds with the rest
             foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(this))
             {
@@ -186,6 +198,13 @@ namespace Odyssey.UserInterface.Controls
 
         void IOverlay.ProcessPointerRelease(PointerEventArgs e)
         {
+            // If an element as captured the pointer, send the event to it first
+            if (CaptureElement != null)
+                e.Handled = CaptureElement.ProcessPointerRelease(e);
+
+            if (e.Handled)
+                return;
+
             //Proceeds with the rest
             foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(this))
             {

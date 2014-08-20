@@ -15,8 +15,10 @@ namespace Odyssey.Graphics.Drawing
 
         public override void Render()
         {
-            Device.FillEllipse(this,Fill);
-            Device.DrawEllipse(this, Stroke);
+            if (Fill != null)
+                Device.FillEllipse(this,Fill);
+            if (Stroke != null)
+                Device.DrawEllipse(this, Stroke);
         }
 
         protected override void OnPositionChanged(EventArgs e)
