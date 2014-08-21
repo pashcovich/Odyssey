@@ -39,9 +39,10 @@ namespace Odyssey.Geometry.Primitives
             controlPoints.AddRange(points);
         }
 
-        protected Point this[int index]
+        public Point this[int index]
         {
             get { return controlPoints[index]; }
+            set { controlPoints[index] = value; }
         }
 
     }

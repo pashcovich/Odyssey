@@ -29,7 +29,7 @@ namespace Odyssey.Graphics.Drawing
                 Matrix previousTransform = Transform;
 
                 Transform *= Matrix.RotationYawPitchRoll(0, 0, -angle) * Matrix.Translation(p0);
-                FillRectangle(new RectangleF(-strokeThickness/2, 0, strokeThickness, d), gradient);
+                FillRectangle(new RectangleF(-strokeThickness/2, 0, strokeThickness, d));
                 Transform = previousTransform;
             }
         }

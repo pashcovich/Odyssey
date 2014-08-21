@@ -42,7 +42,7 @@ namespace Odyssey.Talos.Systems
 
         public void Render(ITimeService service)
         {
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 commandManager.Run();
             }
@@ -62,7 +62,7 @@ namespace Odyssey.Talos.Systems
                 commandManager.Clear();
 
             List<Command> newCommands = new List<Command>();
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 var cPostProcess = entity.GetComponent<PostProcessComponent>();
                 var cModel = entity.GetComponent<ModelComponent>();
@@ -115,7 +115,7 @@ namespace Odyssey.Talos.Systems
             List<Command> filteredCommands =
                 (from cRender in commands.OfType<RenderCommand>()
                     let filteredEntities = from e in cRender.Entities 
-                                           where e.ContainsComponent<TagComponent>() && e.GetComponent<TagComponent>().Tags.Contains(tagFilter)
+                                           where e.Tags.Contains(tagFilter)
                                            select e
                     where filteredEntities.Any()
                     let tRenderCommand = cRender.GetType()

@@ -24,6 +24,7 @@ namespace Odyssey.Graphics.Drawing
         }
 
         public Matrix Transform { get; set; }
+        public IColorResource Color { get; set; }
 
         public Designer(IServiceRegistry services)
         {
@@ -35,6 +36,7 @@ namespace Odyssey.Graphics.Drawing
         public void Begin()
         {
             Transform = Matrix.Identity;
+            Color = new SolidColor("Default", Color4.White);
             shapes.Clear();
         }
 

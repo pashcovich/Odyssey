@@ -79,6 +79,14 @@
     <Compile Include="Graphics\Buffer.Constant.cs" />
     <Compile Include="Graphics\DepthStencilStateCollection.cs" />
     <Compile Include="Graphics\DepthStencilViewSelector.cs" />
+    <Compile Include="Graphics\Drawing\DrawInstruction.cs" />
+    <Compile Include="Graphics\Drawing\IDesignerInstruction.cs" />
+    <Compile Include="Graphics\Drawing\SetColorInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawEllipseInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawRectangleInstruction.cs" />
+    <Compile Include="Graphics\Drawing\FillEllipseInstruction.cs" />
+    <Compile Include="Graphics\Drawing\FillRectangleInstruction.cs" />
+    <Compile Include="Graphics\Drawing\SetTransformInstruction.cs" />
     <Compile Include="Graphics\Models\BufferCollection.cs" />
     <Compile Include="Graphics\Models\CylinderMesh.cs" />
     <Compile Include="Graphics\Models\GeoSphere.cs" />

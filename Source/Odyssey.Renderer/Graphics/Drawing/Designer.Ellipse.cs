@@ -8,15 +8,13 @@ namespace Odyssey.Graphics.Drawing
 {
     public partial class Designer
     {
-        private delegate Color4[] EllipseColorShader(Ellipse ellipse, GradientStopCollection gradientStops, int numVertex, int slices);
+        private delegate Color4[] EllipseColorShader(Ellipse ellipse, IColorResource color, int numVertex, int slices);
 
-        public void FillEllipse(Ellipse ellipse, IGradient gradient, int slices = 64)
+        public void FillEllipse(Ellipse ellipse, int slices = 64)
         {
-            float[] offsets = gradient.GradientStops.Select(g => g.Offset).ToArray();
-            int segments = offsets.Length;
-
-            EllipseColorShader shader = ChooseEllipseShader(gradient);
-            Color4[] colors = shader(ellipse, gradient.GradientStops, (segments - 1) * (slices) + 1, slices);
+            float[] offsets;
+            EllipseColorShader shader = ChooseEllipseShader(Color, out offsets);
+            Color4[] colors = shader(ellipse, Color, (offsets.Length - 1) * (slices) + 1, slices);
             int[] indices;
             Vector3[] vertices = CreateEllipseMesh(ellipse, offsets, slices, Transform, out indices);
             
@@ -27,14 +25,13 @@ namespace Odyssey.Graphics.Drawing
             shapes.Add(new ShapeMeshDescription() { Vertices = vertexArray, Indices = indices });
         }
 
-        public void DrawEllipse(Ellipse ellipse, float ringWidth, IGradient gradient, int slices = 64)
+        public void DrawEllipse(Ellipse ellipse, float ringWidth, int slices = 64)
         {
-            float innerRadiusRatio = 1 - (ringWidth/ellipse.RadiusX); 
-            float[] offsets = gradient.GradientStops.Select(g => (float)MathHelper.ConvertRange(0,1, innerRadiusRatio, 1, g.Offset)).ToArray();
-            int segments = offsets.Length;
+            float innerRadiusRatio = 1 - (ringWidth / ellipse.RadiusX);
+            float[] offsets;
 
-            EllipseColorShader shader = ChooseEllipseOutlineShader(gradient);
-            Color4[] colors = shader(ellipse, gradient.GradientStops, segments * slices, slices);
+            EllipseColorShader shader = ChooseEllipseOutlineShader(innerRadiusRatio, Color, out offsets);
+            Color4[] colors = shader(ellipse, Color, offsets.Length * slices, slices);
             int[] indices;
             Vector3[] vertices = CreateEllipseRing(ellipse, offsets, slices, Transform, out indices);
 
@@ -46,32 +43,34 @@ namespace Odyssey.Graphics.Drawing
         }
 
         #region Color Shaders
-        private static Color4[] EllipseRadial(Ellipse ellipse, GradientStopCollection gradientStops, int numVertex, int slices)
+        private static Color4[] EllipseRadial(Ellipse ellipse, IColorResource color, int numVertex, int slices)
         {
+            var gradient = (IGradient)color;
             Color4[] colors = new Color4[numVertex];
-            colors[0] = gradientStops[0].Color;
+            colors[0] = gradient.GradientStops[0].Color;
             int k = 1;
             for (int i = 1; i < colors.Length; i++)
             {
-
                 if (i > 1 && (i - 1) % slices == 0)
                     k++;
-                colors[i] = gradientStops[k].Color;
+                colors[i] = gradient.GradientStops[k].Color;
             }
 
             return colors;
         }
 
-        private static Color4[] EllipseUniform(Ellipse ellipse, GradientStopCollection gradientStops, int numVertex, int slices)
+        private static Color4[] EllipseUniform(Ellipse ellipse, IColorResource color, int numVertex, int slices)
         {
+            var solidColor = (SolidColor) color;
             Color4[] colors = new Color4[numVertex];
             for (int i = 0; i < numVertex; i++)
-                colors[i] = gradientStops[0].Color;
+                colors[i] = solidColor.Color;
             return colors;
         }
 
-        private static Color4[] EllipseOutlineRadial(Ellipse ellipse, GradientStopCollection gradientStops, int numVertex, int slices)
+        private static Color4[] EllipseOutlineRadial(Ellipse ellipse, IColorResource color, int numVertex, int slices)
         {
+            var gradient = (IGradient)color;
             Color4[] colors = new Color4[numVertex];
             int k = 0;
 
@@ -79,14 +78,15 @@ namespace Odyssey.Graphics.Drawing
             {
                 if (i > 0 && i % slices == 0)
                     k++;
-                colors[i] = gradientStops[k].Color;
+                colors[i] = gradient.GradientStops[k].Color;
             }
 
             return colors;
         }
 
-        private static Color4[] EllipseVertical(Ellipse ellipse, GradientStopCollection gradientStops, int numVertex, int slices)
+        private static Color4[] EllipseVertical(Ellipse ellipse, IColorResource color, int numVertex, int slices)
         {
+            var gradient = (IGradient) color;
             // Only one ellipse ring is supported
             Color4[] colors = new Color4[numVertex];
             float verticalAxis = ellipse.VerticalAxis;
@@ -96,7 +96,7 @@ namespace Odyssey.Graphics.Drawing
             for (int i = 0; i < vertices.Length; i++)
             {
                 float r = Math.Abs(vertices[i].Y - ellipse.Center.Y - ellipse.RadiusY) / verticalAxis;
-                colors[i + 1] = gradientStops.Evaluate(r);
+                colors[i + 1] = gradient.GradientStops.Evaluate(r);
             }
 
             // Color of the center vertex is equal to the color of one of the sides
@@ -105,10 +105,10 @@ namespace Odyssey.Graphics.Drawing
             return colors;
         }
 
-        private static Color4[] EllipseHorizontal(Ellipse ellipse, GradientStopCollection gradientStops, int numVertex, int slices)
+        private static Color4[] EllipseHorizontal(Ellipse ellipse, IColorResource color, int numVertex, int slices)
         {
+            var gradient = (IGradient)color;
             // Only one ellipse ring is supported
-
             Color4[] colors = new Color4[numVertex];
             float horizontalAxis = ellipse.HorizontalAxis;
 
@@ -117,7 +117,7 @@ namespace Odyssey.Graphics.Drawing
             for (int i = 0; i < vertices.Length; i++)
             {
                 float r = Math.Abs(vertices[i].X - ellipse.Center.X - ellipse.RadiusX) / horizontalAxis;
-                colors[i + 1] = gradientStops.Evaluate(r);
+                colors[i + 1] = gradient.GradientStops.Evaluate(r);
             }
 
             // Color of the center vertex is equal to the color of the top or bottom vertex
@@ -269,21 +269,23 @@ namespace Odyssey.Graphics.Drawing
             
         }
 
-        static EllipseColorShader ChooseEllipseShader(IGradient gradient)
+        static EllipseColorShader ChooseEllipseShader(IColorResource color, out float[] ringOffsets)
         {
             EllipseColorShader shader;
-            switch (gradient.Type)
+            switch (color.Type)
             {
-                case GradientType.SolidColor:
+                case ColorType.SolidColor:
+                    ringOffsets = new[] {0f, 1f};
                     shader = EllipseUniform;
                     break;
 
-                case GradientType.Linear:
-                    var gLinear = (LinearGradient)gradient;
+                case ColorType.LinearGradient:
+                    var gLinear = (LinearGradient)color;
 
                     if (gLinear.GradientStops.Count > 2)
                         throw new NotSupportedException("Ellipse supports only two linear gradient stops");
 
+                    ringOffsets = gLinear.GradientStops.Select(g => g.Offset).ToArray();
                     Vector2 direction = gLinear.EndPoint -gLinear.StartPoint;
                     if (direction == Vector2.UnitY)
                         shader = EllipseVertical;
@@ -293,30 +295,34 @@ namespace Odyssey.Graphics.Drawing
                         throw new NotSupportedException("Non axis-aligned gradient are not supported");
                     break;
 
-                case GradientType.Radial:
+                case ColorType.RadialGradient:
+                    ringOffsets = ((IGradient)color).GradientStops.Select(g => g.Offset).ToArray();
                     shader = EllipseRadial;
                     break;
 
                 default:
-                    throw new NotSupportedException(string.Format("Gradient `{0}' is not supported by Ellipse", gradient.Type));
+                    throw new NotSupportedException(string.Format("Gradient `{0}' is not supported by Ellipse", color.Type));
             }
             return shader;
         }
 
-        static EllipseColorShader ChooseEllipseOutlineShader(IGradient gradient)
+        static EllipseColorShader ChooseEllipseOutlineShader(float innerRadiusRatio, IColorResource color, out float[] ringOffsets)
         {
+
             EllipseColorShader shader;
-            switch (gradient.Type)
+            switch (color.Type)
             {
-                case GradientType.SolidColor:
+                case ColorType.SolidColor:
+                    ringOffsets = new float[]{0f,1f};
                     shader = EllipseUniform;
                     break;
-                case GradientType.Radial:
+                case ColorType.RadialGradient:
+                    ringOffsets = ((IGradient)color).GradientStops.Select(g => (float)MathHelper.ConvertRange(0, 1, innerRadiusRatio, 1, g.Offset)).ToArray();
                     shader = EllipseOutlineRadial;
                     break;
 
                 default:
-                    throw new NotSupportedException(string.Format("Gradient `{0}' is not supported by EllipseOutline", gradient.Type));
+                    throw new NotSupportedException(string.Format("Gradient `{0}' is not supported by EllipseOutline", color.Type));
             }
             return shader;
         }

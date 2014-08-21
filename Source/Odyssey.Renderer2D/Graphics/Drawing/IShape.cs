@@ -3,7 +3,7 @@ using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
 {
-    public interface IShape : IRenderable
+    public interface IShape 
     {
         RectangleF BoundingRectangle { get; }
 
@@ -12,5 +12,7 @@ namespace Odyssey.Graphics.Drawing
         Brush Stroke { get; }
 
         float StrokeThickness { get; set; }
+
+        void Render();
     }
 }

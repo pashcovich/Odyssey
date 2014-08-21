@@ -34,7 +34,7 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (IEntity entity in Entities.Where(e => e.IsEnabled))
+            foreach (Entity entity in Entities.Where(e => e.IsEnabled))
             {
                 var cModel = entity.GetComponent<ModelComponent>(tModel.KeyPart);
                 var cShader = entity.GetComponent<ShaderComponent>(tShader.KeyPart);

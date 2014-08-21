@@ -16,7 +16,7 @@ namespace Odyssey.Talos.Systems
         {
         }
 
-        void SetupEntity(IEntity entity)
+        void SetupEntity(Entity entity)
         {
             PointLightNode nPointLight = new PointLightNode(entity);
             LightNodes.Add(nPointLight.Id, nPointLight);
@@ -48,7 +48,7 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 if (!entity.IsEnabled)
                     continue;

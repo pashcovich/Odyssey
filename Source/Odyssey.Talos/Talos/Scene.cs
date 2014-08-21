@@ -18,29 +18,32 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Odyssey.Content;
 using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Maps;
 using Odyssey.Talos.Messages;
 using Odyssey.Talos.Systems;
 using Odyssey.Utilities.Logging;
 using SharpDX;
-
+using Component = Odyssey.Talos.Components.Component;
 #endregion
 
 namespace Odyssey.Talos
 {
-    [ContentReader(typeof (SceneReader))]
-    public class Scene : IScene
+    public class Scene : IEntityProvider, IUpdateable, IRenderable
     {
         private readonly List<IRenderableSystem> currentlyRenderingSystems;
+        private readonly List<IRenderableSystem> renderableSystems;
         private readonly List<IUpdateableSystem> currentlyUpdatingSystems;
+        private readonly List<IUpdateableSystem> updateableSystems;
         private readonly EntityMap entityMap;
         private readonly Messenger messenger;
-        private readonly List<IRenderableSystem> renderableSystems;
         private readonly SystemMap systemMap;
-        private readonly List<IUpdateableSystem> updateableSystems;
+        private readonly TagManager tagManager;
+
 
         public Scene(IServiceRegistry services)
         {
@@ -53,7 +56,7 @@ namespace Odyssey.Talos
             currentlyUpdatingSystems = new List<IUpdateableSystem>();
             currentlyRenderingSystems = new List<IRenderableSystem>();
             Services = services;
-            Services.AddService(typeof (IScene), this);
+            Services.AddService(typeof (IEntityProvider), this);
             var content = Services.GetService<IAssetProvider>();
             content.AddMapping("Scene", typeof (Scene));
 
@@ -64,18 +67,20 @@ namespace Odyssey.Talos
 
             systemMap.SystemAdded += SystemMapOnSystemAdded;
             systemMap.SystemRemoved += SystemMapOnSystemRemoved;
+
+            tagManager = new TagManager();
         }
 
-        public Scene(IEnumerable<ISystem> systems, IServiceRegistry services)
+        public Scene(IEnumerable<SystemBase> systems, IServiceRegistry services)
             : this(services)
         {
-            foreach (ISystem system in systems)
+            foreach (SystemBase system in systems)
                 AddSystem(system);
         }
 
         public bool IsDesignMode { get; private set; }
 
-        public IEnumerable<ISystem> Systems
+        public IEnumerable<SystemBase> Systems
         {
             get { return systemMap.Systems; }
         }
@@ -90,17 +95,15 @@ namespace Odyssey.Talos
             get { return systemMap; }
         }
 
-        public IEnumerable<IComponent> Components
+        internal EntityMap EntityMap
         {
-            get { return entityMap.Components; }
+            get { return entityMap; }
         }
 
-        public IEnumerable<IEntity> Entities
+        public IEnumerable<Entity> Entities
         {
             get { return entityMap.Entities; }
         }
-
-        public bool IsFirstUpdateDone { get; private set; }
 
         public IServiceRegistry Services { get; private set; }
 
@@ -109,7 +112,7 @@ namespace Odyssey.Talos
             IsDesignMode = true;
         }
 
-        public bool ContainsEntity(IEntity entity)
+        public bool ContainsEntity(Entity entity)
         {
             return entityMap.ContainsEntity(entity);
         }
@@ -119,17 +122,6 @@ namespace Odyssey.Talos
             IsDesignMode = false;
             Validate();
             StartSystems();
-        }
-
-        public bool EntityHasComponent(IEntity entity, long keyPart)
-        {
-            return entityMap.EntityHasComponent(entity, keyPart);
-        }
-
-        public TComponent GetEntityComponent<TComponent>(IEntity entity, long keyPart)
-            where TComponent : IComponent
-        {
-            return entityMap.GetEntityComponent<TComponent>(entity, keyPart);
         }
 
         public void Render(ITimeService time)
@@ -155,25 +147,18 @@ namespace Odyssey.Talos
             currentlyRenderingSystems.Clear();
         }
 
-        public IEntity SelectEntity(long id)
+        public Entity SelectEntity(long id)
         {
             return entityMap.SelectEntity(id);
         }
 
-        public IEnumerable<IComponent> SelectEntityComponents(IEntity entity)
+        internal Entity FindEntityFromComponent(Component component)
         {
-            return entityMap.GetEntityComponents(entity);
-        }
-
-        public void SendMessage<TMessage>(TMessage message) where TMessage : Message
-        {
-            Messenger.Send(message);
-        }
-
-        public bool TryGetEntityComponent<TComponent>(IEntity entity, long keyPart, out TComponent component)
-            where TComponent : IComponent
-        {
-            return entityMap.TryGetEntityComponent(entity, keyPart, out component);
+            return (from e in Entities
+                where e.ContainsComponent(component.KeyPart)
+                let c = e.GetComponent(component.KeyPart)
+                where c.Id == component.Id
+                select e).FirstOrDefault();
         }
 
         public void Unload()
@@ -202,12 +187,6 @@ namespace Odyssey.Talos
             }
 
             currentlyUpdatingSystems.Clear();
-            IsFirstUpdateDone = true;
-        }
-
-        public void AddComponentToEntity(IComponent component, IEntity entity)
-        {
-            entityMap.AddComponentToEntity(component, entity);
         }
 
         public void AddEntity(Entity entity)
@@ -216,7 +195,7 @@ namespace Odyssey.Talos
             entityMap.AddEntity(entity);
         }
 
-        public void AddSystem(ISystem system)
+        public void AddSystem(SystemBase system)
         {
             systemMap.AddSystem(system);
         }
@@ -228,45 +207,19 @@ namespace Odyssey.Talos
             return entity;
         }
 
-        public IEnumerable<IEntity> GetChildren(IEntity parent)
-        {
-            return entityMap.SelectChildren(parent);
-        }
-
-        public IEntity FindChild(IEntity parent, string name)
-        {
-            return entityMap.FindChild(parent, name);
-        }
-
-        public void RemoveComponentFromEntity(IComponent component, IEntity entity)
-        {
-            entityMap.RemoveComponentFromEntity(component, entity);
-        }
-
         public void RemoveEntity(Entity entity)
         {
             entityMap.RemoveEntity(entity);
         }
 
-        public void RemoveSystem(ISystem system)
+        public void RemoveSystem(SystemBase system)
         {
             systemMap.RemoveSystem(system);
         }
 
-        public IEnumerable<TComponent> SelectComponents<TComponent>()
-            where TComponent : IComponent
-        {
-            return entityMap.SelectComponents<TComponent>();
-        }
-
-        public bool SystemHasEntities(ISystem system)
-        {
-            return systemMap.SystemHasEntities(system);
-        }
-
         private void StartSystems()
         {
-            foreach (ISystem system in systemMap.Systems)
+            foreach (SystemBase system in systemMap.Systems)
                 system.Start();
         }
 

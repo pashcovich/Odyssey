@@ -8,9 +8,9 @@ namespace Odyssey.Graphics.Drawing
 {
     public partial class Designer
     {
-        private delegate Color4[] RectangleColorShader(GradientStopCollection gradientStops, int widthSegments, int heightSegments);
+        private delegate Color4[] RectangleColorShader(IColorResource color, int widthSegments, int heightSegments);
 
-        public void DrawRectangle(RectangleF rectangle, float strokeThickness, IGradient gradient)
+        public void DrawRectangle(RectangleF rectangle, float strokeThickness)
         {
             Contract.Requires<ArgumentException>(!rectangle.IsEmpty, "rectangle");
             var outline = new[]
@@ -27,24 +27,24 @@ namespace Odyssey.Graphics.Drawing
 
             foreach (var r in outline)
             {
-                FillRectangle(r, gradient);
+                FillRectangle(r);
             }
 
         }
 
-        public void FillRectangle(RectangleF rectangle, IGradient gradient)
+        public void FillRectangle(RectangleF rectangle)
         {
             Contract.Requires<ArgumentException>(!rectangle.IsEmpty, "rectangle");
-            Contract.Requires<ArgumentException>(gradient != null, "gradient");
+            Contract.Requires<ArgumentException>(Color != null, "color");
 
             float[] widthSegments;
             float[] heightSegments;
 
-            RectangleColorShader shader = ChooseShader(gradient, out widthSegments, out heightSegments);
+            RectangleColorShader shader = ChooseShader(Color, out widthSegments, out heightSegments);
 
             int[] indices;
             Vector3[] vertices = CreateRectangleMesh(rectangle, widthSegments, heightSegments, Transform, out indices);
-            Color4[] colors = shader(gradient.GradientStops, widthSegments.Length, heightSegments.Length);
+            Color4[] colors = shader(Color, widthSegments.Length, heightSegments.Length);
 
             var vertexArray = new VertexPositionColor[vertices.Length];
             for (int i=0; i<vertices.Length;i++)
@@ -53,29 +53,46 @@ namespace Odyssey.Graphics.Drawing
             shapes.Add(new ShapeMeshDescription() { Vertices = vertexArray, Indices = indices });
         }
 
-        static Color4[] RectangleVertical(GradientStopCollection gradientStops, int widthSegments, int heightSegments)
+        static Color4[] RectangleVertical(IColorResource color, int widthSegments, int heightSegments)
         {
+            var gradient = (IGradient) color;
             Color4[] colors = new Color4[widthSegments* heightSegments];
             int index = colors.Length-1;
             for (int i = 0; i < heightSegments; i++)
             {
                 for (int j = 0; j < widthSegments; j++)
                 {
-                    colors[index--] = gradientStops[i].Color;
+                    colors[index--] = gradient.GradientStops[i].Color;
                 }
             }
             return colors;
         }
 
-        static Color4[] RectangleHorizontal(GradientStopCollection gradientStops, int widthSegments, int heightSegments)
+        static Color4[] RectangleHorizontal(IColorResource color, int widthSegments, int heightSegments)
         {
+            var gradient = (IGradient)color;
             Color4[] colors = new Color4[widthSegments * heightSegments];
             int index = colors.Length - 1; ;
             for (int i = 0; i < heightSegments; i++)
             {
                 for (int j = 0; j < widthSegments; j++)
                 {
-                    colors[index--] = gradientStops[j].Color;
+                    colors[index--] = gradient.GradientStops[j].Color;
+                }
+            }
+            return colors;
+        }
+
+        static Color4[] RectangleUniform(IColorResource color, int widthSegments, int heightSegments)
+        {
+            var solidColor = (SolidColor)color;
+            Color4[] colors = new Color4[widthSegments * heightSegments];
+            int index = colors.Length - 1; ;
+            for (int i = 0; i < heightSegments; i++)
+            {
+                for (int j = 0; j < widthSegments; j++)
+                {
+                    colors[index--] = solidColor.Color;
                 }
             }
             return colors;
@@ -138,24 +155,30 @@ namespace Odyssey.Graphics.Drawing
             return vertices;
         }
 
-        static RectangleColorShader ChooseShader(IGradient gradient, out float[] widthSegments, out float[] heightSegments)
+        static RectangleColorShader ChooseShader(IColorResource color, out float[] widthSegments, out float[] heightSegments)
         {
             RectangleColorShader shader;
-            switch (gradient.Type)
+            switch (color.Type)
             {
                 default:
-                case GradientType.Linear:
-                    var gLinear = (LinearGradient)gradient;
+                case ColorType.SolidColor:
+                    widthSegments = new[] {0f, 1f};
+                    heightSegments = new[] { 0f, 1f };
+                    shader = RectangleUniform;
+                    break;
+
+                case ColorType.LinearGradient:
+                    var gLinear = (LinearGradient)color;
                     Vector2 direction = gLinear.EndPoint - gLinear.StartPoint;
                     if (direction == Vector2.UnitY)
                     {
                         widthSegments = new[] {0f, 1f};
-                        heightSegments = gradient.GradientStops.Select(gs => gs.Offset).ToArray();
+                        heightSegments = gLinear.GradientStops.Select(gs => gs.Offset).ToArray();
                         shader = RectangleVertical;
                     }
                     else if (direction == Vector2.UnitX)
                     {
-                        widthSegments = gradient.GradientStops.Select(gs => gs.Offset).ToArray();
+                        widthSegments = gLinear.GradientStops.Select(gs => gs.Offset).ToArray();
                         heightSegments = new[] { 0f, 1f };
                         shader = RectangleHorizontal;
                     }
@@ -163,7 +186,7 @@ namespace Odyssey.Graphics.Drawing
                         throw new NotSupportedException("Non axis-aligned gradient are not supported");
                     break;
 
-                case GradientType.Radial:
+                case ColorType.RadialGradient:
                     throw new NotSupportedException("Rectangle does not support radial gradient");
             }
             return shader;

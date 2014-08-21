@@ -71,6 +71,7 @@
     <Compile Include="Engine\IReferenceService.cs" />
     <Compile Include="Engine\ISwapChainPresenterService.cs" />
     <Compile Include="Engine\ITimeService.cs" />
+    <Compile Include="Engine\IUpdateable.cs" />
     <Compile Include="Engine\IWindowService.cs" />
     <Compile Include="Engine\PlatformTypeAttribute.cs" />
     <Compile Include="Engine\Reference.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Graphics\Effects\IMaterial.cs" />
     <Compile Include="Graphics\Effects\ReferenceEnums.cs" />
     <Compile Include="Graphics\GradientStopChanged.cs" />
+    <Compile Include="Graphics\IColorResource.cs" />
     <Compile Include="Graphics\Interop.cs" />
     <Compile Include="Content\IResource.cs" />
     <Compile Include="Graphics\Models\ModelOperation.cs" />
@@ -96,7 +98,7 @@
     <Compile Include="Graphics\Gradient.cs" />
     <Compile Include="Graphics\GradientStop.cs" />
     <Compile Include="Graphics\GradientStopCollection.cs" />
-    <Compile Include="Graphics\GradientType.cs" />
+    <Compile Include="Graphics\ColorType.cs" />
     <Compile Include="Graphics\IGradient.cs" />
     <Compile Include="Content\IResourceProvider.cs" />
     <Compile Include="Graphics\LinearGradient.cs" />
@@ -133,9 +135,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Talos\IComponent.cs" />
     <Compile Include="Talos\IEntity.cs" />
-    <Compile Include="Talos\IScene.cs" />
     <Compile Include="Utilities\Collections\Cache.cs" />
     <Compile Include="Utilities\Collections\CollectionMap.cs" />
+    <Compile Include="Utilities\Collections\TypeMap.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <None Include="Utilities\Collections\GenericNode.cs" />
     <Compile Include="Utilities\Collections\INode.cs" />

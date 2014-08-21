@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Graphics
+namespace Odyssey.Graphics.Drawing
 {
-    public enum GradientType
+    public interface IDesignerInstruction
     {
-        SolidColor,
-        Linear,
-        Radial
+        void Execute(Designer designer);
     }
+
+
 }
