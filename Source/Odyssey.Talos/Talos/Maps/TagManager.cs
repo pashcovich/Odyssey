@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Odyssey.Utilities.Collections;
 
 namespace Odyssey.Talos.Maps
@@ -17,21 +17,45 @@ namespace Odyssey.Talos.Maps
             tags = new CollectionMap<long, SortedSet<string>, string>();
         }
 
-        public void AddTagToEntity(Entity entity, string tag)
+        public void AddTagToEntity(long entityId, string tag)
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
+            if (!tags.ContainsKey(entityId))
+                tags.DefineNew(entityId);
+            tags.AddTo(entityId, tag);
+        }
+
+        public void RemoveTagFromEntity(long entityId, string tag)
+        {
+            tags.RemoveFrom(entityId, tag);
+        }
+
+        public bool ContainsEntity(long entityId)
+        {
+            return tags.ContainsKey(entityId);
+        }
+
+        public bool ContainsTag(long entityId, string tag)
+        {
             Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(tag), "tag");
-            tags.Associate<long>();
+            return tags.ContainsItem(entityId, tag);
         }
 
         public IEnumerator<string> GetEnumerator()
         {
-            return tags.GetEnumerator();
+            var values = from set in tags
+                from s in set
+                select s;
+            return values.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public IEnumerable<string> this[long entityId]
+        {
+            get { return tags[entityId]; }
         }
     }
 }

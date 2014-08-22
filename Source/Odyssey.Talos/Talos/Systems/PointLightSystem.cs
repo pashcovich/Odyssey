@@ -1,14 +1,11 @@
 ﻿using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Talos.Components;
-using Odyssey.Talos.Initializers;
 using Odyssey.Talos.Messages;
 using Odyssey.Talos.Nodes;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Systems
 {
-    [YamlTag("PointLightSystem")]
     public sealed class PointLightSystem : LightSystem
     {
         public PointLightSystem()
@@ -25,6 +22,7 @@ namespace Odyssey.Talos.Systems
 
         public override void BeforeUpdate()
         {
+            // TODO improve Light System
             // Entity change
             while (MessageQueue.HasItems<EntityChangeMessage>())
             {
@@ -34,15 +32,6 @@ namespace Odyssey.Talos.Systems
                 else if (mEntity.Action == ChangeType.Removed)
                     RemoveEntity(mEntity.Source);
             }
-
-            // Set up shader
-            //while (MessageQueue.HasItems<ContentLoadedMessage<ShaderComponent>>())
-            //{
-            //    var mShader = MessageQueue.Dequeue<ContentLoadedMessage<ShaderComponent>>();
-            //    ShaderInitializer sInitializer = new ShaderInitializer(Scene.Services, mShader.Content.Technique.Effect, mShader.Content.Technique.ActiveTechnique);
-            //    // TODO improve Light System
-            //    sInitializer.InitializeLight(LightNodes.Values.First());
-            //}
         }
 
 

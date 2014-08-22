@@ -22,7 +22,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using Odyssey.Talos.Components;
-using Odyssey.Talos.Maps;
 using Odyssey.Utilities.Logging;
 using Odyssey.Utilities.Reflection;
 using SharpYaml.Serialization;
@@ -36,23 +35,27 @@ namespace Odyssey.Talos
     public sealed class Entity : IEntity
     {
         private static int count;
-        private readonly TagManager tags;
         private readonly long id;
         private long key;
         private Scene scene;
 
-        public IEnumerable<Entity> Children { get { return scene.EntityMap.SelectChildren(this); } }
-
-        public Entity() : this("Untitled")
-        {
-        }
+        public Entity() : this("Untitled") {}
 
         public Entity(string name)
         {
             Name = name;
             id = count++;
             IsEnabled = true;
-            tags = new TagManager();
+        }
+
+        public IEnumerable<Entity> Children
+        {
+            get { return scene.EntityMap.SelectChildren(this); }
+        }
+
+        public Scene Scene
+        {
+            get { return scene; }
         }
 
         /// <summary>
@@ -63,12 +66,8 @@ namespace Odyssey.Talos
             get { return id; }
         }
 
-        public TagManager Tags { get { return tags; } }
-
-        [YamlMember(0)]
         public string Name { get; set; }
 
-        [YamlMember(1)]
         public bool IsEnabled { get; set; }
 
         /// <summary>
@@ -79,17 +78,9 @@ namespace Odyssey.Talos
             get { return key; }
         }
 
-        public Scene Scene { get { return scene; } }
-
-
         public IEnumerable<IComponent> Components
         {
             get { return scene.EntityMap.SelectEntityComponents(this); }
-        }
-
-        public bool ContainsComponent(long keyPart)
-        {
-            return Scene.EntityMap.EntityHasComponent(this, keyPart);
         }
 
         [Pure]
@@ -98,6 +89,34 @@ namespace Odyssey.Talos
 
         {
             return ContainsComponent(ComponentTypeManager.GetKeyPart<TComponent>());
+        }
+
+        public IEnumerable<string> Tags
+        {
+            get
+            {
+                return scene.TagManager.ContainsEntity(id) ? scene.TagManager[id] : Enumerable.Empty<string>();
+            }
+        }
+
+        public void AddTag(string tag)
+        {
+            scene.TagManager.AddTagToEntity(id, tag);
+        }
+
+        public void RemoveTag(string tag)
+        {
+            scene.TagManager.RemoveTagFromEntity(id, tag);
+        }
+
+        public bool ContainsTag(string tag)
+        {
+            return scene.TagManager.ContainsTag(id, tag);
+        }
+
+        public bool ContainsComponent(long keyPart)
+        {
+            return Scene.EntityMap.EntityHasComponent(this, keyPart);
         }
 
         public bool TryGetComponent<TComponent>(out TComponent component)
@@ -121,7 +140,7 @@ namespace Odyssey.Talos
         public IComponent GetComponent(Type componentType)
         {
             Contract.Requires<ArgumentNullException>(componentType != null, "componentType");
-            Contract.Requires<ArithmeticException>(ReflectionHelper.IsTypeDerived(componentType, typeof(IComponent)));
+            Contract.Requires<ArithmeticException>(ReflectionHelper.IsTypeDerived(componentType, typeof (IComponent)));
             return GetComponent(ComponentTypeManager.GetKeyPart(componentType));
         }
 
@@ -130,7 +149,7 @@ namespace Odyssey.Talos
             return Scene.EntityMap.GetEntityComponent<Component>(this, keyPart);
         }
 
-        public IEntity FindChild(string name)
+        public Entity FindChild(string name)
         {
             return scene.EntityMap.FindChild(this, name);
         }
@@ -214,7 +233,5 @@ namespace Odyssey.Talos
             }
             return test;
         }
-
-
     }
 }

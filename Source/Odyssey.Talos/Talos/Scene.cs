@@ -44,7 +44,6 @@ namespace Odyssey.Talos
         private readonly SystemMap systemMap;
         private readonly TagManager tagManager;
 
-
         public Scene(IServiceRegistry services)
         {
             Contract.Requires<ArgumentNullException>(services != null, "services");
@@ -98,6 +97,11 @@ namespace Odyssey.Talos
         internal EntityMap EntityMap
         {
             get { return entityMap; }
+        }
+
+        internal TagManager TagManager
+        {
+            get { return tagManager; }
         }
 
         public IEnumerable<Entity> Entities

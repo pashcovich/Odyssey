@@ -115,7 +115,7 @@ namespace Odyssey.Talos.Systems
             List<Command> filteredCommands =
                 (from cRender in commands.OfType<RenderCommand>()
                     let filteredEntities = from e in cRender.Entities 
-                                           where e.Tags.Contains(tagFilter)
+                                           where e.ContainsTag(tagFilter)
                                            select e
                     where filteredEntities.Any()
                     let tRenderCommand = cRender.GetType()

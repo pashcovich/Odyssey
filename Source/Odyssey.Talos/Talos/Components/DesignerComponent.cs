@@ -45,8 +45,9 @@ namespace Odyssey.Talos.Components
 
             var model = designer.Result;
             model.Name = Name + ".Mesh";
-            Services.GetService<IAssetProvider>().Store(model.Name, model);
             AssetName = model.Name;
+            Services.GetService<IAssetProvider>().Store(model.Name, model);
+            Messenger.SendTo<ModelComponent>(new ContentMessage<Model>(Owner, AssetName, model), Owner);
         }
     }
 }

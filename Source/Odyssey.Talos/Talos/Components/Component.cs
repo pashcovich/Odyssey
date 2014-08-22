@@ -34,6 +34,8 @@ namespace Odyssey.Talos.Components
         private readonly long id;
         private Scene scene;
 
+        public event EventHandler<MessageEventArgs> MessageReceveid;
+
         protected Component(ComponentType type)
         {
             Contract.Requires<ArgumentNullException>(type != null);
@@ -61,10 +63,7 @@ namespace Odyssey.Talos.Components
 
         internal Messenger Messenger { get; set; }
 
-        protected Entity Owner
-        {
-            get { return Scene.FindEntityFromComponent(this); }
-        }
+        public Entity Owner { get; internal set; }
 
         public string Name { get; set; }
 
@@ -84,6 +83,18 @@ namespace Odyssey.Talos.Components
         public virtual bool Validate()
         {
             return true;
+        }
+
+        public void ReceiveMessage(Message message)
+        {
+            OnReceiveMessage(new MessageEventArgs(message));
+        }
+
+        protected virtual void OnReceiveMessage(MessageEventArgs e)
+        {
+            var handler = MessageReceveid;
+            if (handler != null)
+                handler(this, e);
         }
 
         protected void RaisePropertyChanged([CallerMemberName] string property = "")

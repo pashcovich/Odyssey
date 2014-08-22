@@ -33,7 +33,8 @@ namespace Odyssey.Talos.Systems
 
         public override void Stop()
         {
-            Messenger.Unregister<EntityChangeMessage>(this);
+            Messenger.Unregister<EntityChangeMessage>(this); 
+            Services.RemoveService(typeof(ILightService));
         }
 
     }

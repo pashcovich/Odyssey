@@ -92,7 +92,7 @@ namespace Odyssey.Talos.Systems
         public void EnqueueMessage<TMessage>(TMessage message)
             where TMessage : Message
         {
-            messageQueue.Enqueue(message);
+            messageQueue.Enqueue<TMessage>(message);
         }
 
         public abstract void Start();

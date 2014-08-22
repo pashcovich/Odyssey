@@ -42,5 +42,8 @@ namespace Odyssey.Talos
         bool ContainsComponent<TComponent>()
             where TComponent : IComponent;
 
+        IEnumerable<string> Tags { get; }
+        bool ContainsTag(string tag);
+
     }
 }

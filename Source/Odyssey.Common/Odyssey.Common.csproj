@@ -107,6 +107,7 @@
     <Compile Include="Serialization\ISerializableResource.cs" />
     <Compile Include="Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="Serialization\XmlSerializationEventArgs.cs" />
+    <Compile Include="Utilities\Collections\DictionaryMap.cs" />
     <Compile Include="Utilities\Collections\ReadOnlyArray.cs" />
     <Compile Include="Graphics\Organization\IRenderCommand.cs" />
     <Compile Include="Engine\ApplicationContext.cs" />
@@ -137,7 +138,6 @@
     <Compile Include="Talos\IEntity.cs" />
     <Compile Include="Utilities\Collections\Cache.cs" />
     <Compile Include="Utilities\Collections\CollectionMap.cs" />
-    <Compile Include="Utilities\Collections\TypeMap.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <None Include="Utilities\Collections\GenericNode.cs" />
     <Compile Include="Utilities\Collections\INode.cs" />

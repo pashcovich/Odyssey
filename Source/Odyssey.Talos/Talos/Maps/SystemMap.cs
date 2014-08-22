@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Utilities.Collections;
 
 namespace Odyssey.Talos.Maps
 {
@@ -12,7 +13,7 @@ namespace Odyssey.Talos.Maps
         readonly Scene scene;
         readonly LinkedList<SystemBase> systems;
         readonly Dictionary<SystemBase, long> systemIds = new Dictionary<SystemBase, long>();
-        readonly Dictionary<long, List<Entity>> entitiesBySystem;
+        readonly CollectionMap<long, List<Entity>,Entity> entitiesBySystem;
 
         public IEnumerable<SystemBase> Systems { get { return systems; } }
 
@@ -24,14 +25,14 @@ namespace Odyssey.Talos.Maps
             this.scene = scene;
             systems = new LinkedList<SystemBase>();
             systemIds = new Dictionary<SystemBase, long>();
-            entitiesBySystem = new Dictionary<long, List<Entity>>();
+            entitiesBySystem = new CollectionMap<long, List<Entity>,Entity>();
         }
 
         public void AddSystem(SystemBase system)
         {
             systems.AddLast(system);
             systemIds.Add(system, system.Id);
-            entitiesBySystem.Add(system.Id, new List<Entity>());
+            entitiesBySystem.DefineNew(system.Id);
             system.AssignToScene(scene);
             OnSystemAdded(new SystemEventArgs(system));
         }
@@ -119,7 +120,7 @@ namespace Odyssey.Talos.Maps
         internal void RegisterEntityToSystem(Entity entity, SystemBase system)
         {
             if (!entitiesBySystem.ContainsKey(system.Id))
-                entitiesBySystem.Add(system.Id, new List<Entity>());
+                entitiesBySystem.DefineNew(system.Id);
 
             if (!entitiesBySystem[system.Id].Contains(entity))
             {

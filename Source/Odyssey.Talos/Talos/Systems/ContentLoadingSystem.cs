@@ -32,8 +32,8 @@ namespace Odyssey.Talos.Systems
             while (MessageQueue.HasItems<PropertyChangeMessage>())
             {
                 var cPropertyChange = MessageQueue.Dequeue<PropertyChangeMessage>();
-                //if (string.Equals(cPropertyChange.Property, ReflectionHelper.GetPropertyName((ContentComponent c)=> c.AssetName)))
-                //    RegisterEntity(cPropertyChange.Component.);
+                if (string.Equals(cPropertyChange.Property, ReflectionHelper.GetPropertyName((ContentComponent c)=> c.AssetName)))
+                    RegisterEntity(cPropertyChange.Component.Owner);
             }
             base.BeforeUpdate();
         }
@@ -50,7 +50,7 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (IEntity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 SetupEntity(entity);
             }

@@ -68,7 +68,6 @@
     <Compile Include="Talos\Components\PostProcessComponent.cs" />
     <Compile Include="Talos\Components\RequiredComponentAttribute.cs" />
     <Compile Include="Talos\Components\SpriteComponent.cs" />
-    <Compile Include="Talos\Components\TagComponent.cs" />
     <Compile Include="Talos\Components\TargetComponent.cs" />
     <Compile Include="Talos\Components\UserInterfaceComponent.cs" />
     <Compile Include="Talos\IEntityController.cs" />
@@ -84,6 +83,7 @@
     <Compile Include="Talos\Interaction\OrbitController.cs" />
     <Compile Include="Talos\Interaction\PointerControllerBase.cs" />
     <Compile Include="Talos\Interaction\WasdCameraController.cs" />
+    <Compile Include="Talos\Maps\MessageMap.cs" />
     <Compile Include="Talos\Maps\SystemEventArgs.cs" />
     <Compile Include="Talos\Maps\TagManager.cs" />
     <Compile Include="Talos\Messages\CameraMessage.cs" />
@@ -94,7 +94,6 @@
     <Compile Include="Talos\Serialization\SceneProxy.cs" />
     <Compile Include="Talos\Serialization\YamlSerializer.cs" />
     <Compile Include="Talos\Systems\ControllerSystem.cs" />
-    <Compile Include="Talos\Systems\DesignerSystem.cs" />
     <Compile Include="Talos\Systems\InitializationSystem.cs" />
     <Compile Include="Talos\Systems\IRenderableSystem.cs" />
     <Compile Include="Talos\Initializers\CameraInitializer.cs" />
@@ -122,7 +121,6 @@
     <Compile Include="Talos\Entity.cs" />
     <Compile Include="Talos\Maps\EntityEventArgs.cs" />
     <Compile Include="Talos\Maps\EntityMap.cs" />
-    <Compile Include="Talos\Maps\Maps.cs" />
     <Compile Include="Talos\Maps\SystemMap.cs" />
     <Compile Include="Talos\Maps\EntityComponentChangedEventArgs.cs" />
     <Compile Include="Talos\Messages\EntityChangeMessage.cs" />

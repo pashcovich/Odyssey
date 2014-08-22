@@ -2,6 +2,7 @@
 using Odyssey.Graphics;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
+using Odyssey.Utilities.Collections;
 using Odyssey.Utilities.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Odyssey.Talos.Maps
     public class EntityMap
     {
         readonly Scene scene;
-        readonly Dictionary<long, Dictionary<long, Component>> componentsByEntity;
+        private readonly DictionaryMap<long, long, Component> componentsByEntity;
         readonly Dictionary<long, Entity> entities;
         private readonly Dictionary<long, Component> components; 
 
@@ -31,7 +32,7 @@ namespace Odyssey.Talos.Maps
             this.scene = scene;
             entities = new Dictionary<long, Entity>();
             components = new Dictionary<long, Component>();
-            componentsByEntity = new Dictionary<long, Dictionary<long, Component>>();
+            componentsByEntity = new DictionaryMap<long, long, Component>();
         }
 
         protected virtual void OnEntityAdded(EntityEventArgs args)
@@ -69,7 +70,7 @@ namespace Odyssey.Talos.Maps
                 RemoveEntity(entity);
                 LogEvent.Engine.Warning("Entity was already registered in another scene.");
             }
-            componentsByEntity.Add(entity.Id, new Dictionary<long, Component>());
+            componentsByEntity.DefineNew(entity.Id);
             entities.Add(entity.Id, entity);
             OnEntityAdded(new EntityEventArgs(entity));
         }
@@ -189,9 +190,12 @@ namespace Odyssey.Talos.Maps
 
         public void AddComponentToEntity(Component component, Entity entity)
         {
-            componentsByEntity[entity.Id].Add(component.KeyPart, component);
             if (!components.ContainsKey(component.Id))
+            {
+                componentsByEntity[entity.Id].Add(component.KeyPart, component);
                 components.Add(component.Id, component);
+                component.Owner = entity;
+            }
             OnEntityComponentAdded(new EntityComponentChangedEventArgs(entity, component));
         }
 
