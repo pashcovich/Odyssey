@@ -16,7 +16,6 @@
 #region Using Directives
 
 using System;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -83,8 +82,7 @@ namespace Odyssey.Graphics.Drawing
 
             var brushResource = Overlay.Theme.GetResource<ColorResource>(brushClass);
 
-            return styleService.ContainsResource(brushClass) ? styleService.GetResource<Brush>(brushClass) : Overlay.StyleService.CreateColorResource(Device, brushResource);
-
+            return styleService.ContainsResource(brushClass) ? styleService.GetResource<Brush>(brushClass) : styleService.CreateColorResource(Device, brushResource);
         }
 
         protected override void OnInitializing(ControlEventArgs e)
@@ -96,7 +94,6 @@ namespace Odyssey.Graphics.Drawing
 
             if (stroke == null)
                 stroke = CreateOrRetrieveBrush(strokeBrushClass);
-
         }
 
         protected override void OnLayoutUpdated(EventArgs e)

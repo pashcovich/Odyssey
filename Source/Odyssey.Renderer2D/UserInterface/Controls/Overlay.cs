@@ -47,8 +47,6 @@ namespace Odyssey.UserInterface.Controls
 
         public new Direct2DDevice Device { get { return device; } }
 
-        public IStyleService StyleService { get { return styleService; } }
-
         internal UIElement CaptureElement
         {
             get { return captureElement; }

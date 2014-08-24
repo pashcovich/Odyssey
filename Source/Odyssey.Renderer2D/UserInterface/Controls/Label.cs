@@ -63,7 +63,9 @@ namespace Odyssey.UserInterface.Controls
             if (TextDescription == default(TextDescription))
                 ApplyTextDescription();
 
-            Foreground = ToDispose(SolidColorBrush.New(string.Format("UniformFill.{0}", Name), Device, new SolidColor(string.Format("UniformFill.{0}", Name), TextDescription.Color)));
+            var styleService = Overlay.Services.GetService<IStyleService>();
+            SolidColor color = new SolidColor(string.Format("UniformFill.{0}", Name), TextDescription.Color);
+            Foreground = styleService.CreateColorResource(Device, color);
             Foreground.Initialize();
             textFormat = ToDispose(TextDescription.ToTextFormat(Device.Services));
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;

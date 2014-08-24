@@ -133,7 +133,7 @@ namespace Odyssey.UserInterface.Style
 
         public Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource)
         {
-            Brush result=null;
+            Brush result;
             if (TryGetResource(colorResource.Name, out result))
                 return result;
             
@@ -144,9 +144,11 @@ namespace Odyssey.UserInterface.Style
                 result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color));
             }
             if (result == null)
-                result = Brush.FromColorResource(device, colorResource);
-            result.Initialize();
-            AddResource(result);
+            {
+                result = ToDispose(Brush.FromColorResource(device, colorResource));
+                result.Initialize();
+                AddResource(result);
+            }
             return result;
         }
 
