@@ -79,7 +79,9 @@
     <Compile Include="Graphics\Buffer.Constant.cs" />
     <Compile Include="Graphics\DepthStencilStateCollection.cs" />
     <Compile Include="Graphics\DepthStencilViewSelector.cs" />
+    <Compile Include="Graphics\Drawing\Designer.BSpline.cs" />
     <Compile Include="Graphics\Drawing\DrawInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawPolylineInstruction.cs" />
     <Compile Include="Graphics\Drawing\IDesignerInstruction.cs" />
     <Compile Include="Graphics\Drawing\SetColorInstruction.cs" />
     <Compile Include="Graphics\Drawing\DrawEllipseInstruction.cs" />

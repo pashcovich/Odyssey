@@ -17,7 +17,7 @@ namespace Odyssey.Geometry.Primitives
 
         public override Point[] Calculate(Real alpha)
         {
-            if (Count <= Degree+1)
+            if (Count < Degree+1)
                 throw new InvalidOperationException("Insufficient number of control points");
             if (knotVector.Count ==0)
                 throw new InvalidOperationException("Must calculate a knot vector before generating BSpline");
@@ -26,6 +26,7 @@ namespace Odyssey.Geometry.Primitives
 
             float start;
             float end;
+
             if (isClamped)
             {
                 start = alpha;
@@ -98,7 +99,6 @@ namespace Odyssey.Geometry.Primitives
                 double alpha = (t - knotVector[i])/(knotVector[i + Degree + 1 - k] - knotVector[i]);
                 return DeBoor(k - 1, i - 1, t)*(1 - (Real) alpha) + DeBoor(k - 1, i, t)*(Real) alpha;
             }
-
         }
         
         int WhichInterval(Real x)
@@ -113,6 +113,5 @@ namespace Odyssey.Geometry.Primitives
             }
             return -1;
         }
-
     }
 }
