@@ -67,7 +67,8 @@ namespace Odyssey.Talos.Systems
 
         public override void Unload()
         {
-            Overlay.Dispose();
+            if (Overlay!=null)
+                Overlay.Dispose();
         }
     }
 }

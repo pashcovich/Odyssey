@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Organization.Commands;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
-using SharpDX;
 
 namespace Odyssey.Talos.Systems
 {
@@ -58,6 +53,9 @@ namespace Odyssey.Talos.Systems
             if (!MessageQueue.HasItems<OptimizationCompleteMessage>()) return;
 
             var mOptimization = MessageQueue.Dequeue<OptimizationCompleteMessage>();
+            if (!mOptimization.Commands.Any())
+                return;
+
             if (!commandManager.IsEmpty)
                 commandManager.Clear();
 
@@ -77,8 +75,10 @@ namespace Odyssey.Talos.Systems
                         if (ppAction.Technique == Param.EngineActions.RenderSceneToTexture)
                         {
                             string tagFilter = cPostProcess.TagFilter;
-                            var cRender2Texture = new RenderSceneToTextureCommand(Services,
-                                FilterCommands(mOptimization.Commands, tagFilter));
+                            var filteredCommands = FilterCommands(mOptimization.Commands, tagFilter);
+                            if (filteredCommands == null)
+                                continue;
+                            var cRender2Texture = new RenderSceneToTextureCommand(Services, filteredCommands);
                             newCommands.Add(cRender2Texture);
                         }
                     }
@@ -86,8 +86,7 @@ namespace Odyssey.Talos.Systems
                     {
                         Technique effect = techniques[string.Format("{0}.{1}", ppAction.AssetName, ppAction.Technique)];
                         newCommands.Add(new PostProcessCommand(Services, effect, cModel.Model.Meshes[0],
-                            entity,
-                            ppAction.TextureDescription, ppAction.Output) {Name = ppAction.Technique});
+                            entity, ppAction.TextureDescription, ppAction.Output) {Name = ppAction.Technique});
                     }
                 }
                 
