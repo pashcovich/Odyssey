@@ -28,6 +28,8 @@ namespace Odyssey.Geometry.Primitives
 
         public abstract Point[] Calculate(Real alpha);
 
+        public abstract Point Evaluate(Real t);
+
         public void AddPoint(Point point)
         {
             controlPoints.Add(point);

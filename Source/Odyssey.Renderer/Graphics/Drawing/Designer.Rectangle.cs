@@ -20,9 +20,9 @@ namespace Odyssey.Graphics.Drawing
                 // Bottom 
                 new RectangleF(rectangle.X, rectangle.Y + rectangle.Height - strokeThickness, rectangle.Width, strokeThickness),
                 // Left
-                new RectangleF(rectangle.X, rectangle.Y, strokeThickness, rectangle.Height),
+                new RectangleF(rectangle.X, rectangle.Y+strokeThickness, strokeThickness, rectangle.Height - 2 * strokeThickness),
                 // Right
-                new RectangleF(rectangle.X + rectangle.Width - strokeThickness, rectangle.Y, strokeThickness, rectangle.Height)
+                new RectangleF(rectangle.X + rectangle.Width - strokeThickness, rectangle.Y+strokeThickness, strokeThickness, rectangle.Height - 2*strokeThickness)
             };
 
             foreach (var r in outline)

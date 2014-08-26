@@ -9,7 +9,8 @@ namespace Odyssey.Graphics.Drawing
 {
     public partial class Designer
     {
-        public void DrawPolyLine(IEnumerable<Vector2> points, float strokeThickness)
+        private delegate void RenderRectangle(RectangleF rectangle);
+        void CreatePolyLine(IEnumerable<Vector2> points, float lineWidth, RenderRectangle callback)
         {
             Contract.Requires<ArgumentNullException>(points!=null, "points");
             Vector2[] pointArray = points as Vector2[] ?? points.ToArray();
@@ -35,9 +36,22 @@ namespace Odyssey.Graphics.Drawing
 
                 Matrix previousTransform = Transform;
                 Transform = Matrix.RotationYawPitchRoll(0, 0, angle)*Matrix.Translation(p0) * Transform;
-                FillRectangle(new RectangleF(-strokeThickness/2, 0, strokeThickness, d));
+                callback(new RectangleF(-lineWidth / 2, 0, lineWidth, d));
                 Transform = previousTransform;
             }
         }
+
+        public void DrawPolyline(IEnumerable<Vector2> points, float lineWidth, float strokeThickness)
+        {
+            RenderRectangle callback = (r) => DrawRectangle(r, strokeThickness);
+            CreatePolyLine(points, lineWidth, callback);
+        }
+
+        public void FillPolyline(IEnumerable<Vector2> points, float lineWidth)
+        {
+            RenderRectangle callback = FillRectangle;
+            CreatePolyLine(points, lineWidth, callback);
+        }
+
     }
 }

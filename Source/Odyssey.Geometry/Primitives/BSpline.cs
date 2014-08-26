@@ -15,6 +15,12 @@ namespace Odyssey.Geometry.Primitives
             knotVector = new List<Real>();
         }
 
+        public override Point Evaluate(Real t)
+        {
+            int j = WhichInterval(t);
+            return DeBoor(Degree, j, t);
+        }
+
         public override Point[] Calculate(Real alpha)
         {
             if (Count < Degree+1)
@@ -40,8 +46,7 @@ namespace Odyssey.Geometry.Primitives
 
             for (float t = start; t < end; t += alpha)
             {
-                int j = WhichInterval(t);
-                Point p = DeBoor(Degree, j, t);
+                Point p = Evaluate(t);
                 points.Add(p);
             }
 
@@ -66,6 +71,41 @@ namespace Odyssey.Geometry.Primitives
             isClamped = false;
         }
 
+        public BSpline Derivative()
+        {
+            Point[] newCPs = new Point[Count - 1];
+
+            BSpline derivative = new BSpline(Degree - 1);
+
+
+            for (int i = 0; i < newCPs.Length; i++)
+            {
+                newCPs[i] = (this[i + 1] - this[i])*(Degree/(knotVector[i + Degree + 1] - knotVector[i + 1]));
+            }
+
+            derivative.AddPoints(newCPs);
+
+            Real[] newKnotVector = new Real[knotVector.Count - 2];
+            for (int i = 0; i < newKnotVector.Length; i++)
+            {
+                newKnotVector[i] = knotVector[i + 1];
+            }
+            derivative.knotVector.AddRange(newKnotVector);
+
+            return derivative;
+        }
+
+        public BSpline Derivative(int iTh)
+        {
+            BSpline bs = this;
+            while (iTh > 0)
+            {
+                iTh--;
+                bs = bs.Derivative();
+            }
+
+            return bs;
+        }
 
         public void CalculateClampedUniformKnotVector()
         {
