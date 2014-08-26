@@ -61,11 +61,15 @@
     <Compile Include="Graphics\Drawing\Hexagon.cs" />
     <Compile Include="Graphics\Drawing\IShape.cs" />
     <Compile Include="Graphics\Drawing\Line.cs" />
+    <Compile Include="Graphics\TextRenderer.cs" />
     <Compile Include="UserInterface\Behaviors\Behavior.cs" />
     <Compile Include="UserInterface\Behaviors\BehaviorCollection.cs" />
     <Compile Include="UserInterface\Behaviors\DraggableBehavior.cs" />
+    <Compile Include="UserInterface\Controls\AdvancedLabel.cs" />
     <Compile Include="UserInterface\Controls\Border.cs" />
     <Compile Include="UserInterface\Behaviors\GenericBehavior.cs" />
+    <Compile Include="UserInterface\Controls\RichTextBox.cs" />
+    <Compile Include="UserInterface\Controls\TextEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="UserInterface\Style\FigureData.cs" />

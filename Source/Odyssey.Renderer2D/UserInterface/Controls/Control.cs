@@ -24,7 +24,6 @@ namespace Odyssey.UserInterface.Controls
     public abstract class Control : UIElement, IControl, IResourceProvider
     {
         public const string DefaultText = "Default";
-        public const string EmptyStyle = "Empty";
 
         private string controlStyleClass;
         private ControlStyle style;

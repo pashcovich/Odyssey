@@ -83,7 +83,6 @@ namespace Odyssey.UserInterface
                 height = value;
 
                 if (DesignMode) return;
-
                 OnSizeChanged(EventArgs.Empty);
             }
         }

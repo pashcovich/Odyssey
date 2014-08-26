@@ -67,8 +67,10 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         /// <param name="e">The <see cref="ControlEventArgs"/> instance
         /// containing the event data.</param>
-        protected internal virtual void OnControlAdded(ControlEventArgs e)
+        protected virtual void OnControlAdded(ControlEventArgs e)
         {
+            if (!DesignMode)
+                Layout();
             RaiseEvent(ControlAdded, this, e);
         }
 

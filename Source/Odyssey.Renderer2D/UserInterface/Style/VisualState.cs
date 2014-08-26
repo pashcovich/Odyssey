@@ -40,8 +40,8 @@ namespace Odyssey.UserInterface.Style
                 newShape.DesignMode = false;
                 newShape.Position = new Vector2(control.Width, control.Height) * shape.Position;
                 shapeList.Add(newShape);
-
             }
+
             control.AnimationController.AddAnimations(visualStateDefinition.Animations);
             visualState.shapes = shapeList.ToArray();
             return visualState;

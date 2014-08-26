@@ -33,7 +33,7 @@ namespace Odyssey.UserInterface.Style
 {
     public sealed class ControlStyle : ISerializableResource, IResource, IResourceProvider
     {
-        internal const string Empty = "Empty";
+        public const string Empty = "Empty";
         internal const string Error = "Error";
 
         private VisualStateDefinition visualStateDefinition;
@@ -101,5 +101,6 @@ namespace Odyssey.UserInterface.Style
             get { return ((IResourceProvider) visualStateDefinition).Resources; }
         } 
         #endregion
+        
     }
 }

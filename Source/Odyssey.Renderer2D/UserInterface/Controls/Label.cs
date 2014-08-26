@@ -30,20 +30,9 @@ namespace Odyssey.UserInterface.Controls
 {
     public class Label : LabelBase
     {
-        private const string DefaultTextClass = "Default";
-        private TextFormat textFormat;
-
-        protected Brush Foreground { get; set; }
-
         public Label()
             : base(DefaultTextClass)
         {
-        }
-
-        protected TextFormat TextFormat
-        {
-            get { return textFormat; }
-            set { textFormat = value; }
         }
 
         public override bool Contains(Vector2 cursorLocation)
@@ -54,23 +43,7 @@ namespace Odyssey.UserInterface.Controls
         public override void Render()
         {
             DeviceContext context = Device;
-            context.DrawText(Text, textFormat, BoundingRectangle, Foreground);
-        }
-
-        protected override void OnInitializing(ControlEventArgs e)
-        {
-            DeviceContext context = Device;
-            if (TextDescription == default(TextDescription))
-                ApplyTextDescription();
-
-            var styleService = Overlay.Services.GetService<IStyleService>();
-            SolidColor color = new SolidColor(string.Format("UniformFill.{0}", Name), TextDescription.Color);
-            Foreground = styleService.CreateColorResource(Device, color);
-            Foreground.Initialize();
-            textFormat = ToDispose(TextDescription.ToTextFormat(Device.Services));
-            context.TextAntialiasMode = TextAntialiasMode.Grayscale;
-            if (string.IsNullOrEmpty(Text))
-                Text = Name;
+            context.DrawText(Text, TextFormat, BoundingRectangle, Foreground);
         }
     }
 }

@@ -71,6 +71,11 @@ namespace Odyssey.Graphics
             return from == null ? null : from.Resource ?? null;
         }
 
+        public static implicit operator ComObject(Brush from)
+        {
+            return from == null ? null : from.Resource;
+        }
+
         public static Brush FromColorResource(Direct2DDevice device, ColorResource colorResource)
         {
             switch (colorResource.Type)

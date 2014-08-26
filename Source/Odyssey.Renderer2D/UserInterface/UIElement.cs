@@ -118,7 +118,7 @@ namespace Odyssey.UserInterface
         {
             if (parent != null)
             {
-                 Vector2 oldAbsolutePosition = AbsolutePosition;
+                Vector2 oldAbsolutePosition = AbsolutePosition;
                 Vector2 newAbsolutePosition = new Vector2(parent.AbsolutePosition.X + position.X,
                     parent.AbsolutePosition.Y + position.Y);
 

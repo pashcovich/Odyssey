@@ -389,6 +389,7 @@ namespace Odyssey.UserInterface
         /// data.</param>
         protected virtual void OnMove(EventArgs e)
         {
+            if (DesignMode) return; 
             Layout();
             RaiseEvent(Move, this, e);
         }

@@ -5,7 +5,7 @@ namespace Odyssey.UserInterface.Controls
 {
     public abstract class PanelBase : ContainerControl
     {
-        private const string ControlTag = "Panel";
+        protected const string ControlTag = "Panel";
 
         #region Constructors
 
