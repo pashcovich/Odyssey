@@ -32,7 +32,7 @@ namespace Odyssey.Animations
 
         /// <inheritdoc/>
         public float Duration { get { return keyFrames.Max(kf => kf.Time); }}
-        public string TargetProperty { get; internal set; }
+        public string TargetProperty { get; set; }
         public string TargetName { get; internal set; }
         public string Name { get; set; }
 

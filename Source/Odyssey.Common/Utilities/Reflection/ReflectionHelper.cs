@@ -140,7 +140,9 @@ namespace Odyssey.Utilities.Reflection
         public static string GetPropertyName<TClass>(Expression<Func<TClass, object>> propertyExpression)
         {
             var body = propertyExpression.ToString();
-            body = body.Substring(body.IndexOf(".") + 1);
+            int start = body.IndexOf('.')+1;
+            int end = body.Length - 1 - start;
+            body = body.Substring(start, end);
             return body;
         }
 

@@ -47,7 +47,9 @@
     <Compile Include="Animations\CacheAnimationAttribute.cs" />
     <Compile Include="Animations\Color4Curve.cs" />
     <Compile Include="Animations\FloatCurve.cs" />
+    <Compile Include="Animations\IntKeyFrame.cs" />
     <Compile Include="Animations\IAnimationCurve.cs" />
+    <Compile Include="Animations\IntCurve.cs" />
     <Compile Include="Animations\IRequiresCaching.cs" />
     <Compile Include="Content\AssetIdentifier.cs" />
     <Compile Include="Content\AssetOperation.cs" />
