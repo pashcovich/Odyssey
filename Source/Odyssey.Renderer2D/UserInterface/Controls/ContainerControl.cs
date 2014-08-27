@@ -179,9 +179,9 @@ namespace Odyssey.UserInterface.Controls
             Arrange();
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitialized(ControlEventArgs e)
         {
-            base.OnInitializing(e);
+            base.OnInitialized(e);
             foreach (UIElement element in Controls)
             {
                 element.Initialize();

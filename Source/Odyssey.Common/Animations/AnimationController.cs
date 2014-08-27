@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Reflection;
 using Odyssey.Content;
 using Odyssey.Utilities.Reflection;
@@ -37,7 +38,6 @@ namespace Odyssey.Animations
         public bool HasAnimations { get { return animations.Count > 0; } }
 
         public bool IsPlaying { get; private set; }
-        private float elapsedTime;
         private object target;
 
         public AnimationController(object target) : this()
@@ -128,8 +128,9 @@ namespace Odyssey.Animations
 
         public void Play()
         {
-            IsPlaying = true;
+            Reset();
             playingAnimations.AddRange(animations.Values);
+            IsPlaying = true;
         }
 
         public void Play(string animationName)
@@ -137,17 +138,21 @@ namespace Odyssey.Animations
             Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
             
             var animation = animations[animationName];
-            if (playingAnimations.Contains(animation))
-                Stop(animationName);
-            playingAnimations.Add(animation);
+            Rewind(animation);
+            if (!playingAnimations.Contains(animation))
+                playingAnimations.Add(animation);
             IsPlaying = true;
+        }
+
+        private void Reset()
+        {
+            IsPlaying = false;
+            playingAnimations.Clear();
         }
 
         public void Stop()
         {
-            IsPlaying = false;
-            elapsedTime = 0;
-            playingAnimations.Clear();
+            Reset();
         }
 
         public void Stop(string animationName)
@@ -156,29 +161,45 @@ namespace Odyssey.Animations
             playingAnimations.Remove(animations[animationName]);
             if (playingAnimations.Count == 0)
             {
-                IsPlaying = false;
-                elapsedTime = 0;
+                Reset();
             }
+        }
+
+        public void Rewind(string animationName)
+        {
+            Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
+            Rewind(animations[animationName]);
+        }
+
+        void Rewind(Animation animation)
+        {
+            animation.Time = 0;
         }
 
         public void Update(ITimeService time)
         {
             var currentlyPlayingAnimations = new List<Animation>(playingAnimations);
-            elapsedTime += time.FrameTime;
 
             foreach (var animation in currentlyPlayingAnimations)
             {
-                animation.Time = animation.Speed >= 0 ? elapsedTime : animation.Duration - elapsedTime;
+                animation.Time += time.FrameTime;
 
                 foreach (var curve in animation.Curves)
                 {
-                    var value = curve.Evaluate(animation.Time);
+                    var elapsedTime = animation.Speed >= 0 ? animation.Time : animation.Duration - animation.Time;
+                    var value = curve.Evaluate(elapsedTime);
                     var walker = GetWalker(curve.TargetProperty);
                     walker.WriteValue(value);
                 }
 
-                if (elapsedTime > animation.Duration)
-                    Stop(animation.Name);
+                if (animation.Time > animation.Duration)
+                {
+                    if (animation.WrapMode == WrapMode.Loop)
+                        Rewind(animation);
+                    else
+                        Stop(animation.Name);
+                }
+                    
 
             }
         }

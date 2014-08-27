@@ -79,7 +79,7 @@ namespace Odyssey.UserInterface.Controls
             if (Foreground == null)
             {
                 SolidColor color = new SolidColor(string.Format("{0}.Foreground", Name), TextDescription.Color);
-                Foreground = styleService.CreateColorResource(Device, color);
+                Foreground = styleService.CreateOrRetrieveColorResource(Device, color);
             }
 
             textFormat = ToDispose(TextDescription.ToTextFormat(Device.Services));

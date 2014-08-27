@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Odyssey.Content;
@@ -17,8 +18,7 @@ using Odyssey.Utilities.Text;
 
 namespace Odyssey.Animations
 {
-    public abstract class AnimationCurve<TKeyFrame> : ISerializableResource, IResource, IAnimationCurve, IEnumerable<TKeyFrame> 
-        where TKeyFrame : class, IKeyFrame
+    public abstract class AnimationCurve<TKeyFrame> : ISerializableResource, IResource, IAnimationCurve, IEnumerable<TKeyFrame> where TKeyFrame : class, IKeyFrame
     {
         public delegate object CurveFunction(TKeyFrame start, TKeyFrame end, float time);
 
@@ -58,6 +58,7 @@ namespace Odyssey.Animations
         public object Evaluate(float time)
         {
             Contract.Requires<InvalidOperationException>(Length > 0, "Animation must contain at least one KeyFrames");
+
             TKeyFrame start = keyFrames.First();
             TKeyFrame end = keyFrames.Last();
             if (time <= start.Time)
@@ -84,7 +85,7 @@ namespace Odyssey.Animations
             TargetProperty = xmlReader.GetAttribute("TargetProperty");
             TargetName = Text.ParseResource(xmlReader.GetAttribute("TargetName"));
             if (!resourceProvider.ContainsResource(TargetName))
-                throw new InvalidOperationException(string.Format("No resource '{0}' found", TargetName));
+                throw new InvalidOperationException(String.Format("No resource '{0}' found", TargetName));
 
             xmlReader.ReadStartElement();
 
@@ -117,10 +118,15 @@ namespace Odyssey.Animations
             return ((IEnumerable<TKeyFrame>)keyFrames).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return keyFrames.GetEnumerator();
         } 
         #endregion
+
+        public static object Discrete(IKeyFrame start, IKeyFrame end, float time)
+        {
+            return time < end.Time ? start.Value : end.Value;
+        }
     }
 }

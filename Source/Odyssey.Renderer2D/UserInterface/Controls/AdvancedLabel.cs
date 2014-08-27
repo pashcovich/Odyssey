@@ -40,7 +40,7 @@ namespace Odyssey.UserInterface.Controls
             if (Background == null)
             {
                 SolidColor color = new SolidColor(string.Format("{0}.BackgroundFill", Name), Color.Transparent);
-                Background = styleService.CreateColorResource(Device, color);
+                Background = styleService.CreateOrRetrieveColorResource(Device, color);
             }
         }
 

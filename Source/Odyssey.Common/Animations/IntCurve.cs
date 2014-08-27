@@ -9,10 +9,6 @@ namespace Odyssey.Animations
             Function = Linear;
         }
 
-        public static object Discrete(IntKeyFrame start, IntKeyFrame end, float time)
-        {
-            return time < end.Time ? start.Value : end.Value;
-        }
 
         public static object Linear(IntKeyFrame start, IntKeyFrame end, float time)
         {
