@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using Odyssey.Engine;
+using Odyssey.Graphics;
+using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.PostProcessing;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
-    
-    public abstract class RenderToTextureCommandBase : Command, IRenderCommand, IPostProcessCommand
+
+    public abstract class RenderToTextureCommandBase : EngineCommand, IRenderCommand, IPostProcessCommand
     {
         private readonly Texture2DDescription textureDescription;
         private RenderTarget2D renderTarget;
@@ -103,7 +105,7 @@ namespace Odyssey.Graphics.Organization.Commands
             else
             {
                 device.SetRenderTargets(DepthStencil, RenderTarget);
-                device.Clear(Color.Transparent);
+                device.Clear(Color.Black);
             }
             device.SetPixelShaderConstantBuffer(0, null);
             

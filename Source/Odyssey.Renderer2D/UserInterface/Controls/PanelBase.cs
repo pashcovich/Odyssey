@@ -17,18 +17,6 @@ namespace Odyssey.UserInterface.Controls
             : base(controlClass)
         {}
 
-        protected internal override void Layout()
-        {
-            base.Layout();
-            Arrange();
-        }
-
-        protected override void Arrange()
-        {
-            foreach (UIElement element in Controls)
-                element.Position += TopLeftPosition;
-        }
-
         #endregion
     }
 }

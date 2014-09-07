@@ -172,7 +172,12 @@ namespace Odyssey.Engine
 
         public void FillRectangle(Shape shape, Brush brush)
         {
-            deviceContext.FillRectangle(shape.BoundingRectangle, brush);
+           FillRectangle(shape.BoundingRectangle, brush);
+        }
+
+        public void FillRectangle(RectangleF rectangle, Brush brush)
+        {
+            deviceContext.FillRectangle(rectangle, brush);
         }
 
         public void SetTextAntialias(AntialiasMode antialiasMode)

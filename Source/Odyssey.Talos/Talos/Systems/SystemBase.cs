@@ -113,6 +113,16 @@ namespace Odyssey.Talos.Systems
             Scene.SystemMap.RegisterEntityToSystem(entity, this);
         }
 
+        public void UnregisterEntity(Entity entity)
+        {
+            Scene.SystemMap.UnregisterEntityFromSystem(entity, this);
+        }
+
+        public bool IsEntityRegistered(Entity entity)
+        {
+            return Scene.SystemMap.IsEntityRegisteredToSystem(entity, this);
+        }
+
         [Pure]
         public bool Supports(long entityKey)
         {

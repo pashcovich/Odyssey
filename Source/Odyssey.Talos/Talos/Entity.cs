@@ -21,9 +21,11 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using Odyssey.Content;
 using Odyssey.Talos.Components;
 using Odyssey.Utilities.Logging;
 using Odyssey.Utilities.Reflection;
+using Odyssey.Utilities.Text;
 using SharpYaml.Serialization;
 
 #endregion
@@ -32,7 +34,7 @@ namespace Odyssey.Talos
 {
     [YamlTag("Entity")]
     [DebuggerDisplay("{Name}, Id={Id}")]
-    public sealed class Entity : IEntity
+    public sealed class Entity : IEntity, IResourceProvider
     {
         private static int count;
         private readonly long id;
@@ -93,10 +95,7 @@ namespace Odyssey.Talos
 
         public IEnumerable<string> Tags
         {
-            get
-            {
-                return scene.TagManager.ContainsEntity(id) ? scene.TagManager[id] : Enumerable.Empty<string>();
-            }
+            get { return scene.TagManager.ContainsEntity(id) ? scene.TagManager[id] : Enumerable.Empty<string>(); }
         }
 
         public void AddTag(string tag)
@@ -119,6 +118,12 @@ namespace Odyssey.Talos
             return Scene.EntityMap.EntityHasComponent(this, keyPart);
         }
 
+        public bool ContainsComponent(string componentType)
+        {
+            string componentName = string.Format("{0}Component", componentType);
+            return Components.Any(c=>string.Equals(c.GetType().Name, componentName));
+        }
+
         public bool TryGetComponent<TComponent>(out TComponent component)
             where TComponent : Component
         {
@@ -137,16 +142,10 @@ namespace Odyssey.Talos
             return Scene.EntityMap.GetEntityComponent<TComponent>(this, keyPart);
         }
 
-        public IComponent GetComponent(Type componentType)
+        public Component GetComponent(string componentType)
         {
-            Contract.Requires<ArgumentNullException>(componentType != null, "componentType");
-            Contract.Requires<ArithmeticException>(ReflectionHelper.IsTypeDerived(componentType, typeof (IComponent)));
-            return GetComponent(ComponentTypeManager.GetKeyPart(componentType));
-        }
-
-        public IComponent GetComponent(long keyPart)
-        {
-            return Scene.EntityMap.GetEntityComponent<Component>(this, keyPart);
+            string componentName = string.Format("{0}Component", componentType);
+            return Components.First(c => string.Equals(c.GetType().Name, componentName)) as Component;
         }
 
         public Entity FindChild(string name)
@@ -183,6 +182,13 @@ namespace Odyssey.Talos
         {
             key &= ~component.KeyPart;
             scene.EntityMap.RemoveComponentFromEntity(component, this);
+        }
+
+        public void UnregisterComponent<TComponent>()
+            where TComponent : Component
+        {
+            var component = GetComponent<TComponent>();
+            UnregisterComponent(component);
         }
 
         internal void AssignToScene(Scene scene)
@@ -233,5 +239,37 @@ namespace Odyssey.Talos
             }
             return test;
         }
+
+        #region IResourceProvider
+
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+            string resourceArray;
+            string index;
+            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+
+            return isArray
+                ? ContainsComponent(resourceArray) && ((IResourceProvider) GetComponent(resourceArray)).ContainsResource(index)
+                : ContainsComponent(resourceName);
+
+        }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            string resourceArray;
+            string index;
+            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            return isArray
+               ? ((IResourceProvider)GetComponent(resourceArray)).GetResource<TResource>(index)
+               : GetComponent(resourceName) as TResource;
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return Components; }
+        }
+
+        #endregion
+
     }
 }

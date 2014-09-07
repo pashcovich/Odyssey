@@ -36,12 +36,17 @@ namespace Odyssey.UserInterface.Controls
             base.OnInitializing(e);
             textRenderer = new TextRenderer(Device, Foreground);
             var styleService = Overlay.Services.GetService<IStyleService>();
-            UpdateTextLayout();
             if (Background == null)
             {
                 SolidColor color = new SolidColor(string.Format("{0}.BackgroundFill", Name), Color.Transparent);
                 Background = styleService.CreateOrRetrieveColorResource(Device, color);
             }
+        }
+
+        protected override void OnInitialized(ControlEventArgs e)
+        {
+            base.OnInitialized(e);
+            UpdateTextLayout();
         }
 
         protected override void OnTextChanged(TextEventArgs e)
@@ -62,7 +67,7 @@ namespace Odyssey.UserInterface.Controls
             textMetrics = textLayout.Metrics;
         }
 
-        protected override void Measure()
+        protected internal override void Measure()
         {
             if (Width == 0)
                 Width = textMetrics.Width;

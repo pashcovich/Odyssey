@@ -92,7 +92,7 @@ namespace Odyssey.Talos.Maps
         {
             foreach (SystemBase system in systems)
             {
-                if (system.Supports(entity.Key))
+                if (system.IsEntityRegistered(entity))
                     UnregisterEntityFromSystem(entity, system);
             }
         }
@@ -114,7 +114,11 @@ namespace Odyssey.Talos.Maps
 
         internal void OnEntityComponentRemoved(object sender, EntityComponentChangedEventArgs args)
         {
-            RemoveEntityFromSystems(args.Source);
+            foreach(var system in (from s in scene.SystemMap.SelectAllSystems(args.Source)
+                where s.Selector.Supports(args.Component.KeyPart) && s.IsEntityRegistered(args.Source) select s))
+            {
+                system.UnregisterEntity(args.Source);
+            }
         }
 
         internal void RegisterEntityToSystem(Entity entity, SystemBase system)
@@ -148,6 +152,9 @@ namespace Odyssey.Talos.Maps
             return entitiesBySystem[system.Id].Any(e => e.Id == entity.Id);
         }
 
+
+        #region Selection Methods
+
         /// <summary>
         /// Selects all entities that have been assigned to this system./>.
         /// </summary>
@@ -158,8 +165,13 @@ namespace Odyssey.Talos.Maps
             return entitiesBySystem[system.Id];
         }
 
+        public IEnumerable<SystemBase> SelectAllSystems(Entity entity)
+        {
+            return from s in systems
+                where s.IsEntityRegistered(entity)
+                select s;
+        }
 
-        #region Selection Methods
         /// <summary>
         /// Selects the systems that support the <see cref="Entity"/>.
         /// </summary>

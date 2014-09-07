@@ -1,17 +1,18 @@
-﻿using Odyssey.Engine;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos;
 using Odyssey.Utilities.Logging;
 using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
     [DebuggerDisplay("{Type}[{Technique.Name}]: {entities.Count} items [{Model.Name}]")]
     public class TechniqueRenderCommand : RenderCommand, ITechniqueRenderCommand

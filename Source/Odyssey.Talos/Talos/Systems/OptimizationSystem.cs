@@ -7,6 +7,8 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Organization.Commands;
 using Odyssey.Graphics.Shaders;
+using Odyssey.Organization;
+using Odyssey.Organization.Commands;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
 using Odyssey.Utilities.Logging;

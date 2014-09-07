@@ -9,7 +9,7 @@ using SharpDX;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class VisualState : Component, IResource, IResourceProvider, IEnumerable<Shape>
+    public sealed class VisualState : Component, IResourceProvider, IEnumerable<Shape>
     {
         private Shape[] shapes;
 
@@ -42,7 +42,7 @@ namespace Odyssey.UserInterface.Style
                 shapeList.Add(newShape);
             }
 
-            control.AnimationController.AddAnimations(visualStateDefinition.Animations);
+            control.Animator.AddAnimations(visualStateDefinition.Animations);
             visualState.shapes = shapeList.ToArray();
             return visualState;
         }
@@ -80,7 +80,6 @@ namespace Odyssey.UserInterface.Style
             get { return shapes[index]; }
         }
 
-
         #region IEnumerable<Shape>
 
         public IEnumerator<Shape> GetEnumerator()
@@ -95,8 +94,5 @@ namespace Odyssey.UserInterface.Style
         }
 
         #endregion
-
-
-        
     }
 }

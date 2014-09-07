@@ -19,7 +19,7 @@ namespace Odyssey.Graphics.Drawing
             Device.DrawGeometry(shape, Stroke);
         }
 
-        protected override void Measure()
+        protected internal override void Measure()
         {
             transform = Matrix3x2.Translation(AbsolutePosition);
         }

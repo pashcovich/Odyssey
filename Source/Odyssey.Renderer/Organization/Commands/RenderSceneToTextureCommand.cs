@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using Odyssey.Graphics.Organization.Commands;
 using SharpDX;
 using SharpDX.Direct3D11;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
     [DebuggerDisplay("{Type}: {commands.Count} commands")]
     public class RenderSceneToTextureCommand : RenderToTextureCommandBase

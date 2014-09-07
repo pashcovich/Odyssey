@@ -63,7 +63,7 @@ namespace Odyssey.Graphics.Drawing
 
         public float StrokeThickness { get; set; }
 
-        internal override UIElement Copy()
+        protected internal override UIElement Copy()
         {
             Shape copy = (Shape)base.Copy();
             copy.fillBrushClass = fillBrushClass;

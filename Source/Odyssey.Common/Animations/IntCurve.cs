@@ -10,7 +10,7 @@ namespace Odyssey.Animations
         }
 
 
-        public static object Linear(IntKeyFrame start, IntKeyFrame end, float time)
+        public static object Linear(IntKeyFrame start, IntKeyFrame end, float time, object options = null)
         {
             float newValue = Map(start.Time, end.Time, time);
             return (int)MathUtil.Lerp(start.Value, end.Value, newValue);

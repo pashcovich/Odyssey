@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using Odyssey.Engine;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.PostProcessing;
@@ -12,7 +12,7 @@ using Odyssey.Talos;
 using SharpDX;
 using SharpDX.Direct3D11;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
     [DebuggerDisplay("{Type}[{technique.Name}]")]
     public class PostProcessCommand : RenderToTextureCommandBase, ITechniqueRenderCommand

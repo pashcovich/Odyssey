@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
@@ -85,11 +86,12 @@ namespace Odyssey
 
             // Setup Content Manager
             contentManager = new ContentManager(services);
-            contentManager.AddMapping(AssetType.EngineReferences.ToString(), typeof(EngineReferenceCollection));
-            contentManager.AddMapping(AssetType.Model.ToString(), typeof(Model));
-            contentManager.AddMapping(AssetType.Effect.ToString(), typeof(ShaderCollection));
-            contentManager.AddMapping(AssetType.Texture2D.ToString(), typeof(Texture2D));
-            contentManager.AddMapping(AssetType.TextureCube.ToString(), typeof(TextureCube));
+            contentManager.AddMapping(AssetType.EngineReferences, typeof(EngineReferenceCollection));
+            contentManager.AddMapping(AssetType.Model, typeof(Model));
+            contentManager.AddMapping(AssetType.Effect, typeof(ShaderCollection));
+            contentManager.AddMapping(AssetType.Texture2D, typeof(Texture2D));
+            contentManager.AddMapping(AssetType.TextureCube, typeof(TextureCube));
+            contentManager.AddMapping(AssetType.Cutscene, typeof(Cutscene));
 
             var additionalServices = ReflectionHelper.GetAttributes<RequiredServiceAttribute>(GetType());
             foreach (var requiredService in additionalServices)

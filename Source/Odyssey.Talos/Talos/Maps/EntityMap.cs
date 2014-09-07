@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Odyssey.Graphics;
+﻿using Odyssey.Content;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
 using Odyssey.Utilities.Collections;
@@ -8,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Utilities.Text;
 
 namespace Odyssey.Talos.Maps
 {
-    public class EntityMap
+    public sealed class EntityMap : IResourceProvider
     {
         readonly Scene scene;
         private readonly DictionaryMap<long, long, Component> componentsByEntity;
@@ -25,42 +25,43 @@ namespace Odyssey.Talos.Maps
 
         protected Messenger Messenger { get { return scene.Messenger; } }
         public IEnumerable<Entity> Entities { get { return entities.Values; } }
-        public IEnumerable<Component> Components { get { return components.Values; } } 
+        public IEnumerable<Component> Components { get { return components.Values; } }
+        public string Name { get; private set; }
 
         public EntityMap(Scene scene)
         {
+            Name = string.Format("{0}.{1}", scene.Name, GetType().Name);
             this.scene = scene;
             entities = new Dictionary<long, Entity>();
             components = new Dictionary<long, Component>();
             componentsByEntity = new DictionaryMap<long, long, Component>();
         }
 
-        protected virtual void OnEntityAdded(EntityEventArgs args)
+        private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
+         where T : EventArgs
         {
-            var handler = EntityAdded;
             if (handler != null)
-                handler(this, args);
+                handler(sender, args);
         }
 
-        protected virtual void OnEntityRemoved(EntityEventArgs args)
+        private void OnEntityAdded(EntityEventArgs args)
         {
-            var handler = EntityRemoved;
-            if (handler != null)
-                handler(this, args);
+            RaiseEvent(EntityAdded, this, args);
         }
 
-        protected virtual void OnEntityComponentRemoved(EntityComponentChangedEventArgs args)
+        private void OnEntityRemoved(EntityEventArgs args)
         {
-            var handler = EntityComponentRemoved;
-            if (handler != null)
-                handler(this, args);
+            RaiseEvent(EntityRemoved, this, args);
         }
 
-        protected virtual void OnEntityComponentAdded(EntityComponentChangedEventArgs args)
+        private void OnEntityComponentRemoved(EntityComponentChangedEventArgs args)
         {
-            var handler = EntityComponentAdded;
-            if (handler != null)
-                handler(this, args);
+            RaiseEvent(EntityComponentRemoved, this, args);
+        }
+
+        private void OnEntityComponentAdded(EntityComponentChangedEventArgs args)
+        {
+            RaiseEvent(EntityComponentAdded, this, args);
         }
 
         public void AddEntity(Entity entity)
@@ -102,9 +103,21 @@ namespace Odyssey.Talos.Maps
             return entities.ContainsKey(entity.Id);
         }
 
+        public bool ContainsEntity(string name)
+        {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(name), "name");
+            return entities.Any(kvp => string.Equals(kvp.Value.Name, name));
+        }
+
         public Entity GetEntity(long entityId)
         {
             return entities[entityId];
+        }
+
+        public Entity GetEntity(string name)
+        {
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(name), "name");
+            return entities.First(kvp => string.Equals(kvp.Value.Name, name)).Value;
         }
 
         public void Unload()
@@ -188,6 +201,11 @@ namespace Odyssey.Talos.Maps
             return componentsByEntity[entity.Id].ContainsKey(keyPart);
         }
 
+        public bool EntityHasComponent(string entityName, string componentType)
+        {
+            return ContainsEntity(entityName) && GetEntity(entityName).ContainsComponent(componentType);
+        }
+
         public void AddComponentToEntity(Component component, Entity entity)
         {
             if (!components.ContainsKey(component.Id))
@@ -205,6 +223,36 @@ namespace Odyssey.Talos.Maps
             components.Remove(component.Id);
             OnEntityComponentRemoved(new EntityComponentChangedEventArgs(entity, component));
         }
+
+        #region IResourceProvider
+
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+            string resourceArray;
+            string index;
+            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+
+            return isArray
+                ? ContainsEntity(resourceArray) && ((IResourceProvider) GetEntity(resourceArray)).ContainsResource(index)
+                : ContainsEntity(resourceName);
+        }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            string resourceArray;
+            string index;
+            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            return isArray
+                ? ((IResourceProvider) GetEntity(resourceArray)).GetResource<TResource>(index)
+                : GetEntity(resourceName) as TResource;
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return Entities; }
+        }
+
+        #endregion
 
     }
 }

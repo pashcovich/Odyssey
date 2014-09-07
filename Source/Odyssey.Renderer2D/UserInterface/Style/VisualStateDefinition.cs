@@ -15,6 +15,8 @@ namespace Odyssey.UserInterface.Style
         private readonly List<Shape> shapes;
         private readonly List<Animation> animations;
 
+        public string Name { get; set; }
+
         public VisualStateDefinition()
         {
             shapes = new List<Shape>();
@@ -43,6 +45,8 @@ namespace Odyssey.UserInterface.Style
             const string sShapes = "Shapes";
             const string sAnimation = "Animation";
             const string sAnimations = "Animations";
+
+            Name = xmlReader.GetAttribute("Name");
 
             if (!xmlReader.ReadToDescendant(sShapes))
                 throw new InvalidOperationException(String.Format("{0}' element not found", sShapes));

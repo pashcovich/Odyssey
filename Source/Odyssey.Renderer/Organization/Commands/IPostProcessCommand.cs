@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Odyssey.Graphics;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
     public interface IPostProcessCommand
     {

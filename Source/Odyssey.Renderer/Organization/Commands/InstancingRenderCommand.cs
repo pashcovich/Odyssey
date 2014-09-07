@@ -7,8 +7,9 @@ using Odyssey.Graphics.Shaders;
 using Odyssey.Talos;
 using SharpDX;
 using SharpDX.Direct3D11;
+using Buffer = Odyssey.Graphics.Buffer;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
     public class InstancingRenderCommand : TechniqueRenderCommand
     {

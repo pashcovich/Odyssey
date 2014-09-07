@@ -27,13 +27,14 @@ using Odyssey.Talos.Maps;
 using Odyssey.Talos.Messages;
 using Odyssey.Talos.Systems;
 using Odyssey.Utilities.Logging;
+using Odyssey.Utilities.Text;
 using SharpDX;
 using Component = Odyssey.Talos.Components.Component;
 #endregion
 
 namespace Odyssey.Talos
 {
-    public class Scene : IEntityProvider, IUpdateable, IRenderable
+    public class Scene : IEntityProvider, IResourceProvider, IUpdateable, IRenderable
     {
         private readonly List<IRenderableSystem> currentlyRenderingSystems;
         private readonly List<IRenderableSystem> renderableSystems;
@@ -43,6 +44,8 @@ namespace Odyssey.Talos
         private readonly Messenger messenger;
         private readonly SystemMap systemMap;
         private readonly TagManager tagManager;
+
+        public string Name { get; set; }
 
         public Scene(IServiceRegistry services)
         {
@@ -56,6 +59,7 @@ namespace Odyssey.Talos
             currentlyRenderingSystems = new List<IRenderableSystem>();
             Services = services;
             Services.AddService(typeof (IEntityProvider), this);
+            Services.AddService(typeof(IResourceProvider), this);
             var content = Services.GetService<IAssetProvider>();
             content.AddMapping("Scene", typeof (Scene));
 
@@ -160,7 +164,7 @@ namespace Odyssey.Talos
         {
             return (from e in Entities
                 where e.ContainsComponent(component.KeyPart)
-                let c = e.GetComponent(component.KeyPart)
+                let c = e.GetComponent<Component>(component.KeyPart)
                 where c.Id == component.Id
                 select e).FirstOrDefault();
         }
@@ -270,5 +274,31 @@ namespace Odyssey.Talos
             if (!entityMap.Validate())
                 throw new InvalidOperationException("Entities are missing required components");
         }
+
+        public Entity this[string entityName]
+        {
+            get { return entityMap.GetEntity(entityName); }
+        }
+
+        #region IResourceProvider
+
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+            IResourceProvider resourceProvider = entityMap;
+            return resourceProvider.ContainsResource(resourceName);
+        }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            IResourceProvider resourceProvider = entityMap;
+            return resourceProvider.GetResource<TResource>(resourceName);
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return ((IResourceProvider)entityMap).Resources; }
+        }
+
+        #endregion
     }
 }

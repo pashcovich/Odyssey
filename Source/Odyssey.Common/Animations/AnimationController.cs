@@ -1,22 +1,63 @@
-﻿using System;
+﻿#region License
+
+// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using Odyssey.Content;
-using Odyssey.Utilities.Reflection;
 using Odyssey.Engine;
+using Odyssey.Utilities.Reflection;
+
+#endregion
 
 namespace Odyssey.Animations
 {
-    public class AnimationController
+    public class AnimationController : IAnimatable
     {
+        private string name;
         private readonly Dictionary<string, Animation> animations;
-        private readonly Dictionary<string, ObjectWalker> walkers;
 
         private readonly List<Animation> playingAnimations;
+        private readonly Dictionary<string, ObjectWalker> walkers;
+        private object target;
 
-        public IEnumerable<Animation> Animations { get { return animations.Values; } }
+        public AnimationController(object target) : this()
+        {
+            this.target = target;
+        }
+
+        public AnimationController()
+        {
+            animations = new Dictionary<string, Animation>();
+            walkers = new Dictionary<string, ObjectWalker>();
+            playingAnimations = new List<Animation>();
+        }
+
+        public string Name
+        {
+            get { return name; }
+        }
+
+        public IEnumerable<Animation> Animations
+        {
+            get { return animations.Values; }
+        }
 
         public object Target
         {
@@ -35,22 +76,21 @@ namespace Odyssey.Animations
             }
         }
 
-        public bool HasAnimations { get { return animations.Count > 0; } }
-
-        public bool IsPlaying { get; private set; }
-        private object target;
-
-        public AnimationController(object target) : this()
+        public bool HasAnimations
         {
-            this.target = target;
+            get { return animations.Count > 0; }
         }
 
+        public bool IsPlaying { get; private set; }
 
-        public AnimationController()
+        public Animation this[string animationName]
         {
-            animations = new Dictionary<string, Animation>();
-            walkers = new Dictionary<string, ObjectWalker>();
-            playingAnimations = new List<Animation>();
+            get { return animations[animationName]; }
+        }
+
+        public Animation this[int index]
+        {
+            get { return animations.Values.ElementAt(index); }
         }
 
         [Pure]
@@ -63,8 +103,10 @@ namespace Odyssey.Animations
         {
             Contract.Requires<ArgumentNullException>(animation != null, "animation");
             Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(animation.Name), "Cannot add an unnamed animation");
-            Contract.Requires<ArgumentException>(!ContainsAnimation(animation.Name), "An animation with the same name alrady exists in the collection");
+            Contract.Requires<ArgumentException>(!ContainsAnimation(animation.Name),
+                "An animation with the same name alrady exists in the collection");
             animations.Add(animation.Name, animation);
+            animation.Completed += (s, e) => Stop(animation);
         }
 
         public void AddAnimations(IEnumerable<Animation> animations)
@@ -74,7 +116,7 @@ namespace Odyssey.Animations
                 AddAnimation(animation);
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             foreach (var animation in animations.Values)
             {
@@ -98,10 +140,12 @@ namespace Odyssey.Animations
                     if (realTarget == null)
                         throw new InvalidOperationException("'Target' cannot be null");
 
+                    name = string.Format("{0}.Animator", ((IResource) realTarget).Name);
+
                     ObjectWalker walker = new ObjectWalker(realTarget, curve.TargetProperty);
 
                     var requiresCaching = realTarget as IRequiresCaching;
-                    string curveKey = curve.TargetProperty;
+                    string curveKey = curve.Name;
                     if (requiresCaching != null)
                     {
                         var newCurve = requiresCaching.CacheAnimation(walker.CurrentMember.DeclaringType, walker.CurrentMember.Name, curve);
@@ -110,13 +154,15 @@ namespace Odyssey.Animations
                             animation.RemoveCurve(curve.TargetProperty);
                             animation.AddCurve(newCurve);
                             walker.SetTarget(requiresCaching, newCurve.TargetProperty);
-                            curveKey = newCurve.TargetProperty;
+                            curveKey = newCurve.Name;
                             cachedAnimations++;
                         }
                     }
+
                     var animatable = walker.CurrentMember.GetCustomAttribute<AnimatableAttribute>();
                     if (animatable == null)
-                        throw new InvalidOperationException(string.Format("'{0}' is not marked as {1}", walker.CurrentMember.Name, typeof(AnimatableAttribute).Name));
+                        throw new InvalidOperationException(string.Format("'{0}' is not marked as {1}", walker.CurrentMember.Name,
+                            typeof (AnimatableAttribute).Name));
 
                     walkers.Add(curveKey, walker);
                 }
@@ -126,21 +172,28 @@ namespace Odyssey.Animations
             }
         }
 
-        public void Play()
+        public virtual void Play()
         {
             Reset();
             playingAnimations.AddRange(animations.Values);
+            foreach (var animation in playingAnimations)
+                animation.Start();
             IsPlaying = true;
+        }
+
+        private void Play(Animation animation)
+        {
+            animation.Rewind();
+            if (!playingAnimations.Contains(animation))
+                playingAnimations.Add(animation);
+            animation.Start();
         }
 
         public void Play(string animationName)
         {
             Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
-            
             var animation = animations[animationName];
-            Rewind(animation);
-            if (!playingAnimations.Contains(animation))
-                playingAnimations.Add(animation);
+            Play(animation);
             IsPlaying = true;
         }
 
@@ -152,66 +205,53 @@ namespace Odyssey.Animations
 
         public void Stop()
         {
+            foreach (var animation in playingAnimations)
+            {
+                animation.Stop();
+            }
             Reset();
+
         }
 
-        public void Stop(string animationName)
+        private void Stop(Animation animation)
         {
-            Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
-            playingAnimations.Remove(animations[animationName]);
+            playingAnimations.Remove(animation);
             if (playingAnimations.Count == 0)
             {
                 Reset();
             }
         }
 
+        public void Stop(string animationName)
+        {
+            Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
+            var animation = animations[animationName];
+            Stop(animation);
+        }
+
         public void Rewind(string animationName)
         {
             Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
-            Rewind(animations[animationName]);
+            animations[animationName].Rewind();
         }
 
-        void Rewind(Animation animation)
-        {
-            animation.Time = 0;
-        }
-
-        public void Update(ITimeService time)
+        public virtual void Update(ITimeService time)
         {
             var currentlyPlayingAnimations = new List<Animation>(playingAnimations);
 
             foreach (var animation in currentlyPlayingAnimations)
             {
-                animation.Time += time.FrameTime;
-
-                foreach (var curve in animation.Curves)
+                animation.Update(time, (curve, value) =>
                 {
-                    var elapsedTime = animation.Speed >= 0 ? animation.Time : animation.Duration - animation.Time;
-                    var value = curve.Evaluate(elapsedTime);
-                    var walker = GetWalker(curve.TargetProperty);
+                    var walker = GetWalker(curve.Name);
                     walker.WriteValue(value);
-                }
-
-                if (animation.Time > animation.Duration)
-                {
-                    if (animation.WrapMode == WrapMode.Loop)
-                        Rewind(animation);
-                    else
-                        Stop(animation.Name);
-                }
-                    
-
+                });
             }
         }
 
-        internal ObjectWalker GetWalker(string targetProperty)
+        private ObjectWalker GetWalker(string name)
         {
-            return walkers[targetProperty];
-        }
-
-        public Animation this[string animationName]
-        {
-            get { return animations[animationName]; }
+            return walkers[name];
         }
     }
 }

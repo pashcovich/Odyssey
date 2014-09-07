@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos;
 
-namespace Odyssey.Graphics.Organization
+namespace Odyssey.Organization
 {
     [DebuggerDisplay("[{technique.Name}]: {entities.Count} items using {model.Name}")]
     public class RenderableInstruction

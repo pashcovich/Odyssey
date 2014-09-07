@@ -137,9 +137,9 @@ namespace Odyssey.UserInterface
             }
         }
 
-        public AnimationController AnimationController
+        public AnimationController Animator
         {
-            get { return animationController; }
+            get { return animator; }
         }
 
         internal IEnumerable<BindingExpression> Bindings
@@ -266,6 +266,7 @@ namespace Odyssey.UserInterface
         /// Setting this property to a different value that the one it had before the assignment,
         /// will cause the UI to be recomputed if the control is not in <see cref = "DesignMode" />
         /// </remarks>
+        [Animatable]
         public virtual bool IsVisible
         {
             get { return isVisible; }
@@ -331,6 +332,7 @@ namespace Odyssey.UserInterface
 
                 if (DesignMode) return;
 
+                Layout();
                 OnPositionChanged(EventArgs.Empty);
                 OnMove(EventArgs.Empty);
             }

@@ -15,6 +15,8 @@
 
 #region Using Directives
 
+using System.Collections.Generic;
+using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Interaction;
@@ -136,16 +138,19 @@ namespace Odyssey.UserInterface.Controls
             IsInited = false;
         }
 
-        protected override void Arrange()
-        {
-            return;
-        }
-
         protected override void OnInitialized(ControlEventArgs e)
         {
             base.OnInitialized(e);
             Layout();
             IsInited = true;
+        }
+
+        protected internal override void Measure()
+        {
+            var settings = Services.GetService<IDirectXDeviceSettings>();
+            Width = settings.PreferredBackBufferWidth;
+            Height = settings.PreferredBackBufferHeight;
+            base.Measure();
         }
 
         void IOverlay.ProcessPointerMovement(PointerEventArgs e)
@@ -220,8 +225,27 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Update(ITimeService time)
         {
-            foreach (var control in TreeTraversal.PreOrderVisit(this).Where(c => c.AnimationController.IsPlaying))
+            foreach (var control in TreeTraversal.PreOrderVisit(this).Skip(1))
                 control.Update(time);
         }
+
+        #region IResourceProvider
+
+        protected override bool ContainsResource(string resourceName)
+        {
+            return TreeTraversal.PreOrderVisit(this).Any(c=> string.Equals(c.Name, resourceName));
+        }
+
+        protected override TResource GetResource<TResource>(string resourceName)
+        {
+            return TreeTraversal.PreOrderVisit(this).First(c => string.Equals(c.Name, resourceName)) as TResource;
+        }
+
+        protected override IEnumerable<IResource> Resources
+        {
+            get { return TreeTraversal.PreOrderVisit(this); }
+        }
+
+        #endregion
     }
 }

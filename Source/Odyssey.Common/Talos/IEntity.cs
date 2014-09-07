@@ -17,12 +17,13 @@
 
 using System;
 using System.Collections.Generic;
+using Odyssey.Content;
 
 #endregion
 
 namespace Odyssey.Talos
 {
-    public interface IEntity
+    public interface IEntity : IResource
     {
         /// <summary>
         /// Returns the sequential Id number of this instance.
@@ -36,7 +37,6 @@ namespace Odyssey.Talos
 
         bool IsEnabled { get; set; }
 
-        string Name { get; set; }
         IEnumerable<IComponent> Components { get; }
 
         bool ContainsComponent<TComponent>()

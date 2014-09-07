@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Talos\Components\AnimationComponent.cs" />
     <Compile Include="Talos\Components\BloomComponent.cs" />
     <Compile Include="Talos\Components\BlurComponent.cs" />
     <Compile Include="Talos\Components\ControllerComponent.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Talos\Nodes\ICollectionService.cs" />
     <Compile Include="Talos\Serialization\SceneProxy.cs" />
     <Compile Include="Talos\Serialization\YamlSerializer.cs" />
+    <Compile Include="Talos\Systems\AnimationSystem.cs" />
     <Compile Include="Talos\Systems\ControllerSystem.cs" />
     <Compile Include="Talos\Systems\InitializationSystem.cs" />
     <Compile Include="Talos\Systems\IRenderableSystem.cs" />

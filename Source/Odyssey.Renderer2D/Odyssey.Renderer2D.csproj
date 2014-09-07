@@ -70,6 +70,7 @@
     <Compile Include="UserInterface\Behaviors\GenericBehavior.cs" />
     <Compile Include="UserInterface\Controls\RichTextBox.cs" />
     <Compile Include="UserInterface\Controls\TextEventArgs.cs" />
+    <Compile Include="UserInterface\Data\BindingCollection.cs" />
     <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="UserInterface\Style\FigureData.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="UserInterface\Style\VectorCommand.cs" />
     <Compile Include="UserInterface\Style\VisualState.cs" />
     <Compile Include="UserInterface\Style\VisualStateDefinition.cs" />
+    <Compile Include="UserInterface\TimeEventArgs.cs" />
     <Compile Include="UserInterface\TreeTraversal.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElement.Events.cs" />

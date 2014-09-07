@@ -1,8 +1,10 @@
-﻿using SharpDX;
+﻿using Odyssey.Graphics;
+using Odyssey.Graphics.Organization;
+using SharpDX;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
-    public class DepthStencilStateChangeCommand: Command
+    public class DepthStencilStateChangeCommand : EngineCommand
     {
         private readonly DepthStencilState depthStencilState;
 

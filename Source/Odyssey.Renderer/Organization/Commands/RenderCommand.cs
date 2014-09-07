@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Graphics.Models;
+using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos;
 using SharpDX;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
-    public abstract class RenderCommand : Command, IRenderCommand
+    public abstract class RenderCommand : EngineCommand, IRenderCommand
     {
         private readonly Technique technique;
         private readonly List<IEntity> entities;
         
         public Model Model { get; protected set; }
         protected int EntityCount { get { return entities.Count(); }}
+        
 
         public IEnumerable<IEntity> Entities { get { return entities; } }
 

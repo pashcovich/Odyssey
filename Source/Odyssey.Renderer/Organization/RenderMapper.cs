@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Odyssey.Engine;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Talos;
 
-namespace Odyssey.Graphics.Organization
+namespace Odyssey.Organization
 {
     public class RenderMapper : IEnumerable<RenderableInstruction>
     {

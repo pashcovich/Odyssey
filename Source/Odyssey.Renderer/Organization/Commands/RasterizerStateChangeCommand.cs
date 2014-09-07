@@ -1,8 +1,10 @@
-﻿using SharpDX;
+﻿using Odyssey.Graphics;
+using Odyssey.Graphics.Organization;
+using SharpDX;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
-    public class RasterizerStateChangeCommand : Command
+    public class RasterizerStateChangeCommand : EngineCommand
     {
         private readonly RasterizerState rasterizerState;
         public RasterizerState RasterizerState { get { return rasterizerState; } }

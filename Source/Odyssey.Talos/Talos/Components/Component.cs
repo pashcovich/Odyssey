@@ -18,15 +18,20 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using Odyssey.Content;
 using Odyssey.Talos.Messages;
+using Odyssey.Utilities.Text;
 using SharpDX;
+using SharpDX.Direct3D11;
+using Message = Odyssey.Talos.Messages.Message;
 
 #endregion
 
 namespace Odyssey.Talos.Components
 {
-    public abstract class Component : IComponent
+    public abstract class Component : IComponent, IResourceProvider
     {
         private static long count;
         private static readonly Dictionary<Type, long> TypeIndex = new Dictionary<Type, long>();
@@ -109,5 +114,41 @@ namespace Odyssey.Talos.Components
             Services = scene.Services;
             Messenger = scene.Messenger;
         }
+
+        #region IResourceProvider
+
+        protected virtual bool ContainsResource(string resourceName)
+        {
+            return false;
+        }
+
+        protected virtual TResource GetResource<TResource>(string resourceName)
+            where TResource : class, IResource
+        {
+            return null;
+        }
+
+        protected virtual IEnumerable<IResource> Resources
+        {
+            get { return Enumerable.Empty<IResource>(); }
+        }
+
+        bool IResourceProvider.ContainsResource(string resourceName)
+        {
+            return ContainsResource(resourceName);
+
+        }
+
+        TResource IResourceProvider.GetResource<TResource>(string resourceName)
+        {
+            return GetResource<TResource>(resourceName);
+        }
+
+        IEnumerable<IResource> IResourceProvider.Resources
+        {
+            get { return Resources; }
+        }
+
+        #endregion
     }
 }

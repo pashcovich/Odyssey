@@ -17,6 +17,9 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Odyssey.Content;
 using Odyssey.Engine;
@@ -26,6 +29,7 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Reflection;
 using SharpDX;
 using MouseEventArgs = Odyssey.Interaction.PointerEventArgs;
 
@@ -82,8 +86,8 @@ namespace Odyssey.UserInterface
 
             behaviors.Attach(this);
 
-            if (AnimationController.HasAnimations)
-                AnimationController.Initialize();
+            if (Animator.HasAnimations)
+                Animator.Initialize();
 
             OnInitialized(args);
         }
@@ -119,7 +123,7 @@ namespace Odyssey.UserInterface
         /// Creates a shallow copy of this object and its children.
         /// </summary>
         /// <returns>A new copy of this element.</returns>
-        internal virtual UIElement Copy()
+        protected internal virtual UIElement Copy()
         {
             UIElement newElement = (UIElement) Activator.CreateInstance(GetType());
 
@@ -128,7 +132,25 @@ namespace Odyssey.UserInterface
             newElement.Height = Height;
             newElement.Margin = Margin;
 
+            CopyEvents(typeof(UIElement), this, newElement);           
+
+            newElement.Animator.AddAnimations(Animator.Animations);
             return newElement;
+        }
+
+        protected static void CopyEvents(Type type, object source, object target)
+        {
+            var events = from f in ReflectionHelper.GetFields(type)
+                         where f.FieldType.GetTypeInfo().BaseType == typeof(MulticastDelegate)
+                         select f;
+
+            foreach (var eventField in events)
+            {
+                var eventHandler = eventField.GetValue(source);
+                if (eventHandler == null)
+                    continue;
+                eventField.SetValue(target, eventHandler);
+            }
         }
 
         internal virtual void ProcessKeyDown(KeyEventArgs e)
@@ -198,8 +220,10 @@ namespace Odyssey.UserInterface
 
         public virtual void Update(ITimeService time)
         {
-            if (AnimationController.HasAnimations)
-                AnimationController.Update(time);
+            if (Animator.HasAnimations && Animator.IsPlaying)
+                Animator.Update(time);
+
+            OnTick(new TimeEventArgs(time));
         }
 
         public bool CapturePointer()
