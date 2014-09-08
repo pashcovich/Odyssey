@@ -31,7 +31,7 @@ using SharpDX.Direct2D1;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public sealed class Overlay : ContainerControl, IOverlay
+    public sealed class Overlay : ContainerControl, IOverlay, IDesktopOverlay
     {
         private const string DefaultControlTheme = "DefaultTheme";
         private const string DefaultTextTheme = "DefaultText";
@@ -223,10 +223,60 @@ namespace Odyssey.UserInterface.Controls
             e.Handled = true;
         }
 
+        void IDesktopOverlay.ProcessKeyDown(KeyEventArgs e)
+        {
+            // If an element as captured the pointer, send the event to it first
+            if (CaptureElement != null)
+                e.Handled = CaptureElement.ProcessKeyDown(e);
+
+            if (e.Handled)
+                return;
+
+            // Then, send it to the currently focused control
+            if (FocusedElement != null)
+                e.Handled = FocusedElement.ProcessKeyDown(e);
+
+            if (e.Handled)
+                return;
+
+            //Proceeds with the rest
+            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(this))
+            {
+                e.Handled = control.ProcessKeyDown(e);
+                if (e.Handled)
+                    break;
+            }
+
+            if (e.Handled)
+                return;
+
+            e.Handled = ProcessKeyDown(e);
+        }
+
+        void IDesktopOverlay.ProcessKeyUp(KeyEventArgs e)
+        {
+            // If an element as captured the pointer, send the event to it first
+            if (CaptureElement != null)
+                e.Handled = CaptureElement.ProcessKeyUp(e);
+
+            if (e.Handled)
+                return;
+
+            // Then, send it to the currently focused control
+            if (FocusedElement != null)
+                e.Handled = FocusedElement.ProcessKeyUp(e);
+
+            e.Handled = ProcessKeyUp(e);
+        }
+
         public override void Update(ITimeService time)
         {
-            foreach (var control in TreeTraversal.PreOrderVisit(this).Skip(1))
+            var controlArray = TreeTraversal.PreOrderVisit(this).ToArray();
+            for (int i = 1; i < controlArray.Length; i++)
+            {
+                var control = controlArray[i];
                 control.Update(time);
+            }
         }
 
         #region IResourceProvider

@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Point = SharpDX.Vector2;
-using Real = System.Single;
+﻿using Real = System.Single;
+using Point3D = SharpDX.Vector3;
 
 namespace Odyssey.Geometry.Primitives
 {
-    public class BSpline : BSplineBase<Point>
+    public class BSpline3D : BSplineBase<Point3D>, IFunction
     {
-        public BSpline(int degree = 2) : base(degree) {}
+        public BSpline3D(int degree = 2) : base(degree) {}
 
-        public override BSplineBase<Point> Derivative()
+        public override BSplineBase<Point3D> Derivative()
         {
-            Point[] newCPs = new Point[Count - 1];
+            Point3D[] newCPs = new Point3D[Count - 1];
 
-            BSpline derivative = new BSpline(Degree - 1);
+            BSpline3D derivative = new BSpline3D(Degree - 1);
 
             for (int i = 0; i < newCPs.Length; i++)
             {
@@ -35,7 +30,7 @@ namespace Odyssey.Geometry.Primitives
             return derivative;
         }
 
-        protected override Point DeBoor(int k, int i, Real t)
+        protected override Point3D DeBoor(int k, int i, float t)
         {
             if (k == 0)
             {
