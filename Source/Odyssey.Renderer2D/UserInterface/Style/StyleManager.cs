@@ -35,7 +35,6 @@ namespace Odyssey.UserInterface.Style
             content = services.GetService<IAssetProvider>();
 
             content.AddMapping("Theme", typeof (Theme));
-            content.AddMapping("TextDefinitions", typeof (TextDescription));
             content.AddMapping("Font", typeof(Font));
 
             content.AssetsLoaded += InitializeFontCollection;
@@ -86,27 +85,6 @@ namespace Odyssey.UserInterface.Style
             return content.Load<Theme>(themeName);
         }
 
-        public TextDescription GetTextStyle(string themeName, string controlClass)
-        {
-            var theme = content.Load<TextDescription[]>(themeName);
-
-            var description = theme.FirstOrDefault(t => t.Name == controlClass);
-
-            if (description == default(TextDescription))
-            {
-                LogEvent.UserInterface.Warning("[{0}] Text Style not found.", controlClass);
-                return theme.First(c => c.Name == ControlStyle.Error);
-            }
-            else return description;
-        }
-
-        public static T[] LoadDefinitions<T>(Stream stream)
-        {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof (T[]));
-            T[] definitions = (T[]) xmlSerializer.Deserialize(stream);
-            return definitions;
-        }
-
         public TResource GetResource<TResource>(string resourceName) where TResource : class, IResource
         {
             if (!ContainsResource(resourceName)) 
@@ -143,13 +121,15 @@ namespace Odyssey.UserInterface.Style
 
         Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource, bool shared)
         {
-            var resource = ToDispose(Brush.FromColorResource(device, colorResource));
+            var resource = Brush.FromColorResource(device, colorResource);
             AddResource(resource, shared);
             return resource;
         }
 
-        public Brush CreateOrRetrieveColorResource(Direct2DDevice device, ColorResource colorResource, bool shared = true)
+        public Brush CreateOrRetrieveColorResource(ColorResource colorResource, bool shared = true)
         {
+            var device = services.GetService<IDirect2DService>().Direct2DDevice;
+
             if (!shared)
                 return CreateColorResource(device, colorResource, false);
 
@@ -164,6 +144,24 @@ namespace Odyssey.UserInterface.Style
                 result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color));
             }
             return result ?? CreateColorResource(device, colorResource, true);
+        }
+
+        TextFormat CreateTextResource(TextStyle textStyle, bool shared)
+        {
+            var resource = TextFormat.New(services, textStyle);
+            AddResource(resource, shared);
+            return resource;
+        }
+
+        public TextFormat CreateOrRetrieveTextResource(TextStyle textStyle, bool shared = true)
+        {
+            if (!shared)
+                return CreateTextResource(textStyle,false);
+
+            TextFormat result;
+            if (TryGetResource(textStyle.Name, out result))
+                return result;
+            return result ?? CreateTextResource(textStyle, true);
         }
 
         void Unload()

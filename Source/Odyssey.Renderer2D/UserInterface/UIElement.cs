@@ -24,7 +24,6 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
-using Odyssey.UserInterface.Xml;
 using Odyssey.Utilities.Text;
 using SharpDX;
 using System;

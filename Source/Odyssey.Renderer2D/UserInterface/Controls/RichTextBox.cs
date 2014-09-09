@@ -58,7 +58,7 @@ namespace Odyssey.UserInterface.Controls
         {
             base.OnTextDefinitionChanged(e);
             if (lineHeight == 0)
-                LineHeight = TextDescription.Size;
+                LineHeight = TextStyle.Size;
             if (DataTemplate != null)
                 ((Control)DataTemplate.VisualTree).TextStyleClass = TextStyleClass;
         }

@@ -16,7 +16,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected ButtonBase(string controlStyleClass, string textStyleClass = ControlTag)
+        protected ButtonBase(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
             : base(controlStyleClass, textStyleClass)
         {
         }

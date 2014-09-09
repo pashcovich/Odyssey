@@ -16,9 +16,10 @@
 using System;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
+using Odyssey.Utilities.Reflection;
 using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
 using Brush = Odyssey.Graphics.Brush;
+using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -72,17 +73,17 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(ControlEventArgs e)
         {
             DeviceContext context = Device;
-            if (TextDescription == default(TextDescription))
+            if (TextStyle == null)
                 ApplyTextDescription();
 
             var styleService = Overlay.Services.GetService<IStyleService>();
             if (Foreground == null)
             {
-                SolidColor color = new SolidColor(string.Format("{0}.Foreground", Name), TextDescription.Color);
-                Foreground = styleService.CreateOrRetrieveColorResource(Device, color);
+                var brushResource = Overlay.Theme.GetResource<ColorResource>(TextStyle.Foreground);
+                Foreground = styleService.CreateOrRetrieveColorResource(brushResource);
             }
 
-            textFormat = ToDispose(TextDescription.ToTextFormat(Device.Services));
+            textFormat = styleService.CreateOrRetrieveTextResource(TextStyle);
             context.TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Grayscale;
             if (string.IsNullOrEmpty(Text))
                 Text = Name;

@@ -82,7 +82,7 @@ namespace Odyssey.Graphics.Drawing
 
             var brushResource = Overlay.Theme.GetResource<ColorResource>(brushClass);
 
-            return styleService.CreateOrRetrieveColorResource(Device, brushResource);
+            return styleService.CreateOrRetrieveColorResource(brushResource);
         }
 
         protected override void OnInitializing(ControlEventArgs e)
