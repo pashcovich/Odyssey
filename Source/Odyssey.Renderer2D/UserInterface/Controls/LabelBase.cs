@@ -70,12 +70,18 @@ namespace Odyssey.UserInterface.Controls
             RaiseEvent(TextChanged, this, e);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
-            DeviceContext context = Device;
             if (TextStyle == null)
                 ApplyTextDescription();
+            
+            if (string.IsNullOrEmpty(Text))
+                Text = Name;
+        }
 
+        protected override void OnTextStyleChanged(EventArgs e)
+        {
+            base.OnTextStyleChanged(e);
             var styleService = Overlay.Services.GetService<IStyleService>();
             if (Foreground == null)
             {
@@ -84,9 +90,8 @@ namespace Odyssey.UserInterface.Controls
             }
 
             textFormat = styleService.CreateOrRetrieveTextResource(TextStyle);
+            DeviceContext context = Device;
             context.TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Grayscale;
-            if (string.IsNullOrEmpty(Text))
-                Text = Name;
         }
     }
 }

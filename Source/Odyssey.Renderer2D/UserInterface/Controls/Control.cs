@@ -35,9 +35,9 @@ namespace Odyssey.UserInterface.Controls
         private string textStyleClass;
         private VisualState visualState;
 
-        protected Control(string styleClass, string textStyleClass = TextStyle.Default)
+        protected Control(string controlStyleClass, string textStyleClass = TextStyle.Default)
         {
-            controlStyleClass = styleClass;
+            this.controlStyleClass = controlStyleClass;
             this.textStyleClass = textStyleClass;
         }
 
@@ -73,7 +73,7 @@ namespace Odyssey.UserInterface.Controls
             {
                 if (textStyle == value) return;
                 textStyle = value;
-                OnTextDefinitionChanged(EventArgs.Empty);
+                OnTextStyleChanged(EventArgs.Empty);
             }
         }
 
@@ -86,8 +86,11 @@ namespace Odyssey.UserInterface.Controls
                     return;
 
                 textStyleClass = value;
-                if (!DesignMode)
-                    ApplyTextDescription();
+                if (DesignMode)
+                    return;
+                
+                ApplyTextDescription();
+                OnTextStyleChanged(EventArgs.Empty);
             }
         }
 
@@ -205,24 +208,24 @@ namespace Odyssey.UserInterface.Controls
                 RaiseEvent(ControlDefinitionChanged, this, e);
         }
 
-        protected override void OnDesignModeChanged(ControlEventArgs e)
+        protected override void OnDesignModeChanged(EventArgs e)
         {
             base.OnDesignModeChanged(e);
             if (!IsVisual || ActiveStatus == ControlStatus.None)
                 return;
 
             foreach (Shape element in VisualState)
-                element.DesignMode = e.Control.DesignMode;
+                element.DesignMode = DesignMode;
         }
 
-        protected override void OnInitialized(ControlEventArgs e)
+        protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
             if (string.Equals(StyleClass, "Empty")) return;
             ActiveStatus = IsEnabled ? ControlStatus.Enabled : ControlStatus.Disabled;
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             ApplyControlDescription();
@@ -234,7 +237,7 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event
         /// data.</param>
-        protected virtual void OnTextDefinitionChanged(EventArgs e)
+        protected virtual void OnTextStyleChanged(EventArgs e)
         {
             if (!DesignMode)
                 RaiseEvent(TextStyleChanged, this, e);

@@ -75,8 +75,8 @@ namespace Odyssey.UserInterface
 
         public void Initialize()
         {
-            ControlEventArgs args = new ControlEventArgs(this);
-            OnInitializing(args);
+            var args = new EventArgs();
+            
             foreach (var kvp in bindings)
             {
                 var bindingExpression = kvp.Value;
@@ -84,6 +84,7 @@ namespace Odyssey.UserInterface
                 bindingExpression.Initialize();
             }
 
+            OnInitializing(args);
             behaviors.Attach(this);
 
             if (Animator.HasAnimations)

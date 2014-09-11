@@ -34,9 +34,6 @@ namespace Odyssey.Graphics.Drawing
 {
     public abstract class Shape : UIElement, IShape, IRequiresCaching
     {
-        public static Color4 DefaultFillColor = Color.MidnightBlue;
-        public static Color4 DefaultStrokeColor = Color.DimGray;
-
         private string fillBrushClass;
         private string strokeBrushClass;
         private Brush fill;
@@ -85,7 +82,7 @@ namespace Odyssey.Graphics.Drawing
             return styleService.CreateOrRetrieveColorResource(brushResource);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
 

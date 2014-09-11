@@ -138,10 +138,11 @@ namespace Odyssey.UserInterface.Controls
             IsInited = false;
         }
 
-        protected override void OnInitialized(ControlEventArgs e)
+        protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
             Layout();
+            
             IsInited = true;
         }
 

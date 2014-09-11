@@ -21,17 +21,12 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        public override bool Contains(Vector2 cursorLocation)
-        {
-            return BoundingRectangle.Contains(cursorLocation);
-        }
-
         public override void Render()
         {
             textLayout.Draw(textRenderer, AbsolutePosition.X, AbsolutePosition.Y);
         }
 
-        protected override void OnInitializing(ControlEventArgs e)
+        protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             textRenderer = new TextRenderer(Device, Foreground);
@@ -43,7 +38,7 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override void OnInitialized(ControlEventArgs e)
+        protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
             UpdateTextLayout();

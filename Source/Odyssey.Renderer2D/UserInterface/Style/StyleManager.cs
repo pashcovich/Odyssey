@@ -5,12 +5,9 @@ using System.Diagnostics.Contracts;
 using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
-using Odyssey.Utilities.Logging;
 using SharpDX;
 using System;
-using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using SharpDX.DirectWrite;
 using Font = Odyssey.Content.Font;
 using Path = System.IO.Path;
@@ -21,9 +18,21 @@ namespace Odyssey.UserInterface.Style
 {
     public class StyleManager : Component, IStyleService
     {
+        private struct ResourceDescription
+        {
+            public IResource Value { get; private set; }
+            public bool IsShared { get; private set; }
+
+            public ResourceDescription(bool isShared, IResource value) : this()
+            {
+                IsShared = isShared;
+                Value = value;
+            }
+        }
+
         private readonly IAssetProvider content;
         private readonly Dictionary<string, IResource> uniqueResources;
-        private readonly Dictionary<string, IResource> sharedResources;
+        private readonly Dictionary<string, ResourceDescription> sharedResources;
         private FontCollection fontCollection;
         private NativeFontLoader fontLoader;
         private readonly IServiceRegistry services;
@@ -38,7 +47,7 @@ namespace Odyssey.UserInterface.Style
             content.AddMapping("Font", typeof(Font));
 
             content.AssetsLoaded += InitializeFontCollection;
-            sharedResources = new Dictionary<string, IResource>();
+            sharedResources = new Dictionary<string, ResourceDescription>();
             uniqueResources= new Dictionary<string, IResource>();
         }
 
@@ -66,17 +75,14 @@ namespace Odyssey.UserInterface.Style
         {
             Contract.Requires<ArgumentException>(!ContainsResource(resource.Name), "A resource with the same name is already in the collection");
 
-            if (shared)
-                sharedResources.Add(resource.Name, resource); 
-            else 
-                uniqueResources.Add(resource.Name, resource);
+            sharedResources.Add(resource.Name, new ResourceDescription(shared, resource));
 
             var disposableResource = resource as IDisposable;
             if (disposableResource != null)
                 ToDispose(disposableResource);
 
             var initializableResource = resource as IInitializable;
-            if (initializableResource!=null && !initializableResource.IsInited)
+            if (initializableResource != null && !initializableResource.IsInited)
                 initializableResource.Initialize();
         }
 
@@ -90,7 +96,7 @@ namespace Odyssey.UserInterface.Style
             if (!ContainsResource(resourceName)) 
                 throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
 
-            var resource = sharedResources[resourceName];
+            var resource = sharedResources[resourceName].Value;
             TResource resultResource = resource as TResource;
             if (resultResource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
@@ -98,20 +104,20 @@ namespace Odyssey.UserInterface.Style
             return resultResource;
         }
 
-        public bool TryGetResource<TResource>(string resourceName, out TResource resource) where TResource : class, IResource
+        public bool TryGetResource<TResource>(string resourceName, bool shared,out TResource resource) 
+            where TResource : class, IResource
         {
-            if (ContainsResource(resourceName))
-            {
-                resource = GetResource<TResource>(resourceName) as TResource;
-                return true;
-            }
             resource = null;
-            return false;
+            if (!ContainsResource(resourceName)) return false;
+
+            var resourceDescription = sharedResources[resourceName];
+            resource = resourceDescription.IsShared == shared ? (TResource)resourceDescription.Value : null;
+            return resource != null;
         }
 
         public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
         {
-            return sharedResources.Values.OfType<TResource>();
+            return (from rd in sharedResources.Values select rd.Value).OfType<TResource>();
         }
 
         public IEnumerable<IResource> Resources
@@ -119,10 +125,10 @@ namespace Odyssey.UserInterface.Style
             get { throw new NotImplementedException(); }
         }
 
-        Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource, bool shared)
+        Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource)
         {
             var resource = Brush.FromColorResource(device, colorResource);
-            AddResource(resource, shared);
+            AddResource(resource, colorResource.Shared);
             return resource;
         }
 
@@ -130,20 +136,17 @@ namespace Odyssey.UserInterface.Style
         {
             var device = services.GetService<IDirect2DService>().Direct2DDevice;
 
-            if (!shared)
-                return CreateColorResource(device, colorResource, false);
-
             Brush result;
-            if (TryGetResource(colorResource.Name, out result))
+            if (TryGetResource(colorResource.Name, shared, out result))
                 return result;
 
             var solidColor = colorResource as SolidColor;
             if (solidColor != null)
             {
                 var brushes = GetResources<SolidColorBrush>();
-                result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color));
+                result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color) && b.Shared == shared);
             }
-            return result ?? CreateColorResource(device, colorResource, true);
+            return result ?? CreateColorResource(device, shared ? colorResource : colorResource.CopyAs('u' + colorResource.Name, false));
         }
 
         TextFormat CreateTextResource(TextStyle textStyle, bool shared)
@@ -155,12 +158,13 @@ namespace Odyssey.UserInterface.Style
 
         public TextFormat CreateOrRetrieveTextResource(TextStyle textStyle, bool shared = true)
         {
-            if (!shared)
-                return CreateTextResource(textStyle,false);
-
             TextFormat result;
-            if (TryGetResource(textStyle.Name, out result))
+            if (TryGetResource(textStyle.Name, shared, out result))
                 return result;
+
+            if (!shared)
+                return CreateTextResource(textStyle, false);
+
             return result ?? CreateTextResource(textStyle, true);
         }
 

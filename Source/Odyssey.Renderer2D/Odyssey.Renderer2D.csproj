@@ -107,7 +107,6 @@
     <Compile Include="UserInterface\Controls\ContentControl.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\ControlCollection.cs" />
-    <Compile Include="UserInterface\Controls\ControlEventArgs.cs" />
     <Compile Include="UserInterface\Controls\Enums.cs" />
     <Compile Include="UserInterface\Controls\FpsCounter.cs" />
     <Compile Include="UserInterface\Controls\IContainer.cs" />
