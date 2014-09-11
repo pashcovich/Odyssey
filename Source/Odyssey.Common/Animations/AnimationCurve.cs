@@ -19,16 +19,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Odyssey.Content;
 using Odyssey.Geometry;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Logging;
 using Odyssey.Utilities.Reflection;
 using Odyssey.Utilities.Text;
-using SharpYaml.Tokens;
 
 #endregion
 
@@ -43,14 +40,19 @@ namespace Odyssey.Animations
         private readonly List<TKeyFrame> keyFrames;
         private object functionOptions;
 
-        protected object FunctionOptions { get { return functionOptions; } }
+        protected object FunctionOptions
+        {
+            get { return functionOptions; }
+        }
 
         public AnimationCurve()
         {
             keyFrames = new List<TKeyFrame>();
         }
 
-        public int Length
+        public string Key { get { return string.Format("{0}.{1}", Name, TargetProperty); } }
+
+        public int KeyFrameCount
         {
             get { return keyFrames.Count; }
         }
@@ -91,8 +93,6 @@ namespace Odyssey.Animations
         {
             get
             {
-                if (string.IsNullOrEmpty(name))
-                    name = string.Format("{0}.{1}", TargetName, TargetProperty);
                 return name;
             }
             set
@@ -141,8 +141,9 @@ namespace Odyssey.Animations
             if (!string.IsNullOrEmpty(function))
             {
                 // It seems that Type.GetMethods does not return inherited methods
-                var method = ReflectionHelper.GetMethod(GetType(), function) ?? ReflectionHelper.GetMethod(typeof(AnimationCurve<TKeyFrame>), function);
-                
+                var method = ReflectionHelper.GetMethod(GetType(), function) ??
+                             ReflectionHelper.GetMethod(typeof (AnimationCurve<TKeyFrame>), function);
+
                 Function = (CurveFunction) method.CreateDelegate(typeof (CurveFunction));
                 string options = xmlReader.GetAttribute("Options");
                 functionOptions = DeserializeOptions(method.Name, options, resourceProvider);
@@ -153,7 +154,8 @@ namespace Odyssey.Animations
             while (xmlReader.IsStartElement())
             {
                 string type = xmlReader.LocalName;
-                var keyFrame = (ISerializableResource)Activator.CreateInstance(Type.GetType(String.Format("Odyssey.Animations.{0}, Odyssey.Common", type)));
+                var keyFrame = (ISerializableResource)
+                        Activator.CreateInstance(Type.GetType(String.Format("Odyssey.Animations.{0}, Odyssey.Common", type)));
                 keyFrame.DeserializeXml(resourceProvider, xmlReader);
                 AddKeyFrame((TKeyFrame) keyFrame);
             }
@@ -195,8 +197,7 @@ namespace Odyssey.Animations
             Contract.Requires<ArgumentNullException>(options != null, "options");
             float subdivisions = (float) options;
             float period = (end.Time - start.Time)/subdivisions;
-            return (time % period) < (period / 2) ? start.Value : end.Value;
+            return (time%period) < (period/2) ? start.Value : end.Value;
         }
-
     }
 }
