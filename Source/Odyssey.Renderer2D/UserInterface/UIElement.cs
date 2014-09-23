@@ -52,8 +52,6 @@ namespace Odyssey.UserInterface
         private UIElement parent;
 
         private Vector2 position;
-        private Vector2 normalizedPosition;
-
         #endregion Private fields
 
         #region Constructors
@@ -154,7 +152,5 @@ namespace Odyssey.UserInterface
             boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);
         }
-
-
     }
 }

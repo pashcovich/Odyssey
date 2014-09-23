@@ -309,7 +309,6 @@ namespace Odyssey.UserInterface
                     if (formerParent != null)
                         formerParent.Controls.Remove(value);
                     Depth = Depth.AsChildOf(parent.Depth);
-                    normalizedPosition = position / new Vector2(parent.Width, parent.Height);
                 }
 
                 bool isOverlay = parent is Overlay;
@@ -341,28 +340,6 @@ namespace Odyssey.UserInterface
                 if (position == value) return;
 
                 position = value;
-                if (Parent != null)
-                    normalizedPosition = position / new Vector2(Parent.Width, Parent.Height);
-
-                if (DesignMode) return;
-
-                Layout();
-                OnPositionChanged(EventArgs.Empty);
-                OnMove(EventArgs.Empty);
-            }
-        }
-
-
-        public Vector2 NormalizedPosition
-        {
-            get { return normalizedPosition; }
-            set
-            {
-                if (normalizedPosition == value) return;
-                normalizedPosition = value;
-
-                if (Parent != null)
-                    position = normalizedPosition * new Vector2(Parent.Width, Parent.Height);
 
                 if (DesignMode) return;
 
