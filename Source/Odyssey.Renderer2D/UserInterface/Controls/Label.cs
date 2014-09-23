@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System.Diagnostics;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
 using SharpDX;

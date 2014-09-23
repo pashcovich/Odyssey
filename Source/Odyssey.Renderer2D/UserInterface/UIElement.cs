@@ -14,22 +14,14 @@
 #endregion License
 
 #region Using Directives
-
-using System.Xml;
-using System.Xml.Serialization;
 using Odyssey.Animations;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Behaviors;
-using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
-using Odyssey.UserInterface.Serialization;
-using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Text;
 using SharpDX;
 using System;
 using System.Collections.Generic;
 using Control = Odyssey.UserInterface.Controls.Control;
-
 #endregion Using Directives
 
 namespace Odyssey.UserInterface
@@ -60,6 +52,7 @@ namespace Odyssey.UserInterface
         private UIElement parent;
 
         private Vector2 position;
+        private Vector2 normalizedPosition;
 
         #endregion Private fields
 
@@ -118,7 +111,7 @@ namespace Odyssey.UserInterface
             Arrange();
         }
 
-        protected internal virtual void Arrange()
+        protected virtual void Arrange()
         {
             if (parent != null)
             {
@@ -135,7 +128,7 @@ namespace Odyssey.UserInterface
             }
         }
 
-        protected internal virtual void Measure()
+        protected virtual void Measure()
         {
             if (Width == 0)
             {

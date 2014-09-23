@@ -14,6 +14,7 @@
 #endregion License
 
 using System;
+using System.Diagnostics;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
 using Odyssey.Utilities.Reflection;
@@ -23,6 +24,8 @@ using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 
 namespace Odyssey.UserInterface.Controls
 {
+
+    [DebuggerDisplay("{Text} [{TextStyleClass}]")]
     public abstract class LabelBase : Control
     {
         protected const string DefaultTextClass = "Default";

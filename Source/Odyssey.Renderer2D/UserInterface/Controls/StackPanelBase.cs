@@ -29,7 +29,7 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected internal override void Arrange()
+        protected override void Arrange()
         {
             if (Controls.IsEmpty)
                 return;

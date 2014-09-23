@@ -62,7 +62,7 @@ namespace Odyssey.UserInterface.Controls
             textMetrics = textLayout.Metrics;
         }
 
-        protected internal override void Measure()
+        protected override void Measure()
         {
             if (Width == 0)
                 Width = textMetrics.Width;

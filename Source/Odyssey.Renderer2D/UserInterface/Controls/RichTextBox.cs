@@ -62,7 +62,7 @@ namespace Odyssey.UserInterface.Controls
                 ((Control)DataTemplate.VisualTree).TextStyleClass = TextStyleClass;
         }
 
-        protected internal override void Arrange()
+        protected override void Arrange()
         {
             base.Arrange();
             if (!Controls.IsEmpty)

@@ -147,7 +147,7 @@ namespace Odyssey.UserInterface.Controls
             return newControl;
         }
 
-        protected internal override void Measure()
+        protected override void Measure()
         {
             base.Measure();
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);

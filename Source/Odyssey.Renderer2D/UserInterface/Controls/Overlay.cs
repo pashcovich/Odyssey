@@ -146,7 +146,7 @@ namespace Odyssey.UserInterface.Controls
             IsInited = true;
         }
 
-        protected internal override void Measure()
+        protected override void Measure()
         {
             var settings = Services.GetService<IDirectXDeviceSettings>();
             Width = settings.PreferredBackBufferWidth;
