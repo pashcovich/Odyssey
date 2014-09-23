@@ -1,20 +1,15 @@
-﻿using System;
-using Odyssey.Engine;
-using Odyssey.Graphics.Organization.Commands;
+﻿using Odyssey.Engine;
 using Odyssey.Organization.Commands;
-using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
 using SharpDX;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Systems
 {
-    [YamlTag("RenderSystem")]
     public class RenderSystem : UpdateableSystemBase, IRenderableSystem
     {
         private readonly CommandManager commandManager;
 
-        public RenderSystem() : base(Selector.All(typeof (ModelComponent), typeof (ShaderComponent)))
+        public RenderSystem() : base(Selector.None())
         {
             commandManager = new CommandManager();
         }
@@ -31,13 +26,13 @@ namespace Odyssey.Talos.Systems
 
         public bool BeginRender()
         {
-            var deviceService = Scene.Services.GetService<IOdysseyDeviceService>();
-            deviceService.DirectXDevice.Clear(Color.Black);
             return true;
         }
 
-        public void Render(ITimeService time)
+        public void Render()
         {
+            var deviceService = Scene.Services.GetService<IGraphicsDeviceService>();
+            deviceService.DirectXDevice.Clear(Color.Black);
             foreach (Command command in commandManager)
                 command.Execute();
         }
@@ -47,19 +42,25 @@ namespace Odyssey.Talos.Systems
             commandManager.Unload();
         }
 
+        public override bool BeforeUpdate()
+        {
+            if (MessageQueue.HasItems<CommandUpdateMessage>())
+            {
+                var mUpdate = MessageQueue.Dequeue<CommandUpdateMessage>();
+
+                switch (mUpdate.UpdateType)
+                {
+                    case UpdateType.Add:
+                        commandManager.AddLast(mUpdate.Commands);
+                        commandManager.Initialize();
+                        break;
+                }
+            }
+            return base.BeforeUpdate();
+        }
+
         public override void Process(ITimeService time)
         {
-            if (!MessageQueue.HasItems<CommandUpdateMessage>()) return;
-
-            var mUpdate = MessageQueue.Dequeue<CommandUpdateMessage>();
-
-            switch (mUpdate.UpdateType)
-            {
-                case UpdateType.Add:
-                    commandManager.AddLast(mUpdate.Commands);
-                    commandManager.Initialize();
-                    break;
-            }
         }
     }
 }

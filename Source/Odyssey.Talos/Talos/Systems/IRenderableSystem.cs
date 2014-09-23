@@ -1,10 +1,8 @@
-﻿using Odyssey.Engine;
-
-namespace Odyssey.Talos.Systems
+﻿namespace Odyssey.Talos.Systems
 {
     public interface IRenderableSystem : ISystem
     {
         bool BeginRender();
-        void Render(ITimeService service);
+        void Render();
     }
 }

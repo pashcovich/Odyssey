@@ -7,7 +7,7 @@ using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 
 namespace Odyssey.Talos.Initializers
 {
-    public class ApplicationInitializer : Initializer<IOdysseyDeviceService>
+    public class ApplicationInitializer : Initializer<IGraphicsDeviceService>
     {
         public ApplicationInitializer(IServiceRegistry services)
             : base(services, Reference.Group.Application)
@@ -23,7 +23,7 @@ namespace Odyssey.Talos.Initializers
         public override void SetupInitialization(ShaderInitializer initializer)
         {
             var services = initializer.Services;
-            var settings = services.GetService<IOdysseyDeviceService>();
+            var settings = services.GetService<IGraphicsDeviceService>();
 
             InitializerParameters parameters = new InitializerParameters(-1,initializer.Technique, services, StaticSelector);
             initializer.Initialize(this, settings, parameters);
@@ -37,7 +37,7 @@ namespace Odyssey.Talos.Initializers
             },
         };
 
-        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IOdysseyDeviceService source,
+        protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IGraphicsDeviceService source,
             int parameterIndex, string reference, InitializerParameters initializerParameters)
         {
             if (!ReferenceActions.ContainsKey(reference))

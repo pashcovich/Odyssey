@@ -102,7 +102,7 @@ namespace Odyssey.Daedalus.Viewer
 
         private void DefineScene()
         {
-            var device = Services.GetService<IOdysseyDeviceService>().DirectXDevice;
+            var device = Services.GetService<IGraphicsDeviceService>().DirectXDevice;
             scene = new Scene(Services);
 
             var cube = CubeMesh.New(device, modelOperations: ModelAnalyzer.DetectModelRequirements(vsFlags));

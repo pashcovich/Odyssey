@@ -33,6 +33,7 @@ namespace Odyssey.Engine
             // Initialize the swap chain
             swapChain = ToDispose(CreateSwapChain());
             backBuffer = ToDispose(RenderTarget2D.New(device, swapChain.GetBackBuffer<Texture2D>(0)));
+            backBuffer.DebugName = string.Format("RT2D_Backbuffer");
         }
 
         protected int BufferCount { get; set; }
@@ -66,13 +67,14 @@ namespace Odyssey.Engine
         {
             if (!base.Resize(width, height, format, refreshRate)) return false;
 
+            string backBufferName = backBuffer.DebugName;
             RemoveAndDispose(ref backBuffer);
 
             swapChain.ResizeBuffers(BufferCount, width, height, format, Description.Flags);
 
             // Recreate the back buffer
             backBuffer = ToDispose(RenderTarget2D.New(DirectXDevice, swapChain.GetBackBuffer<Texture2D>(0)));
-
+            backBuffer.DebugName = backBufferName;
             // Reinit the Viewport
             DefaultViewport = new ViewportF(0, 0, backBuffer.Width, backBuffer.Height);
 

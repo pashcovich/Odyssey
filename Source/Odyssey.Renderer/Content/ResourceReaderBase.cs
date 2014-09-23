@@ -12,7 +12,7 @@ namespace Odyssey.Content
         object IContentReader.ReadContent(IAssetProvider readerManager, ref ContentReaderParameters parameters)
         {
             parameters.KeepStreamOpen = false;
-            var service = readerManager.Services.GetService(typeof(IOdysseyDeviceService)) as IOdysseyDeviceService;
+            var service = readerManager.Services.GetService(typeof(IGraphicsDeviceService)) as IGraphicsDeviceService;
             if (service == null)
                 throw new InvalidOperationException("Unable to retrieve a IDirectXDeviceService service provider");
 

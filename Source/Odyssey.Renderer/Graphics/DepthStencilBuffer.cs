@@ -192,6 +192,11 @@ namespace Odyssey.Graphics
             return buffer == null ? null : buffer.depthStencilViews != null ? buffer.depthStencilViews[0] : null;
         }
 
+        public static implicit operator SharpDX.Direct3D11.Texture2D(DepthStencilBuffer buffer)
+        {
+            return buffer == null ? null : buffer.depthStencilViews != null ? buffer.Resource : null;
+        }
+
         internal override TextureView GetRenderTargetView(ViewType viewType, int arrayOrDepthSlice, int mipIndex)
         {
             throw new NotSupportedException();

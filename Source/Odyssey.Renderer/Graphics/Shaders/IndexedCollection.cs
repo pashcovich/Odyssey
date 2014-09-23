@@ -28,6 +28,11 @@ namespace Odyssey.Graphics.Shaders
             return data.ContainsKey(id);
         }
 
+        public void Clear()
+        {
+            data.Clear();
+        }
+
         public IEnumerable<TIndex> Keys
         {
             get { return data.Keys; }

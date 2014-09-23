@@ -69,6 +69,7 @@ namespace Odyssey.Engine
             return from.output;
         }
 
+
         /// <summary>
         /// Enumerates all available display modes for this output and stores them in <see cref="SupportedDisplayModes"/>.
         /// </summary>

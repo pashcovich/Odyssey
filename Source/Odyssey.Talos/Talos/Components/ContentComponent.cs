@@ -1,8 +1,6 @@
-﻿using System;
-using Odyssey.Content;
+﻿using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Utilities.Logging;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {
@@ -23,7 +21,7 @@ namespace Odyssey.Talos.Components
         }
 
         protected IAssetProvider Content { get { return Services.GetService<IAssetProvider>(); } }
-        protected IOdysseyDeviceService DeviceService { get { return Services.GetService<IOdysseyDeviceService>(); } }
+        protected IGraphicsDeviceService DeviceService { get { return Services.GetService<IGraphicsDeviceService>(); } }
 
         protected ContentComponent(ComponentType componentType) : base(componentType)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Odyssey.Animations;
@@ -71,7 +72,19 @@ namespace Odyssey.Utilities.Text
             return new Vector2(x, y);
         }
 
-        internal static Vector3 DecodeVector3(string s)
+        internal static Vector3 DecodeVector3(string value)
+        {
+            const string pattern = @"\s*(?<values>[0-9.,\-\s]*)";
+            Regex regex = new Regex(pattern);
+            var matches = regex.Match(value);
+            string[] values = matches.Groups["values"].Value.Split(',');
+            if (values.Length != 3)
+                throw new InvalidOperationException(string.Format("Vector3 values are not in the correct format: {0}", value));
+            float[] vValues = (from s in values select float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+            return new Vector3(vValues);
+        }
+
+        internal static Vector3 DecodeVector3LongForm(string s)
         {
             Regex regex = new Regex(@"X:\s?(?<x>\d+)\s?Y:\s?(?<y>\d+)\s?Z:\s?(?<z>\d+)\s?");
             Match m = regex.Match(s);

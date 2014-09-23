@@ -9,8 +9,6 @@ namespace Odyssey.Talos.Messages
     {
         readonly MessageMap messageMap;
 
-        internal MessageMap MessageMap {get {return messageMap;}}
-
         public Messenger()
         {
             messageMap = new MessageMap();
@@ -30,28 +28,27 @@ namespace Odyssey.Talos.Messages
             system.MessageQueue.RemoveAssociation<TMessage>();
         }
 
-        public void Send<TMessage>(TMessage message)
+        public void Send<TMessage>(TMessage message, bool isBlocking = false)
             where TMessage : Message
         {
             var interestedSystems = messageMap.Select<TMessage>();
             foreach (SystemBase system in interestedSystems)
-                SendToSystem(message, system);
+                SendToSystem(message, system, isBlocking);
         }
 
-        public void SendToSystem(Message message, SystemBase system)
+        internal void SendToSystem(Message message, SystemBase system, bool isBlocking)
         {
-            if (!message.IsBlocking)
-                system.EnqueueMessage(message);
-            else
+            system.EnqueueMessage(message);
+            if (isBlocking)
                 system.ReceiveBlockingMessage(message);
         }
 
-        public void SendToSystem<TSystem, TMessage>(TMessage message)
+        public void SendToSystem<TSystem, TMessage>(TMessage message, bool isBlocking = false)
             where TSystem : SystemBase
             where TMessage : Message
         {
             var system = messageMap.Select<TMessage>().OfType<TSystem>().First();
-            SendToSystem(message, system);
+            SendToSystem(message, system, isBlocking);
         }
 
         public void SendToEntity<TComponent>(Message message, Entity target)
@@ -72,7 +69,7 @@ namespace Odyssey.Talos.Messages
         {
             var interestedSystems = messageMap.Select<TMessage>().Where(s => s.Selector == selector);
             foreach (SystemBase system in interestedSystems)
-                SendToSystem(message, system);
+                SendToSystem(message, system, false);
         }
 
     }

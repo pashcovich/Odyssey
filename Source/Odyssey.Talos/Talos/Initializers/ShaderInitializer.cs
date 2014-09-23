@@ -13,7 +13,7 @@ namespace Odyssey.Talos.Initializers
 {
     public class ShaderInitializer
     {
-        private static readonly Dictionary<string, Dictionary<Type, bool>> InitializerMap = new Dictionary<string, Dictionary<Type, bool>>();
+        internal static readonly Dictionary<string, Dictionary<Type, bool>> InitializerMap = new Dictionary<string, Dictionary<Type, bool>>();
 
         private static readonly Type[] InstanceInitializers =
         {
@@ -33,7 +33,7 @@ namespace Odyssey.Talos.Initializers
         {
             this.services = services;
             this.technique = technique;
-            Device = services.GetService<IOdysseyDeviceService>().DirectXDevice;
+            Device = services.GetService<IGraphicsDeviceService>().DirectXDevice;
             FindRequiredInitializers();
         }
 

@@ -478,7 +478,7 @@ namespace Odyssey
                     appTime.Update(totalTime, lastFrameElapsedAppTime, drawRunningSlowly);
                     appTime.FrameCount++;
 
-                    renderCallback.Render(appTime);
+                    renderCallback.Render();
 
                     EndDraw();
                 }

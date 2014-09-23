@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
@@ -27,7 +25,7 @@ namespace Odyssey.Talos.Systems
             Messenger.Unregister<PropertyChangeMessage>(this);
         }
 
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             while (MessageQueue.HasItems<PropertyChangeMessage>())
             {
@@ -35,7 +33,7 @@ namespace Odyssey.Talos.Systems
                 if (string.Equals(cPropertyChange.Property, ReflectionHelper.GetPropertyName((ContentComponent c)=> c.AssetName)))
                     RegisterEntity(cPropertyChange.Component.Owner);
             }
-            base.BeforeUpdate();
+            return base.BeforeUpdate();
         }
 
         static void SetupEntity(IEntity entity)

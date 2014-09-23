@@ -101,20 +101,21 @@ namespace Odyssey.Talos.Initializers
 
         private static IEnumerable<IParameter> ComputeBlurOffsetsAndWeights(int index, Entity entity, InitializerParameters parameters)
         {
-            var deviceSettings = parameters.Services.GetService<IDirectXDeviceSettings>();
             bool isHorizontal = parameters.Technique.Name == "PostProcess.GaussianBlurH";
+            var cPostProcess = entity.GetComponent<PostProcessComponent>();
+
             float texelWidth;
             float texelHeight;
             var cBlur = entity.GetComponent<BlurComponent>();
             if (isHorizontal)
             {
-                texelWidth = 1.0f/(deviceSettings.PreferredBackBufferWidth*cBlur.DownScale);
+                texelWidth = 1.0f/(cPostProcess.OutputWidth*cBlur.DownScale);
                 texelHeight = 0;
             }
             else
             {
                 texelWidth = 0;
-                texelHeight = 1.0f/(deviceSettings.PreferredBackBufferHeight*cBlur.DownScale);
+                texelHeight = 1.0f/(cPostProcess.OutputHeight*cBlur.DownScale);
             }
             Vector2[] offsets;
             float[] weights;

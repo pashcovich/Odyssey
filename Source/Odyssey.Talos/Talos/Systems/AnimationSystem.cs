@@ -1,4 +1,5 @@
-﻿using Odyssey.Talos.Components;
+﻿using System.Linq;
+using Odyssey.Talos.Components;
 using Odyssey.Talos.Messages;
 
 namespace Odyssey.Talos.Systems
@@ -18,7 +19,7 @@ namespace Odyssey.Talos.Systems
             Messenger.Unregister<EntityChangeMessage>(this);
         }
 
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             // Entity change
             while (MessageQueue.HasItems<EntityChangeMessage>())
@@ -26,9 +27,9 @@ namespace Odyssey.Talos.Systems
                 EntityChangeMessage mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
                 var entity = mEntity.Source;
                 var cAnimation = entity.GetComponent<AnimationComponent>();
-
                 cAnimation.Initialize();
             }
+            return base.BeforeUpdate();
         }
 
         public override void Process(Engine.ITimeService time)

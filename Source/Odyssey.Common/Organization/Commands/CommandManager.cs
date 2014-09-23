@@ -1,12 +1,11 @@
-﻿using Odyssey.Organization.Commands;
-using SharpDX;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using SharpDX;
 
-namespace Odyssey.Graphics.Organization.Commands
+namespace Odyssey.Organization.Commands
 {
     public class CommandManager : Component, IEnumerable<Command>
     {
@@ -47,11 +46,11 @@ namespace Odyssey.Graphics.Organization.Commands
             get { return commands.ElementAt(index); }
         }
 
-        public void AddBefore(LinkedListNode<Command> node, Command value)
+        public void AddBefore(Command command, Command newCommand)
         {
-            Contract.Requires<ArgumentNullException>(node != null);
-            Contract.Requires<ArgumentNullException>(value != null);
-            commands.AddBefore(node, ToDispose(value));
+            Contract.Requires<ArgumentNullException>(command != null);
+            Contract.Requires<ArgumentNullException>(newCommand != null);
+            commands.AddBefore(commands.Find(command), ToDispose(newCommand)); 
         }
 
         public void AddFirst(Command command)
@@ -100,6 +99,19 @@ namespace Odyssey.Graphics.Organization.Commands
         {
             foreach (Command command in commands)
                 command.Execute();
+        }
+
+        public void RunOnce(Command command)
+        {
+            if (!command.IsInited)
+                command.Initialize();
+            command.Execute();
+        }
+
+        public void RunOnce(IEnumerable<Command> commands)
+        {
+            foreach (var command in commands)
+                RunOnce(command);
         }
 
         public void Unload()

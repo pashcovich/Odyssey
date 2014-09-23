@@ -111,6 +111,16 @@ namespace Odyssey.Graphics.Shaders
             return shaders.Values.Any(s => s.Name == shaderName);
         }
 
+        public void ClearBuffers()
+        {
+            foreach (var shader in shaders.Values)
+            {
+                shader.ClearBuffers();
+            }
+            foreach (var cbDesc in mapping.Shaders.SelectMany(shaderDesc => shaderDesc.ConstantBuffers))
+                cbDesc.ClearParsed();
+        }
+
         public void AssembleBuffers()
         {
             foreach (ConstantBuffer cb in shaders.Values.SelectMany(shader => shader.Buffers.Where(cb => !cb.IsInited)))
@@ -119,8 +129,7 @@ namespace Odyssey.Graphics.Shaders
 
         public void UpdateBuffers(UpdateType updateType)
         {
-            foreach (
-                ConstantBuffer cb in
+            foreach (ConstantBuffer cb in
                     shaders.Values.SelectMany(shader => shader.Buffers.Where(cb => cb.Description.UpdateFrequency == updateType)))
                 cb.Update();
         }

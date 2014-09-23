@@ -6,11 +6,11 @@ namespace Odyssey.Organization.Commands
 {
     public abstract class EngineCommand : Command
     {
-        protected IOdysseyDeviceService DeviceService { get; private set; }
+        protected IGraphicsDeviceService DeviceService { get; private set; }
 
         protected EngineCommand(IServiceRegistry services, CommandType type) : base(services, type)
         {
-            DeviceService = Services.GetService<IOdysseyDeviceService>();
+            DeviceService = Services.GetService<IGraphicsDeviceService>();
         }
     }
 }

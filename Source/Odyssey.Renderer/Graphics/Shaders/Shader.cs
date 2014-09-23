@@ -39,6 +39,11 @@ namespace Odyssey.Graphics.Shaders
             textures.Add(tMapping);
         }
 
+        public void ClearBuffers()
+        {
+            buffers.Clear();
+        }
+
         public abstract void Apply(string technique, UpdateType updateType);
 
         public abstract void Apply(string technique, long id, UpdateType updateType);

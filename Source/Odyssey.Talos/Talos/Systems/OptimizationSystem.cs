@@ -26,9 +26,10 @@ namespace Odyssey.Talos.Systems
             renderMapper = new RenderMapper();
         }
 
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             renderMapper.Clear();
+            return base.BeforeUpdate();
         }
 
         public override void Process(ITimeService time)

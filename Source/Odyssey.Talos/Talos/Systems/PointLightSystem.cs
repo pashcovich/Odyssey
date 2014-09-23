@@ -20,7 +20,7 @@ namespace Odyssey.Talos.Systems
             Messenger.Send(new LightMessage(entity, nPointLight, UpdateType.Remove));
         }
 
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             // TODO improve Light System
             // Entity change
@@ -32,6 +32,7 @@ namespace Odyssey.Talos.Systems
                 else if (mEntity.Action == UpdateType.Remove)
                     RemoveEntity(mEntity.Source);
             }
+            return base.BeforeUpdate();
         }
 
 

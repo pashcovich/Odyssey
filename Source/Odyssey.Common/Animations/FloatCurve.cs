@@ -21,16 +21,5 @@ namespace Odyssey.Animations
             return MathUtil.Lerp(start.Value, end.Value, newValue);
         }
 
-        protected override object DeserializeOptions(string methodName, string options, IResourceProvider resourceProvider)
-        {
-            switch (methodName)
-            {
-                case "SquareWave":
-                    return float.Parse(options, CultureInfo.InvariantCulture);
-
-                default:
-                    return base.DeserializeOptions(methodName, options, resourceProvider);
-            }
-        }
     }
 }

@@ -88,7 +88,7 @@ namespace Odyssey.Talos
             get { return systemMap.Systems; }
         }
 
-        internal Messenger Messenger
+        public Messenger Messenger
         {
             get { return messenger; }
         }
@@ -132,7 +132,7 @@ namespace Odyssey.Talos
             StartSystems();
         }
 
-        public void Render(ITimeService time)
+        public void Render()
         {
             lock (renderableSystems)
             {
@@ -142,13 +142,10 @@ namespace Odyssey.Talos
 
             foreach (IRenderableSystem system in currentlyRenderingSystems)
             {
-                if (!system.IsEnabled)
-                    continue;
 
                 if (system.BeginRender())
                 {
-                    system.Render(time);
-                    //system.EndRender();
+                    system.Render();
                 }
             }
 
@@ -158,6 +155,12 @@ namespace Odyssey.Talos
         public Entity SelectEntity(long id)
         {
             return entityMap.SelectEntity(id);
+        }
+
+        public TSystem SelectSystem<TSystem>()
+            where TSystem : SystemBase
+        {
+            return Systems.OfType<TSystem>().First();
         }
 
         internal Entity FindEntityFromComponent(Component component)
@@ -185,9 +188,7 @@ namespace Odyssey.Talos
 
             foreach (IUpdateableSystem system in currentlyUpdatingSystems)
             {
-                system.BeforeUpdate();
-
-                if (!system.IsEnabled)
+                if (!system.BeforeUpdate())
                     continue;
 
                 system.Process(time);

@@ -133,5 +133,10 @@ namespace Odyssey.Graphics.Shaders
                 parsedReferences.Add(technique, new List<EngineReference>());
             parsedReferences[technique].Add(reference);
         }
+
+        internal void ClearParsed()
+        {
+            parsedReferences.Clear();
+        }
     }
 }

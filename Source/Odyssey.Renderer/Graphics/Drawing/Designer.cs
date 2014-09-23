@@ -29,7 +29,7 @@ namespace Odyssey.Graphics.Drawing
         public Designer(IServiceRegistry services)
         {
             this.services = services;
-            device = services.GetService<IOdysseyDeviceService>().DirectXDevice;
+            device = services.GetService<IGraphicsDeviceService>().DirectXDevice;
             shapes = new List<ShapeMeshDescription>();
         }
 

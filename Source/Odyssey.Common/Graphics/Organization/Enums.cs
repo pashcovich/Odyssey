@@ -13,6 +13,7 @@ namespace Odyssey.Graphics.Organization
         PostProcessing,
         PlayAnimation,
         Render2D,
+        Engine,
     }
 
     public enum PreferredRasterizerState

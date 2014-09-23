@@ -22,9 +22,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Odyssey.Content;
 using Odyssey.Talos.Messages;
-using Odyssey.Utilities.Text;
 using SharpDX;
-using SharpDX.Direct3D11;
 using Message = Odyssey.Talos.Messages.Message;
 
 #endregion

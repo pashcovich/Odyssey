@@ -44,6 +44,12 @@ namespace Odyssey.Graphics.Shaders
             parameters = new List<IParameter>();
         }
 
+        public void Clear()
+        {
+            description.ClearParsed();
+            parameters.Clear();
+        }
+
         public void AddParameter(int index, IParameter parameter)
         {
             parameters.Add(parameter);

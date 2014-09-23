@@ -14,8 +14,10 @@ namespace Odyssey.Talos.Systems
             tUpdate = ComponentTypeManager.GetType<UpdateComponent>();
         }
 
-        public virtual void BeforeUpdate()
+        public virtual bool BeforeUpdate()
         {
+            HandleMessages();
+            return IsEnabled && HasEntities;
         }
 
         public virtual void AfterUpdate()

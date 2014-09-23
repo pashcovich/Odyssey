@@ -1,5 +1,4 @@
-﻿using SharpDX;
-using SharpYaml.Serialization;
+﻿using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {

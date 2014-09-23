@@ -41,7 +41,7 @@ namespace Odyssey.Talos.Systems
             Messenger.Unregister<EntityChangeMessage>(this);
         }
         
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             // Entity change
             while (MessageQueue.HasItems<EntityChangeMessage>())
@@ -58,7 +58,9 @@ namespace Odyssey.Talos.Systems
                 else if (mEntity.Action == UpdateType.Remove)
                     Messenger.Send(new CameraMessage(entity, camera, UpdateType.Remove));
             }
+            return base.BeforeUpdate();
         }
+
 
         public override void Process(ITimeService time)
         {

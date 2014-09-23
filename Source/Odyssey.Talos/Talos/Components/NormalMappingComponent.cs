@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
-
-namespace Odyssey.Talos.Components
+﻿namespace Odyssey.Talos.Components
 {
+    [RequiredComponent(typeof(ModelComponent))]
     public class BloomComponent : Component
     {
         public float Threshold { get; set; }

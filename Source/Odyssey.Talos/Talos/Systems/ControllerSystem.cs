@@ -25,7 +25,7 @@ namespace Odyssey.Talos.Systems
             Messenger.Unregister<EntityChangeMessage>(this);
         }
 
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             // Entity change
             while (MessageQueue.HasItems<EntityChangeMessage>())
@@ -37,6 +37,7 @@ namespace Odyssey.Talos.Systems
                 if (mEntity.Action == UpdateType.Add)
                     cController.Controller.BindToEntity(entity);
             }
+            return base.BeforeUpdate();
         }
 
         public override void Process(ITimeService time)

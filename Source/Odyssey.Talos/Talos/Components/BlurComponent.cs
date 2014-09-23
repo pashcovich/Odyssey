@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Graphics.PostProcessing;
+﻿using Odyssey.Graphics.PostProcessing;
 
 namespace Odyssey.Talos.Components
 {
+    [RequiredComponent(typeof(ModelComponent))]
     public class BlurComponent : Component
     {
         public BlurComponent() : base(ComponentTypeManager.GetType<BlurComponent>())

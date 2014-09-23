@@ -32,7 +32,7 @@ namespace Odyssey.Engine
     /// <summary>
     /// Manages the <see cref="DirectXDevice"/> lifecycle.
     /// </summary>
-    public class DirectXDeviceManager : Component, IDirectXDeviceManager, IOdysseyDeviceService, IDirectXDeviceSettings
+    public class DirectXDeviceManager : Component, IDirectXDeviceManager, IGraphicsDeviceService, IDirectXDeviceSettings
     {
         #region Fields
 
@@ -118,7 +118,7 @@ namespace Odyssey.Engine
             // Register the services to the registry
             application.Services.AddService(typeof (IDirectXDeviceManager), this);
             application.Services.AddService(typeof (IDirectXDeviceService), this);
-            application.Services.AddService(typeof (IOdysseyDeviceService), this);
+            application.Services.AddService(typeof (IGraphicsDeviceService), this);
             application.Services.AddService(typeof (IDirectXDeviceSettings), this);
 
             deviceFactory = (IDirectXDeviceFactory) application.Services.GetService(typeof (IDirectXDeviceFactory));
@@ -436,9 +436,9 @@ namespace Odyssey.Engine
                     DirectXDevice.ClearState();
 
                     // By default, we setup the render target to the back buffer, and the viewport as well.
-                    if (DirectXDevice.RenderTarget != null)
+                    if (DirectXDevice.BackBuffer != null)
                     {
-                        DirectXDevice.SetRenderTargets(DirectXDevice.DepthStencilBuffer, DirectXDevice.RenderTarget);
+                        DirectXDevice.SetRenderTargets(DirectXDevice.DepthStencilBuffer, DirectXDevice.BackBuffer);
                         DirectXDevice.SetViewport(0, 0, DirectXDevice.Presenter.BackBuffer.Description.Width,
                             DirectXDevice.Presenter.BackBuffer.Description.Height);
                     }
@@ -502,7 +502,7 @@ namespace Odyssey.Engine
         #endregion Public Methods and Operators
 
         protected static DisplayOrientation SelectOrientation(DisplayOrientation orientation, int width, int height,
-            bool allowLandscapeLeftAndRight)
+                                                              bool allowLandscapeLeftAndRight)
         {
             if (orientation != DisplayOrientation.Default)
             {
@@ -539,9 +539,9 @@ namespace Odyssey.Engine
             {
                 if (application != null)
                 {
-                    if (application.Services.GetService(typeof (IOdysseyDeviceService)) == this)
+                    if (application.Services.GetService(typeof (IGraphicsDeviceService)) == this)
                     {
-                        application.Services.RemoveService(typeof (IOdysseyDeviceService));
+                        application.Services.RemoveService(typeof (IGraphicsDeviceService));
                     }
 
                     application.Window.ClientSizeChanged -= Window_ClientSizeChanged;

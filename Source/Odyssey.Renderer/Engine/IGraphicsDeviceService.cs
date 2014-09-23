@@ -3,7 +3,7 @@
     /// <summary>
     /// Service providing method to access Device life-cycle.
     /// </summary>
-    public interface IOdysseyDeviceService : IDirectXDeviceService
+    public interface IGraphicsDeviceService : IDirectXDeviceService
     {
         /// <summary>
         /// Gets the current graphics device.

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Odyssey.Content;
-using Odyssey.Graphics.Organization.Commands;
 using Odyssey.Organization.Commands;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Text;

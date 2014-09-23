@@ -17,7 +17,7 @@ namespace Odyssey.Talos.Systems
         {
         }
 
-        public override void BeforeUpdate()
+        protected override void HandleMessages()
         {
             // Before each frame we check if a new shader has been added to the scene.
             // If so, we need to initialize it.

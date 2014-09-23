@@ -1,6 +1,4 @@
-﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Talos.Components;
-namespace Odyssey.Talos.Messages
+﻿namespace Odyssey.Talos.Messages
 {
     public class ComponentMessage<TComponent> : Message
         where TComponent : IComponent

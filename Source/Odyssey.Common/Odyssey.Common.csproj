@@ -53,6 +53,7 @@
     <Compile Include="Animations\IAnimatable.cs" />
     <Compile Include="Animations\IAnimator.cs" />
     <Compile Include="Animations\PathCurve.cs" />
+    <Compile Include="Animations\Vector3Curve.cs" />
     <Compile Include="Animations\Vector3KeyFrame.cs" />
     <Compile Include="Geometry\IFunction.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />

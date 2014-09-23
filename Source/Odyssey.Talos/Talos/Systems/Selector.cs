@@ -34,6 +34,11 @@ namespace Odyssey.Talos.Systems
             return new Selector().GetOne(types);
         }
 
+        public static Selector None()
+        {
+            return new Selector();
+        }
+
         public Selector GetAll(params Type[] types)
         {
             Contract.Requires<ArgumentNullException>(types!=null);

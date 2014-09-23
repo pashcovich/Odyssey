@@ -1,6 +1,5 @@
 ﻿using Odyssey.Graphics.Models;
 using System;
-using System.Diagnostics.Contracts;
 using Odyssey.Talos.Messages;
 
 namespace Odyssey.Talos.Components

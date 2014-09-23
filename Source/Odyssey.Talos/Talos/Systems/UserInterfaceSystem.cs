@@ -25,7 +25,7 @@ namespace Odyssey.Talos.Systems
             Messenger.Unregister<EntityChangeMessage>(this);
         }
 
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             while (MessageQueue.HasItems<EntityChangeMessage>())
             {
@@ -37,6 +37,7 @@ namespace Odyssey.Talos.Systems
                     Messenger.SendToSystem<RenderSystem, CommandUpdateMessage>(new CommandUpdateMessage(new UserInterfaceRenderCommand(Services, cUserInterface.Overlay)));
                 }
             }
+            return base.BeforeUpdate();
         }
 
         public override void Process(ITimeService time)

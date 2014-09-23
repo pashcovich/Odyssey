@@ -36,6 +36,7 @@ namespace Odyssey.Animations
             switch (methodName)
             {
                 case "LinearPath":
+                case "DiscretePath":
                     return resourceProvider.GetResource<IResource>(options);
 
                 default:
@@ -43,12 +44,18 @@ namespace Odyssey.Animations
             }
         }
 
-
         public static object LinearPath(FloatKeyFrame start, FloatKeyFrame end, float time, object options = null)
         {
             float newValue = Map(start.Time, end.Time, time);
             float t = MathUtil.Lerp(start.Value, end.Value, newValue);
 
+            var function = (IFunction)options;
+            return function.Evaluate(t);
+        }
+
+        public static object DiscretePath(FloatKeyFrame start, FloatKeyFrame end, float time, object options = null)
+        {
+            float t = time < end.Time ? start.Value : end.Value;
             var function = (IFunction)options;
             return function.Evaluate(t);
         }

@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Graphics.Organization;
-using Odyssey.Graphics.Organization.Commands;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Organization.Commands;
 using Odyssey.Utilities.Extensions;
@@ -30,7 +29,7 @@ namespace Odyssey.Graphics
         {
             Contract.Requires<ArgumentNullException>(list != null, "List cannot be null.");
             this.services = services;
-            device = services.GetService<IOdysseyDeviceService>().DirectXDevice;
+            device = services.GetService<IGraphicsDeviceService>().DirectXDevice;
             resultCommands = new LinkedList<Command>();
             sourceCommands = new LinkedList<Command>(list);
         }
@@ -106,8 +105,9 @@ namespace Odyssey.Graphics
             }
             
             // Go back to first ITechniqueRenderCommand
-            var firstRenderCommand = (ITechniqueRenderCommand)sourceCommands.First(c=> c is ITechniqueRenderCommand);
-            SaveState(firstRenderCommand.Technique);
+            var firstRenderCommand = (ITechniqueRenderCommand)sourceCommands.FirstOrDefault(c=> c is ITechniqueRenderCommand);
+            if (firstRenderCommand!=null)
+                SaveState(firstRenderCommand.Technique);
             return resultCommands;
         }
 

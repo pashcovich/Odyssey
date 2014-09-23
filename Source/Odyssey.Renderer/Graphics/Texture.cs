@@ -527,7 +527,9 @@ namespace Odyssey.Graphics
         public Image GetDataAsImage()
         {
             using (var stagingTexture = ToStaging())
+            {
                 return GetDataAsImage(stagingTexture);
+            }
         }
 
         /// <summary>
@@ -540,6 +542,8 @@ namespace Odyssey.Graphics
             if (stagingTexture.Description.Usage != ResourceUsage.Staging)
                 throw new ArgumentException("Invalid texture used as staging. Must have Usage = ResourceUsage.Staging",
                     "stagingTexture");
+
+            stagingTexture.Initialize();
 
             var image = Image.New(stagingTexture.Description);
             try
@@ -619,6 +623,7 @@ namespace Odyssey.Graphics
         {
             using (var staging = ToStaging())
             {
+                staging.Initialize();
                 Save(filePath, staging, fileType);
             }
         }

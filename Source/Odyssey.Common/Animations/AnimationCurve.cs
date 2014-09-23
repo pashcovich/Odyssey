@@ -19,6 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using Odyssey.Content;
@@ -126,7 +127,14 @@ namespace Odyssey.Animations
 
         protected virtual object DeserializeOptions(string methodName, string options, IResourceProvider resourceProvider)
         {
-            throw new InvalidOperationException(string.Format("Method '{0}' not supported", methodName));
+            switch (methodName)
+            {
+                case "SquareWave":
+                    return float.Parse(options, CultureInfo.InvariantCulture);
+
+                default:
+                    throw new InvalidOperationException(string.Format("Method '{0}' not supported", methodName));
+            }
         }
 
         public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
@@ -146,7 +154,8 @@ namespace Odyssey.Animations
 
                 Function = (CurveFunction) method.CreateDelegate(typeof (CurveFunction));
                 string options = xmlReader.GetAttribute("Options");
-                functionOptions = DeserializeOptions(method.Name, options, resourceProvider);
+                if (!string.IsNullOrEmpty(options))
+                    functionOptions = DeserializeOptions(method.Name, options, resourceProvider);
             }
 
             xmlReader.ReadStartElement();

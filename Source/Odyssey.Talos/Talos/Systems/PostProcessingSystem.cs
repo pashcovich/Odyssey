@@ -1,34 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Engine;
-using Odyssey.Graphics;
-using Odyssey.Graphics.Organization.Commands;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
+using Odyssey.Organization;
 using Odyssey.Organization.Commands;
 using Odyssey.Talos.Components;
+using Odyssey.Talos.Initializers;
 using Odyssey.Talos.Messages;
 
 namespace Odyssey.Talos.Systems
 {
     public class PostProcessingSystem : UpdateableSystemBase, IRenderableSystem
     {
-        private readonly CommandManager commandManager;
+        private readonly List<Command> sceneCommands;
+        private bool process;
 
-        public PostProcessingSystem() : base(Selector.All(typeof(PostProcessComponent)))
+
+        public PostProcessingSystem() : base(Selector.All(typeof (PostProcessComponent)))
         {
-            commandManager = new CommandManager();
+            sceneCommands = new List<Command>();
         }
 
         public override void Start()
         {
             Messenger.Register<CommandUpdateMessage>(this);
+            Messenger.Register<ResizeOutputMessage>(this);
         }
 
         public override void Stop()
         {
             Messenger.Unregister<CommandUpdateMessage>(this);
+            Messenger.Unregister<ResizeOutputMessage>(this);
         }
 
         public bool BeginRender()
@@ -36,96 +39,110 @@ namespace Odyssey.Talos.Systems
             return true;
         }
 
-        public void Render(ITimeService service)
+        public void Render()
         {
             foreach (Entity entity in Entities)
             {
-                commandManager.Run();
+                if (!entity.IsEnabled)
+                    continue;
+                var cPostProcess = entity.GetComponent<PostProcessComponent>();
+                cPostProcess.CommandManager.Run();
             }
         }
 
         public override void Unload()
         {
-            commandManager.Unload();
+            foreach (Entity entity in Entities)
+            {
+                if (!entity.IsEnabled)
+                    continue;
+                var cPostProcess = entity.GetComponent<PostProcessComponent>();
+                cPostProcess.CommandManager.Unload();
+            }
+        }
+
+        protected override void HandleMessages()
+        {
+            if (MessageQueue.HasItems<CommandUpdateMessage>())
+            {
+                var mOptimization = MessageQueue.Dequeue<CommandUpdateMessage>();
+                sceneCommands.AddRange(mOptimization.Commands);
+                IsEnabled = true;
+            }
+            if (MessageQueue.HasItems<ResizeOutputMessage>())
+            {
+                var mResize = MessageQueue.Dequeue<ResizeOutputMessage>();
+                ShaderInitializer.InitializerMap.Clear();
+                foreach (var entity in Entities)
+                {
+                    var cPostProcess = entity.GetComponent<PostProcessComponent>();
+                    cPostProcess.OutputWidth = mResize.Width;
+                    cPostProcess.OutputHeight = mResize.Height;
+
+                    // Reinitialize Shaders
+                    foreach (var technique in cPostProcess.Techniques)
+                        technique.ClearBuffers();
+
+                    foreach (var technique in cPostProcess.Techniques)
+                    {
+                        Messenger.SendToSystem<InitializationSystem, ContentMessage<Technique>>(
+                            new ContentMessage<Technique>(entity, cPostProcess.AssetName, technique), true);
+                    }
+
+                    SetupEntity(entity);
+                }
+            }
+        }
+
+        void SetupEntity(Entity entity)
+        {
+            var cPostProcess = entity.GetComponent<PostProcessComponent>();
+            cPostProcess.CommandManager.Clear();
+            var postProcessor = new PostProcessor(Services, cPostProcess.OutputWidth, cPostProcess.OutputHeight);
+            var techniques = cPostProcess.Techniques.ToDictionary(t => t.Name, t => t);
+            var actions = cPostProcess.Actions.ToArray();
+
+            foreach (PostProcessAction ppAction in actions)
+            {
+                if (ppAction.AssetName == Param.Engine)
+                {
+                    switch (ppAction.Technique)
+                    {
+                        case Param.EngineActions.RenderSceneToTexture:
+                            postProcessor.ProcessAction(ppAction, sceneCommands, cPostProcess.TagFilter);
+                            break;
+                    }
+                }
+                else
+                {
+                    var cModel = entity.GetComponent<ModelComponent>();
+                    Technique effect = techniques[string.Format("{0}.{1}", ppAction.AssetName, ppAction.Technique)];
+                    postProcessor.ProcessAction(ppAction, cModel.Model, effect, entity);
+                }
+            }
+
+            var commandManager = cPostProcess.CommandManager;
+            commandManager.AddLast(postProcessor.Result());
+            if (cPostProcess.Target == TargetOutput.Backbuffer)
+            {
+                var lastCommand = commandManager.Last();
+                commandManager.AddBefore(lastCommand, new ChangeTargetsCommand(Services) { Target = Services.GetService<IGraphicsDeviceService>().DirectXDevice });
+            }
+            commandManager.Initialize();
+
+            var postProcessCommands = commandManager.OfType<IPostProcessCommand>().ToArray();
+            for (int i = 1; i < postProcessCommands.Length; i++)
+            {
+                var ppAction = actions[i];
+                postProcessCommands[i].SetInputs(ppAction.InputIndices.Select(idx => postProcessCommands[idx].Output));
+            }
         }
 
         public override void Process(ITimeService time)
         {
-            if (!MessageQueue.HasItems<CommandUpdateMessage>()) return;
-
-            var mOptimization = MessageQueue.Dequeue<CommandUpdateMessage>();
-            if (!mOptimization.Commands.Any())
-                return;
-
-            if (!commandManager.IsEmpty)
-                commandManager.Clear();
-
-            List<Command> newCommands = new List<Command>();
-            foreach (Entity entity in Entities)
-            {
-                var cPostProcess = entity.GetComponent<PostProcessComponent>();
-                var cModel = entity.GetComponent<ModelComponent>();
-
-                var techniques = cPostProcess.Techniques.ToDictionary(t => t.Name, t => t);
-                for (int i=0; i< cPostProcess.Actions.Count; i++)
-                {
-                    PostProcessAction ppAction = cPostProcess.Actions[i];
-
-                    if (ppAction.AssetName == Param.Odyssey)
-                    {
-                        if (ppAction.Technique == Param.EngineActions.RenderSceneToTexture)
-                        {
-                            string tagFilter = cPostProcess.TagFilter;
-                            var filteredCommands = FilterCommands(mOptimization.Commands, tagFilter);
-                            if (filteredCommands == null)
-                                continue;
-                            var cRender2Texture = new RenderSceneToTextureCommand(Services, filteredCommands);
-                            newCommands.Add(cRender2Texture);
-                        }
-                    }
-                    else
-                    {
-                        Technique effect = techniques[string.Format("{0}.{1}", ppAction.AssetName, ppAction.Technique)];
-                        newCommands.Add(new PostProcessCommand(Services, effect, cModel.Model.Meshes[0],
-                            entity, ppAction.TextureDescription, ppAction.Output) {Name = ppAction.Technique});
-                    }
-                }
-                
-                StateViewer sv = new StateViewer(Services, newCommands);
-                commandManager.AddLast(sv.Analyze());
-                commandManager.Initialize();
-
-                if (MessageQueue.HasItems<CommandUpdateMessage>())
-                    throw new InvalidOperationException(string.Format("Multiple {0}s found", typeof(CommandUpdateMessage).Name));
-                var postProcessCommands = commandManager.OfType<IPostProcessCommand>().ToArray();
-
-                for (int i = 1; i < postProcessCommands.Length; i++)
-                {
-                    var ppAction = cPostProcess.Actions[i];
-                    postProcessCommands[i].SetInputs(ppAction.InputIndices.Select(idx => postProcessCommands[idx].Output));
-                }
-            }
-
-            
+            foreach (var entity in Entities)
+                SetupEntity(entity);
         }
 
-
-        IEnumerable<Command> FilterCommands(IEnumerable<Command> commands, string tagFilter)
-        {
-            List<Command> filteredCommands =
-                (from cRender in commands.OfType<RenderCommand>()
-                    let filteredEntities = from e in cRender.Entities 
-                                           where e.ContainsTag(tagFilter)
-                                           select e
-                    where filteredEntities.Any()
-                    let tRenderCommand = cRender.GetType()
-                    select (RenderCommand) Activator.CreateInstance(tRenderCommand,
-                                new object[] { Services, cRender.Technique, cRender.Model, filteredEntities }))
-                                .Cast<Command>().ToList();
-
-            StateViewer sv = new StateViewer(Services, filteredCommands);
-            return sv.Analyze(); 
-        }
-        
     }
 }

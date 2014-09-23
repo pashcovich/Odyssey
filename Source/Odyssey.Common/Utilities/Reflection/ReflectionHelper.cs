@@ -64,7 +64,7 @@ namespace Odyssey.Utilities.Reflection
 
         public static MethodInfo GetMethod(Type type, string methodName)
         {
-            return GetMethods(type).First(m => string.Equals(m.Name, methodName));
+            return GetMethods(type).FirstOrDefault(m => string.Equals(m.Name, methodName));
         }
 
         public static FieldInfo GetField(Type type, string fieldName)

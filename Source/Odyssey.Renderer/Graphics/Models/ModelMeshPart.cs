@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Odyssey.Content;
 using Odyssey.Engine;
-using Odyssey.Graphics.Organization.Commands;
 using SharpDX;
 
 namespace Odyssey.Graphics.Models

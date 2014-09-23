@@ -1,8 +1,8 @@
 ﻿namespace Odyssey.Engine
 {
-    internal struct Param
+    public struct Param
     {
-        internal const string Odyssey = "Odyssey";
+        internal const string Engine = "OdysseyEngine";
 
         internal struct Floats
         {
@@ -124,6 +124,13 @@
         internal struct EngineActions
         {
             internal const string RenderSceneToTexture = "RenderSceneToTexture";
+            internal const string RenderPostProcessedSceneToTexture = "RenderPostProcessedSceneToTexture";
+            internal const string TakeScreenshot = "TakeScreenshot";
+        }
+
+        internal struct Shaders
+        {
+            internal const string PostProcess = "PostProcess";
         }
     }
 }

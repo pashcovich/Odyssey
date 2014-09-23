@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
@@ -22,8 +23,8 @@ namespace Odyssey.Organization.Commands
         private readonly ModelMesh quad;
         public Technique Technique { get { return technique; } }
 
-        public PostProcessCommand(IServiceRegistry services, Technique technique, ModelMesh quad, IEntity entity, Texture2DDescription textureDescription = default (Texture2DDescription), TargetOutput output = TargetOutput.NewRenderTarget) 
-            : base(services, textureDescription, output)
+        public PostProcessCommand(IServiceRegistry services, Technique technique, ModelMesh quad, IEntity entity, Texture2DDescription textureDescription = default (Texture2DDescription), OutputRule outputRule = OutputRule.NewRenderTarget) 
+            : base(services, textureDescription, outputRule)
         {
             Contract.Requires<ArgumentNullException>(technique != null, "technique");
             Contract.Requires<ArgumentNullException>(quad!= null, "quad");
@@ -31,7 +32,6 @@ namespace Odyssey.Organization.Commands
             this.technique = technique;
             this.quad = quad;
             this.entity = entity;
-            Inputs = new List<Texture>();
         }
 
         public override void PreRender()
@@ -42,9 +42,10 @@ namespace Odyssey.Organization.Commands
             device.SetCurrentEffect(Technique);
             device.InputAssembler.InputLayout = Technique.InputLayout;
             device.SetPixelShaderSampler(0, device.SamplerStates.Default);
-            for (int i = 0; i < Inputs.Count; i++)
+            var inputs = Inputs.ToArray();
+            for (int i = 0; i < inputs.Length; i++)
             {
-                var texture = Inputs[i];
+                var texture = inputs[i];
                 device.SetPixelShaderShaderResourceView(i, texture.ShaderResourceView[ViewType.Full, 0, 0]);
             }
 
@@ -68,8 +69,14 @@ namespace Odyssey.Organization.Commands
             }
 
             quad.Draw(device);
+
+            device.SetPixelShaderSampler(0, null);
+                    
+                    var inputs = Inputs.ToArray();
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                device.SetPixelShaderShaderResourceView(i, null);
+            }
         }
-
-
     }
 }

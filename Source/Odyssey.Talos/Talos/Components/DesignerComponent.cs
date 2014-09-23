@@ -3,7 +3,6 @@ using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
 using Odyssey.Talos.Messages;
 using Odyssey.Graphics.Models;
-using Odyssey.Talos.Systems;
 
 namespace Odyssey.Talos.Components
 {

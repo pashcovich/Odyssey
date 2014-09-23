@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
 using SharpDX;
-using SharpYaml;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Talos.Components
 {

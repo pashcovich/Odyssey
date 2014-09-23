@@ -4,7 +4,7 @@ namespace Odyssey.Talos.Systems
 {
     public interface IUpdateableSystem: ISystem
     {
-        void BeforeUpdate();
+        bool BeforeUpdate();
         void AfterUpdate();
         void Process(ITimeService time);
     }

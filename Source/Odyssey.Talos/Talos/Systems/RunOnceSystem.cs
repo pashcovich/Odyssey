@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Talos.Components;
+﻿using System.Collections.Generic;
 using Odyssey.Talos.Messages;
 
 namespace Odyssey.Talos.Systems
@@ -22,7 +17,7 @@ namespace Odyssey.Talos.Systems
             Messenger.Unregister<EntityChangeMessage>(this);
         }
 
-        public override void BeforeUpdate()
+        public override bool BeforeUpdate()
         {
             while (MessageQueue.HasItems<EntityChangeMessage>())
             {
@@ -33,8 +28,7 @@ namespace Odyssey.Talos.Systems
                 }
             }
 
-            if (HasEntities)
-                IsEnabled = true;
+            return base.BeforeUpdate();
         }
 
         public override void AfterUpdate()

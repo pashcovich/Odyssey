@@ -28,7 +28,7 @@ using VertexShader = SharpDX.Direct3D11.VertexShader;
 
 namespace Odyssey.Engine
 {
-    public class DirectXDevice : Component, IDirect3DProvider
+    public class DirectXDevice : Component, IDirect3DProvider, ITarget
     {
         internal InputAssemblerStage InputAssembler;
         internal OutputMergerStage OutputMerger;
@@ -210,7 +210,7 @@ namespace Odyssey.Engine
         /// Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.
         /// </summary>
         /// <value>The back buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device.</value>
-        public RenderTarget2D RenderTarget
+        public RenderTarget2D BackBuffer
         {
             get { return Presenter != null ? Presenter.BackBuffer : null; }
         }
@@ -1123,6 +1123,16 @@ namespace Odyssey.Engine
 
             var inputLayout = CurrentTechnique.InputLayout;
             InputAssembler.InputLayout = inputLayout;
+        }
+
+        RenderTargetView ITarget.RenderTarget
+        {
+            get { return currentRenderTargetView; }
+        }
+
+        DepthStencilView ITarget.DepthStencilBuffer
+        {
+            get { return currentDepthStencilView; }
         }
     }
 }

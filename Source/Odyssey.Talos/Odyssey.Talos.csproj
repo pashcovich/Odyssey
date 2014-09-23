@@ -73,6 +73,7 @@
     <Compile Include="Talos\Components\PostProcessComponent.Glow.cs" />
     <Compile Include="Talos\Components\PostProcessComponent.cs" />
     <Compile Include="Talos\Components\RequiredComponentAttribute.cs" />
+    <Compile Include="Talos\Components\ScreenshotComponent.cs" />
     <Compile Include="Talos\Components\SpriteComponent.cs" />
     <Compile Include="Talos\Components\TargetComponent.cs" />
     <Compile Include="Talos\Components\UserInterfaceComponent.cs" />
@@ -94,7 +95,9 @@
     <Compile Include="Talos\Maps\TagManager.cs" />
     <Compile Include="Talos\Messages\CameraMessage.cs" />
     <Compile Include="Talos\Messages\ContentMessage.cs" />
+    <Compile Include="Talos\Messages\ResizeOutputMessage.cs" />
     <Compile Include="Talos\Messages\LightMessage.cs" />
+    <Compile Include="Talos\Messages\ScreenshotMessage.cs" />
     <Compile Include="Talos\Nodes\LightCollection.cs" />
     <Compile Include="Talos\Nodes\ICollectionService.cs" />
     <Compile Include="Talos\Serialization\SceneProxy.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Talos\Nodes\PointLightNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Talos\Systems\RunOnceSystem.cs" />
+    <Compile Include="Talos\Systems\ScreenshotSystem.cs" />
     <Compile Include="Talos\Systems\Selector.cs" />
     <Compile Include="Talos\Systems\CameraSystem.cs" />
     <Compile Include="Talos\Systems\IUpdateableSystem.cs" />

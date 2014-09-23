@@ -5,8 +5,8 @@ namespace Odyssey.Organization.Commands
 {
     public interface IPostProcessCommand
     {
-        List<Texture> Inputs { get; }
-        Texture Output { get; set; }
+        IEnumerable<Texture> Inputs { get; }
+        Texture Output { get; }
         void SetInputs(IEnumerable<Texture> textures);
     }
 }

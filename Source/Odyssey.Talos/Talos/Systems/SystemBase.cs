@@ -139,9 +139,14 @@ namespace Odyssey.Talos.Systems
 
         protected virtual void OnBlockingMessageReceived(MessageEventArgs args)
         {
+            HandleMessages();
             var handler = BlockingMessageReceived;
             if (handler != null)
                 handler(this, args);
+        }
+
+        protected virtual void HandleMessages()
+        {
         }
     }
 }
