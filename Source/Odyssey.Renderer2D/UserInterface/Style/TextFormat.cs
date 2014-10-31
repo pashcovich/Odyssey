@@ -48,12 +48,13 @@ namespace Odyssey.UserInterface.Style
             var content = services.GetService<IAssetProvider>();
 
             SharpDX.DirectWrite.TextFormat textFormat;
+            float scaledFontSize = textStyle.Size*Layout.Scale;
 
             if (content.Contains(textStyle.FontFamily))
                 textFormat = new SharpDX.DirectWrite.TextFormat(deviceService.Direct2DDevice, textStyle.FontFamily, services.GetService<IStyleService>().FontCollection,
-                    (SharpDX.DirectWrite.FontWeight)textStyle.FontWeight, (SharpDX.DirectWrite.FontStyle)textStyle.FontStyle, FontStretch.Normal, textStyle.Size);
+                    (SharpDX.DirectWrite.FontWeight)textStyle.FontWeight, (SharpDX.DirectWrite.FontStyle)textStyle.FontStyle, FontStretch.Normal, scaledFontSize);
             else textFormat = new SharpDX.DirectWrite.TextFormat(deviceService.Direct2DDevice, textStyle.FontFamily, (SharpDX.DirectWrite.FontWeight)textStyle.FontWeight,
-                (SharpDX.DirectWrite.FontStyle)textStyle.FontStyle, textStyle.Size);
+                (SharpDX.DirectWrite.FontStyle)textStyle.FontStyle, scaledFontSize);
 
             textFormat.TextAlignment = (SharpDX.DirectWrite.TextAlignment)textStyle.TextAlignment;
             textFormat.ParagraphAlignment = (SharpDX.DirectWrite.ParagraphAlignment)textStyle.ParagraphAlignment;

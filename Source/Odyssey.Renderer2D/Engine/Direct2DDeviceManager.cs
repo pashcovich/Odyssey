@@ -18,6 +18,7 @@
 using System;
 using Odyssey.Content;
 using Odyssey.Geometry;
+using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
@@ -80,6 +81,8 @@ namespace Odyssey.Engine
                 if (!MathHelper.ScalarNearEqual(deviceSettings.HorizontalDpi, d2dDevice.HorizontalDpi) ||
                     !MathHelper.ScalarNearEqual(deviceSettings.VerticalDpi, d2dDevice.VerticalDpi))
                     throw new InvalidOperationException("Direct2D device DPI values do not match Direct3D device DPI values");
+
+                Layout.Scale = deviceSettings.PreferredBackBufferWidth/1920f;
 
                 OnDeviceCreated(EventArgs.Empty);
             }

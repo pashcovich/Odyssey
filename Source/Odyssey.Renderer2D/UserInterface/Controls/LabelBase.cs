@@ -13,18 +13,19 @@
 
 #endregion License
 
+#region Using Directives
+
 using System;
 using System.Diagnostics;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Reflection;
 using SharpDX.Direct2D1;
 using Brush = Odyssey.Graphics.Brush;
-using TextFormat = Odyssey.UserInterface.Style.TextFormat;
+
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {
-
     [DebuggerDisplay("{Text} [{TextStyleClass}]")]
     public abstract class LabelBase : Control
     {
@@ -32,16 +33,6 @@ namespace Odyssey.UserInterface.Controls
         private const string ControlTag = "Default";
         private string text;
         private TextFormat textFormat;
-
-        protected TextFormat TextFormat
-        {
-            get { return textFormat; }
-            set { textFormat = value; }
-        }
-
-        public Brush Foreground { get; set; }
-
-        public event EventHandler<TextEventArgs> TextChanged;
 
         protected LabelBase()
             : this(ControlTag)
@@ -53,6 +44,14 @@ namespace Odyssey.UserInterface.Controls
         {
             CanRaiseEvents = false;
         }
+
+        protected TextFormat TextFormat
+        {
+            get { return textFormat; }
+            set { textFormat = value; }
+        }
+
+        public Brush Foreground { get; set; }
 
         public string Text
         {
@@ -68,6 +67,8 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
+        public event EventHandler<TextEventArgs> TextChanged;
+
         protected virtual void OnTextChanged(TextEventArgs e)
         {
             RaiseEvent(TextChanged, this, e);
@@ -77,7 +78,7 @@ namespace Odyssey.UserInterface.Controls
         {
             if (TextStyle == null)
                 ApplyTextDescription();
-            
+
             if (string.IsNullOrEmpty(Text))
                 Text = Name;
         }
@@ -94,7 +95,7 @@ namespace Odyssey.UserInterface.Controls
 
             textFormat = styleService.CreateOrRetrieveTextResource(TextStyle);
             DeviceContext context = Device;
-            context.TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Grayscale;
+            context.TextAntialiasMode = TextAntialiasMode.Grayscale;
         }
     }
 }

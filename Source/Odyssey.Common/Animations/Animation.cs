@@ -46,7 +46,10 @@ namespace Odyssey.Animations
 
         public float Duration
         {
-            get { return animationCurves.Values.Max(a => a.Duration); }
+            get
+            {
+                return animationCurves.Values.Any() ? animationCurves.Values.Max(a => a.Duration) : 0;
+            }
         }
 
         public float Time

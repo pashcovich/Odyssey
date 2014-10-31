@@ -11,6 +11,14 @@ namespace Odyssey.UserInterface.Style
 {
     public static class Layout
     {
+        private const float Unit = 32;
+        public static float Scale = 1.0f;
+
+        public static float Units(float units)
+        {
+            return Scale*Unit*units;
+        }
+
         public static Vector2 CenterControl(UIElement control, UIElement container)
         {
             return new Vector2(CenterControlHorizontal(control, container),

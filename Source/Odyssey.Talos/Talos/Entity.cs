@@ -145,7 +145,10 @@ namespace Odyssey.Talos
         public Component GetComponent(string componentType)
         {
             string componentName = string.Format("{0}Component", componentType);
-            return Components.First(c => string.Equals(c.GetType().Name, componentName)) as Component;
+            var component = Components.FirstOrDefault(c => string.Equals(c.GetType().Name, componentName)) as Component;
+            if (component == null)
+                throw new InvalidOperationException(string.Format("'{0}' does not contain a '{1}'", Name, componentName));
+            return component;
         }
 
         public Entity FindChild(string name)
