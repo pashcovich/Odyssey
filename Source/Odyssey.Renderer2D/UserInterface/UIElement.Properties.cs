@@ -36,6 +36,8 @@ namespace Odyssey.UserInterface
         private float width;
         private object dataContext;
 
+        internal protected bool IsInternal { get; set; }
+
         public RectangleF BoundingRectangle
         {
             get { return boundingRectangle; }
@@ -305,11 +307,12 @@ namespace Odyssey.UserInterface
                 {
                     parent = value;
                     OnParentChanged(EventArgs.Empty);
-                    IContainer formerParent = parent as IContainer;
+                    var formerParent = parent as IContainer;
                     if (formerParent != null)
                         formerParent.Controls.Remove(value);
                     Depth = Depth.AsChildOf(parent.Depth);
                 }
+                DesignMode = parent.DesignMode;
 
                 bool isOverlay = parent is Overlay;
 

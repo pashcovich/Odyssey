@@ -152,7 +152,7 @@ namespace Odyssey.UserInterface.Controls
         public override void Render()
         {
             base.Render();
-            foreach (var control in Controls.Where(control => control.IsVisible))
+            foreach (UIElement control in Controls.Where(control => control.IsVisible))
                 control.Render();
         }
 
@@ -160,7 +160,7 @@ namespace Odyssey.UserInterface.Controls
         {
             UIElement copy = base.Copy();
             CopyEvents(typeof(ContainerControl), this, copy);
-            IContainer containerCopy = (IContainer) copy;
+            var containerCopy = (IContainer) copy;
             foreach (UIElement child in Controls)
                 containerCopy.Controls.Add(child.Copy());
 

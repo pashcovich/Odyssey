@@ -139,7 +139,7 @@ namespace Odyssey.UserInterface.Controls
 
         protected internal override UIElement Copy()
         {
-            Control newControl = (Control) base.Copy();
+            var newControl = (Control) base.Copy();
             newControl.Style = Style;
             newControl.Padding = Padding;
             newControl.TextStyleClass = TextStyleClass;

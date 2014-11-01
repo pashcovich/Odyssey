@@ -37,7 +37,8 @@ namespace Odyssey.UserInterface.Style
                 newShape.Width = control.Width * shape.Width;
                 newShape.Height = control.Height * shape.Height;
                 newShape.Parent = control;
-                newShape.DesignMode = false;
+                newShape.DesignMode = true;
+                newShape.IsInternal = true;
                 newShape.Position = new Vector2(control.Width, control.Height) * shape.Position;
                 shapeList.Add(newShape);
             }

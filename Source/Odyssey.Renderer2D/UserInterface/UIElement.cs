@@ -32,7 +32,7 @@ namespace Odyssey.UserInterface
     /// </summary>
     public abstract partial class UIElement : Component, IUIElement, IAnimator, IComparable<UIElement>, ISerializableResource
     {
-        protected static readonly Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
+        private static readonly Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
 
         #region Private fields
 
@@ -65,6 +65,7 @@ namespace Odyssey.UserInterface
         protected UIElement()
         {
             string type = GetType().Name;
+
             if (!TypeCounter.ContainsKey(type))
                 TypeCounter.Add(type, 1);
             else
@@ -114,12 +115,13 @@ namespace Odyssey.UserInterface
             if (parent != null)
             {
                 Vector2 oldAbsolutePosition = AbsolutePosition;
-                Vector2 newAbsolutePosition = parent.AbsolutePosition + parent.TopLeftPosition + new Vector2(Margin.Left, Margin.Top) + position;
+                Vector2 newAbsolutePosition = parent.AbsolutePosition + new Vector2(Margin.Left, Margin.Top) + position;
+                
+                if (!IsInternal)
+                    newAbsolutePosition += parent.TopLeftPosition;
 
                 if (!newAbsolutePosition.Equals(oldAbsolutePosition))
-                {
                     AbsolutePosition = newAbsolutePosition;
-                }
 
                 UpdateLayoutInternal();
                 OnLayoutUpdated(EventArgs.Empty);
@@ -140,7 +142,7 @@ namespace Odyssey.UserInterface
             }
             
             var parentControl = Parent as Control;
-            if (parentControl != null)
+            if (parentControl != null && !IsInternal)
             {
                 Width -= parentControl.Padding.Horizontal;
                 Height -= parentControl.Padding.Vertical;
