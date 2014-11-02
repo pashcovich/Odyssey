@@ -1,30 +1,28 @@
 ﻿using System.Diagnostics;
-using Odyssey.Animations;
 using SharpDX;
 
 namespace Odyssey.Talos.Components
 {
-    [DebuggerDisplay("{Rotation}: ({Orientation})")]
+    [DebuggerDisplay("{Rotation}: ({Rotation})")]
     public class RotationComponent : Component
     {
-        private Quaternion orientation;
+        private Vector3 w;
 
         internal bool IsDirty { get; set; }
 
-        [Animatable]
-        public Quaternion Orientation
+        public Vector3 AngularVelocity
         {
-            get { return orientation; }
+            get { return w; }
             set
             {
-                orientation = value;
+                w = value;
                 IsDirty = true;
             }
         }
 
         public RotationComponent() : base(ComponentTypeManager.GetType<RotationComponent>())
         {
-            Orientation = Quaternion.Identity;
+            w = Vector3.Zero;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Odyssey.Talos.Interaction
     {
         private readonly IServiceRegistry services;
         private PositionComponent cPosition;
-        private RotationComponent cRotation;
+        private OrientationComponent cRotation;
         private UpdateComponent cUpdate;
 
         public ControllerBase(IServiceRegistry services)
@@ -36,7 +36,7 @@ namespace Odyssey.Talos.Interaction
             this.services = services;
         }
 
-        protected RotationComponent CRotation
+        protected OrientationComponent CRotation
         {
             get { return cRotation; }
         }

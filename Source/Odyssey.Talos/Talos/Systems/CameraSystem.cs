@@ -27,7 +27,7 @@ namespace Odyssey.Talos.Systems
     public class PerspectiveCameraSystem : UpdateableSystemBase
     {
         public PerspectiveCameraSystem()
-            : base(Selector.All(typeof (PositionComponent), typeof (RotationComponent), typeof (CameraComponent), typeof (UpdateComponent)))
+            : base(Selector.All(typeof (PositionComponent), typeof (OrientationComponent), typeof (CameraComponent), typeof (UpdateComponent)))
         {
         }
 
@@ -70,7 +70,7 @@ namespace Odyssey.Talos.Systems
                 if (!cUpdate.RequiresUpdate)
                     continue;
                 var cPosition = entity.GetComponent<PositionComponent>();
-                var cRotation = entity.GetComponent<RotationComponent>();
+                var cRotation = entity.GetComponent<OrientationComponent>();
                 var cCamera = entity.GetComponent<CameraComponent>();
                 cCamera.View = Matrix.Translation(-cPosition.Position)* Matrix.RotationQuaternion(cRotation.Orientation);
             }
@@ -82,7 +82,7 @@ namespace Odyssey.Talos.Systems
             float aspectRatio = deviceSettings.PreferredBackBufferWidth/(float) deviceSettings.PreferredBackBufferHeight;
             var cCamera = entity.GetComponent<CameraComponent>();
             var cPosition = entity.GetComponent<PositionComponent>();
-            var cRotation = entity.GetComponent<RotationComponent>();
+            var cRotation = entity.GetComponent<OrientationComponent>();
             
             TargetComponent cTarget;
             cCamera.Viewport = new ViewportF(0, 0, deviceSettings.PreferredBackBufferWidth,

@@ -14,7 +14,7 @@ namespace Odyssey.Talos.Systems
     {
         public TransformSystem()
             : base(Selector.All(typeof(PositionComponent), typeof(UpdateComponent), typeof(TransformComponent))
-            .GetOne(typeof (RotationComponent), typeof (ScalingComponent), typeof (ParentComponent)))
+            .GetOne(typeof (OrientationComponent), typeof (ScalingComponent), typeof (ParentComponent)))
         {
         }
 
@@ -32,7 +32,7 @@ namespace Odyssey.Talos.Systems
                 var cPosition = entity.GetComponent<PositionComponent>();
                 var cTransform = entity.GetComponent<TransformComponent>();
                 ScalingComponent cScaling;
-                RotationComponent cRotation;
+                OrientationComponent cRotation;
                 ParentComponent cParent;
 
                 Matrix mLocalWorld = Matrix.Identity;
@@ -50,6 +50,7 @@ namespace Odyssey.Talos.Systems
                         cTransform.Rotation = Matrix.RotationQuaternion(cRotation.Orientation);
                         cRotation.IsDirty = false;
                     }
+
                     mLocalWorld *= cTransform.Rotation;
                 }
 
@@ -75,19 +76,6 @@ namespace Odyssey.Talos.Systems
             }
         }
 
-        public override void AfterUpdate()
-        {
-            foreach (Entity entity in Scene.SystemMap.SelectAllEntities(this))
-            {
-                if (!entity.IsEnabled)
-                    continue;
-
-                var cUpdate = entity.GetComponent<UpdateComponent>();
-                if (cUpdate.UpdateFrequency == UpdateFrequency.Static)
-                    cUpdate.RequiresUpdate = false;
-                else if (cUpdate.UpdateFrequency == UpdateFrequency.RealTime)
-                    cUpdate.RequiresUpdate = true;
-            }
-        }
+        
     }
 }
