@@ -1,15 +1,6 @@
-﻿using Odyssey.Utilities.Logging;
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Odyssey.UserInterface.Controls
+﻿namespace Odyssey.UserInterface.Controls
 {
-    public abstract class ListBoxBase : ItemsControl, IContainer
+    public abstract class ListBoxBase : ItemsControl
     {
         private const string ControlTag = "ListBox";
 
@@ -20,10 +11,11 @@ namespace Odyssey.UserInterface.Controls
 
         protected override void Arrange()
         {
+            base.Arrange();
             if (Controls.IsEmpty)
                 return;
 
-            UserInterface.Style.Layout.UpdateLayoutHorizontal(this, Controls);
+            UserInterface.Style.Layout.DistributeHorizontally(this, Controls);
         }
     }
 }

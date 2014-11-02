@@ -59,7 +59,7 @@ namespace Odyssey.UserInterface.Controls
         /// <summary>
         /// Raises the <see cref="ControlAdded"/> event.
         /// </summary>
-        /// <param name="e">The <see cref="ControlEventArgs"/> instance
+        /// <param name="e">The <see cref="EventArgs"/> instance
         /// containing the event data.</param>
         protected virtual void OnControlAdded(EventArgs e)
         {
@@ -175,15 +175,6 @@ namespace Odyssey.UserInterface.Controls
                 ctl.Layout();
             }
         }
-
-        //protected internal override void Measure()
-        //{
-        //    base.Measure();
-        //    foreach (UIElement ctl in Controls)
-        //    {
-        //        ctl.Measure();
-        //    }
-        //}
 
         protected override void OnInitialized(EventArgs e)
         {

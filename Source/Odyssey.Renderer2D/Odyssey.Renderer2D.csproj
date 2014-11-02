@@ -70,6 +70,10 @@
     <Compile Include="UserInterface\Controls\AdvancedLabel.cs" />
     <Compile Include="UserInterface\Controls\Border.cs" />
     <Compile Include="UserInterface\Behaviors\GenericBehavior.cs" />
+    <Compile Include="UserInterface\Controls\Charts\ColumnChart.cs" />
+    <Compile Include="UserInterface\Controls\Charts\Chart.cs" />
+    <Compile Include="UserInterface\Controls\Charts\ChartItem.cs" />
+    <Compile Include="UserInterface\Controls\Charts\ColumnItem.cs" />
     <Compile Include="UserInterface\Controls\IDesktopOverlay.cs" />
     <Compile Include="UserInterface\Controls\RichTextBox.cs" />
     <Compile Include="UserInterface\Controls\TextEventArgs.cs" />

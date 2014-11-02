@@ -66,7 +66,7 @@ namespace Odyssey.UserInterface.Controls
         {
             base.Arrange();
             if (!Controls.IsEmpty)
-                UserInterface.Style.Layout.UpdateLayoutVertical(this, Controls);
+                UserInterface.Style.Layout.DistributeVertically(this, Controls);
         }
     }
 }

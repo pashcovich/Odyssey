@@ -43,6 +43,9 @@ namespace Odyssey.UserInterface.Controls
 
         public Thickness Padding { get; set; }
 
+        public virtual float ClientAreaHeight { get { return Height - Padding.Vertical; }}
+        public virtual float ClientAreaWidth { get { return Width - Padding.Horizontal; } }
+
         public string StyleClass
         {
             get { return controlStyleClass; }
@@ -230,6 +233,13 @@ namespace Odyssey.UserInterface.Controls
             base.OnInitializing(e);
             ApplyControlDescription();
             ApplyTextDescription();
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            if (IsVisual)
+                VisualState.SynchronizeSize();
         }
 
         /// <summary>

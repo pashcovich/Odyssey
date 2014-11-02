@@ -83,7 +83,12 @@ namespace Odyssey.UserInterface.Data
 
         public void UpdateTarget()
         {
-            targetProperty.SetValue(target, value);
+            if (value.GetType() == targetProperty.PropertyType)
+                targetProperty.SetValue(target, value);
+            else
+            {
+                targetProperty.SetValue(target, Convert.ChangeType(value, targetProperty.PropertyType));
+            }
         }
 
         internal void ChangeValue(object newValue, bool notify)

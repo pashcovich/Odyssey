@@ -28,7 +28,7 @@ namespace Odyssey.UserInterface
         {
             IContainer containerControl = root as IContainer;
             if (containerControl != null)
-                foreach (UIElement control in containerControl.Controls.InteractionEnabledControls)
+                foreach (UIElement control in containerControl.Controls.InteractionEnabled)
                     foreach (UIElement ctlChild in PostOrderInteractionVisit(control))
                         yield return ctlChild;
             else

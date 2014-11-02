@@ -25,9 +25,9 @@ namespace Odyssey.UserInterface.Style
                 CenterControlVertical(control, container));
         }
 
-        internal static void UpdateLayoutHorizontal(Controls.Control parent, IEnumerable<UIElement> children)
+        public static void DistributeHorizontally(Controls.Control parent, IEnumerable<UIElement> children)
         {
-            Vector2 previousPosition = parent.TopLeftPosition + new Vector2(parent.Padding.Left, parent.Padding.Top);
+            Vector2 previousPosition = parent.TopLeftPosition;
             foreach (UIElement element in children)
             {
                 var margin = element.Margin;
@@ -36,9 +36,18 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        public static void UpdateLayoutVertical(Control parent, IEnumerable<UIElement> children)
+        public static void AlignBottom(Control parent, IEnumerable<UIElement> children)
         {
-            Vector2 previousPosition = parent.TopLeftPosition + new Vector2(parent.Padding.Left, parent.Padding.Top);
+            float clientAreaHeight = parent.ClientAreaHeight;
+            foreach (UIElement element in children)
+            {
+                element.Position = new Vector2(element.Position.X, clientAreaHeight - element.Height);
+            }
+        }
+
+        public static void DistributeVertically(Control parent, IEnumerable<UIElement> children)
+        {
+            Vector2 previousPosition = parent.TopLeftPosition;
             foreach (UIElement element in children)
             {
                 var margin = element.Margin;

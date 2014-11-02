@@ -34,18 +34,17 @@ namespace Odyssey.UserInterface.Controls
             Owner = owner;
         }
 
-        public IEnumerable<UIElement> InteractionEnabledControls
+        public IEnumerable<UIElement> InteractionEnabled
         {
             get
             {
-                for (int i = 0; i < Count; i++)
-                {
-                    UIElement control = this[i];
-                    if (control.IsVisible && control.IsEnabled && control.CanRaiseEvents)
-                        yield return control;
-                    else continue;
-                }
+                return this.Where(c => c.IsVisible && c.IsEnabled && c.CanRaiseEvents);
             }
+        }
+
+        public IEnumerable<UIElement> Public
+        {
+            get { return this.Where(c => !c.IsInternal); }
         }
 
         public bool IsEmpty

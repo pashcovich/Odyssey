@@ -47,8 +47,7 @@ namespace Odyssey.UserInterface.Controls
                     TextStyleClass = TextStyleClass
                 }
             };
-            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((Label l) => l.Text),
-                new Binding(DataTemplate.VisualTree.Name, string.Empty));
+            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((Label l) => l.Text), new Binding(DataTemplate.VisualTree.Name, string.Empty));
             return DataTemplate;
         }
 
@@ -64,7 +63,7 @@ namespace Odyssey.UserInterface.Controls
                     DataTemplate.Key, DataTemplate.DataType.Name, Name, GetType().Name));
                 return;
             }
-
+            int itemCount = 1;
             foreach (var item in ItemsSource)
             {
                 UIElement previousElement = this;
@@ -81,10 +80,9 @@ namespace Odyssey.UserInterface.Controls
                     newItem.DataContext = item;
 
                     foreach (var kvp in DataTemplate.Bindings.Where(kvp => string.Equals(newItem.Name, kvp.Value.TargetElement)))
-                    {
                         newItem.SetBinding(kvp.Value, kvp.Key);
-                    }
 
+                    newItem.Name = string.Format("{0}{1:D2}", newItem.Name, itemCount++);
                     previousElement = newItem;
                 }
             }

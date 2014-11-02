@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Content;
-using Odyssey.Graphics;
 using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Controls;
 using SharpDX;
@@ -11,10 +10,13 @@ namespace Odyssey.UserInterface.Style
 {
     public sealed class VisualState : Component, IResourceProvider, IEnumerable<Shape>
     {
-        private Shape[] shapes;
+        private readonly Control parent ;
+        private readonly  Shape[] shapes;
 
-        private VisualState()
+        private VisualState(Control parent, IEnumerable<Shape> shapes)
         {
+            this.parent = parent;
+            this.shapes = shapes.ToArray();
         }
 
         public void Initialize()
@@ -28,9 +30,7 @@ namespace Odyssey.UserInterface.Style
 
         internal static VisualState GenerateVisualStateForControl(Control control, VisualStateDefinition visualStateDefinition)
         {
-            var visualState = new VisualState();
-
-            List<Shape> shapeList = new List<Shape>();
+            var shapeList = new List<Shape>();
             foreach (var shape in visualStateDefinition.Shapes)
             {
                 var newShape = (Shape)shape.Copy();
@@ -44,14 +44,23 @@ namespace Odyssey.UserInterface.Style
             }
 
             control.Animator.AddAnimations(visualStateDefinition.Animations);
-            visualState.shapes = shapeList.ToArray();
-            return visualState;
+            return new VisualState(control, shapeList);
         }
 
         public void Update()
         {
             foreach (Shape shape in shapes)
                 shape.Layout();
+        }
+
+        public void SynchronizeSize()
+        {
+            foreach (var shape in shapes)
+            {
+                shape.Width *= parent.Width / shape.Width;
+                shape.Height *= parent.Height/shape.Height;
+            }
+
         }
 
         #region IResourceProvider
