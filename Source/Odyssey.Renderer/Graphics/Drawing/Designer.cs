@@ -25,12 +25,14 @@ namespace Odyssey.Graphics.Drawing
 
         public Matrix Transform { get; set; }
         public IColorResource Color { get; set; }
+        public ModelOperation ModelOperations { get; set; }
 
         public Designer(IServiceRegistry services)
         {
             this.services = services;
             device = services.GetService<IGraphicsDeviceService>().DirectXDevice;
             shapes = new List<ShapeMeshDescription>();
+            ModelOperations = ModelOperation.None;
         }
 
         public void Begin()
@@ -47,8 +49,8 @@ namespace Odyssey.Graphics.Drawing
 
         void Build()
         {
-            List<VertexPositionColor> vertexList = new List<VertexPositionColor>();
-            List<int> indexList = new List<int>();
+            var vertexList = new List<VertexPositionColor>();
+            var indexList = new List<int>();
 
             int index = 0;
             foreach (var shape in shapes)
@@ -61,7 +63,7 @@ namespace Odyssey.Graphics.Drawing
                 index += shape.Vertices.Length;
             }
             
-            model = GeometricPrimitive.New(device, "ShapeMesh", vertexList.ToArray(), indexList.ToArray());
+            model = GeometricPrimitive<VertexPositionNormalTexture>.New(device, "ShapeMesh", vertexList.ToArray(), indexList.ToArray(), modelOperations: ModelOperations);
         }
 
     }

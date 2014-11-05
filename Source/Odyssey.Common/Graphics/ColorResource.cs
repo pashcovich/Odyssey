@@ -7,7 +7,7 @@ using Odyssey.Utilities.Reflection;
 
 namespace Odyssey.Graphics
 {
-    public abstract class ColorResource : ISerializableResource, IResource, IColorResource
+    public abstract class ColorResource : ISerializableResource, IColorResource
     {
         private readonly ColorType type;
         private bool shared;

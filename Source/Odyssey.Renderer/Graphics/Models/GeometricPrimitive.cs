@@ -63,7 +63,7 @@ namespace Odyssey.Graphics.Models
             where TVertex : struct
         {
             bool toLeftHanded = modelOperations.HasFlag(ModelOperation.ReverseIndices);
-
+           
             return new GeometricPrimitive<TVertex>(name, vertices, indices, primitiveTopology, toLeftHanded).ToModel(device);
         }
 
@@ -137,7 +137,7 @@ namespace Odyssey.Graphics.Models
             }
             else if (modelOperations.HasFlag(ModelOperation.CalculateBarycentricCoordinates))
             {
-                var barycentricVertices = ModelEditor.ConvertToBarycentricVertices(vertices, indices);
+                var barycentricVertices = ModelEditor.ConvertToBarycentricEdgeVertices(vertices, indices);
                 return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, null, primitiveTopology, false).ToModel(device);
             }
             else if (modelOperations.HasFlag(ModelOperation.CalculateBarycentricCoordinatesAndExcludeEdges))
@@ -147,7 +147,6 @@ namespace Odyssey.Graphics.Models
                 return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, newIndices, primitiveTopology, false).ToModel(device);
             }
             else return new GeometricPrimitive(name, vertices, indices, primitiveTopology, toLeftHanded).ToModel(device);
-
         }
 
     }

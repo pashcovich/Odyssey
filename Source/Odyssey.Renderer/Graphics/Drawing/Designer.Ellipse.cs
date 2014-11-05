@@ -2,6 +2,7 @@
 using System.Linq;
 using Odyssey.Geometry;
 using Odyssey.Geometry.Primitives;
+using Odyssey.Graphics.Models;
 using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
@@ -16,7 +17,7 @@ namespace Odyssey.Graphics.Drawing
             EllipseColorShader shader = ChooseEllipseShader(Color, out offsets);
             Color4[] colors = shader(ellipse, Color, (offsets.Length - 1) * (slices) + 1, slices);
             int[] indices;
-            Vector3[] vertices = CreateEllipseMesh(ellipse, offsets, slices, Transform, out indices);
+            Vector3[] vertices = EllipseMesh.CreateMesh(ellipse, offsets, slices, Transform, out indices);
             
             var vertexArray = new VertexPositionColor[vertices.Length];
             for (int i = 0; i < vertices.Length; i++)
@@ -30,16 +31,41 @@ namespace Odyssey.Graphics.Drawing
             float innerRadiusRatio = 1 - (ringWidth / ellipse.RadiusX);
             float[] offsets;
 
+            var solidColor = Color as SolidColor;
+            if (solidColor != null)
+            {
+                Color = RadialGradient.New(Color.Name,
+                    new[]
+                    {
+                        new GradientStop(SharpDX.Color.Transparent, 0),
+                        new GradientStop(solidColor.Color, innerRadiusRatio), new GradientStop(solidColor.Color, 1)
+                    });
+            }
+
             EllipseColorShader shader = ChooseEllipseOutlineShader(innerRadiusRatio, Color, out offsets);
             Color4[] colors = shader(ellipse, Color, offsets.Length * slices, slices);
             int[] indices;
-            Vector3[] vertices = CreateEllipseRing(ellipse, offsets, slices, Transform, out indices);
+            Vector3[] vertices = EllipseMesh.CreateMesh(ellipse, offsets, slices, Transform, out indices);
 
             var vertexArray = new VertexPositionColor[vertices.Length];
             for (int i = 0; i < vertices.Length; i++)
                 vertexArray[i] = new VertexPositionColor() { Position = vertices[i], Color = colors[i] };
 
             shapes.Add(new ShapeMeshDescription() { Vertices = vertexArray, Indices = indices });
+        }
+
+        private static void TriangulateEllipseFirstRing(int slices, ref int[] indices, int startIndex = 0)
+        {
+            // First ring indices
+            for (int i = 0; i < slices; i++)
+            {
+                indices[startIndex + (3 * i)] = 0;
+                indices[startIndex + (3 * i) + 1] = i + 2;
+                indices[startIndex + (3 * i) + 2] = i + 1;
+            }
+            indices[startIndex + 3 * slices - 2] = 1;
+            SharpDX.Utilities.Swap(ref indices[startIndex + 3 * slices - 2], ref indices[startIndex + 3 * slices - 1]);
+
         }
 
         #region Color Shaders
@@ -127,148 +153,6 @@ namespace Odyssey.Graphics.Drawing
         } 
         #endregion
 
-        static Vector3[] CreateEllipseRing(Ellipse ellipse, float[] ringOffsets, int slices, Matrix transform, out int[] indices)
-        {
-            int rings = ringOffsets.Length;
-            Vector3[] vertices = new Vector3[rings * slices];
-            indices = new int[3 * slices * 2 * (rings - 1)];
-
-            var innerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[0], ellipse.RadiusY * ringOffsets[0], slices).ToArray();
-            for (int i = 0; i < slices; i++)
-            {
-                vertices[i] = innerRingVertices[i].ToVector3();
-            }
-            
-            int indexCount = 0;
-            for (int r = 1; r < rings; r++)
-            {
-                // Other rings vertices
-                var outerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[r], ellipse.RadiusY * ringOffsets[r], slices).ToArray();
-                for (int i = 0; i < slices; i++)
-                {
-                    vertices[(r*slices)+i] = outerRingVertices[i].ToVector3();
-                }
-
-                // Other rings indices
-                int baseIndex = (r-1)*slices;
-
-                for (int i = 0; i < slices; i++)
-                {
-                    // current ring
-
-                    // first face
-                    indices[indexCount] = baseIndex + i;
-                    indices[indexCount + 2] = baseIndex + i + slices;
-                    indices[indexCount + 1] = baseIndex + i + slices + 1;
-                    
-                    // second face
-                    indices[indexCount + 3] = baseIndex + i;
-                    indices[indexCount + 5] = baseIndex + i + slices + 1;
-                    indices[indexCount + 4] = baseIndex + i + 1;
-                    indexCount += 6;
-                }
-                // Wrap faces
-                indices[indexCount - 4] = r *slices;
-                indices[indexCount - 5] = (r -1)* slices;
-                indices[indexCount - 1] = (r + 1)*slices - 1;
-            }
-
-            if (!transform.IsIdentity)
-            {
-                for (int i = 0; i < vertices.Length; i++)
-                {
-                    var vertex = vertices[i];
-                    vertices[i] = Vector3.Transform(vertex, transform).ToVector3();
-                }
-            }
-            return vertices;
-
-        }
-        static Vector3[] CreateEllipseMesh(Ellipse ellipse, float[] ringOffsets, int slices, Matrix transform, out int[] indices)
-        {
-            int rings = ringOffsets.Length;
-            Vector3[] vertices = new Vector3[((rings - 1) * slices) + 1];
-
-            vertices[0] = ellipse.Center.ToVector3();
-
-            // First ring vertices
-            // ringOffsets[0] is assumed to be the center
-            // ringOffsets[1] the first ring
-            var innerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[1], ellipse.RadiusY* ringOffsets[1], slices).ToArray();
-            for (int i = 0; i < slices; i++)
-            {
-                vertices[i + 1] = innerRingVertices[i].ToVector3();
-            }
-
-            indices = new int[3 * slices * ((2 * (rings - 2)) + 1)];
-
-            TriangulateEllipseFirstRing(slices, ref indices);
-
-            if (rings == 1)
-            {
-                return vertices;
-            }
-
-            int indexCount = 0;
-            int baseIndex = 3 * slices;
-            for (int r = 1; r < rings - 1; r++)
-            {
-                // Other rings vertices
-                var outerRingVertices = Ellipse.CalculateVertices(ellipse.Center, ellipse.RadiusX * ringOffsets[r+1], ellipse.RadiusY * ringOffsets[r+1], slices).ToArray();
-                for (int i = 0; i < slices; i++)
-                {
-                    vertices[(r * slices) + i + 1] =outerRingVertices[i].ToVector3();
-                }
-
-                // Other rings indices
-                int j = r * slices;
-                int k = (r - 1) * slices;
-
-                for (int i = 0; i < slices; i++)
-                {
-                    // current ring
-
-                    // first face
-                    indices[baseIndex + indexCount] = j + i + 2;
-                    indices[baseIndex + indexCount + 1] = j + i + 1;
-                    indices[baseIndex + indexCount + 2] = k + i + 1;
-                    // second face
-                    indices[baseIndex + indexCount + 3] = j + i + 2;
-                    indices[baseIndex + indexCount + 4] = k + i + 1;
-                    indices[baseIndex + indexCount + 5] = k + i + 2;
-                    indexCount += 6;
-                }
-                // Wrap faces
-                indices[baseIndex + indexCount - 3] = 1 + (r - 1)*slices;
-                indices[baseIndex + indexCount - 6] = r*slices + 1;
-            }
-            SharpDX.Utilities.Swap(ref indices[baseIndex+indexCount -1], ref indices[baseIndex+indexCount-2]);
-            if (!transform.IsIdentity)
-            {
-                for (int i = 0; i < vertices.Length; i++)
-                {
-                    var vertex = vertices[i];
-                    vertices[i] = Vector3.Transform(vertex, transform).ToVector3();
-                }
-            }
-
-            return vertices;
-        }
-
-        static void TriangulateEllipseFirstRing(int slices, ref int[] indices, int startIndex = 0)
-        {
-            // First ring indices
-            for (int i = 0; i < slices; i++)
-            {
-                indices[startIndex + (3*i)] = 0;
-                indices[startIndex + (3*i) + 1] = i + 2;
-                indices[startIndex + (3*i) + 2] = i + 1;
-            }
-            indices[startIndex + 3*slices - 2] = 1;
-            SharpDX.Utilities.Swap(ref indices[startIndex + 3 * slices - 2], ref indices[startIndex + 3 * slices - 1]);
-            
-        }
-
         static EllipseColorShader ChooseEllipseShader(IColorResource color, out float[] ringOffsets)
         {
             EllipseColorShader shader;
@@ -301,7 +185,7 @@ namespace Odyssey.Graphics.Drawing
                     break;
 
                 default:
-                    throw new NotSupportedException(string.Format("Gradient `{0}' is not supported by Ellipse", color.Type));
+                    throw new NotSupportedException(String.Format("Gradient `{0}' is not supported by Ellipse", color.Type));
             }
             return shader;
         }
@@ -313,16 +197,13 @@ namespace Odyssey.Graphics.Drawing
             switch (color.Type)
             {
                 case ColorType.SolidColor:
-                    ringOffsets = new float[]{0f,1f};
-                    shader = EllipseUniform;
-                    break;
                 case ColorType.RadialGradient:
                     ringOffsets = ((IGradient)color).GradientStops.Select(g => (float)MathHelper.ConvertRange(0, 1, innerRadiusRatio, 1, g.Offset)).ToArray();
                     shader = EllipseOutlineRadial;
                     break;
 
                 default:
-                    throw new NotSupportedException(string.Format("Gradient `{0}' is not supported by EllipseOutline", color.Type));
+                    throw new NotSupportedException(String.Format("Gradient `{0}' is not supported by EllipseOutline", color.Type));
             }
             return shader;
         }

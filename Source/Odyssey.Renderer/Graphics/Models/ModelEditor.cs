@@ -85,7 +85,7 @@ namespace Odyssey.Graphics.Models
                     barycentricVertices[edge1.Item1].Barycentric += 2*biE1;
                     barycentricVertices[edge2.Item2].Barycentric += biE2;
 
-                    }
+                }
             }
             return barycentricVertices;
         }

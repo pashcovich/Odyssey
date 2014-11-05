@@ -89,9 +89,11 @@
     <Compile Include="Graphics\Drawing\DrawRectangleInstruction.cs" />
     <Compile Include="Graphics\Drawing\FillEllipseInstruction.cs" />
     <Compile Include="Graphics\Drawing\FillRectangleInstruction.cs" />
+    <Compile Include="Graphics\Drawing\SetModelOperationsInstruction.cs" />
     <Compile Include="Graphics\Drawing\SetTransformInstruction.cs" />
     <Compile Include="Graphics\Models\BufferCollection.cs" />
     <Compile Include="Graphics\Models\CylinderMesh.cs" />
+    <Compile Include="Graphics\Models\EllipseMesh.cs" />
     <Compile Include="Graphics\Models\GeoSphere.cs" />
     <Compile Include="Graphics\Models\IModelMesh.cs" />
     <Compile Include="Graphics\Models\IPrimitiveGenerator.cs" />
