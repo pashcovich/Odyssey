@@ -152,7 +152,7 @@ namespace Odyssey.Engine
 
         public void DrawLine(Line line, Brush brush, float strokeThickness = 1.0f)
         {
-            deviceContext.DrawLine(line.P0, line.P1, brush, strokeThickness);
+            deviceContext.DrawLine(line.P0 + line.Position, line.P1 + line.Position, brush, strokeThickness);
         }
 
         public void DrawText(string text, TextFormat textFormat, RectangleF layoutRect, Brush foregroundBrush,

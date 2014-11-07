@@ -39,6 +39,11 @@ namespace Odyssey.Graphics.Drawing
         private Brush fill;
         private Brush stroke;
 
+        public Shape()
+        {
+            CanRaiseEvents = false;
+        }
+
         [Animatable]
         [CacheAnimation(typeof(GradientStop), "Color")]
         public Brush Fill
