@@ -30,7 +30,7 @@ namespace Odyssey.Graphics.Models
         public void GenerateMesh(out VertexPositionNormalTexture[] vertices, out int[] indices)
         {
             int slices = tessellation;
-            int rings = 1;
+            const int rings = 1;
             var ringOffsets = new float[rings+1];
             ringOffsets[0] = innerRadiusRatio;
             float delta = (1-innerRadiusRatio)/rings;
@@ -104,7 +104,7 @@ namespace Odyssey.Graphics.Models
         internal static Vector3[] CreateMesh(Ellipse ellipse, float[] ringOffsets, int slices, Matrix transform, out int[] indices)
         {
             int rings = ringOffsets.Length;
-            Vector3[] vertices = new Vector3[((rings - 1) * slices) + 1];
+            var vertices = new Vector3[((rings - 1) * slices) + 1];
 
             vertices[0] = ellipse.Center.ToVector3();
 
@@ -125,7 +125,7 @@ namespace Odyssey.Graphics.Models
             {
                 return vertices;
             }
-
+            
             int indexCount = 0;
             int baseIndex = 3 * slices;
             for (int r = 1; r < rings - 1; r++)
@@ -144,7 +144,6 @@ namespace Odyssey.Graphics.Models
                 for (int i = 0; i < slices; i++)
                 {
                     // current ring
-
                     // first face
                     indices[baseIndex + indexCount] = j + i + 2;
                     indices[baseIndex + indexCount + 1] = j + i + 1;
@@ -153,13 +152,16 @@ namespace Odyssey.Graphics.Models
                     indices[baseIndex + indexCount + 3] = j + i + 2;
                     indices[baseIndex + indexCount + 4] = k + i + 1;
                     indices[baseIndex + indexCount + 5] = k + i + 2;
+
                     indexCount += 6;
                 }
                 // Wrap faces
                 indices[baseIndex + indexCount - 3] = 1 + (r - 1) * slices;
                 indices[baseIndex + indexCount - 6] = r * slices + 1;
+                SharpDX.Utilities.Swap(ref indices[baseIndex + indexCount - 1], ref indices[baseIndex + indexCount - 2]);
+
             }
-            SharpDX.Utilities.Swap(ref indices[baseIndex + indexCount - 1], ref indices[baseIndex + indexCount - 2]);
+            
             if (!transform.IsIdentity)
             {
                 for (int i = 0; i < vertices.Length; i++)
@@ -174,7 +176,7 @@ namespace Odyssey.Graphics.Models
 
         static void TriangulateEllipseFirstRing(int slices, ref int[] indices, int startIndex = 0)
         {
-            // First ring indices
+            //First ring indices
             for (int i = 0; i < slices; i++)
             {
                 indices[startIndex + (3 * i)] = 0;
@@ -182,8 +184,6 @@ namespace Odyssey.Graphics.Models
                 indices[startIndex + (3 * i) + 2] = i + 1;
             }
             indices[startIndex + 3 * slices - 2] = 1;
-            SharpDX.Utilities.Swap(ref indices[startIndex + 3 * slices - 2], ref indices[startIndex + 3 * slices - 1]);
-
         }
 
         public static Model New(DirectXDevice device, float semiMajorAxis=1.0f, float semiMinorAxis = 1.0f, int tessellation = 64, float innerRadiusRatio = 0f, float tileX = 1.0f,

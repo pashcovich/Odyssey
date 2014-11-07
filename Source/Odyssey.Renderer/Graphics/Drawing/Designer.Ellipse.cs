@@ -11,7 +11,7 @@ namespace Odyssey.Graphics.Drawing
     {
         private delegate Color4[] EllipseColorShader(Ellipse ellipse, IColorResource color, int numVertex, int slices);
 
-        public void FillEllipse(Ellipse ellipse, int slices = 64)
+        public void FillEllipse(Ellipse ellipse, int slices = 6)
         {
             float[] offsets;
             EllipseColorShader shader = ChooseEllipseShader(Color, out offsets);
@@ -45,7 +45,7 @@ namespace Odyssey.Graphics.Drawing
             EllipseColorShader shader = ChooseEllipseOutlineShader(innerRadiusRatio, Color, out offsets);
             Color4[] colors = shader(ellipse, Color, offsets.Length * slices, slices);
             int[] indices;
-            Vector3[] vertices = EllipseMesh.CreateMesh(ellipse, offsets, slices, Transform, out indices);
+            Vector3[] vertices = EllipseMesh.CreateRingMesh(ellipse, offsets, slices, Transform, out indices);
 
             var vertexArray = new VertexPositionColor[vertices.Length];
             for (int i = 0; i < vertices.Length; i++)
@@ -54,19 +54,6 @@ namespace Odyssey.Graphics.Drawing
             shapes.Add(new ShapeMeshDescription() { Vertices = vertexArray, Indices = indices });
         }
 
-        private static void TriangulateEllipseFirstRing(int slices, ref int[] indices, int startIndex = 0)
-        {
-            // First ring indices
-            for (int i = 0; i < slices; i++)
-            {
-                indices[startIndex + (3 * i)] = 0;
-                indices[startIndex + (3 * i) + 1] = i + 2;
-                indices[startIndex + (3 * i) + 2] = i + 1;
-            }
-            indices[startIndex + 3 * slices - 2] = 1;
-            SharpDX.Utilities.Swap(ref indices[startIndex + 3 * slices - 2], ref indices[startIndex + 3 * slices - 1]);
-
-        }
 
         #region Color Shaders
         private static Color4[] EllipseRadial(Ellipse ellipse, IColorResource color, int numVertex, int slices)
