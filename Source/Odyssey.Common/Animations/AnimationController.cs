@@ -121,7 +121,7 @@ namespace Odyssey.Animations
             foreach (var animation in animations.Values)
             {
                 int cachedAnimations = 0;
-                List<IAnimationCurve> curves = new List<IAnimationCurve>(animation.Curves);
+                var curves = new List<IAnimationCurve>(animation.Curves);
                 foreach (IAnimationCurve curve in curves)
                 {
                     object realTarget;

@@ -97,7 +97,7 @@ namespace Odyssey.UserInterface.Style
                 throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
 
             var resource = sharedResources[resourceName].Value;
-            TResource resultResource = resource as TResource;
+            var resultResource = resource as TResource;
             if (resultResource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
                     resourceName, resource, typeof(TResource).Name));
