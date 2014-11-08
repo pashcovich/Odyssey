@@ -34,7 +34,7 @@ namespace Odyssey.Talos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (Entity entity in Entities.Where(e => e.IsEnabled))
+            foreach (var entity in Entities.Where(e => e.IsEnabled))
             {
                 var cModel = entity.GetComponent<ModelComponent>(tModel.KeyPart);
                 var cShader = entity.GetComponent<ShaderComponent>(tShader.KeyPart);
@@ -51,11 +51,11 @@ namespace Odyssey.Talos.Systems
 
         void CreateCommands()
         {
-            LinkedList<Command> commands = new LinkedList<Command>();
+            var commands = new LinkedList<Command>();
             foreach (var renderable in renderMapper)
             {
-                Technique technique = renderable.Technique;
-                Model model = renderable.Model;
+                var technique = renderable.Technique;
+                var model = renderable.Model;
                 RenderCommand renderCommand;
                 if (technique.Mapping.Key.Supports(VertexShaderFlags.InstanceWorld))
                 {
@@ -69,8 +69,8 @@ namespace Odyssey.Talos.Systems
             }
 
 
-            StateViewer sv = new StateViewer(Services, commands);
-            LinkedList<Command> resultCommands = sv.Analyze();
+            var sv = new StateViewer(Services, commands);
+            var resultCommands = sv.Analyze();
 
             if (resultCommands == null)
                 LogEvent.Engine.Error("Nothing to render!");

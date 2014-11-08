@@ -144,5 +144,10 @@ namespace Odyssey.Talos.Systems
                 SetupEntity(entity);
         }
 
+        public override void AfterUpdate()
+        {
+            base.AfterUpdate();
+            IsEnabled = false;
+        }
     }
 }
