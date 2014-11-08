@@ -79,12 +79,13 @@ namespace Odyssey.Graphics.Models
                     int nextJ = (j + 1) % stride;
 
                     indices[indexCount++] = (ushort)(i * stride + j);
-                    indices[indexCount++] = (ushort)(nextI * stride + j);
                     indices[indexCount++] = (ushort)(i * stride + nextJ);
+                    indices[indexCount++] = (ushort)(nextI * stride + j);
+                    
 
                     indices[indexCount++] = (ushort)(i * stride + nextJ);
-                    indices[indexCount++] = (ushort)(nextI * stride + j);
                     indices[indexCount++] = (ushort)(nextI * stride + nextJ);
+                    indices[indexCount++] = (ushort)(nextI * stride + j);
                 }
             }
 
@@ -103,11 +104,10 @@ namespace Odyssey.Graphics.Models
         /// <param name="device">The device.</param>
         /// <param name="diameter">The diameter.</param>
         /// <param name="tessellation">The tessellation.</param>
-        /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <returns>A sphere primitive.</returns>
         /// <exception cref="System.ArgumentOutOfRangeException">tessellation;Must be >= 3</exception>
         public static Model New(DirectXDevice device, float diameter = 2.0f, int tessellation = 16, float tileX = 1.0f,
-            float tileY = 1.0f, PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList, ModelOperation modelOperations = ModelOperation.None)
+            float tileY = 1.0f, ModelOperation modelOperations = ModelOperation.None)
         {
             Contract.Requires<ArgumentException>(tessellation >= 3, "tessellation must be >= 3");
             SphereMesh sphere = new SphereMesh(tileX, tileY, tessellation, diameter);
@@ -115,7 +115,7 @@ namespace Odyssey.Graphics.Models
             int[] indices;
             sphere.GenerateMesh(out vertices, out indices);
 
-            return GeometricPrimitive.New(device, "Sphere", vertices, indices, primitiveTopology, modelOperations);
+            return GeometricPrimitive.New(device, "Sphere", vertices, indices, PrimitiveTopology.TriangleList, modelOperations);
         }
 
     }

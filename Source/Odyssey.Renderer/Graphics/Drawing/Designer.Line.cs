@@ -11,6 +11,7 @@ namespace Odyssey.Graphics.Drawing
     public partial class Designer
     {
         private delegate void RenderRectangle(RectangleF rectangle);
+
         void CreatePolyLine(IEnumerable<Vector2> points, float lineWidth, RenderRectangle callback)
         {
             Contract.Requires<ArgumentNullException>(points!=null, "points");

@@ -130,13 +130,14 @@ namespace Odyssey.Graphics.Drawing
 
                     if (i < rows && j < columns)
                     {
-                        indices[indexCount] = vertexCount + columns + 1 ;
+                        indices[indexCount+2] = vertexCount + columns + 1 ;
                         indices[indexCount + 1] = vertexCount + 1;
-                        indices[indexCount + 2] = vertexCount;
+                        indices[indexCount] = vertexCount;
 
-                        indices[indexCount + 3] = indices[indexCount];
-                        indices[indexCount + 4] = indices[indexCount] + 1;
-                        indices[indexCount + 5] = indices[indexCount + 1];
+
+                        indices[indexCount + 3] = indices[indexCount + 1];
+                        indices[indexCount + 4] = indices[indexCount + 2]+1;
+                        indices[indexCount + 5] = indices[indexCount + 2];
                         indexCount += 6;
                     }
 

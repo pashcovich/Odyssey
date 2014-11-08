@@ -123,6 +123,7 @@ namespace Odyssey.Graphics.Models
                 vertices[i].TextureUV = new Vector2(1.0f - vertices[i].TextureUV.X, vertices[i].TextureUV.Y);
             }
         }
+
         public static Model New(DirectXDevice device, string name, VertexPositionNormalTexture[] vertices, int[] indices,
             PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList, ModelOperation modelOperations = ModelOperation.None)
         {

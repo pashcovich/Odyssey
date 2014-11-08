@@ -75,19 +75,20 @@ namespace Odyssey.Graphics.Models
 
                     // first face
                     indices[indexCount] = baseIndex + i;
-                    indices[indexCount + 2] = baseIndex + i + slices;
-                    indices[indexCount + 1] = baseIndex + i + slices + 1;
+                    indices[indexCount + 1] = baseIndex + i + slices;
+                    indices[indexCount + 2] = baseIndex + i + slices + 1;
 
                     // second face
                     indices[indexCount + 3] = baseIndex + i;
-                    indices[indexCount + 5] = baseIndex + i + slices + 1;
-                    indices[indexCount + 4] = baseIndex + i + 1;
+                    indices[indexCount + 4] = baseIndex + i + slices + 1;
+                    indices[indexCount + 5] = baseIndex + i + 1;
                     indexCount += 6;
                 }
                 // Wrap faces
-                indices[indexCount - 4] = r * slices;
-                indices[indexCount - 5] = (r - 1) * slices;
-                indices[indexCount - 1] = (r + 1) * slices - 1;
+                indices[indexCount - 2] = (r + 1) * slices - 1;
+                indices[indexCount - 5] = r * slices;
+                indices[indexCount - 4] = (r - 1) * slices;
+                
             }
 
             if (!transform.IsIdentity)
@@ -146,12 +147,12 @@ namespace Odyssey.Graphics.Models
                     // current ring
                     // first face
                     indices[baseIndex + indexCount] = j + i + 2;
-                    indices[baseIndex + indexCount + 1] = j + i + 1;
-                    indices[baseIndex + indexCount + 2] = k + i + 1;
+                    indices[baseIndex + indexCount + 2] = j + i + 1;
+                    indices[baseIndex + indexCount + 1] = k + i + 1;
                     // second face
                     indices[baseIndex + indexCount + 3] = j + i + 2;
-                    indices[baseIndex + indexCount + 4] = k + i + 1;
-                    indices[baseIndex + indexCount + 5] = k + i + 2;
+                    indices[baseIndex + indexCount + 5] = k + i + 1;
+                    indices[baseIndex + indexCount + 4] = k + i + 2;
 
                     indexCount += 6;
                 }
@@ -180,10 +181,10 @@ namespace Odyssey.Graphics.Models
             for (int i = 0; i < slices; i++)
             {
                 indices[startIndex + (3 * i)] = 0;
-                indices[startIndex + (3 * i) + 1] = i + 2;
-                indices[startIndex + (3 * i) + 2] = i + 1;
+                indices[startIndex + (3 * i) + 2] = i + 2;
+                indices[startIndex + (3 * i) + 1] = i + 1;
             }
-            indices[startIndex + 3 * slices - 2] = 1;
+            indices[startIndex + 3 * slices - 1] = 1;
         }
 
         public static Model New(DirectXDevice device, float semiMajorAxis=1.0f, float semiMinorAxis = 1.0f, int tessellation = 64, float innerRadiusRatio = 0f, float tileX = 1.0f,

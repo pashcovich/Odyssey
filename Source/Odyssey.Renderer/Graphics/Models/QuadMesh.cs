@@ -33,14 +33,15 @@ namespace Odyssey.Graphics.Models
                     normal, new Vector2(0.0f, 0.0f)),
                 new VertexPositionNormalTexture(new Vector3(topLeft.X + width, topLeft.Y, topLeft.Z),
                     normal, new Vector2(1.0f, 0.0f)*TileFactor),
-                new VertexPositionNormalTexture(new Vector3(topLeft.X, topLeft.Y + height, topLeft.Z),
-                    normal, new Vector2(0.0f, 1.0f)*TileFactor),
                 new VertexPositionNormalTexture(new Vector3(topLeft.X + width, topLeft.Y + height, topLeft.Z),
                     normal, new Vector2(1.0f, 1.0f)*TileFactor),
+                new VertexPositionNormalTexture(new Vector3(topLeft.X, topLeft.Y + height, topLeft.Z),
+                    normal, new Vector2(0.0f, 1.0f)*TileFactor),
+                
             };
             indices = new []
             {
-                0, 1, 2,
+                0, 3, 1,
                 1, 3,2
             };;
         }

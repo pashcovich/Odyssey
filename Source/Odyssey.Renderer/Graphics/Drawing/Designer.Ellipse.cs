@@ -11,7 +11,7 @@ namespace Odyssey.Graphics.Drawing
     {
         private delegate Color4[] EllipseColorShader(Ellipse ellipse, IColorResource color, int numVertex, int slices);
 
-        public void FillEllipse(Ellipse ellipse, int slices = 6)
+        public void FillEllipse(Ellipse ellipse, int slices = 64)
         {
             float[] offsets;
             EllipseColorShader shader = ChooseEllipseShader(Color, out offsets);
