@@ -15,7 +15,7 @@ namespace Odyssey.Graphics
         /// <summary>
         /// A built-in state object with default settings for using a depth stencil buffer.
         /// </summary>
-        public readonly DepthStencilState Default;
+        public readonly DepthStencilState Enabled;
 
         /// <summary>
         /// A built-in state object with settings for enabling a read-only depth stencil buffer.
@@ -34,7 +34,7 @@ namespace Odyssey.Graphics
         internal DepthStencilStateCollection(DirectXDevice device)
             : base(device)
         {
-            Default = Add(DepthStencilState.New(device, "Default", true, true));
+            Enabled = Add(DepthStencilState.New(device, "Enabled", true, true));
             DepthRead = Add(DepthStencilState.New(device, "DepthRead", true, false));
             None = Add(DepthStencilState.New(device, "None", false, false));
 

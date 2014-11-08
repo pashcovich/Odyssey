@@ -18,12 +18,14 @@ namespace Odyssey.Graphics.Organization
 
     public enum PreferredRasterizerState
     {
+        None,
         CullBack,
         Wireframe
     }
 
     public enum PreferredBlendState
     {
+        None,
         Opaque,
         Additive,
         /// <summary>
@@ -34,9 +36,9 @@ namespace Odyssey.Graphics.Organization
 
     public enum PreferredDepthStencilState
     {
+        None,
         Enabled,
         EnabledComparisonLessEqual,
-        None,
     }
 
     [Flags]
