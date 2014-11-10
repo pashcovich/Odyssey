@@ -24,17 +24,19 @@ using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models
 {
-    public class CylinderMesh
+    public class ConeMesh
     {
-        private readonly float diameter;
+        private readonly float baseRadius;
+        private readonly float topRadius;
         private readonly float height;
         private readonly int tessellationH;
         private readonly int tessellationV;
         private readonly Vector2 tileFactor;
 
-        public CylinderMesh(float diameter, float height, int tessellationH, int tessellationV, float tileX, float tileY)
+        public ConeMesh(float baseRadius, float topRadius, float height, int tessellationH, int tessellationV, float tileX, float tileY)
         {
-            this.diameter = diameter;
+            this.baseRadius = baseRadius;
+            this.topRadius = topRadius;
             this.height = height;
             this.tessellationH = tessellationH;
             this.tessellationV = tessellationV;
@@ -43,17 +45,20 @@ namespace Odyssey.Graphics.Models
 
         public void GenerateMesh(out VertexPositionNormalTexture[] vertices, out int[] indices)
         {
-            var mb = new MeshBuilder();
-            float deltaV = height / tessellationV;
+            var mb = new MeshBuilder() { TileFactor =  tileFactor};
+            float deltaV = height/tessellationV;
+
             for (int i = 0; i <= tessellationV; i++)
             {
-                Vector3 p = Vector3.Up * deltaV * i - height / 2 * Vector3.Up;
-                float v = (float)i / tessellationV;
-                mb.BuildRing(tessellationH, p, diameter / 2, v, i > 0);
+                Vector3 p = Vector3.Up*deltaV*i - height/2*Vector3.Up;
+                float r = MathUtil.Lerp(baseRadius, topRadius, (float) i/tessellationV);
+                float v = (float) i/tessellationV;
+                mb.BuildRing(tessellationH, p, r, v, i > 0);
             }
 
-            mb.BuildCap(tessellationH, -height / 2 * Vector3.Up, diameter / 2, true);
-            mb.BuildCap(tessellationH, Vector3.Up * height / 2, diameter / 2, false);
+            mb.BuildCap(tessellationH, -height/2*Vector3.Up, baseRadius, true);
+            if (topRadius>0)
+                mb.BuildCap(tessellationH, height/2 * Vector3.Up, topRadius, false);
 
             vertices = mb.GetVertices();
             indices = mb.GetIndices();
@@ -64,7 +69,7 @@ namespace Odyssey.Graphics.Models
         /// </summary>
         /// <param name="device">The device.</param>
         /// <param name="height">The height.</param>
-        /// <param name="diameter">The diameter.</param>
+        /// <param name="baseRadius">The radius of the base.</param>
         /// <param name="tessellationH">The horizontal tessellation.</param>
         /// <param name="tessellationV">The vertical tessellation.</param>
         /// <param name="tileX">Horizontal texture coordinate scale factor.</param>
@@ -72,12 +77,12 @@ namespace Odyssey.Graphics.Models
         /// <param name="modelOperations">Operations to perform on the model.</param>
         /// <returns>A cone primitive.</returns>
         public static Model New(DirectXDevice device,
-            float diameter, float height,
+            float baseRadius, float height, float topRadius = 0, 
             int tessellationH = 8, int tessellationV = 8,
             float tileX = 1.0f, float tileY = 1.0f,
             ModelOperation modelOperations = ModelOperation.None)
         {
-            var cylinder = new CylinderMesh(diameter, height, tessellationH, tessellationV, tileX, tileY);
+            var cylinder = new ConeMesh(baseRadius, topRadius, height, tessellationH, tessellationV, tileX, tileY);
             VertexPositionNormalTexture[] vertices;
             int[] indices;
             cylinder.GenerateMesh(out vertices, out indices);

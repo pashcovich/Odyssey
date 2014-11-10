@@ -92,11 +92,14 @@
     <Compile Include="Graphics\Drawing\SetModelOperationsInstruction.cs" />
     <Compile Include="Graphics\Drawing\SetTransformInstruction.cs" />
     <Compile Include="Graphics\Models\BufferCollection.cs" />
+    <Compile Include="Graphics\Models\ConeMesh.cs" />
     <Compile Include="Graphics\Models\CylinderMesh.cs" />
     <Compile Include="Graphics\Models\EllipseMesh.cs" />
     <Compile Include="Graphics\Models\GeoSphere.cs" />
     <Compile Include="Graphics\Models\IModelMesh.cs" />
     <Compile Include="Graphics\Models\IPrimitiveGenerator.cs" />
+    <Compile Include="Graphics\Models\MeshBuilder.cs" />
+    <Compile Include="Graphics\Models\MeshHelper.cs" />
     <Compile Include="Graphics\Models\Model.cs" />
     <Compile Include="Graphics\Models\ModelAnalyzer.cs" />
     <Compile Include="Graphics\Models\ModelBufferRange.cs" />

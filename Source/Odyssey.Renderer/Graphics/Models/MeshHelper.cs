@@ -14,7 +14,7 @@ namespace Odyssey.Graphics.Models
 
         internal static Vector3 ComputeFaceNormal(Vector3 v1, Vector3 v2, Vector3 v3)
         {
-            return new Triangle(v1,v2,v3).CalculateNormal();
+            return new Triangle(v1, v2, v3).CalculateNormal();
         }
 
         // Helper creates a triangle fan to close the end of a cylinder.
