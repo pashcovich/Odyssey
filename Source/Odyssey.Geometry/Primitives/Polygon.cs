@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Odyssey.Engine;
 using SharpDX;
 using Real = System.Single;
 using Point = SharpDX.Vector2;
@@ -28,6 +29,9 @@ namespace Odyssey.Geometry.Primitives
         {
             get { return Vertices.Count; }
         }
+
+        public Real SideLength { get; private set; }
+        public Real CircumCircleRadius { get; private set; }
 
         public Matrix3x2 Transform { get; set; }
 
@@ -327,23 +331,23 @@ namespace Odyssey.Geometry.Primitives
 
         public static Polygon New(Point center, Real circumCircleRadius, int sides)
         {
-            float polygonSide = SideLength(circumCircleRadius, sides);
+            float sideLength = ComputeSideLength(circumCircleRadius, sides);
 
-            Vector2[] polygonPoints = new Vector2[sides];
+            var polygonPoints = new Vector2[sides];
             
             for (int i = 0; i < sides; i++)
             {
                 float theta = 2 * MathUtil.Pi / sides;
-                float x = center.X + (float)Math.Cos(i * theta) * polygonSide;
-                float y = center.Y + (float)Math.Sin(i * theta) * polygonSide;
+                float x = center.X + (float)Math.Cos(i * theta) * sideLength;
+                float y = center.Y + (float)Math.Sin(i * theta) * sideLength;
 
                 polygonPoints[i] = new Vector2(x, y);
             }
 
-            return new Polygon(polygonPoints);
+            return new Polygon(polygonPoints) { SideLength = sideLength, CircumCircleRadius = circumCircleRadius};
         }
 
-        static float SideLength(float circumCircleRadius, int sides)
+        static float ComputeSideLength(float circumCircleRadius, int sides)
         {
             return 2*circumCircleRadius*(float)Math.Sin(Math.PI/sides);
         }
