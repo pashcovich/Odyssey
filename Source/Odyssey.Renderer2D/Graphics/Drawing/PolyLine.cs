@@ -28,7 +28,7 @@ namespace Odyssey.Graphics.Drawing
 {
     public class PolyLine : PathGeometry
     {
-        internal PolyLine(string name, Direct2DDevice device)
+        private PolyLine(string name, Direct2DDevice device)
             : base(name, device)
         {
             Initialize(Resource);
@@ -42,7 +42,7 @@ namespace Odyssey.Graphics.Drawing
             if (array.Length < 2)
                 throw new ArgumentException("Figure needs at least two points");
             
-            PolyLine polyLine = new PolyLine(name, device);
+            var polyLine = new PolyLine(name, device);
             var sink = polyLine.DefineFigure();
             sink.BeginFigure(array[0], figureBegin);
             sink.AddLines(array.Skip(1));

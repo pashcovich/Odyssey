@@ -19,6 +19,11 @@ namespace Odyssey.UserInterface.Style
             return Scale*Unit*units;
         }
 
+        public static Vector2 Units(float unitsX, float unitsY)
+        {
+            return Scale*Unit*new Vector2(unitsX, unitsY);
+        }
+
         public static Vector2 CenterControl(UIElement control, UIElement container)
         {
             return new Vector2(CenterControlHorizontal(control, container),

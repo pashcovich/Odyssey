@@ -49,6 +49,7 @@
     <Compile Include="Engine\Direct2DDevice.cs" />
     <Compile Include="Engine\Direct2DSurface.cs" />
     <Compile Include="Engine\IDirect2DService.cs" />
+    <Compile Include="Graphics\Drawing\FigureDesigner.cs" />
     <Compile Include="Graphics\GradientBrush.cs" />
     <Compile Include="Graphics\RadialGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\CutCornerRectangle.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="UserInterface\Data\BindingCollection.cs" />
     <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
-    <Compile Include="UserInterface\Style\FigureData.cs" />
     <Compile Include="Graphics\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\PolygonBase.cs" />
     <Compile Include="Graphics\Drawing\Rectangle.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="Graphics\Drawing\Shape.cs" />
     <Compile Include="Graphics\Brush.cs" />
     <Compile Include="Graphics\Drawing\FigureBegin.cs" />
-    <Compile Include="Graphics\Drawing\FigureDesigner.cs" />
+    <Compile Include="Graphics\Drawing\FigureParser.cs" />
     <Compile Include="Graphics\Drawing\FigureEnd.cs" />
     <Compile Include="Graphics\Drawing\FillMode.cs" />
     <Compile Include="Graphics\Drawing\Geometry.cs" />

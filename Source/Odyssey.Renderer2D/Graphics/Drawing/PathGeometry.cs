@@ -50,12 +50,19 @@ namespace Odyssey.Graphics.Drawing
             return new PathGeometry(name, device) { Figures = VectorArtParser.ParsePathData(pathData) };
         }
 
+        public static PathGeometry New(string name, Direct2DDevice device, IEnumerable<VectorCommand> commands)
+        {
+            return new PathGeometry(name, device) { Figures = commands };
+        }
+
         public override void Initialize()
         {
             Initialize(Resource);
             var sink = DefineFigure();
-            var designer = new FigureDesigner(sink);
+            var designer = new FigureParser(sink);
             designer.Execute(Figures);
+            if (designer.IsFigureOpen)
+                sink.EndFigure(FigureEnd.Open);
             sink.Close();
         }
 

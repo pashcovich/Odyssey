@@ -39,13 +39,18 @@ namespace Odyssey.Graphics.Drawing
         {
             var polygon = Polygon.New(center, circumCircleRadius, sides);
 
-            PolygonGeometry polygonGeometry = new PolygonGeometry(name, device, polygon);
+            var polygonGeometry = new PolygonGeometry(name, device, polygon);
             var sink = polygonGeometry.DefineFigure();
             sink.BeginFigure(polygon[0], figureBegin);
             sink.AddLines(polygon.Skip(1));
             sink.EndFigure(FigureEnd.Closed);
             sink.Close();
             return polygonGeometry;
+        }
+
+        public static PolygonGeometry New(string name, Direct2DDevice device, Polygon polygon, FigureBegin figureBegin)
+        {
+            return New(name, device, polygon.Centroid, polygon.CircumCircleRadius, polygon.Count, figureBegin);
         }
     }
 }

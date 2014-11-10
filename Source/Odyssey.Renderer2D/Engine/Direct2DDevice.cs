@@ -130,9 +130,9 @@ namespace Odyssey.Engine
         internal void CreateResources()
         { }
 
-        public void DrawGeometry(Graphics.Drawing.Geometry geometry, Brush brush)
+        public void DrawGeometry(Graphics.Drawing.Geometry geometry, Brush brush, float strokeThickness = 1.0f)
         {
-            deviceContext.DrawGeometry(geometry, brush);
+            deviceContext.DrawGeometry(geometry, brush, strokeThickness);
         }
 
         public void DrawRectangle(Shape shape, Brush brush, float strokeThickness = 1.0f)

@@ -64,7 +64,7 @@ namespace Odyssey.UserInterface.Style
             if (resource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
 
-            TResource resultResource = resource as TResource;
+            var resultResource = resource as TResource;
             if (resultResource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
                     resourceName, resource, typeof (TResource).Name));
@@ -76,7 +76,7 @@ namespace Odyssey.UserInterface.Style
             foreach (var resource in root.Resources)
             {
                 yield return resource;
-                IResourceProvider resourceProvider = resource as IResourceProvider;
+                var resourceProvider = resource as IResourceProvider;
                 if (resourceProvider != null)
                 {
                     foreach (var childResource in PreOrderVisit(resourceProvider))
@@ -119,7 +119,7 @@ namespace Odyssey.UserInterface.Style
                 }
                 while (xmlReader.IsStartElement())
                 {
-                    string name = xmlReader.LocalName;
+                    var name = xmlReader.LocalName;
                     switch (name)
                     {
                         case "ControlStyle":
@@ -142,12 +142,12 @@ namespace Odyssey.UserInterface.Style
             reader.ReadStartElement(sResources);
             while (reader.IsStartElement())
             {
-                string name = reader.Name;
+                var name = reader.Name;
 
-                string typeName = String.Format("Odyssey.Graphics.{0}, Odyssey.Common", name);
+                var typeName = String.Format("Odyssey.Graphics.{0}, Odyssey.Common", name);
 
                 ColorResource colorResource;
-                string resourceName = reader.GetAttribute(ReflectionHelper.GetPropertyName((Theme t) => t.Name));
+                var resourceName = reader.GetAttribute(ReflectionHelper.GetPropertyName((Theme t) => t.Name));
                 try
                 {
                     colorResource = (ColorResource) Activator.CreateInstance(Type.GetType(typeName));

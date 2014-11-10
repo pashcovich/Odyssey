@@ -13,6 +13,8 @@
 
 #endregion License
 
+using SharpDX.Direct2D1;
+
 #region Using Directives
 
 using SharpDX;
@@ -44,6 +46,18 @@ namespace Odyssey.Graphics.Drawing
         public void AddLines(IEnumerable<Vector2> points)
         {
             geometrySink.AddLines(points.ToArray());
+        }
+
+        public void AddArc(float width, float height, float angleDegrees, bool isLargeArc, bool sweepDirection, Vector2 endPoint)
+        {
+            geometrySink.AddArc(new ArcSegment()
+            {
+                Size = new Size2F(width,height),
+                RotationAngle = angleDegrees,
+                ArcSize = isLargeArc ? ArcSize.Large : ArcSize.Small,
+                SweepDirection = sweepDirection ? SweepDirection.Clockwise : SweepDirection.CounterClockwise,
+                Point = endPoint
+            });
         }
 
         public void BeginFigure(Vector2 point, FigureBegin figureBegin)
