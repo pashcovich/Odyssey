@@ -2,7 +2,7 @@
 using Odyssey.Graphics.Effects;
 using Odyssey.Utilities;
 using Odyssey.Utilities.Logging;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;

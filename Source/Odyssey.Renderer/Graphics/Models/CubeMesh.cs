@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Engine;
 using Odyssey.Graphics.Meshes;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1.Effects;
 using SharpDX.Direct3D;
 

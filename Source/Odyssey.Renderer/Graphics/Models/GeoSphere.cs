@@ -8,7 +8,7 @@ using Odyssey.Engine;
 using Odyssey.Geometry.Primitives;
 using Odyssey.Graphics.Meshes;
 using Odyssey.Utilities.Logging;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models

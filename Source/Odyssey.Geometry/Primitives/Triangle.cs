@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Graphics;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Geometry.Primitives
 {

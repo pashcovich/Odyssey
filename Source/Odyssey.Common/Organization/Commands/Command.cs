@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using Odyssey.Graphics.Organization;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Organization.Commands
 {

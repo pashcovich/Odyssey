@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Engine;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 

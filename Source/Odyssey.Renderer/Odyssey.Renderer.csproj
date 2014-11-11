@@ -48,6 +48,9 @@
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-winrt\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
     <Reference Include="SharpYaml">
       <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
     </Reference>

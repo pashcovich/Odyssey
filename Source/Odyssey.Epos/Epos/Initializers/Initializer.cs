@@ -4,7 +4,7 @@ using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using SharpDX;
+using SharpDX.Mathematics;
 using EngineReference = Odyssey.Engine.EngineReference;
 
 namespace Odyssey.Epos.Initializers

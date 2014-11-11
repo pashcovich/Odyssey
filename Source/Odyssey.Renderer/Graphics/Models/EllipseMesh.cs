@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using Odyssey.Geometry.Primitives;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models

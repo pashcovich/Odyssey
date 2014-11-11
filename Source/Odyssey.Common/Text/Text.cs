@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Odyssey.Animations;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Utilities.Text
 {

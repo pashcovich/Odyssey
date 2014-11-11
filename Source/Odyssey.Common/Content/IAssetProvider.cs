@@ -1,7 +1,7 @@
 ﻿#region Using Directives
 
 using System.Collections.Generic;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 
 #endregion Using Directives

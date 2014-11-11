@@ -11,7 +11,7 @@ using Odyssey.Daedalus.View;
 using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities.Logging;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

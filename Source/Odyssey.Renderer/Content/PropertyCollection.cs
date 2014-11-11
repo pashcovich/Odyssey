@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Content
 {

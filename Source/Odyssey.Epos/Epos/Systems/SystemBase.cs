@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Epos.Messages;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion
 

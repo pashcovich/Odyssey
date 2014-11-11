@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Shaders
 {

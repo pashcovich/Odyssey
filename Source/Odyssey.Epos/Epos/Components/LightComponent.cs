@@ -1,4 +1,4 @@
-﻿using SharpDX;
+﻿using SharpDX.Mathematics;
 using SharpYaml;
 using SharpYaml.Serialization;
 

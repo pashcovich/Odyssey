@@ -4,9 +4,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Odyssey.Graphics.Models;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.DXGI;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Graphics
 {

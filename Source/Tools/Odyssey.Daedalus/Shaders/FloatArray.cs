@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Odyssey.Daedalus.Shaders.Nodes.Math;
 using SharpDX;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders
 {

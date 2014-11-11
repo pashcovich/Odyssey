@@ -1,5 +1,6 @@
 ﻿using System;
-using SharpDX;
+using SharpDX.Mathematics;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Geometry.Primitives
 {

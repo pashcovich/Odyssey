@@ -2,7 +2,7 @@
 using Odyssey.Daedalus.Shaders.Nodes.Math;
 using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Utilities.Collections;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;

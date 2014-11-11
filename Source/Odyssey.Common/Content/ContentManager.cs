@@ -15,7 +15,8 @@
 
 #region Using Directives
 
-using SharpDX;
+using Odyssey.Utilities.Collections;
+using SharpDX.Mathematics;
 using SharpDX.Collections;
 using SharpDX.IO;
 using SharpYaml.Serialization;

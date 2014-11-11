@@ -4,7 +4,7 @@ using System.IO;
 using Odyssey.Daedalus.Shaders;
 using Odyssey.Daedalus.Shaders.Methods;
 using Odyssey.Daedalus.Shaders.Nodes;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Serialization
 {

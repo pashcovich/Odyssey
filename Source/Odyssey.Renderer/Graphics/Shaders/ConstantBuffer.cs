@@ -2,7 +2,7 @@
 using System.ServiceModel.Security;
 using Odyssey.Engine;
 using Odyssey.Utilities.Logging;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 using System.Collections;
 using System.Collections.Generic;

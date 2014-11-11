@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Point = SharpDX.Vector2;
+using Point = SharpDX.Mathematics.Vector2;
 using Real = System.Single;
 
 namespace Odyssey.Geometry.Primitives

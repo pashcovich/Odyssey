@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using SharpDX.Direct3D11;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Shaders
 {

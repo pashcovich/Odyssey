@@ -6,7 +6,7 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Organization.Commands
 {

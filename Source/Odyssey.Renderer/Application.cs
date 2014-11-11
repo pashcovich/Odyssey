@@ -23,7 +23,7 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
 using Odyssey.Utilities.Reflection;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 using SharpDX.Direct3D11;
 using SharpDX.IO;

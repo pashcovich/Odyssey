@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Graphics.Shaders;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Epos.Initializers
 {

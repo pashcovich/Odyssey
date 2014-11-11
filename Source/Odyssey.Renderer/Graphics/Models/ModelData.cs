@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Odyssey.Content;
 using Odyssey.Utilities.Text;
 using SharpDX.IO;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Models
 {

@@ -1,5 +1,5 @@
 ﻿using Odyssey.Geometry.Primitives;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
 {

@@ -10,7 +10,7 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 
 namespace Odyssey.Organization.Commands

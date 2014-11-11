@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Graphics.Shaders;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Nodes
 {

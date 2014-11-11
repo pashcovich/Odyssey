@@ -1,5 +1,5 @@
 ﻿using Real = System.Single;
-using Point3D = SharpDX.Vector3;
+using Point3D = SharpDX.Mathematics.Vector3;
 
 namespace Odyssey.Geometry.Primitives
 {

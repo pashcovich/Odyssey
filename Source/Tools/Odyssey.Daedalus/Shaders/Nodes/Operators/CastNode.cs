@@ -1,4 +1,4 @@
-﻿using SharpDX.Serialization;
+﻿using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;

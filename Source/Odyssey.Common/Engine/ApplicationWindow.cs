@@ -11,7 +11,7 @@
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
 using Odyssey.Graphics;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 using System.Diagnostics.Contracts;
 

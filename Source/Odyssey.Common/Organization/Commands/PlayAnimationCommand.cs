@@ -5,7 +5,7 @@ using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Graphics.Organization;
 using Odyssey.Serialization;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Organization.Commands
 {

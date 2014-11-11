@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using Odyssey.Geometry.Primitives;
 using Odyssey.Utilities.Extensions;
-using SharpDX;
+using SharpDX.Mathematics;
 using System.Linq;
 
 namespace Odyssey.Graphics.Models

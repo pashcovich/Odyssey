@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Daedalus.Shaders.Structs;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {

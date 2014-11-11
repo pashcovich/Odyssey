@@ -18,7 +18,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Odyssey.Daedalus.Serialization;
 using Odyssey.Daedalus.Shaders.Structs;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using EngineReference = Odyssey.Engine.EngineReference;
 
 namespace Odyssey.Daedalus.Shaders

@@ -22,7 +22,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Odyssey.Content;
 using Odyssey.Epos.Messages;
-using SharpDX;
+using SharpDX.Mathematics;
 using Message = Odyssey.Epos.Messages.Message;
 
 #endregion

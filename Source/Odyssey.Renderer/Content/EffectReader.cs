@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities.Logging;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Content
 {

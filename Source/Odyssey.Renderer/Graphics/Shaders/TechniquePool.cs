@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Shaders
 {

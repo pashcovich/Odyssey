@@ -76,7 +76,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.DXGI;
 using SharpDX.WIC;
 

@@ -1,6 +1,6 @@
 ﻿using Odyssey.Daedalus.Shaders.Nodes;
 using Odyssey.Daedalus.Shaders.Nodes.Math;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using System;
 using System.Diagnostics.Contracts;
 using System.Diagnostics.Eventing.Reader;

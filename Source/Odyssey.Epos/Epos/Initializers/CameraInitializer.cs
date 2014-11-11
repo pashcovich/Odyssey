@@ -6,7 +6,7 @@ using Odyssey.Epos.Components;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos.Nodes;
-using SharpDX;
+using SharpDX.Mathematics;
 using Buffer = Odyssey.Graphics.Buffer;
 using EngineReference = Odyssey.Graphics.Effects.EngineReference;
 

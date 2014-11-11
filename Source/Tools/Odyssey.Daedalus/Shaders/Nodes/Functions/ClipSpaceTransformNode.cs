@@ -4,7 +4,7 @@ using Odyssey.Daedalus.Shaders.Nodes.Operators;
 using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
 using Odyssey.Graphics.Shaders;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using System.Collections.Generic;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Functions

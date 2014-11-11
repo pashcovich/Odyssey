@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.PostProcessing;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.IO;

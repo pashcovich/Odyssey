@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Content;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Models
 {

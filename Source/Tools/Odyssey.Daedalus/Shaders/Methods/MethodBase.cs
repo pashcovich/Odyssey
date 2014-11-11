@@ -18,7 +18,7 @@ using System.Reflection;
 using Odyssey.Daedalus.Serialization;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities.Logging;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Methods
 {

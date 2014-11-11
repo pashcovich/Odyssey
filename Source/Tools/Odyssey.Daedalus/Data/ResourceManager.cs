@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.Windows.Navigation;
 using Odyssey.Daedalus.Shaders.Techniques;
 using Odyssey.Graphics.Shaders;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using ShaderDescription = Odyssey.Daedalus.Model.ShaderDescription;
 
 namespace Odyssey.Daedalus.Data

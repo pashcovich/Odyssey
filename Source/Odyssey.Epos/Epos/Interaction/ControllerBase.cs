@@ -18,7 +18,7 @@
 using System;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion
 

@@ -8,7 +8,7 @@ using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Organization.Commands;
 using Odyssey.Epos;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 

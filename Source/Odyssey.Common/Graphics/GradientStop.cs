@@ -1,7 +1,7 @@
 ﻿using System;
 using Odyssey.Animations;
 using Odyssey.ViewModel;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics
 {

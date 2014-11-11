@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Odyssey.Serialization;
 using Odyssey.Utilities.Text;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics
 {

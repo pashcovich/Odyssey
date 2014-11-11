@@ -3,7 +3,7 @@ using System.Globalization;
 using Odyssey.Content;
 using Odyssey.Geometry;
 using Odyssey.Epos;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Animations
 {
