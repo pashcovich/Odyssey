@@ -191,7 +191,8 @@ namespace Odyssey.Animations
 
         public void Play(string animationName)
         {
-            Contract.Requires<ArgumentNullException>(ContainsAnimation(animationName), "Animation not found");
+            if (!ContainsAnimation(animationName))
+                throw new InvalidOperationException(string.Format("Animation '{0}' not found", animationName));
             var animation = animations[animationName];
             Play(animation);
             IsPlaying = true;

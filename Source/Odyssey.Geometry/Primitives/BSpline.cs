@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Point = SharpDX.Mathematics.Vector2;
+﻿using Point = SharpDX.Mathematics.Vector2;
 using Real = System.Single;
 
 namespace Odyssey.Geometry.Primitives
@@ -14,7 +9,7 @@ namespace Odyssey.Geometry.Primitives
 
         public override BSplineBase<Point> Derivative()
         {
-            Point[] newCPs = new Point[Count - 1];
+            var newCPs = new Point[Count - 1];
 
             BSpline derivative = new BSpline(Degree - 1);
 
@@ -25,7 +20,7 @@ namespace Odyssey.Geometry.Primitives
 
             derivative.AddPoints(newCPs);
 
-            Real[] newKnotVector = new Real[KnotVector.Count - 2];
+            var newKnotVector = new Real[KnotVector.Count - 2];
             for (int i = 0; i < newKnotVector.Length; i++)
             {
                 newKnotVector[i] = KnotVector[i + 1];

@@ -10,7 +10,6 @@ namespace Odyssey.Graphics
     public class RadialGradient : Gradient, IEquatable<RadialGradient>
     {
         private static int count;
-        private float radiusX;
 
         public Vector2 Center { get; private set; }
 

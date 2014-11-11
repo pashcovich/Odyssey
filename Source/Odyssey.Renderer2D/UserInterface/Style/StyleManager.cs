@@ -74,7 +74,8 @@ namespace Odyssey.UserInterface.Style
 
         public void AddResource(IResource resource, bool shared = true)
         {
-            Contract.Requires<ArgumentException>(!ContainsResource(resource.Name), "A resource with the same name is already in the collection");
+            if (ContainsResource(resource.Name))
+                throw new InvalidOperationException("A resource with the same name is already in the collection");
 
             sharedResources.Add(resource.Name, new ResourceDescription(shared, resource));
 

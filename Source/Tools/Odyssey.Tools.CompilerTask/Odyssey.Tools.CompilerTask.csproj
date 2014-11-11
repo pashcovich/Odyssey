@@ -36,7 +36,7 @@
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -74,13 +74,13 @@
       <HintPath>..\..\..\Libraries\AssimpNet\AssimpNet.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.DXGI">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.DXGI.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Mathematics">
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

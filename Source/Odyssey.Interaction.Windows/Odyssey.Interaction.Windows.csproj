@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX.Mathematics">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime" />

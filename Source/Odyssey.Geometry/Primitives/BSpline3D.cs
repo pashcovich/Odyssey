@@ -9,9 +9,9 @@ namespace Odyssey.Geometry.Primitives
 
         public override BSplineBase<Point3D> Derivative()
         {
-            Point3D[] newCPs = new Point3D[Count - 1];
+            var newCPs = new Point3D[Count - 1];
 
-            BSpline3D derivative = new BSpline3D(Degree - 1);
+            var derivative = new BSpline3D(Degree - 1);
 
             for (int i = 0; i < newCPs.Length; i++)
             {
@@ -20,7 +20,7 @@ namespace Odyssey.Geometry.Primitives
 
             derivative.AddPoints(newCPs);
 
-            Real[] newKnotVector = new Real[KnotVector.Count - 2];
+            var newKnotVector = new Real[KnotVector.Count - 2];
             for (int i = 0; i < newKnotVector.Length; i++)
             {
                 newKnotVector[i] = KnotVector[i + 1];

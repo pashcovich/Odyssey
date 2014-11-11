@@ -15,6 +15,7 @@ namespace Odyssey.Collections
             collectionMap = new Dictionary<TIndex, Dictionary<TKey, TValue>>();
         }
 
+        [Pure]
         public bool ContainsKey(TIndex index)
         {
             Contract.Requires<ArgumentNullException>(index != null, "index");

@@ -52,7 +52,7 @@
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Mathematics">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-winrt\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="SharpYaml">
       <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
@@ -169,9 +169,7 @@
     <Compile Include="Epos\Systems\UpdateableSystemBase.cs" />
     <Compile Include="Epos\Systems\UserInterfaceSystem.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

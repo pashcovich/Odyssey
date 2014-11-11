@@ -38,6 +38,6 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("0.3.0.*")]
+[assembly: AssemblyVersion("0.3.*")]
 [assembly: InternalsVisibleTo("Odyssey.Windows")]
 [assembly: InternalsVisibleTo("Odyssey.Interaction.Windows")]
