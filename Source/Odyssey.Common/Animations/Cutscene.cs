@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Organization.Commands;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Animations
 {

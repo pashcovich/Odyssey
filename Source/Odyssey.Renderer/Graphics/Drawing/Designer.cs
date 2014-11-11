@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics.Models;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
 {

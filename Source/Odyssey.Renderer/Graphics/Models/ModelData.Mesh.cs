@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Odyssey.Content;
-using SharpDX;
-using SharpDX.Serialization;
+using SharpDX.Mathematics;
+using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Models
 {

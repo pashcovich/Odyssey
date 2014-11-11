@@ -1,12 +1,8 @@
-﻿using System.IO;
-using System.Runtime.CompilerServices;
-using Odyssey.Engine;
+﻿using Odyssey.Core;
 using Odyssey.Graphics;
 using Odyssey.Graphics.PostProcessing;
-using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SharpDX.IO;
 using Texture2D = Odyssey.Graphics.Texture2D;
 
 namespace Odyssey.Organization.Commands

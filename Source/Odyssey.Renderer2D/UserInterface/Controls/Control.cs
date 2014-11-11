@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Logging;
-using SharpDX;
+using Odyssey.Logging;
+using SharpDX.Mathematics;
 
 #endregion
 

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
@@ -10,7 +10,6 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
-using SharpDX;
 using SharpDX.Direct3D11;
 
 namespace Odyssey.Organization.Commands

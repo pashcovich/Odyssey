@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using Shader = Odyssey.Daedalus.Shaders.Shader;
 
 namespace Odyssey.Daedalus.Serialization

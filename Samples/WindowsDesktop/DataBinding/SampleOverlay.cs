@@ -1,11 +1,13 @@
 ﻿#region Using Directives
 
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using System.Collections.Generic;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
@@ -15,7 +17,7 @@ namespace MiniUI
     {
         public static Overlay New(IServiceRegistry services)
         {
-            IDirectXDeviceSettings settings = services.GetService<IDirectXDeviceSettings>();
+            var settings = services.GetService<IDirectXDeviceSettings>();
             var overlay = new Overlay(services)
             {
                 Width = settings.PreferredBackBufferWidth,

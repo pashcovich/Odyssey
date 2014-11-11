@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Odyssey.Utilities.Reflection;
+using Odyssey.Reflection;
 
 namespace Odyssey.Epos.Systems
 {

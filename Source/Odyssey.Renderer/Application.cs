@@ -17,15 +17,13 @@
 
 using Odyssey.Animations;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Epos;
-using Odyssey.Utilities.Reflection;
-using SharpDX;
+using Odyssey.Reflection;
 using System;
-using SharpDX.Direct3D11;
 using SharpDX.IO;
 using Texture2D = Odyssey.Graphics.Texture2D;
 

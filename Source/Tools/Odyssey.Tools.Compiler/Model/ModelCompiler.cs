@@ -8,11 +8,11 @@ using Assimp;
 using Assimp.Unmanaged;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Models;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
-using SharpDX.IO;
+using SharpDX.Mathematics;
 using Mesh = Assimp.Mesh;
 
 namespace Odyssey.Tools.Compiler.Model

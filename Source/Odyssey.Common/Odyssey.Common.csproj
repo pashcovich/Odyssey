@@ -37,6 +37,9 @@
     <Reference Include="SharpDX.DXGI">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-winrt\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
     <Reference Include="SharpYaml">
       <HintPath>..\..\Libraries\SharpYaml\SharpYaml.dll</HintPath>
     </Reference>
@@ -55,7 +58,11 @@
     <Compile Include="Animations\PathCurve.cs" />
     <Compile Include="Animations\Vector3Curve.cs" />
     <Compile Include="Animations\Vector3KeyFrame.cs" />
+    <Compile Include="Collections\ComponentCollection.cs" />
+    <Compile Include="Core\Component.cs" />
+    <Compile Include="Core\ComponentBase.cs" />
     <Compile Include="Geometry\IFunction.cs" />
+    <Compile Include="Core\IServiceRegistry.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />
     <Compile Include="Animations\QuaternionCurve.cs" />
     <Compile Include="Animations\FloatCurve.cs" />
@@ -121,12 +128,25 @@
     <Compile Include="Graphics\LinearGradient.cs" />
     <Compile Include="Graphics\RadialGradient.cs" />
     <Compile Include="Graphics\SolidColor.cs" />
+    <Compile Include="Serialization\ArrayLengthType.cs" />
+    <Compile Include="Serialization\BinarySerializer.cs" />
+    <Compile Include="Serialization\BinarySerializer.Mathematics.cs" />
+    <Compile Include="Serialization\DynamicSerializerAttribute.cs" />
+    <Compile Include="Serialization\IDataSerializable.cs" />
+    <Compile Include="Serialization\IdentityEqualityComparer.cs" />
+    <Compile Include="Serialization\InvalidChunkException.cs" />
     <Compile Include="Serialization\ISerializableResource.cs" />
+    <Compile Include="Serialization\SerializeFlags.cs" />
+    <Compile Include="Serialization\SerializerMode.cs" />
     <Compile Include="Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="Serialization\XmlSerializationEventArgs.cs" />
-    <Compile Include="Talos\IPosition.cs" />
-    <Compile Include="Utilities\Collections\DictionaryMap.cs" />
-    <Compile Include="Utilities\Collections\ReadOnlyArray.cs" />
+    <Compile Include="Epos\IPosition.cs" />
+    <Compile Include="Collections\DictionaryMap.cs" />
+    <Compile Include="Collections\ObservableCollection.cs" />
+    <Compile Include="Collections\ObservableCollectionEventArgs.cs" />
+    <Compile Include="Collections\ObservableDictionary.cs" />
+    <Compile Include="Collections\ObservableDictionaryEventArgs.cs" />
+    <Compile Include="Collections\ReadOnlyArray.cs" />
     <Compile Include="Graphics\Organization\IRenderCommand.cs" />
     <Compile Include="Engine\ApplicationContext.cs" />
     <Compile Include="Engine\ApplicationContextType.cs" />
@@ -151,23 +171,26 @@
     <Compile Include="Graphics\Organization\ICommand.cs" />
     <Compile Include="Network\PacketEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Talos\IComponent.cs" />
-    <Compile Include="Talos\IEntity.cs" />
-    <Compile Include="Utilities\Collections\Cache.cs" />
-    <Compile Include="Utilities\Collections\CollectionMap.cs" />
+    <Compile Include="Epos\IComponent.cs" />
+    <Compile Include="Epos\IEntity.cs" />
+    <Compile Include="Collections\Cache.cs" />
+    <Compile Include="Collections\CollectionMap.cs" />
+    <Compile Include="Core\SingletonString.cs" />
+    <Compile Include="Core\TimerTick.cs" />
+    <Compile Include="Text\Encoding.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
-    <None Include="Utilities\Collections\GenericNode.cs" />
-    <Compile Include="Utilities\Collections\INode.cs" />
-    <Compile Include="Utilities\Collections\Node.cs" />
-    <Compile Include="Utilities\Collections\QueueMap.cs" />
-    <Compile Include="Utilities\Extensions\EnumExtensions.cs" />
-    <Compile Include="Utilities\Extensions\RandomSubset.cs" />
-    <Compile Include="Utilities\Logging\AbstractLogEvent.cs" />
-    <Compile Include="Utilities\Logging\LogEvent.cs" />
-    <Compile Include="Utilities\Logging\TraceData.cs" />
-    <Compile Include="Utilities\Reflection\ObjectWalker.cs" />
-    <Compile Include="Utilities\Reflection\ReflectionHelper.cs" />
-    <Compile Include="Utilities\Text\Text.cs" />
+    <None Include="Collections\GenericNode.cs" />
+    <Compile Include="Collections\INode.cs" />
+    <Compile Include="Collections\Node.cs" />
+    <Compile Include="Collections\QueueMap.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Extensions\RandomSubset.cs" />
+    <Compile Include="Text\Logging\AbstractLogEvent.cs" />
+    <Compile Include="Text\Logging\LogEvent.cs" />
+    <Compile Include="Text\Logging\TraceData.cs" />
+    <Compile Include="Reflection\ObjectWalker.cs" />
+    <Compile Include="Reflection\ReflectionHelper.cs" />
+    <Compile Include="Text\Text.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

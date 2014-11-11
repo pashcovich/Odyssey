@@ -1,6 +1,7 @@
 ﻿#region Using Directives
 
 using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using System;

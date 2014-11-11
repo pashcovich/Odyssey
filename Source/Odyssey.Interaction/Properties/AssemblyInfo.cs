@@ -25,7 +25,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("Odyssey.Interaction")]
 [assembly: AssemblyDescription("Input support for the Odyssey Engine.")]
-[assembly: AssemblyCompany("Avengers Utd - http://www.avengersutd.com/")]
+[assembly: AssemblyCompany("Iter Astris - http://www.iterastris.uk/")]
 [assembly: AssemblyCopyright("GPLv3")]
 [assembly: NeutralResourcesLanguage("en")]
 

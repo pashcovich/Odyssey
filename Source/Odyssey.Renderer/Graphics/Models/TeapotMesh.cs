@@ -5,6 +5,7 @@ using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Models;
 using SharpDX.Direct3D;
+using SharpDX.Mathematics;
 
 namespace SharpDX.Toolkit.Graphics
 {

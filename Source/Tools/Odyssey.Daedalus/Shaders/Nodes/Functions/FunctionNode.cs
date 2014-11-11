@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Odyssey.Daedalus.Shaders.Methods;
 using Odyssey.Daedalus.Shaders.Nodes.Operators;
 using Odyssey.Graphics.Shaders;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Functions
 {

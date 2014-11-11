@@ -31,6 +31,9 @@
     <Reference Include="SharpDX.DXGI">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-winrt\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animations\GradientBrushCurve.cs" />
@@ -56,7 +59,6 @@
     <Compile Include="Graphics\Drawing\CutCornerRectangleBase.cs" />
     <Compile Include="Graphics\Drawing\CutCornerRectangleOutline.cs" />
     <Compile Include="Graphics\Drawing\DiagonalCutCornerRectangle.cs" />
-    <Compile Include="Graphics\Effects\StereoEffect.cs" />
     <Compile Include="Graphics\Drawing\Ellipse.cs" />
     <Compile Include="Graphics\Drawing\Hexagon.cs" />
     <Compile Include="Graphics\Drawing\IShape.cs" />

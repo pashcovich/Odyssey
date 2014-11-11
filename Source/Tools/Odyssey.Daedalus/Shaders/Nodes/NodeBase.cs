@@ -4,7 +4,7 @@ using Odyssey.Daedalus.Serialization;
 using Odyssey.Daedalus.Shaders.Methods;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;

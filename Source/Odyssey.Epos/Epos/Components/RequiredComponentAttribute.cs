@@ -1,5 +1,5 @@
 ﻿using System;
-using Odyssey.Utilities.Reflection;
+using Odyssey.Reflection;
 
 namespace Odyssey.Epos.Components
 {

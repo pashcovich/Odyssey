@@ -8,7 +8,7 @@ using Odyssey.Graphics.Models;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using Buffer = Odyssey.Graphics.Buffer;
 using Encoding = System.Text.Encoding;
 using VertexBufferBinding = Odyssey.Graphics.Models.VertexBufferBinding;

@@ -15,10 +15,11 @@
 
 #region Using Directives
 
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
 using Odyssey.Epos;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion
 

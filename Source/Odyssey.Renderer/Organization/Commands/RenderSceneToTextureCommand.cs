@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using SharpDX;
+using Odyssey.Core;
 using SharpDX.Direct3D11;
 
 namespace Odyssey.Organization.Commands

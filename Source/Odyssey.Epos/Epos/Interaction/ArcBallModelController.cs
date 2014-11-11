@@ -16,9 +16,10 @@
 #region Using Directives
 
 using System;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion
 

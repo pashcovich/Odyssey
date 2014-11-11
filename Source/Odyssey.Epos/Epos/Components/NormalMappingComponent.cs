@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpYaml.Serialization;
 
 namespace Odyssey.Epos.Components

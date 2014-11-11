@@ -2,7 +2,7 @@
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Messages;
-using Odyssey.Utilities.Reflection;
+using Odyssey.Reflection;
 
 namespace Odyssey.Epos.Systems
 {

@@ -17,7 +17,7 @@
 
 using System;
 using Odyssey.UserInterface.Controls;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
@@ -26,7 +26,7 @@ namespace Odyssey.Graphics.Drawing
     public class CutCornerRectangle : CutCornerRectangleBase
     {
         private PolyLine shape;
-        private Matrix3x2 transform;
+        private Vector2[] points;
 
         protected PolyLine Shape
         {
@@ -34,27 +34,28 @@ namespace Odyssey.Graphics.Drawing
             set { shape = value; }
         }
 
-        protected new Matrix3x2 Transform
-        {
-            get { return transform; }
-        }
-
         public override void Render()
         {
-            Device.Transform = transform;
-            Device.FillGeometry(shape, Fill);
-            Device.DrawGeometry(shape, Stroke);
-        }
-
-        protected override void Measure()
-        {
-            transform = Matrix3x2.Translation(AbsolutePosition);
+            Device.Transform = Transform;
+            if (Fill != null)
+            {
+                Fill.Transform = Matrix3x2.Scaling(Width, Height)*Transform;
+                Device.FillGeometry(shape, Fill);
+            }
+            if (Stroke!=null)
+                Device.DrawGeometry(shape, Stroke);
+            Device.Transform = Matrix3x2.Identity;
         }
 
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            Vector2[] points =
+            SetupShapes();
+        }
+
+        void SetupShapes()
+        {
+            points = new[]
             {
                 new Vector2(CutCornerLength, 0),
                 new Vector2(Width - CutCornerLength, 0),
@@ -65,9 +66,16 @@ namespace Odyssey.Graphics.Drawing
                 new Vector2(0, Height - CutCornerLength),
                 new Vector2(0, CutCornerLength)
             };
-
+            RemoveAndDispose(ref shape);
             shape = ToDispose(PolyLine.New(string.Format("PL.{0}", Name), Device, points, FigureBegin.Filled, FigureEnd.Closed));
-
         }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            SetupShapes();
+        }
+
+
     }
 }

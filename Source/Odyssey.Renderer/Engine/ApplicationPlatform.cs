@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using Odyssey.Core;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;

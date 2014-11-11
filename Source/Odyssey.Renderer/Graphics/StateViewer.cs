@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Organization.Commands;
-using Odyssey.Utilities.Extensions;
-using SharpDX;
-using SharpDX.Direct3D11;
 
 namespace Odyssey.Graphics
 {

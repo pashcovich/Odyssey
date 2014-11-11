@@ -24,6 +24,8 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
 using SharpDX;
+using SharpDX.Mathematics;
+using SharpDX.Mathematics.Interop;
 
 #endregion
 

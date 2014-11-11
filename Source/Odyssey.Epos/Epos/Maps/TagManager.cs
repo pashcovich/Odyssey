@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Odyssey.Utilities.Collections;
+using Odyssey.Collections;
 
 namespace Odyssey.Epos.Maps
 {

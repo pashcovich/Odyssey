@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
 {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Odyssey.Content;
+using Odyssey.Reflection;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using System;
-using Odyssey.Utilities.Reflection;
 
 namespace Odyssey.Epos.Components
 {

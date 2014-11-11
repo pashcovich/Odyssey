@@ -5,7 +5,6 @@ using SharpDX.Windows;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Rectangle = SharpDX.Rectangle;
 
 #endregion Using Directives
 
@@ -90,9 +89,9 @@ namespace Odyssey.Engine
         }
 
         /// <inheritdoc />
-        public override Rectangle ClientBounds
+        public override SharpDX.Mathematics.Rectangle ClientBounds
         {
-            get { return new Rectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height); }
+            get { return new SharpDX.Mathematics.Rectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height); }
         }
 
         /// <inheritdoc />

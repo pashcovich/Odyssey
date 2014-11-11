@@ -1,6 +1,6 @@
 ﻿using System;
 using Odyssey.UserInterface.Controls;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
 {
@@ -19,7 +19,7 @@ namespace Odyssey.Graphics.Drawing
                 new Vector2(0, CutCornerLength)
             };
 
-            Shape = PolyLine.New(string.Format("PL.{0}", Name), Device, points, FigureBegin.Filled, FigureEnd.Closed);
+            Shape = ToDispose(PolyLine.New(string.Format("PL.{0}", Name), Device, points, FigureBegin.Filled, FigureEnd.Closed));
 
         }
     }

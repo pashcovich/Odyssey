@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Odyssey.Geometry;
 using Odyssey.Serialization;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Animations
 {

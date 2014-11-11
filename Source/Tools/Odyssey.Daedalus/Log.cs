@@ -1,5 +1,5 @@
 ﻿using Odyssey.Daedalus.Properties;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using System.IO;
 
 namespace Odyssey.Daedalus

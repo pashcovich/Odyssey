@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Odyssey.Content;
+using Odyssey.Core;
 using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.IO;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Graphics
 {

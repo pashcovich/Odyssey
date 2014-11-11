@@ -1,7 +1,7 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Graphics.Rendering2D.Effects;
 using Odyssey.UserInterface.Controls;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;

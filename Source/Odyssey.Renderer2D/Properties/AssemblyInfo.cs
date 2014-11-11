@@ -27,7 +27,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("Odyssey.Renderer2D")]
 [assembly: AssemblyDescription("User Interface Library of the Odyssey Engine.")]
-[assembly: AssemblyCompany("Avengers Utd - http://www.avengersutd.com/")]
+[assembly: AssemblyCompany("Iter Astris - http://www.iterastris.uk/")]
 [assembly: AssemblyCopyright("GPLv3")]
 [assembly: NeutralResourcesLanguage("en")]
 
@@ -38,6 +38,6 @@ using System.Runtime.CompilerServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("0.2.2.*")]
+[assembly: AssemblyVersion("0.3.0.*")]
 [assembly: InternalsVisibleTo("Odyssey.Windows")]
 [assembly: InternalsVisibleTo("Odyssey.Interaction.Windows")]

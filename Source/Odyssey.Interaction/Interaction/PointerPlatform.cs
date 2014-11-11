@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using Odyssey.Core;
 using SharpDX;
 using System;
 using System.Diagnostics.Contracts;

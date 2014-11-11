@@ -35,6 +35,9 @@
     <Reference Include="SharpDX">
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Desktop">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.Direct2D1">
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Direct2D1.dll</HintPath>
     </Reference>
@@ -43,6 +46,9 @@
     </Reference>
     <Reference Include="SharpDX.DXGI">
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -30,9 +30,9 @@ using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Utilities;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpDX.Direct3D11;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 using SamplerStateDescription = Odyssey.Graphics.Shaders.SamplerStateDescription;
 

@@ -4,7 +4,7 @@
 // Change these attribute values to modify the information associated with an assembly.
 [assembly: AssemblyTitle("Odyssey.Windows8")]
 [assembly: AssemblyDescription("Windows 8 support for the Odyssey Engine.")]
-[assembly: AssemblyCompany("Avengers Utd - http://www.avengersutd.com/")]
+[assembly: AssemblyCompany("Iter Astris - http://www.iterastris.uk/")]
 [assembly: AssemblyCopyright("GPLv3")]
 
 // Version information for an assembly consists of the following four values:

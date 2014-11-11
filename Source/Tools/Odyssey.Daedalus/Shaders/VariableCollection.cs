@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Odyssey.Engine;
 using Odyssey.Daedalus.Serialization;
 using Odyssey.Daedalus.Shaders.Structs;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders
 {

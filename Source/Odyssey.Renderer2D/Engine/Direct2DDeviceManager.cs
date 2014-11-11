@@ -17,9 +17,11 @@
 
 using System;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Geometry;
 using Odyssey.UserInterface.Style;
 using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;

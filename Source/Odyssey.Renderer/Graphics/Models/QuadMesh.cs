@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Odyssey.Engine;
-using Odyssey.Graphics.Meshes;
-using SharpDX;
+﻿using Odyssey.Engine;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models

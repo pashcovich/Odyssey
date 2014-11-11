@@ -1,10 +1,10 @@
 ﻿#region Using Directives
 
 using System;
+using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
-using Odyssey.Utilities.Logging;
-using Odyssey.Utilities.Reflection;
-using SharpDX;
+using Odyssey.Logging;
+using SharpDX.Mathematics;
 using System.Collections;
 using System.Linq;
 

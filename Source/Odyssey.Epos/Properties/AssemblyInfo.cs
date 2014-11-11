@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Odyssey.Talos")]
+[assembly: AssemblyTitle("Odyssey.Epos")]
 [assembly: AssemblyDescription("Entity Component System Framework for the Odyssey Engine")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Avengers UTD")]
-[assembly: AssemblyProduct("Odyssey.Talos")]
+[assembly: AssemblyCompany("Iter Astris - http://www.iterastris.uk/")]
+[assembly: AssemblyProduct("Odyssey.Epos")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -27,4 +27,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.*")]
+[assembly: AssemblyVersion("0.3.*")]

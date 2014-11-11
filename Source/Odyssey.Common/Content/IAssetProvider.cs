@@ -1,7 +1,8 @@
 ﻿#region Using Directives
 
 using System.Collections.Generic;
-using SharpDX;
+using Odyssey.Core;
+using SharpDX.Mathematics;
 using System;
 
 #endregion Using Directives

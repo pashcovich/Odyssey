@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Controls;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Style
 {

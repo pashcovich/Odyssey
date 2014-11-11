@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Odyssey.Windows")]
 [assembly: AssemblyDescription("Windows Forms support for the Odyssey Engine.")]
-[assembly: AssemblyCompany("Avengers Utd - http://www.avengersutd.com/")]
+[assembly: AssemblyCompany("Iter Astris - http://www.iterastris.uk/")]
 [assembly: AssemblyCopyright("GPLv3")]
 
 // Setting ComVisible to false makes the types in this assembly not visible to COM components. If

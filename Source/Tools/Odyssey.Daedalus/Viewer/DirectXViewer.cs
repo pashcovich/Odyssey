@@ -18,16 +18,16 @@
 using GalaSoft.MvvmLight.Messaging;
 using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Engine;
-using Odyssey.Graphics.Effects;
-using Odyssey.Graphics.Models;
-using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Systems;
-using SharpDX;
+using Odyssey.Graphics.Effects;
+using Odyssey.Graphics.Models;
+using Odyssey.Graphics.Shaders;
 using SharpDX.Diagnostics;
 using SharpDX.Direct3D11;
 using System;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 

@@ -1,5 +1,5 @@
 ﻿using Odyssey.Graphics.Drawing;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {

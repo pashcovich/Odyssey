@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.UserInterface.Style;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {

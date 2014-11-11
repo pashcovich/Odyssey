@@ -20,15 +20,15 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Maps;
 using Odyssey.Epos.Messages;
 using Odyssey.Epos.Systems;
 using Odyssey.Graphics;
-using Odyssey.Utilities.Logging;
-using Odyssey.Utilities.Text;
-using SharpDX;
+using Odyssey.Logging;
+using SharpDX.Mathematics;
 using Component = Odyssey.Epos.Components.Component;
 #endregion
 

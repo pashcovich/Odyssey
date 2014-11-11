@@ -2,8 +2,7 @@
 using Odyssey.Animations;
 using Odyssey.Engine;
 using Odyssey.Geometry;
-using Odyssey.Utilities.Reflection;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 
 namespace Odyssey.Graphics

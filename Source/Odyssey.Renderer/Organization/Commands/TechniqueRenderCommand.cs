@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
-using Odyssey.Utilities.Logging;
-using SharpDX;
+using Odyssey.Logging;
 
 namespace Odyssey.Organization.Commands
 {

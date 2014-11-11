@@ -1,11 +1,4 @@
 ﻿using Odyssey.Graphics.Effects;
-using Odyssey.Utilities;
-using Odyssey.Utilities.Reflection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Graphics.Models
 {

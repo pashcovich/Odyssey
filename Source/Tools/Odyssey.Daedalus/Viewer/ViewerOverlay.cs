@@ -1,4 +1,5 @@
-﻿using Odyssey.UserInterface.Controls;
+﻿using Odyssey.Core;
+using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using System;

@@ -25,12 +25,12 @@ using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Interaction;
+using Odyssey.Reflection;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Reflection;
-using SharpDX;
+using SharpDX.Mathematics;
 using MouseEventArgs = Odyssey.Interaction.PointerEventArgs;
 
 #endregion

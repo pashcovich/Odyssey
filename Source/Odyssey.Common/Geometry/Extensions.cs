@@ -1,4 +1,4 @@
-﻿using SharpDX;
+﻿using SharpDX.Mathematics;
 using System.Linq;
 
 namespace Odyssey.Geometry

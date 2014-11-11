@@ -21,8 +21,7 @@ using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
 using System;
 using Odyssey.UserInterface.Serialization;
-using Odyssey.Utilities.Text;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
@@ -474,7 +473,7 @@ namespace Odyssey.UserInterface
             Name = reader.GetAttribute("Name");
             
             string sPosition = reader.GetAttribute("Position");
-            Position = string.IsNullOrEmpty(sPosition) ? Vector2.Zero : Text.DecodeVector2(sPosition);
+            Position = string.IsNullOrEmpty(sPosition) ? Vector2.Zero : Text.Text.DecodeVector2(sPosition);
 
             string sWidth = reader.GetAttribute("Width");
             string sHeight = reader.GetAttribute("Height");
@@ -486,7 +485,7 @@ namespace Odyssey.UserInterface
         {
             var writer = e.XmlWriter;
             writer.WriteAttributeString("Name", Name);
-            writer.WriteAttributeString("Position", Text.EncodeVector2(Position));
+            writer.WriteAttributeString("Position", Text.Text.EncodeVector2(Position));
             writer.WriteAttributeString("Width", Width.ToString("F"));
             writer.WriteAttributeString("Height", Height.ToString("F"));
         }

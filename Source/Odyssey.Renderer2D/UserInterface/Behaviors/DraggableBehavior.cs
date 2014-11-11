@@ -1,5 +1,5 @@
 ﻿using Odyssey.Interaction;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Behaviors
 {

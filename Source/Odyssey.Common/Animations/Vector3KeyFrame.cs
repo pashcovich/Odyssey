@@ -1,6 +1,5 @@
 ﻿using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Animations
 {
@@ -10,7 +9,7 @@ namespace Odyssey.Animations
         {
             base.OnReadXml(e);
             string value = e.XmlReader.GetAttribute("Value");
-            Value = Text.DecodeVector3(value);
+            Value = Text.Text.DecodeVector3(value);
             e.XmlReader.ReadStartElement();
         }
     }

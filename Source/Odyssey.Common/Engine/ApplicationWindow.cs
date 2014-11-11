@@ -10,8 +10,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
+using Odyssey.Core;
 using Odyssey.Graphics;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 using System.Diagnostics.Contracts;
 

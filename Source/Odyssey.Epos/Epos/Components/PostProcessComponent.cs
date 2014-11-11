@@ -22,7 +22,7 @@ using Odyssey.Epos.Messages;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Organization.Commands;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 
 #endregion
 

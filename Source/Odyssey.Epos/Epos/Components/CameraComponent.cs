@@ -1,5 +1,5 @@
 ﻿using Odyssey.Engine;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 
 namespace Odyssey.Epos.Components

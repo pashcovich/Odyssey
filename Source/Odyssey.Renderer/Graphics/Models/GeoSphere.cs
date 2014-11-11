@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Odyssey.Engine;
 using Odyssey.Geometry.Primitives;
-using Odyssey.Graphics.Meshes;
-using Odyssey.Utilities.Logging;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models

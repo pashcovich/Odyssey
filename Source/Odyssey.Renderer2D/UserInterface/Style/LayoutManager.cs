@@ -2,7 +2,7 @@
 
 using System.Linq;
 using Odyssey.UserInterface.Controls;
-using SharpDX;
+using SharpDX.Mathematics;
 using System.Collections.Generic;
 
 #endregion Using Directives

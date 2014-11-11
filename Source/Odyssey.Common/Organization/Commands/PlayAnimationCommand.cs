@@ -3,9 +3,10 @@ using System.Diagnostics.Contracts;
 using System.Globalization;
 using Odyssey.Animations;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Graphics.Organization;
 using Odyssey.Serialization;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Organization.Commands
 {

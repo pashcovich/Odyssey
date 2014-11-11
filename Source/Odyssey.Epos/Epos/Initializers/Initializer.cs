@@ -1,10 +1,11 @@
-﻿using Odyssey.Engine;
+﻿using Odyssey.Core;
+using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using System.Collections.Generic;
 using System.Linq;
-using SharpDX;
+using SharpDX.Mathematics;
 using EngineReference = Odyssey.Engine.EngineReference;
 
 namespace Odyssey.Epos.Initializers

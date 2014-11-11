@@ -1,10 +1,14 @@
 ﻿#region Using Directives
 
+using System.Runtime.InteropServices;
+using Odyssey.Core;
 using Odyssey.Graphics.Drawing;
-using SharpDX;
+using Odyssey.Reflection;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using System;
 using System.Diagnostics.Contracts;
+using SharpDX.Mathematics.Interop;
 using Brush = Odyssey.Graphics.Brush;
 using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 using D2DFactory = SharpDX.Direct2D1.Factory1;
@@ -137,7 +141,7 @@ namespace Odyssey.Engine
 
         public void DrawRectangle(Shape shape, Brush brush, float strokeThickness = 1.0f)
         {
-            deviceContext.DrawRectangle(shape.BoundingRectangle, brush, strokeThickness);
+            deviceContext.DrawRectangle(Convert(shape.BoundingRectangle), brush, strokeThickness);
         }
 
         public void DrawEllipse(Ellipse ellipse, Brush brush, float strokeThickness = 1.0f)
@@ -158,7 +162,7 @@ namespace Odyssey.Engine
         public void DrawText(string text, TextFormat textFormat, RectangleF layoutRect, Brush foregroundBrush,
             DrawTextOptions textOptions = DrawTextOptions.None)
         {
-            deviceContext.DrawText(text, textFormat, layoutRect, foregroundBrush, textOptions);
+            deviceContext.DrawText(text, textFormat, Convert(layoutRect), foregroundBrush, textOptions);
         }
 
         public void FillGeometry(Graphics.Drawing.Geometry geometry, Brush brush)
@@ -173,12 +177,18 @@ namespace Odyssey.Engine
 
         public void FillRectangle(RectangleF rectangle, Brush brush)
         {
-            deviceContext.FillRectangle(rectangle, brush);
+            deviceContext.FillRectangle(Convert(rectangle), brush);
         }
 
         public void SetTextAntialias(AntialiasMode antialiasMode)
         {
             deviceContext.AntialiasMode = antialiasMode;
+        }
+
+        static RawRectangleF Convert(RectangleF rectangle)
+        {
+            object s = rectangle;
+            return ReflectionHelper.CopyStruct<RawRectangleF>(ref s);
         }
 
         public Matrix3x2 Transform

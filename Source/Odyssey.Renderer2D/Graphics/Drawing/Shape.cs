@@ -20,13 +20,11 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Odyssey.Animations;
+using Odyssey.Reflection;
 using Odyssey.UserInterface;
-using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Reflection;
-using Odyssey.Utilities.Text;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
@@ -116,11 +114,11 @@ namespace Odyssey.Graphics.Drawing
             string sStroke = reader.GetAttribute("Stroke");
             if (!string.IsNullOrEmpty(sFill))
             {
-                fillBrushClass = Text.ParseResource(sFill);
+                fillBrushClass = Text.Text.ParseResource(sFill);
             }
             if (!string.IsNullOrEmpty(sStroke))
             {
-                strokeBrushClass = Text.ParseResource(sStroke);
+                strokeBrushClass = Text.Text.ParseResource(sStroke);
             }
 
             if (!reader.IsEmptyElement)

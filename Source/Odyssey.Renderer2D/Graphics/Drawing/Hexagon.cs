@@ -1,7 +1,7 @@
 ﻿using System;
 using Odyssey.Geometry.Primitives;
 using Odyssey.UserInterface.Controls;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
 {

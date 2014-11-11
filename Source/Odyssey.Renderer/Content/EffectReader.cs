@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Utilities.Logging;
-using SharpDX.Serialization;
+using Odyssey.Logging;
+using Odyssey.Serialization;
 
 namespace Odyssey.Content
 {
@@ -9,10 +9,10 @@ namespace Odyssey.Content
     {
         public object ReadContent(IAssetProvider assetManager, ref ContentReaderParameters parameters)
         {
-            ShaderCollection shaderCollection = new ShaderCollection();
+            var shaderCollection = new ShaderCollection();
             try
             {
-                BinarySerializer bs = new BinarySerializer(parameters.Stream, SerializerMode.Read) {AllowIdentity = true};
+                var bs = new BinarySerializer(parameters.Stream, SerializerMode.Read) {AllowIdentity = true};
                 bs.Serialize(ref shaderCollection);
             }
             catch (SerializationException e)

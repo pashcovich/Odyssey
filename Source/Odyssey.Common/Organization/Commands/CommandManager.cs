@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using SharpDX;
+using Odyssey.Core;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Organization.Commands
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using Odyssey.Utilities.Reflection;
+using Odyssey.Reflection;
 
 namespace Odyssey.UserInterface.Behaviors
 {

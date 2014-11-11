@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 
 namespace Odyssey.Daedalus
 {

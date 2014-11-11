@@ -1,8 +1,7 @@
 ﻿using Odyssey.Graphics.Effects;
-using Odyssey.Utilities;
-using Odyssey.Utilities.Extensions;
+using Odyssey.Extensions;
 using SharpDX.DXGI;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

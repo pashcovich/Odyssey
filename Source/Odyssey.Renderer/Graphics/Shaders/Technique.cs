@@ -20,9 +20,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
-using SharpDX;
 using SharpDX.Direct3D11;
 
 #endregion

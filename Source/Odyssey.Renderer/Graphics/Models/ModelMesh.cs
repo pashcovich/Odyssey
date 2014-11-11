@@ -1,7 +1,8 @@
 ﻿using System;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Engine;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Models
 {

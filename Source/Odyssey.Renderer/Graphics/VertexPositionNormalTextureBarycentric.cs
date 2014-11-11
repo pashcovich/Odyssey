@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Odyssey.Graphics.Meshes;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics
 {

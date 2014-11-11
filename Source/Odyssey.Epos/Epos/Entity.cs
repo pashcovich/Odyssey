@@ -23,11 +23,10 @@ using System.Linq;
 using System.Text;
 using Odyssey.Content;
 using Odyssey.Epos.Components;
-using Odyssey.Utilities.Logging;
-using Odyssey.Utilities.Reflection;
-using Odyssey.Utilities.Text;
+using Odyssey.Reflection;
+using Odyssey.Logging;
 using SharpYaml.Serialization;
-
+using Component = Odyssey.Epos.Components.Component;
 #endregion
 
 namespace Odyssey.Epos
@@ -249,7 +248,7 @@ namespace Odyssey.Epos
         {
             string resourceArray;
             string index;
-            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
 
             return isArray
                 ? ContainsComponent(resourceArray) && ((IResourceProvider) GetComponent(resourceArray)).ContainsResource(index)
@@ -261,7 +260,7 @@ namespace Odyssey.Epos
         {
             string resourceArray;
             string index;
-            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
             return isArray
                ? ((IResourceProvider)GetComponent(resourceArray)).GetResource<TResource>(index)
                : GetComponent(resourceName) as TResource;

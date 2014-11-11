@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using Odyssey.Core;
 using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
@@ -147,10 +149,10 @@ namespace Odyssey.Engine
             var desktopBounds = outputDescription.DesktopBounds;
 
             return (from supportedDisplayMode in SupportedDisplayModes
-                where supportedDisplayMode.Width == desktopBounds.Width &&
-                    supportedDisplayMode.Height == desktopBounds.Height && supportedDisplayMode.Format == format
+                where supportedDisplayMode.Width == desktopBounds.Right &&
+                    supportedDisplayMode.Height == desktopBounds.Bottom && supportedDisplayMode.Format == format
                     orderby supportedDisplayMode.RefreshRate.Numerator descending 
-                select new DisplayMode(format, desktopBounds.Width, desktopBounds.Height, supportedDisplayMode.RefreshRate))
+                select new DisplayMode(format, desktopBounds.Right, desktopBounds.Bottom, supportedDisplayMode.RefreshRate))
                 .FirstOrDefault();
         }
     }

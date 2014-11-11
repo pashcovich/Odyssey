@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Text;
-using SharpDX.Serialization;
+using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Methods
 {

@@ -13,11 +13,14 @@
 
 #endregion License
 
+using Odyssey.Core;
+using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.Mathematics.Interop;
 
 #region Using Directives
 
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +48,7 @@ namespace Odyssey.Graphics.Drawing
 
         public void AddLines(IEnumerable<Vector2> points)
         {
-            geometrySink.AddLines(points.ToArray());
+            geometrySink.AddLines(points.Select(p=>new RawVector2(){X=p.X, Y=p.Y}).ToArray());
         }
 
         public void AddArc(float width, float height, float angleDegrees, bool isLargeArc, bool sweepDirection, Vector2 endPoint)

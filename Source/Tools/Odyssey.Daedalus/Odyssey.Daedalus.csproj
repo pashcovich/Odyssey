@@ -62,6 +62,9 @@
     <Reference Include="SharpDX.DXGI">
       <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.DXGI.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-net40\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -390,6 +393,10 @@
       <Project>{26fd6c22-2141-4994-85cb-5a730c910aa2}</Project>
       <Name>Odyssey.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Odyssey.Epos\Odyssey.Epos.csproj">
+      <Project>{ea37bfcc-7ed7-46e4-9025-a86a7df93beb}</Project>
+      <Name>Odyssey.Epos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Odyssey.Interaction\Odyssey.Interaction.csproj">
       <Project>{7740A46F-0809-49D2-BD34-71F6D8B6D2CC}</Project>
       <Name>Odyssey.Interaction</Name>
@@ -401,10 +408,6 @@
     <ProjectReference Include="..\..\Odyssey.Renderer\Odyssey.Renderer.csproj">
       <Project>{018ff216-7048-4b2f-a193-d2f8b20fb03d}</Project>
       <Name>Odyssey.Renderer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Odyssey.Talos\Odyssey.Talos.csproj">
-      <Project>{7e2bc73b-cb14-4d62-89ae-a0eb5a1eaf93}</Project>
-      <Name>Odyssey.Talos</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Odyssey.Windows.WPF\Odyssey.Windows.WPF.csproj">
       <Project>{3bc0070f-f405-4a11-ad8a-03fe7508b3b0}</Project>

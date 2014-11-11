@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Core;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
-using SharpDX;
 
 namespace Odyssey.Organization.Commands
 {

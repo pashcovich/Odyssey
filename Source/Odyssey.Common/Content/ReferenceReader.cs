@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using Odyssey.Engine;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 
 namespace Odyssey.Content
 {

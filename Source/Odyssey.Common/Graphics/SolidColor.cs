@@ -1,7 +1,6 @@
 ﻿using System;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics
 {
@@ -30,7 +29,7 @@ namespace Odyssey.Graphics
             base.OnReadXml(e);
             var reader = e.XmlReader;
             string colorValue = reader.GetAttribute("Color");
-            Color = Text.DecodeColor4Abgr(colorValue);
+            Color = Text.Text.DecodeColor4Abgr(colorValue);
             reader.ReadStartElement();
         }
 
