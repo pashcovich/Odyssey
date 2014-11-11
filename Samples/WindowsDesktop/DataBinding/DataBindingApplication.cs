@@ -14,21 +14,18 @@
 #endregion License
 
 #region Using Directives
-
-using System;
 using MiniUI;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Style;
-using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Windows;
 using System.Drawing;
-using Color = SharpDX.Color;
 
 #endregion Using Directives
 
@@ -94,7 +91,7 @@ namespace DataBinding
             deviceManager.Context.OutputMerger.SetTargets(deviceManager.BackBuffer);
             RenderLoop.Run(form, () =>
             {
-                deviceManager.Context.ClearRenderTargetView(deviceManager.BackBuffer, Color.Black);
+                deviceManager.Context.ClearRenderTargetView(deviceManager.BackBuffer, SharpDX.Mathematics.Color.Black);
                 Render();
                 deviceManager.SwapChain.Present(0, PresentFlags.None);
             });

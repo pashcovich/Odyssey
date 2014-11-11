@@ -1,8 +1,7 @@
-﻿using SharpDX.Windows;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
+using SharpDX.Windows;
 
 namespace Odyssey.Engine
 {

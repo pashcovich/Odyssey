@@ -17,17 +17,17 @@
 
 using System;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Style;
-using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using SharpDX.Windows;
 using System.Drawing;
-using Color = SharpDX.Color;
 
 #endregion Using Directives
 
@@ -98,7 +98,7 @@ namespace MiniUI
             RenderLoop.Run(form, () =>
             {
                 Update();
-                d3dDeviceManager.Context.ClearRenderTargetView(d3dDeviceManager.BackBuffer, Color.Black);
+                d3dDeviceManager.Context.ClearRenderTargetView(d3dDeviceManager.BackBuffer, new RawColor4(0,0,0,1));
                 Render();
                 d3dDeviceManager.SwapChain.Present(0, PresentFlags.None);
             });
