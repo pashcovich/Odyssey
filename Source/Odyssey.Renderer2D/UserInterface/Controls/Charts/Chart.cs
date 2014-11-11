@@ -35,7 +35,7 @@ namespace Odyssey.UserInterface.Controls.Charts
                 xAxisTitle.IsInternal = true;
                 
                 xAxisTitle.Width = Width;
-                xAxisTitle.Height = UserInterface.Style.Layout.Units(1);
+                xAxisTitle.Height = LayoutManager.Units(1);
                 xAxisTitle.Position = new Vector2(0, Height - Padding.Bottom - XAxisTitle.Height);
                 Add(xAxisTitle);
                 Layout();
@@ -59,8 +59,8 @@ namespace Odyssey.UserInterface.Controls.Charts
             if (Controls.IsEmpty)
                 return;
 
-            UserInterface.Style.Layout.DistributeHorizontally(this, Controls.Public);
-            UserInterface.Style.Layout.AlignBottom(this, Controls.Public);
+            LayoutManager.DistributeHorizontally(this, Controls.Public);
+            LayoutManager.AlignBottom(this, Controls.Public);
         }
 
         protected override void OnInitialized(EventArgs e)

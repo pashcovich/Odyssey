@@ -1,6 +1,7 @@
 ﻿#region Using Directives
 
 using System;
+using Odyssey.UserInterface.Style;
 
 #endregion Using Directives
 
@@ -35,9 +36,9 @@ namespace Odyssey.UserInterface.Controls
                 return;
 
             if (Orientation == Orientation.Horizontal)
-                UserInterface.Style.Layout.DistributeHorizontally(this, Controls);
+                LayoutManager.DistributeHorizontally(this, Controls);
             else
-                UserInterface.Style.Layout.DistributeVertically(this, Controls);
+                LayoutManager.DistributeVertically(this, Controls);
         }
     }
 }

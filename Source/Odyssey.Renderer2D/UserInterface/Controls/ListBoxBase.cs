@@ -1,4 +1,6 @@
-﻿namespace Odyssey.UserInterface.Controls
+﻿using Odyssey.UserInterface.Style;
+
+namespace Odyssey.UserInterface.Controls
 {
     public abstract class ListBoxBase : ItemsControl
     {
@@ -15,7 +17,7 @@
             if (Controls.IsEmpty)
                 return;
 
-            UserInterface.Style.Layout.DistributeHorizontally(this, Controls);
+            LayoutManager.DistributeHorizontally(this, Controls);
         }
     }
 }

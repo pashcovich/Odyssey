@@ -2,20 +2,27 @@
 
 namespace Odyssey.UserInterface.Style
 {
-    [DebuggerDisplay("{command} = ({arguments})")]
+    [DebuggerDisplay("{PrimitiveType} = ({arguments})")]
     public class VectorCommand
     {
         private readonly float[] arguments;
-        private readonly char command;
+        private readonly PrimitiveType primitiveType;
+        private readonly bool isRelative;
 
-        public VectorCommand(char command, float[] arguments)
+        public VectorCommand(PrimitiveType primitiveType, float[] arguments, bool isRelative = false)
         {
-            this.command = command;
+            this.primitiveType = primitiveType;
             this.arguments = arguments;
+            this.isRelative = isRelative;
         }
 
         public float[] Arguments { get { return arguments; } }
 
-        public char Command { get { return command; } }
+        public PrimitiveType PrimitiveType { get { return primitiveType; } }
+
+        public bool IsRelative
+        {
+            get { return isRelative; }
+        }
     }
 }

@@ -82,7 +82,7 @@ namespace Odyssey.Engine
                     !MathHelper.ScalarNearEqual(deviceSettings.VerticalDpi, d2dDevice.VerticalDpi))
                     throw new InvalidOperationException("Direct2D device DPI values do not match Direct3D device DPI values");
 
-                Layout.Scale = deviceSettings.PreferredBackBufferWidth/1920f;
+                LayoutManager.Scale = deviceSettings.PreferredBackBufferWidth/1920f;
 
                 OnDeviceCreated(EventArgs.Empty);
             }

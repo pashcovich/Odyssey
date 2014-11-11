@@ -132,7 +132,7 @@ namespace Odyssey.UserInterface.Style
             return resource;
         }
 
-        public Brush CreateOrRetrieveColorResource(ColorResource colorResource, bool shared = true)
+        public Brush GetBrushResource(ColorResource colorResource, bool shared = true)
         {
             var device = services.GetService<IDirect2DService>().Direct2DDevice;
 
@@ -149,6 +149,11 @@ namespace Odyssey.UserInterface.Style
             return result ?? CreateColorResource(device, shared ? colorResource : colorResource.CopyAs('u' + colorResource.Name, false));
         }
 
+        public Brush GetBrushResource(string name, Theme theme, bool shared = true)
+        {
+            return GetBrushResource(theme.GetResource<ColorResource>(name), shared);
+        }
+
         TextFormat CreateTextResource(TextStyle textStyle, bool shared)
         {
             var resource = TextFormat.New(services, textStyle);
@@ -156,7 +161,7 @@ namespace Odyssey.UserInterface.Style
             return resource;
         }
 
-        public TextFormat CreateOrRetrieveTextResource(TextStyle textStyle, bool shared = true)
+        public TextFormat GetTextResource(TextStyle textStyle, bool shared = true)
         {
             TextFormat result;
             if (TryGetResource(textStyle.Name, shared, out result))

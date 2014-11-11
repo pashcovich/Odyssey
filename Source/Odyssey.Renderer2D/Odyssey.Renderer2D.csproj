@@ -84,6 +84,7 @@
     <Compile Include="Graphics\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\PolygonBase.cs" />
     <Compile Include="Graphics\Drawing\Rectangle.cs" />
+    <Compile Include="UserInterface\Style\PrimitiveType.cs" />
     <Compile Include="UserInterface\Style\TextFormat.cs" />
     <Compile Include="UserInterface\Style\TextStyle.cs" />
     <Compile Include="UserInterface\Style\Theme.cs" />
@@ -137,12 +138,13 @@
     <Compile Include="UserInterface\Style\Depth.cs" />
     <Compile Include="UserInterface\Style\Enums.cs" />
     <Compile Include="UserInterface\Style\IStyleService.cs" />
-    <Compile Include="UserInterface\Style\Layout.cs" />
+    <Compile Include="UserInterface\Style\LayoutManager.cs" />
     <Compile Include="UserInterface\Style\VectorArtParser.cs" />
     <Compile Include="UserInterface\Style\StyleManager.cs" />
     <Compile Include="UserInterface\Style\TextEnums.cs" />
     <Compile Include="UserInterface\Style\Thickness.cs" />
     <Compile Include="UserInterface\Style\VectorCommand.cs" />
+    <Compile Include="UserInterface\Style\Figure.cs" />
     <Compile Include="UserInterface\Style\VisualState.cs" />
     <Compile Include="UserInterface\Style\VisualStateDefinition.cs" />
     <Compile Include="UserInterface\TimeEventArgs.cs" />

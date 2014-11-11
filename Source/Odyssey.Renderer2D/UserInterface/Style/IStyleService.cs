@@ -10,7 +10,8 @@ namespace Odyssey.UserInterface.Style
         FontCollection FontCollection { get; }
         Theme GetTheme(string themeName);
         void AddResource(IResource resource, bool shared = true);
-        Brush CreateOrRetrieveColorResource(ColorResource colorResource, bool shared = true);
-        TextFormat CreateOrRetrieveTextResource(TextStyle textStyle, bool shared = true);
+        Brush GetBrushResource(ColorResource colorResource, bool shared = true);
+        Brush GetBrushResource(string name, Theme theme, bool shared = true);
+        TextFormat GetTextResource(TextStyle textStyle, bool shared = true);
     }
 }

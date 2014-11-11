@@ -21,47 +21,87 @@ namespace Odyssey.Graphics.Drawing
         {
             foreach (var instruction in commands)
             {
-                switch (instruction.Command)
+                bool isRelative = instruction.IsRelative;
+
+                switch (instruction.PrimitiveType)
                 {
-                    case 'M':
-                        Move(instruction, true);
+                    case PrimitiveType.Move:
+                        Move(instruction, isRelative);
                         break;
 
-                    case 'L':
-                        Line(instruction, true);
+                    case PrimitiveType.Line:
+                        Line(instruction, isRelative);
                         break;
 
-                    case 'Z':
+                    case PrimitiveType.HorizontalLine:
+                        HorizontalLine(instruction, isRelative);
+                        break;
+
+                    case PrimitiveType.VerticalLine:
+                        VerticalLine(instruction, isRelative);
+                        break;
+
+                    case PrimitiveType.EllipticalArc:
+                        Arc(instruction, isRelative);
+                        break;
+
+                    case PrimitiveType.Close:
                         Close(FigureEnd.Closed);
-                        break;
-
-                    case 'A':
-                        Arc(instruction, true);
                         break;
 
                 }
             }
         }
 
-        void Move(VectorCommand instruction, bool isAbsolute)
+        private void HorizontalLine(VectorCommand instruction, bool isRelative)
+        {
+            var points = new List<Vector2>();
+            for (var i = 0; i < instruction.Arguments.Length; i++)
+            {
+                var point = new Vector2(instruction.Arguments[i], previousPoint.Y);
+                if (isRelative)
+                    point+= new Vector2(previousPoint.X, 0);
+                points.Add(point);
+                previousPoint = points[i];
+            }
+            sink.AddLines(points);
+        }
+
+        private void VerticalLine(VectorCommand instruction, bool isRelative)
+        {
+            var points = new List<Vector2>();
+            for (var i = 0; i < instruction.Arguments.Length; i++)
+            {
+                var point = new Vector2(previousPoint.X, instruction.Arguments[i]);
+                if (isRelative)
+                    point+= new Vector2(0, previousPoint.Y);
+                points.Add(point);
+                previousPoint = points[i];
+            }
+            sink.AddLines(points);
+        }
+
+        void Move(VectorCommand instruction, bool isRelative)
         {
             if (IsFigureOpen)
                 Close(FigureEnd.Open);
 
             var point = new Vector2(instruction.Arguments[0], instruction.Arguments[1]);
-            startPoint = isAbsolute ? point : point + startPoint;
+            if (isRelative)
+                point += startPoint;
+            startPoint = isRelative ? point + startPoint : point;
             previousPoint = startPoint;
             sink.BeginFigure(startPoint, FigureBegin.Filled);
             IsFigureOpen = true;
         }
 
-        void Line(VectorCommand instruction, bool isAbsolute)
+        void Line(VectorCommand instruction, bool isRelative)
         {
             var points = new List<Vector2>();
             for (var i = 0; i < instruction.Arguments.Length; i = i + 2)
             {
                 var point = new Vector2(instruction.Arguments[i], instruction.Arguments[i + 1]);
-                if (!isAbsolute)
+                if (isRelative)
                     point += previousPoint;
                 points.Add(point);
                 previousPoint = points[i];
@@ -69,18 +109,21 @@ namespace Odyssey.Graphics.Drawing
             sink.AddLines(points);
         }
 
-        void Arc(VectorCommand instruction, bool isAbsolute)
+        void Arc(VectorCommand instruction, bool isRelative)
         {
-            float w = instruction.Arguments[0];
-            float h = instruction.Arguments[1];
-            float a = instruction.Arguments[2];
-            bool isLargeArc = (int)instruction.Arguments[3] == 1;
-            bool sweepDirection = (int)instruction.Arguments[4] == 1;
-            
-            var p = new Vector2(instruction.Arguments[5], instruction.Arguments[6]);
-            if (!isAbsolute)
-                p += previousPoint;
-            sink.AddArc(w,h, a, isLargeArc, sweepDirection, p);
+            for (int i = 0; i < instruction.Arguments.Length; i = i + 3)
+            {
+                float w = instruction.Arguments[0];
+                float h = instruction.Arguments[1];
+                float a = instruction.Arguments[2];
+                bool isLargeArc = (int) instruction.Arguments[3] == 1;
+                bool sweepDirection = (int) instruction.Arguments[4] == 1;
+
+                var p = new Vector2(instruction.Arguments[5], instruction.Arguments[6]);
+                if (isRelative)
+                    p += previousPoint;
+                sink.AddArc(w, h, a, isLargeArc, sweepDirection, p);
+            }
         }
 
         void Close(FigureEnd endType)

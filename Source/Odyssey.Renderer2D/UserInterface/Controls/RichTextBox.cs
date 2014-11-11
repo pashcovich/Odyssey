@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.UserInterface.Data;
+using Odyssey.UserInterface.Style;
 using Odyssey.Utilities.Reflection;
 using SharpDX;
 
@@ -66,7 +67,7 @@ namespace Odyssey.UserInterface.Controls
         {
             base.Arrange();
             if (!Controls.IsEmpty)
-                UserInterface.Style.Layout.DistributeVertically(this, Controls);
+                LayoutManager.DistributeVertically(this, Controls);
         }
     }
 }

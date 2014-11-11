@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Odyssey.UserInterface.Style
 {
-    public static class Layout
+    public static class LayoutManager
     {
         private const float Unit = 32;
         public static float Scale = 1.0f;
