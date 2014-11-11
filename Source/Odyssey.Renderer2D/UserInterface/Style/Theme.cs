@@ -64,7 +64,7 @@ namespace Odyssey.UserInterface.Style
             if (resource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
 
-            TResource resultResource = resource as TResource;
+            var resultResource = resource as TResource;
             if (resultResource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
                     resourceName, resource, typeof (TResource).Name));
@@ -76,7 +76,7 @@ namespace Odyssey.UserInterface.Style
             foreach (var resource in root.Resources)
             {
                 yield return resource;
-                IResourceProvider resourceProvider = resource as IResourceProvider;
+                var resourceProvider = resource as IResourceProvider;
                 if (resourceProvider != null)
                 {
                     foreach (var childResource in PreOrderVisit(resourceProvider))
@@ -119,7 +119,7 @@ namespace Odyssey.UserInterface.Style
                 }
                 while (xmlReader.IsStartElement())
                 {
-                    string name = xmlReader.LocalName;
+                    var name = xmlReader.LocalName;
                     switch (name)
                     {
                         case "ControlStyle":
@@ -142,24 +142,48 @@ namespace Odyssey.UserInterface.Style
             reader.ReadStartElement(sResources);
             while (reader.IsStartElement())
             {
-                string name = reader.Name;
-
-                string typeName = String.Format("Odyssey.Graphics.{0}, Odyssey.Common", name);
-
-                ColorResource colorResource;
-                string resourceName = reader.GetAttribute(ReflectionHelper.GetPropertyName((Theme t) => t.Name));
-                try
+                var name = reader.Name;
+                switch (name)
                 {
-                    colorResource = (ColorResource) Activator.CreateInstance(Type.GetType(typeName));
+                    case "Figure":
+                        ParseVectorResource(reader);
+                        break;
+
+                    case "SolidColor":
+                    case "LinearGradient":
+                    case "RadialGradient":
+                        ParseColorResource(reader);
+                        break;
+
+                    default:
+                        throw new InvalidOperationException(string.Format("Element '{0}' not recognized", name));
                 }
-                catch (ArgumentNullException ex)
-                {
-                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Resource", typeName));
-                }
-                colorResource.DeserializeXml(this, reader);
-                AddResource(resourceName, colorResource);
             }
             reader.ReadEndElement();
+        }
+
+        private void ParseVectorResource(XmlReader reader)
+        {
+            var vectorResource = new Figure();
+            vectorResource.DeserializeXml(this, reader);
+            AddResource(vectorResource.Name, vectorResource);
+        }
+
+        private void ParseColorResource(XmlReader reader)
+        {
+            var typeName = String.Format("Odyssey.Graphics.{0}, Odyssey.Common", reader.Name);
+            ColorResource colorResource;
+            var resourceName = reader.GetAttribute(ReflectionHelper.GetPropertyName((Theme t) => t.Name));
+            try
+            {
+                colorResource = (ColorResource)Activator.CreateInstance(Type.GetType(typeName));
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Resource", typeName));
+            }
+            colorResource.DeserializeXml(this, reader);
+            AddResource(resourceName, colorResource);
         }
 
         private void ParseControlStyle(XmlReader reader)

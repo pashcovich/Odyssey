@@ -48,7 +48,7 @@ namespace Odyssey.UserInterface.Style
             var content = services.GetService<IAssetProvider>();
 
             SharpDX.DirectWrite.TextFormat textFormat;
-            float scaledFontSize = textStyle.Size*Layout.Scale;
+            float scaledFontSize = textStyle.Size*LayoutManager.Scale;
 
             if (content.Contains(textStyle.FontFamily))
                 textFormat = new SharpDX.DirectWrite.TextFormat(deviceService.Direct2DDevice, textStyle.FontFamily, services.GetService<IStyleService>().FontCollection,

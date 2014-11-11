@@ -21,7 +21,7 @@ using Odyssey.Content;
 
 #endregion
 
-namespace Odyssey.Talos
+namespace Odyssey.Epos
 {
     public interface IEntity : IResource
     {

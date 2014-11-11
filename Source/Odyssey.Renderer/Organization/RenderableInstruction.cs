@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Talos;
+using Odyssey.Epos;
 
 namespace Odyssey.Organization
 {

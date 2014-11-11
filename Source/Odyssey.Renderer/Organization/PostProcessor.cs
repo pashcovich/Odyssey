@@ -7,7 +7,7 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Organization.Commands;
-using Odyssey.Talos;
+using Odyssey.Epos;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;

@@ -21,7 +21,7 @@ using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Talos;
+using Odyssey.Epos;
 using Odyssey.Utilities.Reflection;
 using SharpDX;
 using System;

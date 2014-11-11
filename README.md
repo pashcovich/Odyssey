@@ -3,7 +3,7 @@ This repository contains the source code for:
 
 #### Odyssey.Renderer
 3D engine
-#### Odyssey.Talos
+#### Odyssey.Epos
 Entity Component System Framework
 #### Odyssey.Renderer2D
 User Interface Library _(in OdysseyUI.sln)_

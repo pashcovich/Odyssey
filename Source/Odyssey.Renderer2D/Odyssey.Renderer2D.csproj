@@ -49,6 +49,7 @@
     <Compile Include="Engine\Direct2DDevice.cs" />
     <Compile Include="Engine\Direct2DSurface.cs" />
     <Compile Include="Engine\IDirect2DService.cs" />
+    <Compile Include="Graphics\Drawing\FigureDesigner.cs" />
     <Compile Include="Graphics\GradientBrush.cs" />
     <Compile Include="Graphics\RadialGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\CutCornerRectangle.cs" />
@@ -80,10 +81,10 @@
     <Compile Include="UserInterface\Data\BindingCollection.cs" />
     <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
-    <Compile Include="UserInterface\Style\FigureData.cs" />
     <Compile Include="Graphics\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\PolygonBase.cs" />
     <Compile Include="Graphics\Drawing\Rectangle.cs" />
+    <Compile Include="UserInterface\Style\PrimitiveType.cs" />
     <Compile Include="UserInterface\Style\TextFormat.cs" />
     <Compile Include="UserInterface\Style\TextStyle.cs" />
     <Compile Include="UserInterface\Style\Theme.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Graphics\Drawing\Shape.cs" />
     <Compile Include="Graphics\Brush.cs" />
     <Compile Include="Graphics\Drawing\FigureBegin.cs" />
-    <Compile Include="Graphics\Drawing\FigureDesigner.cs" />
+    <Compile Include="Graphics\Drawing\FigureParser.cs" />
     <Compile Include="Graphics\Drawing\FigureEnd.cs" />
     <Compile Include="Graphics\Drawing\FillMode.cs" />
     <Compile Include="Graphics\Drawing\Geometry.cs" />
@@ -137,12 +138,13 @@
     <Compile Include="UserInterface\Style\Depth.cs" />
     <Compile Include="UserInterface\Style\Enums.cs" />
     <Compile Include="UserInterface\Style\IStyleService.cs" />
-    <Compile Include="UserInterface\Style\Layout.cs" />
+    <Compile Include="UserInterface\Style\LayoutManager.cs" />
     <Compile Include="UserInterface\Style\VectorArtParser.cs" />
     <Compile Include="UserInterface\Style\StyleManager.cs" />
     <Compile Include="UserInterface\Style\TextEnums.cs" />
     <Compile Include="UserInterface\Style\Thickness.cs" />
     <Compile Include="UserInterface\Style\VectorCommand.cs" />
+    <Compile Include="UserInterface\Style\Figure.cs" />
     <Compile Include="UserInterface\Style\VisualState.cs" />
     <Compile Include="UserInterface\Style\VisualStateDefinition.cs" />
     <Compile Include="UserInterface\TimeEventArgs.cs" />

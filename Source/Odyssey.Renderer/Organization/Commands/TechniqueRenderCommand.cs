@@ -8,7 +8,7 @@ using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Talos;
+using Odyssey.Epos;
 using Odyssey.Utilities.Logging;
 using SharpDX;
 

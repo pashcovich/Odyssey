@@ -90,10 +90,10 @@ namespace Odyssey.UserInterface.Controls
             if (Foreground == null)
             {
                 var brushResource = Overlay.Theme.GetResource<ColorResource>(TextStyle.Foreground);
-                Foreground = styleService.CreateOrRetrieveColorResource(brushResource);
+                Foreground = styleService.GetBrushResource(brushResource);
             }
 
-            textFormat = styleService.CreateOrRetrieveTextResource(TextStyle);
+            textFormat = styleService.GetTextResource(TextStyle);
             DeviceContext context = Device;
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
         }

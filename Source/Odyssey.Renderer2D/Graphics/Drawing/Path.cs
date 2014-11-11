@@ -1,5 +1,4 @@
 ﻿using System;
-using Odyssey.UserInterface.Controls;
 using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
@@ -15,8 +14,15 @@ namespace Odyssey.Graphics.Drawing
 
         public override void Render()
         {
-            //Device.DrawGeometry(Data, Stroke);
-            Device.FillGeometry(Data, Fill);
+            Device.Transform = Transform;
+            if (Fill != null)
+            {
+                Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
+                Device.FillGeometry(Data, Fill);
+            }
+            if (Stroke != null)
+                Device.DrawGeometry(Data, Stroke,StrokeThickness);
+            Device.Transform = Matrix3x2.Identity;
         }
 
         protected override void OnInitializing(EventArgs e)
