@@ -143,23 +143,47 @@ namespace Odyssey.UserInterface.Style
             while (reader.IsStartElement())
             {
                 var name = reader.Name;
-
-                var typeName = String.Format("Odyssey.Graphics.{0}, Odyssey.Common", name);
-
-                ColorResource colorResource;
-                var resourceName = reader.GetAttribute(ReflectionHelper.GetPropertyName((Theme t) => t.Name));
-                try
+                switch (name)
                 {
-                    colorResource = (ColorResource) Activator.CreateInstance(Type.GetType(typeName));
+                    case "Figure":
+                        ParseVectorResource(reader);
+                        break;
+
+                    case "SolidColor":
+                    case "LinearGradient":
+                    case "RadialGradient":
+                        ParseColorResource(reader);
+                        break;
+
+                    default:
+                        throw new InvalidOperationException(string.Format("Element '{0}' not recognized", name));
                 }
-                catch (ArgumentNullException ex)
-                {
-                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Resource", typeName));
-                }
-                colorResource.DeserializeXml(this, reader);
-                AddResource(resourceName, colorResource);
             }
             reader.ReadEndElement();
+        }
+
+        private void ParseVectorResource(XmlReader reader)
+        {
+            var vectorResource = new Figure();
+            vectorResource.DeserializeXml(this, reader);
+            AddResource(vectorResource.Name, vectorResource);
+        }
+
+        private void ParseColorResource(XmlReader reader)
+        {
+            var typeName = String.Format("Odyssey.Graphics.{0}, Odyssey.Common", reader.Name);
+            ColorResource colorResource;
+            var resourceName = reader.GetAttribute(ReflectionHelper.GetPropertyName((Theme t) => t.Name));
+            try
+            {
+                colorResource = (ColorResource)Activator.CreateInstance(Type.GetType(typeName));
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Resource", typeName));
+            }
+            colorResource.DeserializeXml(this, reader);
+            AddResource(resourceName, colorResource);
         }
 
         private void ParseControlStyle(XmlReader reader)
