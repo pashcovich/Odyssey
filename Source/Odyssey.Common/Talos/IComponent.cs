@@ -1,6 +1,6 @@
 ﻿using Odyssey.Content;
 
-namespace Odyssey.Talos
+namespace Odyssey.Epos
 {
     public interface IComponent : IResource
     {

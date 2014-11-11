@@ -5,7 +5,7 @@ using System.Linq;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Talos;
+using Odyssey.Epos;
 using SharpDX;
 
 namespace Odyssey.Organization.Commands

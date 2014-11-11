@@ -1,6 +1,6 @@
 ﻿using SharpDX;
 
-namespace Odyssey.Talos
+namespace Odyssey.Epos
 {
     public interface IPosition
     {

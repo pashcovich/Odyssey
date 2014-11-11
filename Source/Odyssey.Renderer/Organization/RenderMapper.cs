@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Talos;
+using Odyssey.Epos;
 
 namespace Odyssey.Organization
 {

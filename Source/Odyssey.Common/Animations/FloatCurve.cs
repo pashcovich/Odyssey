@@ -2,7 +2,7 @@
 using System.Globalization;
 using Odyssey.Content;
 using Odyssey.Geometry;
-using Odyssey.Talos;
+using Odyssey.Epos;
 using SharpDX;
 
 namespace Odyssey.Animations
