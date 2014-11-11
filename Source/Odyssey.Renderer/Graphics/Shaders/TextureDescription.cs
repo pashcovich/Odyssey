@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using Odyssey.Graphics.Effects;
+﻿using Odyssey.Graphics.Effects;
 using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Shaders

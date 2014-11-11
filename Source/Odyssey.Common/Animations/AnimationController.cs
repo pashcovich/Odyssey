@@ -22,7 +22,7 @@ using System.Linq;
 using System.Reflection;
 using Odyssey.Content;
 using Odyssey.Engine;
-using Odyssey.Utilities.Reflection;
+using Odyssey.Reflection;
 
 #endregion
 

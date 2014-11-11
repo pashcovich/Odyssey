@@ -10,7 +10,7 @@ using Odyssey.Daedalus.Serialization;
 using Odyssey.Daedalus.View;
 using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;

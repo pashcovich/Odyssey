@@ -2,7 +2,6 @@
 using System.Globalization;
 using Odyssey.Graphics;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Animations

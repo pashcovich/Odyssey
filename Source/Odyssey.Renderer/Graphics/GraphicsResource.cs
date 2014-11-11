@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
+using Odyssey.Core;
 using Odyssey.Engine;
-using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 
 namespace Odyssey.Graphics

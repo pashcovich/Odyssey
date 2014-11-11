@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     /// <summary>
     /// Event arguments for the <see cref="ObservableDictionary{TKey,TValue}.ItemAdded"/> and <see cref="ObservableDictionary{TKey,TValue}.ItemRemoved"/> events.

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     /// <summary>
     /// An observable collection.

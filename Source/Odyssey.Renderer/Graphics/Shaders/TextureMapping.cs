@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX.Mathematics;
-
-namespace Odyssey.Graphics.Shaders
+﻿namespace Odyssey.Graphics.Shaders
 {
     public class TextureMapping
     {

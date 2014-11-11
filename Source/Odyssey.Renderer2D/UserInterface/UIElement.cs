@@ -15,12 +15,14 @@
 
 #region Using Directives
 using Odyssey.Animations;
+using Odyssey.Core;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Data;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 using System.Collections.Generic;
+using SharpDX.Mathematics.Interop;
 using Control = Odyssey.UserInterface.Controls.Control;
 #endregion Using Directives
 

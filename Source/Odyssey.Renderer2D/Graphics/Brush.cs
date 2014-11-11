@@ -20,6 +20,7 @@ using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using SharpDX;
+using SharpDX.Mathematics;
 using Odyssey.Animations;
 
 #endregion Using Directives

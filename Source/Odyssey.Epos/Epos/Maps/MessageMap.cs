@@ -4,9 +4,9 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Odyssey.Collections;
 using Odyssey.Epos.Systems;
-using Odyssey.Utilities.Collections;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 
 namespace Odyssey.Epos.Maps
 {

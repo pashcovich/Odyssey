@@ -1,7 +1,7 @@
 ﻿using System;
 using SharpDX;
 
-namespace Odyssey
+namespace Odyssey.Core
 {
     /// <summary>
     /// A service registry is a <see cref="IServiceProvider"/> that provides methods to register and unregister services.

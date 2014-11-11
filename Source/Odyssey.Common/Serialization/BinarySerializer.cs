@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Odyssey.Core;
 using SharpDX;
 using SharpDX.IO;
 using SharpDX.Multimedia;
@@ -32,7 +33,7 @@ namespace Odyssey.Serialization
     /// 
     /// </ul>
     /// </remarks>
-    public partial class BinarySerializer 
+    public partial class BinarySerializer : Component
     {
         private int chunkCount;
         private Chunk[] chunks;
@@ -102,13 +103,13 @@ namespace Odyssey.Serialization
 
         private SerializerMode mode;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BinarySerializer" /> class.
         /// </summary>
         /// <param name="stream">The stream to read or write to.</param>
         /// <param name="mode">The read or write mode.</param>
-        public BinarySerializer(Stream stream, SerializerMode mode) : this(stream, mode, SharpDX.Text.Encoding.ASCII)
+        public BinarySerializer(Stream stream, SerializerMode mode) : 
+            this(stream, mode, Text.Encoding.ASCII)
         {
         }
 
@@ -2804,6 +2805,10 @@ namespace Odyssey.Serialization
                 v >>= 7;
             }
             Writer.Write((byte)v);
+        }
+
+        protected override void Dispose(bool disposeManagedResources)
+        {
         }
 
         private static Dynamic GetDynamic<T>(FourCC id) where T : IDataSerializable, new()

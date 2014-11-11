@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     public class DictionaryMap<TIndex, TKey, TValue>
         where TKey : IComparable<TKey>

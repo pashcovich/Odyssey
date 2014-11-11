@@ -58,10 +58,11 @@
     <Compile Include="Animations\PathCurve.cs" />
     <Compile Include="Animations\Vector3Curve.cs" />
     <Compile Include="Animations\Vector3KeyFrame.cs" />
-    <Compile Include="Component.cs" />
-    <Compile Include="ComponentBase.cs" />
+    <Compile Include="Collections\ComponentCollection.cs" />
+    <Compile Include="Core\Component.cs" />
+    <Compile Include="Core\ComponentBase.cs" />
     <Compile Include="Geometry\IFunction.cs" />
-    <Compile Include="IServiceRegistry.cs" />
+    <Compile Include="Core\IServiceRegistry.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />
     <Compile Include="Animations\QuaternionCurve.cs" />
     <Compile Include="Animations\FloatCurve.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Graphics\SolidColor.cs" />
     <Compile Include="Serialization\ArrayLengthType.cs" />
     <Compile Include="Serialization\BinarySerializer.cs" />
+    <Compile Include="Serialization\BinarySerializer.Mathematics.cs" />
     <Compile Include="Serialization\DynamicSerializerAttribute.cs" />
     <Compile Include="Serialization\IDataSerializable.cs" />
     <Compile Include="Serialization\IdentityEqualityComparer.cs" />
@@ -173,6 +175,9 @@
     <Compile Include="Epos\IEntity.cs" />
     <Compile Include="Collections\Cache.cs" />
     <Compile Include="Collections\CollectionMap.cs" />
+    <Compile Include="Core\SingletonString.cs" />
+    <Compile Include="Core\TimerTick.cs" />
+    <Compile Include="Text\Encoding.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <None Include="Collections\GenericNode.cs" />
     <Compile Include="Collections\INode.cs" />

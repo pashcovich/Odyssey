@@ -18,7 +18,7 @@
 using System.Diagnostics;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using Brush = Odyssey.Graphics.Brush;
@@ -38,8 +38,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
-            DeviceContext context = Device;
-            context.DrawText(Text, TextFormat, BoundingRectangle, Foreground);
+            Device.DrawText(Text, TextFormat, BoundingRectangle, Foreground);
         }
     }
 }

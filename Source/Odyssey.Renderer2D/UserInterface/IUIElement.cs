@@ -2,7 +2,7 @@
 
 using Odyssey.Content;
 using Odyssey.Interaction;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 
 #endregion Using Directives

@@ -1,9 +1,9 @@
-﻿using Odyssey.Utilities.Logging;
+﻿using Odyssey.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     public class QueueMap<TItem>
     {

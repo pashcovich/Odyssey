@@ -1,8 +1,7 @@
 using System;
 using System.ComponentModel;
-using Odyssey.Content;
 
-namespace Odyssey
+namespace Odyssey.Core
 {
     /// <summary>
     /// A lightweight Component base class.

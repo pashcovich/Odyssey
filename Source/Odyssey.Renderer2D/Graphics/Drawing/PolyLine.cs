@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Engine;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 

@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.DirectWrite;
 using TextRenderer = Odyssey.Graphics.TextRenderer;
 

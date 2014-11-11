@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using Odyssey.Content;
-using SharpDX.Mathematics;
 using SharpDX.Direct3D;
-using SharpDX.DXGI;
 using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Models

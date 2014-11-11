@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Xml;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics
@@ -43,8 +42,8 @@ namespace Odyssey.Graphics
             var reader = e.XmlReader;
             string sStart = reader.GetAttribute("StartPoint");
             string sEnd = reader.GetAttribute("EndPoint");
-            StartPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.DecodeFloatVector2(sStart);
-            EndPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.DecodeFloatVector2(sEnd);
+            StartPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.Text.DecodeFloatVector2(sStart);
+            EndPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.Text.DecodeFloatVector2(sEnd);
             base.OnReadXml(e);
         }
 

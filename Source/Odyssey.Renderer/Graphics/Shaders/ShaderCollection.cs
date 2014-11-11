@@ -1,5 +1,5 @@
 ﻿using Odyssey.Content;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpDX.IO;
 using System;
 using System.Collections;

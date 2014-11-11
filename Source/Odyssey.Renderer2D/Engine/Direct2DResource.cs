@@ -1,6 +1,7 @@
 ﻿using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Graphics;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using System;
 using System.Diagnostics.Contracts;

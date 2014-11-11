@@ -17,7 +17,7 @@ using System.Linq;
 using System.Reflection;
 using Odyssey.Daedalus.Serialization;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Methods

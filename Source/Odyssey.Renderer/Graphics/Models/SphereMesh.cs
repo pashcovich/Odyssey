@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Engine;
-using Odyssey.Graphics.Meshes;
 using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 

@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using Odyssey.Serialization;
 using SharpDX.DXGI;
-using Odyssey.Serialization;
 
 namespace Odyssey.Graphics
 {

@@ -15,7 +15,8 @@
 
 #region Using Directives
 
-using SharpDX.Mathematics;
+using Odyssey.Core;
+using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using System;

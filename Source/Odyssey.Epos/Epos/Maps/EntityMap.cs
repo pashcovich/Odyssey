@@ -1,13 +1,12 @@
 ﻿using Odyssey.Content;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Messages;
-using Odyssey.Utilities.Collections;
-using Odyssey.Utilities.Logging;
+using Odyssey.Collections;
+using Odyssey.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Odyssey.Utilities.Text;
 
 namespace Odyssey.Epos.Maps
 {
@@ -230,7 +229,7 @@ namespace Odyssey.Epos.Maps
         {
             string resourceArray;
             string index;
-            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
 
             return isArray
                 ? ContainsEntity(resourceArray) && ((IResourceProvider) GetEntity(resourceArray)).ContainsResource(index)
@@ -241,7 +240,7 @@ namespace Odyssey.Epos.Maps
         {
             string resourceArray;
             string index;
-            bool isArray = Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
             return isArray
                 ? ((IResourceProvider) GetEntity(resourceArray)).GetResource<TResource>(index)
                 : GetEntity(resourceName) as TResource;

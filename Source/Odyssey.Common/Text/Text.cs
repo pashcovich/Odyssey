@@ -4,10 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Odyssey.Animations;
 using SharpDX.Mathematics;
 
-namespace Odyssey.Utilities.Text
+namespace Odyssey.Text
 {
     public static class Text
     {

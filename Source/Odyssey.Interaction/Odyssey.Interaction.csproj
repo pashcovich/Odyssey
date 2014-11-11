@@ -48,15 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup-->
   <ItemGroup>
-    <Reference Include="SharpDX">
-      <HintPath>$(SharpDXSdkBinDir)\$(SharpDXDirectXVersion)-$(SharpDXPlatform)\SharpDX.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Odyssey.Common\Odyssey.Common.csproj">
       <Project>{26FD6C22-2141-4994-85CB-5A730C910AA2}</Project>
       <Name>Odyssey.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-winrt\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Dev\SharpDX\Bin\DirectX11_2-winrt\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Condition="'$(Configuration)' == 'Win7Debug'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

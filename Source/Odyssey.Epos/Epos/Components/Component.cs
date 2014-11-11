@@ -21,6 +21,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Epos.Messages;
 using SharpDX.Mathematics;
 using Message = Odyssey.Epos.Messages.Message;

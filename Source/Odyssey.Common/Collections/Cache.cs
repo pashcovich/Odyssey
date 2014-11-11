@@ -7,7 +7,7 @@ using System.Linq;
 
 #endregion
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     public interface ICacheable
     {

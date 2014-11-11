@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpDX.IO;
 
 namespace Odyssey.Content

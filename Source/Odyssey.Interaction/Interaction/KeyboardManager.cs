@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using Odyssey.Core;
 using SharpDX;
 
 namespace Odyssey.Interaction

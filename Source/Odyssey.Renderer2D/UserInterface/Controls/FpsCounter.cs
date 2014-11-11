@@ -2,7 +2,7 @@
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using SolidColorBrush = Odyssey.Graphics.SolidColorBrush;
 

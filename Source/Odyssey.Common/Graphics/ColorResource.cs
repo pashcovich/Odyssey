@@ -2,8 +2,8 @@ using System;
 using System.Globalization;
 using System.Xml;
 using Odyssey.Content;
+using Odyssey.Reflection;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Reflection;
 
 namespace Odyssey.Graphics
 {

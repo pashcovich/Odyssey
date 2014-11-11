@@ -15,7 +15,8 @@
 
 #region Using Directives
 
-using SharpDX;
+using Odyssey.UserInterface.Style;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
@@ -23,11 +24,9 @@ namespace Odyssey.Graphics.Drawing
 {
     public abstract class CutCornerRectangleBase : Shape
     {
-        private const float DefaultCornerLength = 16;
-
         protected CutCornerRectangleBase()
         {
-            CutCornerLength = DefaultCornerLength;
+            CutCornerLength = LayoutManager.Units(2f);
         }
 
         public float CutCornerLength { get; set; }

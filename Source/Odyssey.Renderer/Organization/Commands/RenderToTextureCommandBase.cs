@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics;
-using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Organization;
 using Odyssey.Graphics.PostProcessing;
-using Odyssey.Graphics.Shaders;
 using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 using TextureDescription = Odyssey.Graphics.TextureDescription;

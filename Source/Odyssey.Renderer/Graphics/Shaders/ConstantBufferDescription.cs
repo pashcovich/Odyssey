@@ -1,10 +1,7 @@
-﻿using System.Diagnostics;
-using Odyssey.Graphics.Effects;
-using Odyssey.Utilities;
-using Odyssey.Utilities.Logging;
+﻿using Odyssey.Graphics.Effects;
+using Odyssey.Logging;
 using Odyssey.Serialization;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
 using EngineReference = Odyssey.Engine.EngineReference;

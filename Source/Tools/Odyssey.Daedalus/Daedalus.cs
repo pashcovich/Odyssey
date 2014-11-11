@@ -1,7 +1,7 @@
 ﻿using Odyssey.Daedalus.Properties;
 using Odyssey.Daedalus.Viewer;
 using Odyssey.Daedalus.View;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using System;
 using System.IO;
 using System.Windows.Threading;
@@ -26,7 +26,7 @@ namespace Odyssey.Daedalus
                     );
             string dataFolderPath = System.IO.Path.Combine(
                 appDataPath,
-                "Avengers_UTD",
+                "IterAstris",
                 "Daedalus"
             );
 

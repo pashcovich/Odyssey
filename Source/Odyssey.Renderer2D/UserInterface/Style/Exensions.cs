@@ -17,7 +17,7 @@
 
 using Odyssey.Content;
 using Odyssey.Engine;
-using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.DirectWrite;
 
 #endregion Using Directives

@@ -1,7 +1,6 @@
 ﻿using Odyssey.Content;
 using Odyssey.Engine;
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.IO;

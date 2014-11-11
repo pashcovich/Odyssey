@@ -15,7 +15,8 @@
 
 #region Using Directives
 
-using Odyssey.Utilities.Collections;
+using Odyssey.Collections;
+using Odyssey.Core;
 using SharpDX.Mathematics;
 using SharpDX.Collections;
 using SharpDX.IO;

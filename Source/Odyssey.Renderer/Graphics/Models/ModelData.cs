@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Content;
-using Odyssey.Utilities.Text;
 using SharpDX.IO;
 using Odyssey.Serialization;
 

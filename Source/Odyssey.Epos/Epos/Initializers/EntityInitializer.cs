@@ -18,11 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpDX.Mathematics;
 
 #endregion

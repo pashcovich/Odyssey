@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Diagnostics.Contracts;
 
-namespace Odyssey.Utilities.Logging
+namespace Odyssey.Logging
 {
     public struct TraceData
     {

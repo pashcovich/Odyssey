@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Odyssey.Utilities.Reflection;
+using Odyssey.Reflection;
 
 namespace Odyssey.Epos.Components
 {

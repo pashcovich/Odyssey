@@ -1,6 +1,6 @@
-﻿using Odyssey.Graphics;
+﻿using Odyssey.Core;
+using Odyssey.Graphics;
 using Odyssey.Graphics.Organization;
-using SharpDX.Mathematics;
 
 namespace Odyssey.Organization.Commands
 {

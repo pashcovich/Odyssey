@@ -1,8 +1,4 @@
-﻿using Odyssey.Engine;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-
-namespace Odyssey.Graphics.PostProcessing
+﻿namespace Odyssey.Graphics.PostProcessing
 {
     public enum TargetOutput
     {

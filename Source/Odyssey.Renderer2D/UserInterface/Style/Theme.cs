@@ -24,8 +24,8 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using Odyssey.Content;
 using Odyssey.Graphics;
+using Odyssey.Reflection;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Reflection;
 
 #endregion
 

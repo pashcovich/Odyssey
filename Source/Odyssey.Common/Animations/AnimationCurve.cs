@@ -24,9 +24,8 @@ using System.Linq;
 using System.Xml;
 using Odyssey.Content;
 using Odyssey.Geometry;
+using Odyssey.Reflection;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Reflection;
-using Odyssey.Utilities.Text;
 
 #endregion
 
@@ -141,7 +140,7 @@ namespace Odyssey.Animations
         {
             TargetProperty = xmlReader.GetAttribute("TargetProperty");
 
-            TargetName = Text.ParseResource(xmlReader.GetAttribute("TargetName"));
+            TargetName = Text.Text.ParseResource(xmlReader.GetAttribute("TargetName"));
             if (!resourceProvider.ContainsResource(TargetName))
                 throw new InvalidOperationException(String.Format("No resource '{0}' found", TargetName));
 

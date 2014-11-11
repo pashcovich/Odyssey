@@ -1,5 +1,5 @@
 ﻿using System;
-using Odyssey.Utilities.Collections;
+using Odyssey.Collections;
 using SharpDX.DXGI;
 
 namespace Odyssey.Graphics

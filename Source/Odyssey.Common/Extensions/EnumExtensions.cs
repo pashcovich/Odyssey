@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Odyssey.Utilities.Extensions
+namespace Odyssey.Extensions
 {
     public static class EnumExtensions
     {

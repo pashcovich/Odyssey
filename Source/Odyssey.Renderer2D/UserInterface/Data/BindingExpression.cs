@@ -1,6 +1,6 @@
 ﻿#region Using Directives
 
-using Odyssey.Utilities.Reflection;
+using Odyssey.Reflection;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     /// <summary>
     /// An event providing the item changed in a collection (inserted or removed).

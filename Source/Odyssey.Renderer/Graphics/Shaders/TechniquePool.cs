@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Odyssey.Core;
 using Odyssey.Engine;
-using Odyssey.Graphics.Effects;
-using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Shaders
 {

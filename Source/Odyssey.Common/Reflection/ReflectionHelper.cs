@@ -6,11 +6,12 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-#endregion Using Directives
+#endregion
 
-namespace Odyssey.Utilities.Reflection
+namespace Odyssey.Reflection
 {
     public static class ReflectionHelper
     {
@@ -86,11 +87,8 @@ namespace Odyssey.Utilities.Reflection
 
                 if (property == null)
                     return currentType.GetDeclaredField(propertyName);
-                else
-                {
-                    currentType = property.PropertyType.GetTypeInfo();
-                    containingProperty = property;
-                }
+                currentType = property.PropertyType.GetTypeInfo();
+                containingProperty = property;
             }
 
             return null;
@@ -114,8 +112,8 @@ namespace Odyssey.Utilities.Reflection
         {
             Contract.Requires<ArgumentNullException>(type != null, "type");
             const string rArrayPattern = @"(?<array>\w*)\[(?<index>\d+)\]";
-            Regex rArray = new Regex(rArrayPattern);
-            ;
+            var rArray = new Regex(rArrayPattern);
+            
             TypeInfo currentType = type.GetTypeInfo();
             containingProperty = null;
             MemberInfo member = null;
@@ -128,15 +126,14 @@ namespace Odyssey.Utilities.Reflection
                     string array = match.Groups["array"].Value;
 
                     currentType = (currentType.GetDeclaredProperty(array)).GetType().GetTypeInfo();
-
                 }
 
-                member = currentType.GetDeclaredProperty(propertyName) as MemberInfo ?? currentType.GetDeclaredField(propertyName) as MemberInfo;
+                member = currentType.GetDeclaredProperty(propertyName) == null ? currentType.GetDeclaredField(propertyName) : null;
 
-                if (member !=null)
+                if (member != null)
                 {
                     currentType = member.GetType().GetTypeInfo();
-                    containingProperty = (PropertyInfo)member;
+                    containingProperty = (PropertyInfo) member;
                 }
             }
 
@@ -161,8 +158,8 @@ namespace Odyssey.Utilities.Reflection
         {
             TypeInfo baseTypeInfo = type.GetTypeInfo();
             var types = from typeInfo in assembly.DefinedTypes
-                        where baseTypeInfo.IsAssignableFrom(typeInfo)
-                        select typeInfo.AsType();
+                where baseTypeInfo.IsAssignableFrom(typeInfo)
+                select typeInfo.AsType();
 
             return types;
         }
@@ -170,7 +167,7 @@ namespace Odyssey.Utilities.Reflection
         public static string GetPropertyName<TClass>(Expression<Func<TClass, object>> propertyExpression)
         {
             var body = propertyExpression.ToString();
-            int start = body.IndexOf('.')+1;
+            int start = body.IndexOf('.') + 1;
             int end = body.Length - start;
             if (body.EndsWith(")"))
                 end -= 1;
@@ -182,6 +179,14 @@ namespace Odyssey.Utilities.Reflection
         public static bool IsTypeDerived(Type derivedType, Type baseType)
         {
             return baseType.GetTypeInfo().IsAssignableFrom(derivedType.GetTypeInfo());
+        }
+
+        public static TStruct CopyStruct<TStruct>(ref object struct1)
+        {
+            GCHandle handle = GCHandle.Alloc(struct1, GCHandleType.Pinned);
+            var typedStruct = (TStruct)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(TStruct));
+            handle.Free();
+            return typedStruct;
         }
     }
 }

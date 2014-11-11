@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Reflection;
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     public class CollectionMap<TIndex, TCollection, TItem> : IEnumerable<TCollection> 
         where TCollection : ICollection<TItem>, new()

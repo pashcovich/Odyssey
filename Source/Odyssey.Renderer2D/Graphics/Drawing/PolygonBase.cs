@@ -16,7 +16,7 @@
 #region Using Directives
 
 using Odyssey.Geometry.Primitives;
-using SharpDX;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 

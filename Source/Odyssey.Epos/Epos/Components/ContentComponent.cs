@@ -1,6 +1,6 @@
 ﻿using Odyssey.Content;
 using Odyssey.Engine;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 
 namespace Odyssey.Epos.Components
 {

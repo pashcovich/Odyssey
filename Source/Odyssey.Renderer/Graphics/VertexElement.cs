@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using Odyssey.Graphics.Models;
+using Odyssey.Core;
 using SharpDX.Mathematics;
 using SharpDX.DXGI;
 using Odyssey.Serialization;
+using SharpDX.Mathematics.Interop;
 
 namespace Odyssey.Graphics
 {
@@ -642,7 +643,7 @@ namespace Odyssey.Graphics
             if (typeof(Bool4) == typeT)
                 return Format.R32G32B32A32_UInt;
 
-            if (typeof(Bool) == typeT)
+            if (typeof(RawBool) == typeT)
                 return Format.R32_UInt;
 
             throw new NotSupportedException(string.Format("Type [{0}] is not supported. You must specify an explicit DXGI.Format", typeT.Name));

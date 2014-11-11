@@ -1,8 +1,10 @@
 ﻿#region Using Directives
 
+using Odyssey.Core;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
+using SharpDX;
 using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
@@ -18,7 +20,6 @@ using Device1 = SharpDX.Direct3D11.Device1;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
 using PixelShader = SharpDX.Direct3D11.PixelShader;
 using RasterizerState = Odyssey.Graphics.RasterizerState;
-using Rectangle = SharpDX.Rectangle;
 using Resource = SharpDX.Direct3D11.Resource;
 using ResultCode = SharpDX.DXGI.ResultCode;
 using SamplerState = Odyssey.Graphics.SamplerState;

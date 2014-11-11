@@ -1,6 +1,5 @@
 ﻿using System;
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using DeviceChild = SharpDX.Direct3D11.DeviceChild;

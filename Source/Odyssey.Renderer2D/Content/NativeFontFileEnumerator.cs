@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 using SharpDX;
+using SharpDX.Mathematics;
 using SharpDX.DirectWrite;
 
 namespace Odyssey.Content

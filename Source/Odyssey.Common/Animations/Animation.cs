@@ -23,7 +23,6 @@ using System.Xml;
 using Odyssey.Content;
 using Odyssey.Engine;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
 
 #endregion
 

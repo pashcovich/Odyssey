@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Odyssey.Common")]
 [assembly: AssemblyDescription("Common classes for the Odyssey Engine.")]
-[assembly: AssemblyCompany("Avengers Utd - http://www.avengersutd.com/")]
+[assembly: AssemblyCompany("Iter Astris - http://www.iterastris.uk/")]
 [assembly: AssemblyCopyright("GPLv3")]
 [assembly: NeutralResourcesLanguage("en")]
 
@@ -22,10 +22,11 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers by using the '*'
 // as shown below: [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.*")]
+[assembly: AssemblyVersion("0.3.*")]
 [assembly: InternalsVisibleTo("Odyssey.2D")]
 [assembly: InternalsVisibleTo("Odyssey.Engine")]
 [assembly: InternalsVisibleTo("Odyssey.Content")]
+[assembly: InternalsVisibleTo("Odyssey.Epos")]
 [assembly: InternalsVisibleTo("Odyssey.Talos")]
 [assembly: InternalsVisibleTo("Odyssey.Renderer")]
 [assembly: InternalsVisibleTo("Odyssey.Renderer2D")]

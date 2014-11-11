@@ -2,7 +2,6 @@
 using System.Xml.Linq;
 using Odyssey.Graphics;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Animations
@@ -13,11 +12,11 @@ namespace Odyssey.Animations
         {
             base.OnReadXml(e);
             string value = e.XmlReader.GetAttribute("Value");
-            string resourceName = Text.ParseResource(value);
+            string resourceName = Text.Text.ParseResource(value);
             if (!string.IsNullOrEmpty(resourceName))
                 Value = e.ResourceProvider.GetResource<SolidColor>(resourceName).Color;
             else
-                Value = Text.DecodeColor4Abgr(value);
+                Value = Text.Text.DecodeColor4Abgr(value);
 
             e.XmlReader.ReadStartElement();
         }

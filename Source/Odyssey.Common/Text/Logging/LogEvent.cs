@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text;
 
-namespace Odyssey.Utilities.Logging
+namespace Odyssey.Logging
 {
     
 

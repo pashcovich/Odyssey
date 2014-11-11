@@ -17,11 +17,12 @@
 
 using System.Collections.Generic;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Style;
-using SharpDX;
+using SharpDX.Mathematics;
 using System;
 using System.Diagnostics.Contracts;
 using System.Linq;

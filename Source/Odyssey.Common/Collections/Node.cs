@@ -9,7 +9,7 @@ using System.Linq;
 
 #endregion Using directives
 
-namespace Odyssey.Utilities.Collections
+namespace Odyssey.Collections
 {
     [DebuggerDisplay("{GetType().Name} = {ToString()}")]
     public abstract class Node : INode, IEnumerable<INode>

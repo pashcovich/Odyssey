@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Odyssey.Collections;
+using Odyssey.Core;
 using Odyssey.Engine;
-using SharpDX.Mathematics;
-using SharpDX.DXGI;
 
 namespace Odyssey.Graphics
 {
@@ -26,7 +22,7 @@ namespace Odyssey.Graphics
         /// <summary>
         /// Gets the graphics device associated with this collection.
         /// </summary>
-        protected DirectXDevice DirectXDevice;
+        protected readonly DirectXDevice DirectXDevice;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StateCollectionBase{T}" /> class.

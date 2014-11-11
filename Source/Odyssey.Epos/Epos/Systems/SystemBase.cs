@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Odyssey.Core;
 using Odyssey.Epos.Messages;
 using SharpDX.Mathematics;
 

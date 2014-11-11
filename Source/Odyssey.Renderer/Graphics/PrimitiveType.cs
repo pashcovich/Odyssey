@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SharpDX.Direct3D;
-using Odyssey.Serialization;
 
 namespace Odyssey.Graphics
 {

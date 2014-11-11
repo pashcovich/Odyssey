@@ -1,11 +1,12 @@
 ﻿#region Using Directives
 
 using Odyssey.Graphics;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpDX;
 using SharpDX.DXGI;
 using System;
 using System.Windows.Forms;
+using SharpDX.Mathematics.Interop;
 using Device = SharpDX.Direct3D11.Device;
 using Texture2D = SharpDX.Direct3D11.Texture2D;
 
@@ -40,7 +41,7 @@ namespace Odyssey.Engine
 
                 try
                 {
-                    Bool isCurrentlyFullscreen;
+                    RawBool isCurrentlyFullscreen;
                     SwapChain.GetFullscreenState(out isCurrentlyFullscreen, out currentOutput);
 
                     // check if the current fullscreen monitor is the same as new one

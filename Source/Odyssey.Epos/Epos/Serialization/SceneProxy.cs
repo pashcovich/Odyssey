@@ -7,6 +7,7 @@ using Odyssey.Epos.Components;
 using Odyssey.Epos.Systems;
 using SharpYaml;
 using SharpYaml.Serialization;
+using Component = Odyssey.Core.Component;
 
 namespace Odyssey.Epos.Serialization
 {

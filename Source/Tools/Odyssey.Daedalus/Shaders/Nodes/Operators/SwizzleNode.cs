@@ -1,7 +1,7 @@
 ﻿using Odyssey.Graphics.Shaders;
 using Odyssey.Daedalus.Shaders.Nodes.Math;
 using Odyssey.Daedalus.Shaders.Structs;
-using Odyssey.Utilities.Collections;
+using Odyssey.Collections;
 using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;

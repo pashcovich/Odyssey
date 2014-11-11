@@ -2,8 +2,8 @@
 using Odyssey.Content;
 using System;
 using System.Collections.Generic;
+using Odyssey.Reflection;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Reflection;
 
 namespace Odyssey.UserInterface.Style
 {

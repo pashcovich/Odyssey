@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using Odyssey.Serialization;
-using Odyssey.Utilities.Text;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics
@@ -33,11 +32,11 @@ namespace Odyssey.Graphics
             {
                 Color4 color;
                 string colorValue = reader.GetAttribute("Color");
-                string colorAsResource = Text.ParseResource(colorValue);
+                string colorAsResource = Text.Text.ParseResource(colorValue);
                 if (!string.IsNullOrEmpty(colorAsResource))
                     color = e.ResourceProvider.GetResource<SolidColor>(colorAsResource).Color;
                 else 
-                    color = string.IsNullOrEmpty(colorValue) ? new Color4(0, 0, 0, 0) : Text.DecodeColor4Abgr(colorValue);
+                    color = string.IsNullOrEmpty(colorValue) ? new Color4(0, 0, 0, 0) : Text.Text.DecodeColor4Abgr(colorValue);
 
                 string offset = reader.GetAttribute("Offset");
                 var gradientStop = new GradientStop

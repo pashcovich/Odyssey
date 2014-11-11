@@ -1,6 +1,7 @@
-﻿using Odyssey.Graphics.Organization;
+﻿using Odyssey.Core;
+using Odyssey.Graphics.Organization;
 using Odyssey.UserInterface.Controls;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Organization.Commands
 {

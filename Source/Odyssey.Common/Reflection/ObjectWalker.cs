@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
-namespace Odyssey.Utilities.Reflection
+namespace Odyssey.Reflection
 {
     public class ObjectWalker
     {

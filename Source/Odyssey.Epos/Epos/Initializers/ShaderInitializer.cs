@@ -1,9 +1,10 @@
 ﻿using System.Linq.Expressions;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Utilities.Logging;
+using Odyssey.Logging;
 using SharpDX.Mathematics;
 using System;
 using System.Collections.Generic;

@@ -15,9 +15,10 @@
 
 #region Using Directives
 
+using Odyssey.Core;
 using Odyssey.Graphics;
-using Odyssey.Utilities.Logging;
-using SharpDX.Mathematics;
+using Odyssey.Logging;
+using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;

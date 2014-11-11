@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using Odyssey.Graphics.Drawing;
+using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Reflection;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {

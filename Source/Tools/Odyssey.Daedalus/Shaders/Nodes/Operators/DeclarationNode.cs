@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Daedalus.Shaders.Nodes.Math;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Utilities.Collections;
+using Odyssey.Collections;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {

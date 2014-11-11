@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 
 #endregion Using directives
 
-namespace Odyssey.Utilities.Logging
+namespace Odyssey.Logging
 {
     public delegate void DebugWriter(LogData logEntry);
 

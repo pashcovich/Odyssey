@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 

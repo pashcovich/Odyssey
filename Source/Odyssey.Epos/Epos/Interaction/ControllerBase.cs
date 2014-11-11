@@ -16,6 +16,7 @@
 #region Using Directives
 
 using System;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using SharpDX.Mathematics;

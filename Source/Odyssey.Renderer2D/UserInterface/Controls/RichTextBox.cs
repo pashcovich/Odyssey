@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
-using Odyssey.Utilities.Reflection;
-using SharpDX;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {

@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
