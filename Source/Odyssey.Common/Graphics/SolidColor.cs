@@ -29,7 +29,7 @@ namespace Odyssey.Graphics
             base.OnReadXml(e);
             var reader = e.XmlReader;
             string colorValue = reader.GetAttribute("Color");
-            Color = Text.Text.DecodeColor4Abgr(colorValue);
+            Color = Text.TextHelper.DecodeColor4Abgr(colorValue);
             reader.ReadStartElement();
         }
 

@@ -9,7 +9,7 @@ namespace Odyssey.Animations
         {
             base.OnReadXml(e);
             string value = e.XmlReader.GetAttribute("Value");
-            Value = Text.Text.DecodeVector3(value);
+            Value = Text.TextHelper.DecodeVector3(value);
             e.XmlReader.ReadStartElement();
         }
     }

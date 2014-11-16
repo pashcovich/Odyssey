@@ -429,7 +429,7 @@ namespace Odyssey.Collections
 
         #endregion INode Members
 
-        #region SceneStatic Methods
+        #region Static Methods
 
         /// <summary>
         ///   Checks whether the node is a parent of the specified node or whether the two nodes are

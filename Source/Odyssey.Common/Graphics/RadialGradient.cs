@@ -49,8 +49,8 @@ namespace Odyssey.Graphics
             string sEnd = reader.GetAttribute("OriginOffset");
             string sRadiusX = reader.GetAttribute("RadiusX");
             string sRadiusY = reader.GetAttribute("RadiusY");
-            Center = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.Text.DecodeFloatVector2(sStart);
-            OriginOffset = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.Text.DecodeFloatVector2(sEnd);
+            Center = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.TextHelper.DecodeFloatVector2(sStart);
+            OriginOffset = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.TextHelper.DecodeFloatVector2(sEnd);
             RadiusX = string.IsNullOrEmpty(sRadiusX) ? 0 : float.Parse(sRadiusX, CultureInfo.InvariantCulture);
             RadiusY = string.IsNullOrEmpty(sRadiusY) ? 0 : float.Parse(sRadiusY, CultureInfo.InvariantCulture);
             base.OnReadXml(e);

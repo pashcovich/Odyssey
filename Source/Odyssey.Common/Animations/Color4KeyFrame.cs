@@ -12,11 +12,11 @@ namespace Odyssey.Animations
         {
             base.OnReadXml(e);
             string value = e.XmlReader.GetAttribute("Value");
-            string resourceName = Text.Text.ParseResource(value);
+            string resourceName = Text.TextHelper.ParseResource(value);
             if (!string.IsNullOrEmpty(resourceName))
                 Value = e.ResourceProvider.GetResource<SolidColor>(resourceName).Color;
             else
-                Value = Text.Text.DecodeColor4Abgr(value);
+                Value = Text.TextHelper.DecodeColor4Abgr(value);
 
             e.XmlReader.ReadStartElement();
         }

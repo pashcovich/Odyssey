@@ -248,7 +248,7 @@ namespace Odyssey.Epos
         {
             string resourceArray;
             string index;
-            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.TextHelper.IsExpressionArray(resourceName, out resourceArray, out index);
 
             return isArray
                 ? ContainsComponent(resourceArray) && ((IResourceProvider) GetComponent(resourceArray)).ContainsResource(index)
@@ -260,7 +260,7 @@ namespace Odyssey.Epos
         {
             string resourceArray;
             string index;
-            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.TextHelper.IsExpressionArray(resourceName, out resourceArray, out index);
             return isArray
                ? ((IResourceProvider)GetComponent(resourceArray)).GetResource<TResource>(index)
                : GetComponent(resourceName) as TResource;

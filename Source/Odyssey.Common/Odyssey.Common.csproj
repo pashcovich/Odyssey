@@ -190,7 +190,7 @@
     <Compile Include="Text\Logging\TraceData.cs" />
     <Compile Include="Reflection\ObjectWalker.cs" />
     <Compile Include="Reflection\ReflectionHelper.cs" />
-    <Compile Include="Text\Text.cs" />
+    <Compile Include="Text\TextHelper.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

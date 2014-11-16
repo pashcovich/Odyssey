@@ -32,11 +32,11 @@ namespace Odyssey.Graphics
             {
                 Color4 color;
                 string colorValue = reader.GetAttribute("Color");
-                string colorAsResource = Text.Text.ParseResource(colorValue);
+                string colorAsResource = Text.TextHelper.ParseResource(colorValue);
                 if (!string.IsNullOrEmpty(colorAsResource))
                     color = e.ResourceProvider.GetResource<SolidColor>(colorAsResource).Color;
                 else 
-                    color = string.IsNullOrEmpty(colorValue) ? new Color4(0, 0, 0, 0) : Text.Text.DecodeColor4Abgr(colorValue);
+                    color = string.IsNullOrEmpty(colorValue) ? new Color4(0, 0, 0, 0) : Text.TextHelper.DecodeColor4Abgr(colorValue);
 
                 string offset = reader.GetAttribute("Offset");
                 var gradientStop = new GradientStop

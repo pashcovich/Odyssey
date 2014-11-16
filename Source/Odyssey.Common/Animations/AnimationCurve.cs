@@ -140,7 +140,7 @@ namespace Odyssey.Animations
         {
             TargetProperty = xmlReader.GetAttribute("TargetProperty");
 
-            TargetName = Text.Text.ParseResource(xmlReader.GetAttribute("TargetName"));
+            TargetName = Text.TextHelper.ParseResource(xmlReader.GetAttribute("TargetName"));
             if (!resourceProvider.ContainsResource(TargetName))
                 throw new InvalidOperationException(String.Format("No resource '{0}' found", TargetName));
 

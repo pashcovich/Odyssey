@@ -76,7 +76,7 @@ namespace Odyssey.Reflection
                 string arrayName;
 
                 int index;
-                if (Text.Text.IsExpressionArray(subPath, out arrayName, out index))
+                if (Text.TextHelper.IsExpressionArray(subPath, out arrayName, out index))
                 {
                     expression = arrayName;
                 }

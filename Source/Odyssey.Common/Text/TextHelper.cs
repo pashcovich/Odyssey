@@ -8,7 +8,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.Text
 {
-    public static class Text
+    public static class TextHelper
     {
         static readonly Regex resourceRegex = new Regex(@"(?<=\{)\s*(?<name>\w*[^}]*)\s*(?=\})");
 

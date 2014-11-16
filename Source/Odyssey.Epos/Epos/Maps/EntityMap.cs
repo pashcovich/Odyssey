@@ -229,7 +229,7 @@ namespace Odyssey.Epos.Maps
         {
             string resourceArray;
             string index;
-            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.TextHelper.IsExpressionArray(resourceName, out resourceArray, out index);
 
             return isArray
                 ? ContainsEntity(resourceArray) && ((IResourceProvider) GetEntity(resourceArray)).ContainsResource(index)
@@ -240,7 +240,7 @@ namespace Odyssey.Epos.Maps
         {
             string resourceArray;
             string index;
-            bool isArray = Text.Text.IsExpressionArray(resourceName, out resourceArray, out index);
+            bool isArray = Text.TextHelper.IsExpressionArray(resourceName, out resourceArray, out index);
             return isArray
                 ? ((IResourceProvider) GetEntity(resourceArray)).GetResource<TResource>(index)
                 : GetEntity(resourceName) as TResource;
