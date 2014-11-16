@@ -33,8 +33,6 @@ namespace Odyssey.Graphics.Drawing
             Resource = new SharpDX.Direct2D1.PathGeometry(device);
         }
 
-        public IEnumerable<VectorCommand> Figures { get; set; }
-
         /// <summary>
         /// <see cref="SharpDX.Direct2D1.PathGeometry"/> casting operator.
         /// </summary>
@@ -45,30 +43,25 @@ namespace Odyssey.Graphics.Drawing
             return from == null ? null : from.Resource ?? null;
         }
 
-        public static PathGeometry New(string name, Direct2DDevice device, string pathData)
+        public static PathGeometry New(string name, Direct2DDevice device)
         {
-            return new PathGeometry(name, device) { Figures = VectorArtParser.ParsePathData(pathData) };
-        }
-
-        public static PathGeometry New(string name, Direct2DDevice device, IEnumerable<VectorCommand> commands)
-        {
-            return new PathGeometry(name, device) { Figures = commands };
+            return new PathGeometry(name, device);
         }
 
         public override void Initialize()
         {
             Initialize(Resource);
-            var sink = DefineFigure();
+        }
+
+        public void RunCommands(IEnumerable<VectorCommand> commands)
+        {
+            var sink = new GeometrySink(Resource.Open());
             var designer = new FigureParser(sink);
-            designer.Execute(Figures);
+            designer.Execute(commands);
             if (designer.IsFigureOpen)
                 sink.EndFigure(FigureEnd.Open);
             sink.Close();
         }
 
-        protected GeometrySink DefineFigure()
-        {
-            return new GeometrySink(Resource.Open());
-        }
     }
 }

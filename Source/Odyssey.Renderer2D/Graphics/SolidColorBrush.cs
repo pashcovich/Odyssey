@@ -11,26 +11,26 @@ namespace Odyssey.Graphics
 {
     public sealed class SolidColorBrush : Brush
     {
-        private new readonly SolidColor ColorResource;
-        private new readonly SharpDX.Direct2D1.SolidColorBrush Resource;
+        private new readonly SolidColor colorResource;
+        private new readonly SharpDX.Direct2D1.SolidColorBrush resource;
 
         private SolidColorBrush(string name, Direct2DDevice device, SolidColor solidColor, SharpDX.Direct2D1.SolidColorBrush brush)
             : base(name, device, solidColor, brush)
         {
-            ColorResource = solidColor;
-            Resource = brush;
+            colorResource = solidColor;
+            resource = brush;
         }
 
         [Animatable]
         public Color4 Color
         {
-            get { return ColorResource.Color; }
+            get { return colorResource.Color; }
             set
             {
-                if (ColorResource.Color == value)
+                if (colorResource.Color == value)
                     return;
-                ColorResource.Color = value;
-                Resource.Color = value;
+                colorResource.Color = value;
+                resource.Color = value;
             }
         }
 

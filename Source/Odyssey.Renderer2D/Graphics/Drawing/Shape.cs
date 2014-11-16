@@ -21,6 +21,7 @@ using System.Linq;
 using System.Reflection;
 using Odyssey.Animations;
 using Odyssey.Reflection;
+using Odyssey.Text;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
@@ -32,10 +33,24 @@ namespace Odyssey.Graphics.Drawing
 {
     public abstract class Shape : UIElement, IShape, IRequiresCaching
     {
+        private float scaleX;
+        private float scaleY;
         private string fillBrushClass;
         private string strokeBrushClass;
         private Brush fill;
         private Brush stroke;
+
+        protected internal float ScaleX
+        {
+            get { return scaleX; }
+            set { scaleX = value; }
+        }
+
+        protected internal float ScaleY
+        {
+            get { return scaleY; }
+            set { scaleY = value; }
+        }
 
         public Shape()
         {
@@ -65,10 +80,12 @@ namespace Odyssey.Graphics.Drawing
 
         protected internal override UIElement Copy()
         {
-            Shape copy = (Shape)base.Copy();
+            var copy = (Shape)base.Copy();
             copy.fillBrushClass = fillBrushClass;
             copy.strokeBrushClass = strokeBrushClass;
             copy.StrokeThickness = StrokeThickness;
+            copy.ScaleX = LayoutManager.Scale * ScaleX;
+            copy.ScaleY = LayoutManager.Scale * ScaleY;
             return copy;
         }
 
@@ -94,13 +111,18 @@ namespace Odyssey.Graphics.Drawing
 
             if (stroke == null)
                 stroke = CreateOrRetrieveBrush(strokeBrushClass);
+            
+            if (ScaleX == 0)
+                ScaleX = LayoutManager.Scale;
+            if (ScaleY == 0)
+                ScaleY = LayoutManager.Scale;
         }
 
         protected override void OnLayoutUpdated(EventArgs e)
         {
             base.OnLayoutUpdated(e);
             if (fill != null)
-                fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
+                fill.Transform = Matrix3x2.Scaling(scaleX, scaleY) * Transform;
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)
@@ -114,11 +136,11 @@ namespace Odyssey.Graphics.Drawing
             string sStroke = reader.GetAttribute("Stroke");
             if (!string.IsNullOrEmpty(sFill))
             {
-                fillBrushClass = Text.Text.ParseResource(sFill);
+                fillBrushClass = TextHelper.ParseResource(sFill);
             }
             if (!string.IsNullOrEmpty(sStroke))
             {
-                strokeBrushClass = Text.Text.ParseResource(sStroke);
+                strokeBrushClass = TextHelper.ParseResource(sStroke);
             }
 
             if (!reader.IsEmptyElement)

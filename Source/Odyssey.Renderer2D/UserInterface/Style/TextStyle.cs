@@ -25,23 +25,23 @@ namespace Odyssey.UserInterface.Style
         public void DeserializeXml(IResourceProvider theme, XmlReader xmlReader)
         {
             Name = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Name));
-            Foreground = Text.Text.ParseResource(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Foreground)));
+            Foreground = Text.TextHelper.ParseResource(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Foreground)));
             if (!theme.ContainsResource(Foreground))
                 throw new InvalidOperationException(string.Format("Resource '{0}' not found", Foreground));
             Size = int.Parse(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Size)));
             FontFamily = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.FontFamily));
 
             string eTextAlignment = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.TextAlignment));
-            TextAlignment = string.IsNullOrEmpty(eTextAlignment) ? TextAlignment.Leading : Text.Text.ParseEnum<TextAlignment>(eTextAlignment);
+            TextAlignment = string.IsNullOrEmpty(eTextAlignment) ? TextAlignment.Leading : Text.TextHelper.ParseEnum<TextAlignment>(eTextAlignment);
 
             string eParagraphAlignment = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.ParagraphAlignment));
-            ParagraphAlignment = string.IsNullOrEmpty(eParagraphAlignment) ? ParagraphAlignment.Near : Text.Text.ParseEnum<ParagraphAlignment>(eParagraphAlignment);
+            ParagraphAlignment = string.IsNullOrEmpty(eParagraphAlignment) ? ParagraphAlignment.Near : Text.TextHelper.ParseEnum<ParagraphAlignment>(eParagraphAlignment);
 
             string eFontStyle = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.FontStyle));
-            FontStyle = string.IsNullOrEmpty(eFontStyle) ? FontStyle.Normal : Text.Text.ParseEnum<FontStyle>(eFontStyle);
+            FontStyle = string.IsNullOrEmpty(eFontStyle) ? FontStyle.Normal : Text.TextHelper.ParseEnum<FontStyle>(eFontStyle);
 
             string eFontWeight = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.FontWeight));
-            FontWeight = string.IsNullOrEmpty(eFontWeight) ? FontWeight.Normal : Text.Text.ParseEnum<FontWeight>(eFontWeight);
+            FontWeight = string.IsNullOrEmpty(eFontWeight) ? FontWeight.Normal : Text.TextHelper.ParseEnum<FontWeight>(eFontWeight);
 
             xmlReader.ReadStartElement();
         }

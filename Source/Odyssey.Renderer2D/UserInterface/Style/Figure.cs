@@ -11,6 +11,8 @@ namespace Odyssey.UserInterface.Style
     {
         public string Name { get; private set; }
         public IEnumerable<VectorCommand> Data { get; private set; }
+        public float ScaleTransformX { get; set; }
+        public float ScaleTransformY { get; set; }
 
         public void SerializeXml(IResourceProvider resourceProvider, System.Xml.XmlWriter xmlWriter)
         {
@@ -25,6 +27,11 @@ namespace Odyssey.UserInterface.Style
             if (string.IsNullOrEmpty(pathData))
                 throw new InvalidOperationException(string.Format("No data specified for Figure '{0}'", Name));
             Data = VectorArtParser.ParsePathData(pathData);
+
+            float scaleX;
+            ScaleTransformX = float.TryParse(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((Figure f) => f.ScaleTransformX)), out scaleX) ? scaleX : 1.0f;
+            float scaleY;
+            ScaleTransformY = float.TryParse(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((Figure f) => f.ScaleTransformY)), out scaleY) ? scaleY : 1.0f;
             xmlReader.ReadStartElement();
         }
     }

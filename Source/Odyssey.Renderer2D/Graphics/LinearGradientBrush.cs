@@ -7,18 +7,18 @@ namespace Odyssey.Graphics
 {
     public sealed class LinearGradientBrush : GradientBrush
     {
-        private new readonly LinearGradient ColorResource;
-        private new readonly SharpDX.Direct2D1.LinearGradientBrush Resource;
+        private new readonly LinearGradient colorResource;
+        private new readonly SharpDX.Direct2D1.LinearGradientBrush resource;
 
         private LinearGradientBrush(string name, Direct2DDevice device, LinearGradient linearGradient, SharpDX.Direct2D1.LinearGradientBrush brush)
             : base(name, device, linearGradient, brush)
         {
-            Resource = brush;
-            ColorResource = linearGradient;
+            resource = brush;
+            colorResource = linearGradient;
         }
 
-        public Vector2 StartPoint { get { return ColorResource.StartPoint; } }
-        public Vector2 EndPoint { get { return ColorResource.EndPoint; } }
+        public Vector2 StartPoint { get { return colorResource.StartPoint; } }
+        public Vector2 EndPoint { get { return colorResource.EndPoint; } }
 
         public static LinearGradientBrush New(string name, Direct2DDevice device, LinearGradient linearGradient)
         {

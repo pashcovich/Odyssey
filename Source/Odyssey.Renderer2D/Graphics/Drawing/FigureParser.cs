@@ -23,29 +23,33 @@ namespace Odyssey.Graphics.Drawing
             {
                 bool isRelative = instruction.IsRelative;
 
-                switch (instruction.PrimitiveType)
+                switch (instruction.Type)
                 {
-                    case PrimitiveType.Move:
+                    case CommandType.Move:
                         Move(instruction, isRelative);
                         break;
 
-                    case PrimitiveType.Line:
+                    case CommandType.Line:
                         Line(instruction, isRelative);
                         break;
 
-                    case PrimitiveType.HorizontalLine:
+                    case CommandType.HorizontalLine:
                         HorizontalLine(instruction, isRelative);
                         break;
 
-                    case PrimitiveType.VerticalLine:
+                    case CommandType.VerticalLine:
                         VerticalLine(instruction, isRelative);
                         break;
 
-                    case PrimitiveType.EllipticalArc:
+                    case CommandType.EllipticalArc:
                         Arc(instruction, isRelative);
                         break;
 
-                    case PrimitiveType.Close:
+                    case CommandType.CubicBezierCurve:
+                        CubicBezierCurve(instruction, isRelative);
+                        break;
+
+                    case CommandType.Close:
                         Close(FigureEnd.Closed);
                         break;
 
@@ -111,7 +115,7 @@ namespace Odyssey.Graphics.Drawing
 
         void Arc(VectorCommand instruction, bool isRelative)
         {
-            for (int i = 0; i < instruction.Arguments.Length; i = i + 3)
+            for (int i = 0; i < instruction.Arguments.Length; i = i + 6)
             {
                 float w = instruction.Arguments[0];
                 float h = instruction.Arguments[1];
@@ -123,6 +127,23 @@ namespace Odyssey.Graphics.Drawing
                 if (isRelative)
                     p += previousPoint;
                 sink.AddArc(w, h, a, isLargeArc, sweepDirection, p);
+            }
+        }
+
+        void CubicBezierCurve(VectorCommand instruction, bool isRelative)
+        {
+            for (int i = 0; i < instruction.Arguments.Length; i = i + 6)
+            {
+                var p1 = new Vector2(instruction.Arguments[0], instruction.Arguments[1]);
+                var p2 = new Vector2(instruction.Arguments[2], instruction.Arguments[3]);
+                var p3 = new Vector2(instruction.Arguments[4], instruction.Arguments[5]);
+                if (isRelative)
+                {
+                    p1 += previousPoint;
+                    p2 += previousPoint;
+                    p3 += previousPoint;
+                }
+                sink.AddCubicBezierCurve(p1,p2,p3);
             }
         }
 

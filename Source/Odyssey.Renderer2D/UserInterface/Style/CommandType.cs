@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.UserInterface.Style
 {
-    public enum PrimitiveType
+    public enum CommandType
     {
         None,
         FillRule,

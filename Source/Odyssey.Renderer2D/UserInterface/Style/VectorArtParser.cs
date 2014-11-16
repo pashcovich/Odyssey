@@ -60,7 +60,7 @@ namespace Odyssey.UserInterface.Style
             return new VectorCommand(primitiveType, floatArgs, relative);
         }
 
-        private static PrimitiveType Convert(char cmd, out bool relative)
+        private static CommandType Convert(char cmd, out bool relative)
         {
             relative = char.IsLower(cmd);
             char invCmd = char.ToLower(cmd);
@@ -68,69 +68,69 @@ namespace Odyssey.UserInterface.Style
             switch (invCmd)
             {
                 case 'f':
-                    return PrimitiveType.FillRule;
+                    return CommandType.FillRule;
                 case 'l':
-                    return PrimitiveType.Line;
+                    return CommandType.Line;
                 case 'h':
-                    return PrimitiveType.HorizontalLine;
+                    return CommandType.HorizontalLine;
                 case 'a':
-                    return PrimitiveType.EllipticalArc;
+                    return CommandType.EllipticalArc;
                 case 'm':
-                    return PrimitiveType.Move;
+                    return CommandType.Move;
                 case 'v':
-                    return PrimitiveType.VerticalLine;
+                    return CommandType.VerticalLine;
                 case 'c':
-                    return PrimitiveType.CubicBezierCurve;
+                    return CommandType.CubicBezierCurve;
                 case 'q':
-                    return PrimitiveType.QuadraticBezierCurve;
+                    return CommandType.QuadraticBezierCurve;
                 case 's':
-                    return PrimitiveType.SmoothCubicBezierCurve;
+                    return CommandType.SmoothCubicBezierCurve;
                 case 't':
-                    return PrimitiveType.SmoothQuadraticBezierCurve;
+                    return CommandType.SmoothQuadraticBezierCurve;
                 case 'z':
-                    return PrimitiveType.Close;
+                    return CommandType.Close;
                 default:
                     throw new ArgumentOutOfRangeException(string.Format("Command '{0}' is not valid", cmd));
 
             }
         }
 
-        internal static char ConvertBack(PrimitiveType command, bool relative)
+        internal static char ConvertBack(CommandType command, bool relative)
         {
             char cmd='?';
             switch (command)
             {
-                case PrimitiveType.FillRule:
+                case CommandType.FillRule:
                     cmd = 'f';
                     break;
-                case PrimitiveType.Move:
+                case CommandType.Move:
                     cmd = 'm';
                     break;
-                case PrimitiveType.Line:
+                case CommandType.Line:
                     cmd = 'l';
                     break;
-                case PrimitiveType.HorizontalLine:
+                case CommandType.HorizontalLine:
                     cmd = 'h';
                     break;
-                case PrimitiveType.VerticalLine:
+                case CommandType.VerticalLine:
                     cmd = 'v';
                     break;
-                case PrimitiveType.CubicBezierCurve:
+                case CommandType.CubicBezierCurve:
                     cmd = 'c';
                     break;
-                case PrimitiveType.QuadraticBezierCurve:
+                case CommandType.QuadraticBezierCurve:
                     cmd = 'q';
                     break;
-                case PrimitiveType.SmoothCubicBezierCurve:
+                case CommandType.SmoothCubicBezierCurve:
                     cmd = 's';
                     break;
-                case PrimitiveType.SmoothQuadraticBezierCurve:
+                case CommandType.SmoothQuadraticBezierCurve:
                     cmd = 't';
                     break;
-                case PrimitiveType.EllipticalArc:
+                case CommandType.EllipticalArc:
                     cmd = 'a';
                     break;
-                case PrimitiveType.Close:
+                case CommandType.Close:
                     cmd = 'z';
                     break;
                 default:

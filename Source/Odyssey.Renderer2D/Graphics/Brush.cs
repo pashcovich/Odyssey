@@ -16,7 +16,6 @@
 #region Using Directives
 
 using System;
-using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using SharpDX;

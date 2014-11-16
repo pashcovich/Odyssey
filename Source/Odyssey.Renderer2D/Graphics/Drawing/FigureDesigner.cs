@@ -23,14 +23,23 @@ namespace Odyssey.Graphics.Drawing
             float r1 = outerRadius;
             float r2 = innerRadius;
 
-            AddCommand(PrimitiveType.Move, new[] {center.X + (float) Math.Sin(t0)*r2, center.Y - (float) Math.Cos(t0)*r2});
-            AddCommand(PrimitiveType.EllipticalArc, new[] {r2, r2, 0, 0, 1, center.X + (float) Math.Sin(t1)*r2, center.Y - (float) Math.Cos(t1)*r2});
-            AddCommand(PrimitiveType.Line, new[] {center.X + (float) Math.Sin(t1)*r1, center.Y - (float) Math.Cos(t1)*r1});
-            AddCommand(PrimitiveType.EllipticalArc, new[] {r1, r1, 0, 0, 0, center.X + (float) Math.Sin(t0)*r1, center.Y - (float) Math.Cos(t0)*r1});
+            AddCommand(CommandType.Move, new[] {center.X + (float) Math.Sin(t0)*r2, center.Y - (float) Math.Cos(t0)*r2});
+            AddCommand(CommandType.EllipticalArc, new[] {r2, r2, 0, 0, 1, center.X + (float) Math.Sin(t1)*r2, center.Y - (float) Math.Cos(t1)*r2});
+            AddCommand(CommandType.Line, new[] {center.X + (float) Math.Sin(t1)*r1, center.Y - (float) Math.Cos(t1)*r1});
+            AddCommand(CommandType.EllipticalArc, new[] {r1, r1, 0, 0, 0, center.X + (float) Math.Sin(t0)*r1, center.Y - (float) Math.Cos(t0)*r1});
             
             if (isClosed)
-                AddCommand(PrimitiveType.Close, null);
+                AddCommand(CommandType.Close, null);
 
+        }
+
+        public void DrawRightTrapezoid(Vector2 topLeft, float baseTop, float baseBottom, float height)
+        {
+            AddCommand(CommandType.Move, new[] { topLeft.X, topLeft.Y });
+            AddCommand(CommandType.Line, new[] { baseTop, 0 }, true);
+            AddCommand(CommandType.Line, new[] { baseBottom-baseTop, height }, true);
+            AddCommand(CommandType.Line, new[] { -baseBottom, 0 }, true);
+            AddCommand(CommandType.Close, null);
         }
 
         public void AddCommand(VectorCommand command)
@@ -39,7 +48,7 @@ namespace Odyssey.Graphics.Drawing
             commands.Add(command);
         }
 
-        public void AddCommand(PrimitiveType type, float[] arguments, bool isRelative = false)
+        public void AddCommand(CommandType type, float[] arguments, bool isRelative = false)
         {
             AddCommand(new VectorCommand(type, arguments, isRelative));
         }
@@ -56,7 +65,7 @@ namespace Odyssey.Graphics.Drawing
                 var sb = new StringBuilder();
                 foreach (var command in commands)
                 {
-                    char cmd = VectorArtParser.ConvertBack(command.PrimitiveType, command.IsRelative);
+                    char cmd = VectorArtParser.ConvertBack(command.Type, command.IsRelative);
                     sb.Append(cmd);
                     if (command.Arguments == null)
                         continue;

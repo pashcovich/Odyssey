@@ -63,6 +63,16 @@ namespace Odyssey.Graphics.Drawing
             });
         }
 
+        public void AddCubicBezierCurve(Vector2 p1, Vector2 p2, Vector2 p3)
+        {
+            geometrySink.AddBezier(new BezierSegment()
+            {
+                Point1 = p1,
+                Point2 = p2,
+                Point3 = p3
+            });
+        }
+
         public void BeginFigure(Vector2 point, FigureBegin figureBegin)
         {
             isFigureOpened = true;

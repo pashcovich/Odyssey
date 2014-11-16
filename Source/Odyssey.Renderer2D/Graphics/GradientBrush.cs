@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Odyssey.Engine;
-using SharpDX.Direct2D1;
+﻿using Odyssey.Engine;
 
 namespace Odyssey.Graphics
 {

@@ -9,42 +9,42 @@ namespace Odyssey.Graphics
 {
     public sealed class RadialGradientBrush : GradientBrush
     {
-        protected new readonly RadialGradient ColorResource;
-        private new readonly SharpDX.Direct2D1.RadialGradientBrush Resource;
+        private new readonly RadialGradient colorResource;
+        private new readonly SharpDX.Direct2D1.RadialGradientBrush resource;
 
         private RadialGradientBrush(string name, Direct2DDevice device, RadialGradient radialGradient, SharpDX.Direct2D1.RadialGradientBrush brush)
             : base(name, device, radialGradient, brush)
         {
-            Resource = brush;
-            ColorResource = radialGradient;
+            resource = brush;
+            colorResource = radialGradient;
         }
 
-        public Vector2 Center { get { return ColorResource.Center; } }
-        public Vector2 OriginOffset { get { return ColorResource.OriginOffset; } }
+        public Vector2 Center { get { return colorResource.Center; } }
+        public Vector2 OriginOffset { get { return colorResource.OriginOffset; } }
 
         [Animatable]
         public float RadiusX
         {
-            get { return ColorResource.RadiusX; }
+            get { return colorResource.RadiusX; }
             set
             {
-                if (MathHelper.ScalarNearEqual(ColorResource.RadiusX, value))
+                if (MathHelper.ScalarNearEqual(colorResource.RadiusX, value))
                     return;
-                ColorResource.RadiusX = value;
-                Resource.RadiusX = value;
+                colorResource.RadiusX = value;
+                resource.RadiusX = value;
             }
         }
 
         [Animatable]
         public float RadiusY
         {
-            get { return ColorResource.RadiusY; }
+            get { return colorResource.RadiusY; }
             set
             {
-                if (MathHelper.ScalarNearEqual(ColorResource.RadiusY, value))
+                if (MathHelper.ScalarNearEqual(colorResource.RadiusY, value))
                     return;
-                ColorResource.RadiusY = value;
-                Resource.RadiusY = value;
+                colorResource.RadiusY = value;
+                resource.RadiusY = value;
             }
         }
 
