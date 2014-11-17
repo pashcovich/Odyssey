@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using Odyssey.Animations;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
@@ -92,13 +93,13 @@ namespace Odyssey.UserInterface
             get { return height; }
             set
             {
+                var oldSize = Size;
                 if (height == value)
                     return;
 
                 height = value;
 
-                if (DesignMode) return;
-                OnSizeChanged(EventArgs.Empty);
+                OnSizeChanged(new SizeChangedEventArgs(oldSize, Size));
             }
         }
 
@@ -125,11 +126,11 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Gets the height and width of the control.
         /// </summary>
-        /// <value>The <see cref = "SharpDX.Size2">Size</see> that represents the height and
+        /// <value>The <see cref = "Vector2">Size</see> that represents the height and
         /// width of the control in pixels.</value>
-        public Size2F Size
+        public Vector2 Size
         {
-            get { return new Size2F(Width, Height); }
+            get { return new Vector2(Width, Height); }
         }
 
         public Matrix3x2 Transform
@@ -142,13 +143,13 @@ namespace Odyssey.UserInterface
             get { return width; }
             set
             {
+                var oldSize = Size;
                 if (width == value)
                     return;
 
                 width = value;
 
-                if (DesignMode) return;
-                OnSizeChanged(EventArgs.Empty);
+                OnSizeChanged(new SizeChangedEventArgs(oldSize, Size));
             }
         }
 
@@ -202,7 +203,26 @@ namespace Odyssey.UserInterface
             }
         }
 
-        protected internal Overlay Overlay { get; internal set; }
+        protected Overlay Overlay
+        {
+            get
+            {
+                // Find the overlay we are in;
+                var control = this;
+                while (control != null)
+                {
+                    var controlAsOverlay = control as Overlay;
+                    if (controlAsOverlay != null)
+                    {
+                        return controlAsOverlay;
+                    }
+                    control = control.Parent;
+                }
+                return null;
+            }
+        }
+
+        public PropertyContainer DependencyProperties;
 
         /// <summary>
         /// Gets the top left position in the client area of the control.
@@ -219,7 +239,7 @@ namespace Odyssey.UserInterface
         /// Gets the absolute position in screen coordinates of the upper-left corner of this
         /// control.
         /// </summary>
-        /// <value>A <see cref = "SharpDX.Vector2" /> that represents the absolute
+        /// <value>A <see cref = "Vector2" /> that represents the absolute
         /// position of the upper-left corner in screen coordinates for this control.</value>
         public Vector2 AbsolutePosition { get; private set; }
 
@@ -315,14 +335,6 @@ namespace Odyssey.UserInterface
                     Depth = Depth.AsChildOf(parent.Depth);
                 }
                 DesignMode = parent.DesignMode;
-
-                bool isOverlay = parent is Overlay;
-
-                // Find the overlay we are in;
-                if (isOverlay)
-                    Overlay = (Overlay) Parent;
-                else if (Parent.Overlay != null)
-                    Overlay = Parent.Overlay;
             }
         }
 

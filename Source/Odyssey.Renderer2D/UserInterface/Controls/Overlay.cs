@@ -90,7 +90,6 @@ namespace Odyssey.UserInterface.Controls
             
             EnteredElement = this;
             FocusedElement = this;
-            Overlay = this;
         }
 
         public void BeginDesign()

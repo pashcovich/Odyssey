@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Odyssey.Reflection;
 using Odyssey.Text;
 using Odyssey.UserInterface;
+using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
@@ -59,11 +60,36 @@ namespace Odyssey.Graphics.Drawing
             else Data = VectorArtParser.ParsePathData(figureData);
         }
 
+        protected override void OnSizeChanged(SizeChangedEventArgs e)
+        {
+            base.OnSizeChanged(e);
+            if (e.OldSize.X == 0 || e.OldSize.Y == 0)
+                return;
+            ScaleX *= e.NewSize.X/e.OldSize.X;
+            ScaleY *= e.NewSize.Y/e.OldSize.Y;
+        }
+
         protected internal override UIElement Copy()
         {
             var copy = (Path)base.Copy();
             copy.Data = Data;
             return copy;
+        }
+
+        public static Path FromFigure(Overlay overlay, string figureKey)
+        {
+            var theme = overlay.Theme;
+            var styleService = overlay.Services.GetService<IStyleService>();
+            var figure = theme.GetResource<Figure>(figureKey);
+
+            var path = new Path {Data = figure.Data, StrokeThickness = figure.StrokeThickness, ScaleX = figure.ScaleTransformX, ScaleY = figure.ScaleTransformY};
+
+            if (!string.IsNullOrEmpty(figure.Stroke))
+                path.Stroke = styleService.GetBrushResource(figure.Stroke, theme);
+            if (!string.IsNullOrEmpty(figure.Fill))
+                path.Fill = styleService.GetBrushResource(figure.Fill, theme);
+
+            return path;
         }
     }
 }

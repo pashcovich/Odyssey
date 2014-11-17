@@ -435,10 +435,11 @@ namespace Odyssey.UserInterface
         /// Raises the <see cref="SizeChanged"/> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event
-        /// data.</param>
-        protected virtual void OnSizeChanged(EventArgs e)
+        ///     data.</param>
+        protected virtual void OnSizeChanged(SizeChangedEventArgs e)
         {
-            Layout();
+            if (!DesignMode)
+                Layout();
             RaiseEvent(SizeChanged, this, e);
         }
 

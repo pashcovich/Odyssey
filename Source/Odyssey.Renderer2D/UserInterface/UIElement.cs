@@ -32,12 +32,14 @@ namespace Odyssey.UserInterface
     /// The <b>UIElement</b> class is the root class of all controls in the library. It provides
     /// inheritors with a comprehensive range of properties and methods common to all controls.
     /// </summary>
+    /// [DebuggerDisplay("UIElement: {Name}")]
     public abstract partial class UIElement : Component, IUIElement, IAnimator, IComparable<UIElement>, ISerializableResource
     {
         private static readonly Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
 
         #region Private fields
 
+        private readonly PropertyContainer dependencyProperties;
         private readonly Dictionary<string, BindingExpression> bindings;
         private readonly BehaviorCollection behaviors;
         private readonly AnimationController animator;
@@ -77,6 +79,7 @@ namespace Odyssey.UserInterface
             bindings = new Dictionary<string, BindingExpression>();
             behaviors = new BehaviorCollection();
             animator = new AnimationController(this);
+            DependencyProperties = new PropertyContainer(this);
         }
 
         #endregion Constructors

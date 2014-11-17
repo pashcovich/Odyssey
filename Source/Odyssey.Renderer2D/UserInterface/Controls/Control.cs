@@ -235,7 +235,7 @@ namespace Odyssey.UserInterface.Controls
             ApplyTextDescription();
         }
 
-        protected override void OnSizeChanged(EventArgs e)
+        protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
             base.OnSizeChanged(e);
             if (IsVisual)

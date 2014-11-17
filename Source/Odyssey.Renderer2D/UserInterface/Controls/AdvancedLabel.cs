@@ -72,7 +72,7 @@ namespace Odyssey.UserInterface.Controls
             base.Measure();
         }
 
-        protected override void OnSizeChanged(EventArgs e)
+        protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
             base.OnSizeChanged(e);
             textLayout.MaxWidth = Width;

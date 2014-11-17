@@ -61,6 +61,10 @@
     <Compile Include="Collections\ComponentCollection.cs" />
     <Compile Include="Core\Component.cs" />
     <Compile Include="Core\ComponentBase.cs" />
+    <Compile Include="Core\DefaultValueMetadata.cs" />
+    <Compile Include="Core\PropertyContainer.cs" />
+    <Compile Include="Core\PropertyKey.cs" />
+    <Compile Include="Core\PropertyKeyMetadata.cs" />
     <Compile Include="Geometry\IFunction.cs" />
     <Compile Include="Core\IServiceRegistry.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />

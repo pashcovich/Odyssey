@@ -11,6 +11,8 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
+        protected ContentControl(string controlStyleClass) : base(controlStyleClass) { }
+
         public UIElement Content
         {
             get { return content; }
@@ -18,8 +20,6 @@ namespace Odyssey.UserInterface.Controls
             {
                 content = ToDispose(value);
                 content.Parent = this;
-                if (Overlay != null)
-                    content.Overlay = Overlay;
             }
         }
 
@@ -35,17 +35,6 @@ namespace Odyssey.UserInterface.Controls
                 base.DesignMode = value;
                 if (Content != null)
                     Content.DesignMode = value;
-            }
-        }
-
-        public override UIElement Parent
-        {
-            get { return base.Parent; }
-            internal set
-            {
-                base.Parent = value;
-                if (base.Parent.Overlay != null && Content != null)
-                    Content.Overlay = base.Parent.Overlay;
             }
         }
 
@@ -70,7 +59,7 @@ namespace Odyssey.UserInterface.Controls
                 Content.Layout();
         }
 
-        protected override void OnSizeChanged(EventArgs e)
+        protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
             base.OnSizeChanged(e);
             if (Content != null)
