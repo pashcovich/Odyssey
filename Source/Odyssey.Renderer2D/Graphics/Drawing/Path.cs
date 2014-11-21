@@ -32,11 +32,12 @@ namespace Odyssey.Graphics.Drawing
             Device.Transform = Matrix3x2.Identity;
         }
 
-        protected override void OnInitializing(EventArgs e)
+        protected override void OnLayoutUpdated(EventArgs e)
         {
-            base.OnInitializing(e);
+            base.OnLayoutUpdated(e);
             Redraw();
         }
+
 
         protected virtual void Redraw()
         {

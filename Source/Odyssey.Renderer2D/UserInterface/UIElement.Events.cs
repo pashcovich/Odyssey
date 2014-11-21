@@ -18,6 +18,7 @@
 using System.Globalization;
 using Odyssey.Engine;
 using Odyssey.Interaction;
+using Odyssey.Logging;
 using Odyssey.UserInterface.Controls;
 using System;
 using Odyssey.UserInterface.Serialization;
@@ -371,7 +372,7 @@ namespace Odyssey.UserInterface
 
         protected virtual void OnInitializing(EventArgs e)
         {
-            RaiseEvent(Initializing, this, e);
+            RaiseEvent(Initializing, this, e); LogEvent.UserInterface.Info("Initalizing {0}", Name);
         }
 
         protected virtual void OnLayoutUpdated(EventArgs e)

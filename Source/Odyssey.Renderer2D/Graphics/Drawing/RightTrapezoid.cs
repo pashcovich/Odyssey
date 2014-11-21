@@ -9,15 +9,6 @@ namespace Odyssey.Graphics.Drawing
     {
         internal float TopBaseRatio { get; private set; }
 
-        protected override void OnInitializing(EventArgs e)
-        {
-            if (IsVisible)
-            {
-                Redraw();
-            }
-            base.OnInitializing(e);
-        }
-
         protected internal override UIElement Copy()
         {
             var copy = (RightTrapezoid)base.Copy();
