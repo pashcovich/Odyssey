@@ -60,8 +60,12 @@ namespace Odyssey.UserInterface.Style
         {
             foreach (var shape in shapes)
             {
-                shape.Width *= parent.Width / shape.Width;
-                shape.Height *= parent.Height/shape.Height;
+                if (shape.Width > 0 && shape.Height > 0)
+                {
+                    shape.Width *= parent.Width/shape.Width;
+                    shape.Height *= parent.Height/shape.Height;
+                }
+                else shape.IsVisible = false;
             }
 
         }

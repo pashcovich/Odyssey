@@ -125,6 +125,14 @@ namespace Odyssey.Graphics.Drawing
                 fill.Transform = Matrix3x2.Scaling(scaleX, scaleY) * Transform;
         }
 
+        protected override void Measure()
+        {
+            base.Measure();
+            if (Width == 0 || Height == 0)
+                IsVisible = false;
+
+        }
+
         protected override void OnReadXml(XmlDeserializationEventArgs e)
         {
             base.OnReadXml(e);
