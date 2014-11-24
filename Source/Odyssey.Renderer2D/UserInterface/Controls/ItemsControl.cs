@@ -67,7 +67,7 @@ namespace Odyssey.UserInterface.Controls
             foreach (var item in ItemsSource)
             {
                 UIElement previousElement = this;
-                foreach (UIElement element in TreeTraversal.PreOrderVisit(DataTemplate.VisualTree))
+                foreach (UIElement element in TreeTraversal.PreOrderVisit(DataTemplate.VisualTree, c=>true))
                 {
                     UIElement newItem = element.Copy();
 

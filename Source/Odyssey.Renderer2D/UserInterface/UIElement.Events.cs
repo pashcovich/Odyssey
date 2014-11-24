@@ -270,7 +270,7 @@ namespace Odyssey.UserInterface
         public event EventHandler<EventArgs> PositionChanged;
 
         /// <summary>
-        /// Occurs when <see cref="Size"/> property value changes.
+        /// Occurs when <see cref="RenderSize"/> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> SizeChanged;
 
@@ -372,7 +372,7 @@ namespace Odyssey.UserInterface
 
         protected virtual void OnInitializing(EventArgs e)
         {
-            RaiseEvent(Initializing, this, e); LogEvent.UserInterface.Info("Initalizing {0}", Name);
+            RaiseEvent(Initializing, this, e);
         }
 
         protected virtual void OnLayoutUpdated(EventArgs e)
@@ -439,8 +439,7 @@ namespace Odyssey.UserInterface
         ///     data.</param>
         protected virtual void OnSizeChanged(SizeChangedEventArgs e)
         {
-            if (!DesignMode)
-                Layout();
+            Layout(RenderSize);
             RaiseEvent(SizeChanged, this, e);
         }
 

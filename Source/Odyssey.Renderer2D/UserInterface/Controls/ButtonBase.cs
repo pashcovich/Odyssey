@@ -3,6 +3,7 @@
 using System;
 using Odyssey.Interaction;
 using System.Linq;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
@@ -37,6 +38,18 @@ namespace Odyssey.UserInterface.Controls
                 Content.Initialize();
             }
             ToDispose(Content);
+        }
+
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        {
+            Content.Measure(availableSizeWithoutMargins);
+            return base.MeasureOverride(availableSizeWithoutMargins);
+        }
+
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        {
+            Content.Arrange(availableSizeWithoutMargins);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
         }
 
         protected override void OnPointerEnter(PointerEventArgs e)

@@ -34,10 +34,15 @@ namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
-        private float height;
         private Matrix3x2 transform;
+        private float height;
         private float width;
+        private float minimumWidth;
+        private float minimumHeight;
+        private float maximumWidth;
+        private float maximumHeight;
         private object dataContext;
+        private Vector2 renderSize;
 
         internal protected bool IsInternal { get; set; }
 
@@ -93,13 +98,13 @@ namespace Odyssey.UserInterface
             get { return height; }
             set
             {
-                var oldSize = Size;
+                var oldSize = RenderSize;
                 if (height == value)
                     return;
 
                 height = value;
-
-                OnSizeChanged(new SizeChangedEventArgs(oldSize, Size));
+                if (!DesignMode)
+                    OnSizeChanged(new SizeChangedEventArgs(oldSize, RenderSize));
             }
         }
 
@@ -126,12 +131,25 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Gets the height and width of the control.
         /// </summary>
-        /// <value>The <see cref = "Vector2">Size</see> that represents the height and
-        /// width of the control in pixels.</value>
-        public Vector2 Size
+        /// <value>The <see cref = "Vector2">Size</see> that represents the height and width of the control in pixels.</value>
+        public Vector2 Size { get { return new Vector2(Width, Height);} }
+
+        public Vector2 RenderSize
         {
-            get { return new Vector2(Width, Height); }
+            get { return renderSize; }
+            private set
+            {
+                if (renderSize == value)
+                    return;
+                
+                renderSize = value;
+                UpdateLayoutInternal();
+                OnLayoutUpdated(EventArgs.Empty);
+            }
         }
+
+        public Vector2 DesiredSize { get; private set; }
+        public Vector2 DesiredSizeWithMargins { get; private set; }
 
         public Matrix3x2 Transform
         {
@@ -143,14 +161,39 @@ namespace Odyssey.UserInterface
             get { return width; }
             set
             {
-                var oldSize = Size;
+                var oldSize = RenderSize;
                 if (width == value)
                     return;
 
                 width = value;
 
-                OnSizeChanged(new SizeChangedEventArgs(oldSize, Size));
+                if (!DesignMode)
+                    OnSizeChanged(new SizeChangedEventArgs(oldSize, RenderSize));
             }
+        }
+
+        public float MinimumWidth
+        {
+            get { return minimumWidth; }
+            set { minimumWidth = value; }
+        }
+
+        public float MinimumHeight
+        {
+            get { return minimumHeight; }
+            set { minimumHeight = value; }
+        }
+
+        public float MaximumWidth
+        {
+            get { return maximumWidth; }
+            set { maximumWidth = value; }
+        }
+
+        public float MaximumHeight
+        {
+            get { return maximumHeight; }
+            set { maximumHeight = value; }
         }
 
         public AnimationController Animator
@@ -223,6 +266,7 @@ namespace Odyssey.UserInterface
         }
 
         public PropertyContainer DependencyProperties;
+
 
         /// <summary>
         /// Gets the top left position in the client area of the control.
@@ -360,7 +404,7 @@ namespace Odyssey.UserInterface
 
                 if (DesignMode) return;
 
-                Layout();
+                Layout(RenderSize);
                 OnPositionChanged(EventArgs.Empty);
                 OnMove(EventArgs.Empty);
             }

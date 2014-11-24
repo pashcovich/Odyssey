@@ -38,7 +38,6 @@ namespace Odyssey.Graphics.Drawing
             Redraw();
         }
 
-
         protected virtual void Redraw()
         {
             if (IsVisible && Data == null)
@@ -79,7 +78,6 @@ namespace Odyssey.Graphics.Drawing
             if (e.NewSize.X > 0 && e.NewSize.Y > 0)
                 Redraw();
         }
-
 
         protected internal override UIElement Copy()
         {

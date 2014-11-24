@@ -14,25 +14,20 @@
 #endregion
 
 #region Using Directives
-
 using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml;
 using Odyssey.Content;
 using Odyssey.Engine;
-using Odyssey.Graphics;
 using Odyssey.Interaction;
+using Odyssey.Logging;
 using Odyssey.Reflection;
-using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
-using MouseEventArgs = Odyssey.Interaction.PointerEventArgs;
-
 #endregion
 
 namespace Odyssey.UserInterface
@@ -57,6 +52,87 @@ namespace Odyssey.UserInterface
             if (isFocusable)
                 OnGotFocus(EventArgs.Empty);
         }
+
+        #region Layout
+
+        public void Arrange(Vector2 availableSizeWithMargins)
+        {
+            Vector2 oldAbsolutePosition = AbsolutePosition;
+            Vector2 newAbsolutePosition = new Vector2(Margin.Left, Margin.Top) + position;
+            if (parent != null)
+            {
+                newAbsolutePosition += parent.AbsolutePosition;
+                if (!IsInternal)
+                    newAbsolutePosition += parent.TopLeftPosition;
+            }
+
+            if (!newAbsolutePosition.Equals(oldAbsolutePosition))
+                AbsolutePosition = newAbsolutePosition;
+
+            var elementSize = new Vector2(Width, Height);
+            var finalSizeWithoutMargins = availableSizeWithMargins - new Vector2(Margin.Horizontal, Margin.Vertical);
+            if (float.IsNaN(elementSize.X))
+                elementSize.X = finalSizeWithoutMargins.X;
+            if (float.IsNaN(elementSize.Y))
+                elementSize.Y = finalSizeWithoutMargins.Y;
+
+            if (float.IsNaN(elementSize.X))
+                elementSize.X = Math.Min(DesiredSize.X, finalSizeWithoutMargins.X);
+            if (float.IsNaN(elementSize.Y))
+                elementSize.Y = Math.Min(DesiredSize.Y, finalSizeWithoutMargins.Y);
+
+            // trunk the element size between the maximum and minimum width/height of the UIElement
+            elementSize = new Vector2(
+                Math.Max(MinimumWidth, Math.Min(MaximumWidth, elementSize.X)),
+                Math.Max(MinimumHeight, Math.Min(MaximumHeight, elementSize.Y)));
+
+            elementSize = ArrangeOverride(elementSize);
+            RenderSize = elementSize;
+        }
+
+        public void Measure(Vector2 availableSize)
+        {
+            var desiredSize = new Vector2(Width, Height);
+
+            if (float.IsNaN(desiredSize.X) || float.IsNaN(desiredSize.Y))
+            {
+                Vector2 availableSizeWithoutMargins = availableSize - new Vector2(Margin.Horizontal, Margin.Vertical);
+                availableSizeWithoutMargins = new Vector2(
+                    Math.Max(MinimumWidth, Math.Min(MaximumWidth, !float.IsNaN(desiredSize.X) ? desiredSize.X : availableSizeWithoutMargins.X)),
+                    Math.Max(MinimumHeight, Math.Min(MaximumHeight, !float.IsNaN(desiredSize.Y) ? desiredSize.Y : availableSizeWithoutMargins.Y)));
+
+                var childrenDesiredSize = MeasureOverride(availableSizeWithoutMargins);
+                if (float.IsNaN(desiredSize.X))
+                    desiredSize.X = childrenDesiredSize.X;
+                if (float.IsNaN(desiredSize.Y))
+                    desiredSize.Y = childrenDesiredSize.Y;
+            }
+
+            desiredSize = new Vector2(
+                    Math.Max(MinimumWidth, Math.Min(MaximumWidth, desiredSize.X)),
+                    Math.Max(MinimumHeight, Math.Min(MaximumHeight, desiredSize.Y)));
+
+            DesiredSize = desiredSize;
+            DesiredSizeWithMargins = desiredSize + new Vector2(Margin.Horizontal, Margin.Vertical);
+        }
+
+        public virtual void Layout(Vector2 availableSize)
+        {
+            Measure(availableSize);
+            Arrange(DesiredSizeWithMargins);
+        }
+
+        protected virtual Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        {
+            return availableSizeWithoutMargins;
+        }
+
+        protected virtual Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        {
+            return Vector2.Zero;
+        } 
+
+        #endregion
 
         public static explicit operator RectangleF(UIElement uiElement)
         {
@@ -126,9 +202,8 @@ namespace Odyssey.UserInterface
         /// <returns>A new copy of this element.</returns>
         protected internal virtual UIElement Copy()
         {
-            UIElement newElement = (UIElement) Activator.CreateInstance(GetType());
-
-            newElement.Name = Name;
+            var newElement = (UIElement) Activator.CreateInstance(GetType());
+            newElement.Name = Name ?? newElement.Name;
             newElement.Width = Width;
             newElement.Height = Height;
             newElement.Margin = Margin;
@@ -170,7 +245,7 @@ namespace Odyssey.UserInterface
             return true;
         }
 
-        internal virtual bool ProcessPointerMovement(MouseEventArgs e)
+        internal virtual bool ProcessPointerMovement(PointerEventArgs e)
         {
             Vector2 location = e.CurrentPoint.Position;
             if (!IsPointerCaptured && !Contains(location))
@@ -187,7 +262,7 @@ namespace Odyssey.UserInterface
             return false;
         }
 
-        internal virtual bool ProcessPointerPressed(MouseEventArgs e)
+        internal virtual bool ProcessPointerPressed(PointerEventArgs e)
         {
             Vector2 location = e.CurrentPoint.Position;
             if (!canRaiseEvents || !Contains(location))
@@ -206,7 +281,7 @@ namespace Odyssey.UserInterface
             return true;
         }
 
-        internal virtual bool ProcessPointerRelease(MouseEventArgs e)
+        internal virtual bool ProcessPointerRelease(PointerEventArgs e)
         {
             Vector2 location = e.CurrentPoint.Position;
             if (canRaiseEvents && (IsPointerCaptured || Contains(location)))

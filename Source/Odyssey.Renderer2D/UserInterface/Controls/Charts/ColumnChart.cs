@@ -3,6 +3,7 @@ using Odyssey.Graphics.Drawing;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
@@ -33,6 +34,13 @@ namespace Odyssey.UserInterface.Controls.Charts
             };
             DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(DataTemplate.VisualTree.Name, string.Empty));
             return DataTemplate;
+        }
+
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        {
+            LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls.Public);
+            LayoutManager.AlignBottom(this, Controls.Public);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
         }
     }
 }

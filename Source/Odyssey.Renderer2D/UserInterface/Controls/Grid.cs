@@ -43,6 +43,7 @@ namespace Odyssey.UserInterface.Controls
                     cachedStripPositions[dim].Add(startPosition);
                     startPosition += strip.ActualSize;
                 }
+                cachedStripPositions[dim].Add(startPosition);
             }
         }
 
@@ -59,34 +60,47 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override void Measure()
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Measure();
-            var size = new Vector2(Width, Height);
             for (int dim = 0; dim < stripDefinitions.Length; dim++)
             {
                 float stripSum = stripDefinitions[dim].Sum(s => s.SizeValue);
                 for (int i = 0; i < stripDefinitions[dim].Count; i++)
                 {
                     var strip = stripDefinitions[dim][i];
-                    strip.ActualSize = strip.SizeValue/stripSum*size[dim];
+                    strip.ActualSize = strip.SizeValue/stripSum*availableSizeWithoutMargins[dim];
                 }
             }
 
             CalculateStripPositions();
             CalculateStripSizes();
+
+            foreach (var control in Controls.Public)
+            {
+                var gridPosition = GetElementGridPositions(control);
+                control.Measure(new Vector2(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y]));
+            }
+
+            return availableSizeWithoutMargins;
         }
 
-        protected override void Arrange()
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Arrange();
+            CalculateStripPositions();
+            CalculateStripSizes();
+
             foreach (var control in Controls.Public)
             {
                 var gridPosition = GetElementGridPositions(control);
                 control.Position = new Vector2(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y]);
-                control.Width = cachedStripSizes[0][gridPosition.X];
-                control.Height = cachedStripSizes[1][gridPosition.Y];
+                control.Arrange(new Vector2(cachedStripSizes[0][gridPosition.X],cachedStripSizes[1][gridPosition.Y] ));
             }
+
+            Vector2 finalSize = Vector2.Zero;
+            for (int dim = 0; dim < 2; dim++)
+                finalSize[dim] = Math.Max(cachedStripPositions[dim][stripDefinitions[dim].Count], availableSizeWithoutMargins[dim]);
+
+            return finalSize;
         }
 
         public void AddRowDefinition(StripDefinition row)

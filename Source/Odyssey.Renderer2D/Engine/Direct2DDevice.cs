@@ -131,9 +131,6 @@ namespace Odyssey.Engine
             get { return services; }
         }
 
-        internal void CreateResources()
-        { }
-
         public void DrawGeometry(Graphics.Drawing.Geometry geometry, Brush brush, float strokeThickness = 1.0f)
         {
             deviceContext.DrawGeometry(geometry, brush, strokeThickness);

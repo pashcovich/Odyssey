@@ -26,7 +26,7 @@ namespace Odyssey.Graphics.Drawing
         protected override void Redraw()
         {
             var d = new FigureDesigner();
-            d.DrawRightTrapezoid(Position, Width * TopBaseRatio, Width, Height);
+            d.DrawRightTrapezoid(Position, RenderSize.X * TopBaseRatio, RenderSize.X, RenderSize.Y);
             Data = d.Result;
             base.Redraw();
         }

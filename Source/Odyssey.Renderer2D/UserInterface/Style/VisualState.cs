@@ -11,7 +11,7 @@ namespace Odyssey.UserInterface.Style
 {
     public sealed class VisualState : Component, IResourceProvider, IEnumerable<Shape>
     {
-        private readonly Control parent ;
+        private readonly Control parent;
         private readonly  Shape[] shapes;
 
         private VisualState(Control parent, IEnumerable<Shape> shapes)
@@ -37,12 +37,9 @@ namespace Odyssey.UserInterface.Style
                 var newShape = (Shape)shape.Copy();
                 newShape.ScaleX *= shape.Width;
                 newShape.ScaleY *= shape.Height;
-                newShape.Width = control.Width * shape.Width;
-                newShape.Height = control.Height * shape.Height;
                 newShape.Parent = control;
                 newShape.DesignMode = true;
                 newShape.IsInternal = true;
-                newShape.Position = new Vector2(control.Width, control.Height) * shape.Position;
                 shapeList.Add(newShape);
             }
 
@@ -53,7 +50,11 @@ namespace Odyssey.UserInterface.Style
         public void Update()
         {
             foreach (Shape shape in shapes)
-                shape.Layout();
+            {
+                shape.Width *= parent.RenderSize.X;
+                shape.Height *= parent.RenderSize.Y;
+                shape.Layout(parent.RenderSize);
+            }
         }
 
         public void SynchronizeSize()
@@ -67,7 +68,6 @@ namespace Odyssey.UserInterface.Style
                 }
                 else shape.IsVisible = false;
             }
-
         }
 
         #region IResourceProvider

@@ -63,11 +63,10 @@ namespace Odyssey.UserInterface.Controls
                 ((Control)DataTemplate.VisualTree).TextStyleClass = TextStyleClass;
         }
 
-        protected override void Arrange()
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Arrange();
-            if (!Controls.IsEmpty)
-                LayoutManager.DistributeVertically(this, Controls);
+            LayoutManager.DistributeVertically(availableSizeWithoutMargins, Controls);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
         }
     }
 }

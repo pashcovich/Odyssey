@@ -33,7 +33,7 @@ namespace Odyssey.UserInterface.Controls
             var styleService = Overlay.Services.GetService<IStyleService>();
             if (Background == null)
             {
-                SolidColor color = new SolidColor(string.Format("{0}.BackgroundFill", Name), Color.Transparent);
+                var color = new SolidColor(string.Format("{0}.BackgroundFill", Name), Color.Transparent);
                 Background = styleService.GetBrushResource(color);
             }
         }
@@ -62,14 +62,14 @@ namespace Odyssey.UserInterface.Controls
             textMetrics = textLayout.Metrics;
         }
 
-        protected override void Measure()
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
         {
             if (Width == 0)
                 Width = textMetrics.Width;
             if (Height == 0)
                 Height = textMetrics.Height;
 
-            base.Measure();
+            return base.MeasureOverride(availableSizeWithoutMargins);
         }
 
         protected override void OnSizeChanged(SizeChangedEventArgs e)

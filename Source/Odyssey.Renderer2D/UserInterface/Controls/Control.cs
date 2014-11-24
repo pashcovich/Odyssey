@@ -150,10 +150,10 @@ namespace Odyssey.UserInterface.Controls
             return newControl;
         }
 
-        protected override void Measure()
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Measure();
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
+            return new Vector2(Width, Height) - new Vector2(Margin.Horizontal, Margin.Vertical);
         }
 
         protected virtual void ApplyControlDescription()

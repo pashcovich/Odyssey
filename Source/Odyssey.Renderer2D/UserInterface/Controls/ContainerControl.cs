@@ -65,7 +65,7 @@ namespace Odyssey.UserInterface.Controls
         {
             RaiseEvent(ControlAdded, this, e);
             if (!DesignMode)
-                Layout();
+                Layout(RenderSize);
         }
 
         #endregion IContainer Members
@@ -167,13 +167,24 @@ namespace Odyssey.UserInterface.Controls
             return copy;
         }
 
-        public override void Layout()
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Layout();
+            Vector2 requiredSize = DesiredSize;
             foreach (UIElement ctl in Controls)
             {
-                ctl.Layout();
+                ctl.Measure(availableSizeWithoutMargins);
             }
+            return requiredSize;
+        }
+
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        {
+            foreach (UIElement ctl in Controls)
+            {
+                ctl.Arrange(availableSizeWithoutMargins);
+            }
+
+            return availableSizeWithoutMargins;
         }
 
         protected override void OnInitialized(EventArgs e)

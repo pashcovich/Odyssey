@@ -38,7 +38,7 @@ namespace Odyssey.UserInterface.Controls.Charts
                 xAxisTitle.Height = LayoutManager.Units(1);
                 xAxisTitle.Position = new Vector2(0, Height - Padding.Bottom - XAxisTitle.Height);
                 Add(xAxisTitle);
-                Layout();
+                Layout(RenderSize);
             }
         }
 
@@ -51,16 +51,6 @@ namespace Odyssey.UserInterface.Controls.Charts
                     areaHeight -= xAxisTitle.Height;
                 return areaHeight;
             }
-        }
-
-        protected override void Arrange()
-        {
-            base.Arrange();
-            if (Controls.IsEmpty)
-                return;
-
-            LayoutManager.DistributeHorizontally(this, Controls.Public);
-            LayoutManager.AlignBottom(this, Controls.Public);
         }
 
         protected override void OnInitialized(EventArgs e)

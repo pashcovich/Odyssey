@@ -1,4 +1,5 @@
 ﻿using System;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -52,13 +53,12 @@ namespace Odyssey.UserInterface.Controls
                 Content.Initialize();
         }
 
-        protected override void OnLayoutUpdated(EventArgs e)
+        public override void Layout(Vector2 availableSize)
         {
-            base.OnLayoutUpdated(e);
-            if (Content != null)
-                Content.Layout();
+            base.Layout(availableSize);
+            Content.Layout(availableSize);
         }
-
+        
         protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
             base.OnSizeChanged(e);

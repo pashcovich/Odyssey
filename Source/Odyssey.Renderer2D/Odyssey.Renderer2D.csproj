@@ -77,6 +77,7 @@
     <Compile Include="UserInterface\Controls\Charts\Chart.cs" />
     <Compile Include="UserInterface\Controls\Charts\ChartItem.cs" />
     <Compile Include="UserInterface\Controls\Charts\ColumnItem.cs" />
+    <Compile Include="UserInterface\Controls\DockPanel.cs" />
     <Compile Include="UserInterface\Controls\Grid.cs" />
     <Compile Include="UserInterface\Controls\GridBase.cs" />
     <Compile Include="UserInterface\Controls\IDesktopOverlay.cs" />

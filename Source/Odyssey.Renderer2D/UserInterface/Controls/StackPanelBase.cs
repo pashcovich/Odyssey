@@ -1,7 +1,10 @@
 ﻿#region Using Directives
 
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Odyssey.UserInterface.Style;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
@@ -30,15 +33,30 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override void Arrange()
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
         {
-            if (Controls.IsEmpty)
-                return;
+            int sumIndex = Orientation == Orientation.Horizontal ? 0 : 1;
+            int maximizeIndex = Orientation == Orientation.Horizontal ? 1 : 0;
+            var desiredSize = Vector2.Zero;
 
-            if (Orientation == Orientation.Horizontal)
-                LayoutManager.DistributeHorizontally(this, Controls);
-            else
-                LayoutManager.DistributeVertically(this, Controls);
+            foreach (var control in Controls.Public)
+            {
+                control.Measure(availableSizeWithoutMargins);
+                desiredSize[sumIndex] += control.DesiredSizeWithMargins[sumIndex];
+                desiredSize[maximizeIndex] = Math.Max(desiredSize[maximizeIndex], control.DesiredSizeWithMargins[maximizeIndex]);
+            }
+            return desiredSize;
         }
+
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        {
+            if (Orientation == Orientation.Horizontal)
+                LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls);
+            else
+                LayoutManager.DistributeVertically(availableSizeWithoutMargins, Controls);
+
+            return availableSizeWithoutMargins;
+        }
+
     }
 }

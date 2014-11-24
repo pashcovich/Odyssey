@@ -30,14 +30,14 @@ namespace Odyssey.UserInterface.Style
                 CenterControlVertical(control, container));
         }
 
-        public static void DistributeHorizontally(Controls.Control parent, IEnumerable<UIElement> children)
+        public static void DistributeHorizontally(Vector2 availableSize, IEnumerable<UIElement> children)
         {
-            Vector2 previousPosition = parent.TopLeftPosition;
+            Vector2 previousPosition = Vector2.Zero;
             foreach (UIElement element in children)
             {
-                var margin = element.Margin;
-                element.Position = previousPosition + new Vector2(margin.Left, margin.Top);
-                previousPosition = element.Position + new Vector2(element.Width + margin.Right, -margin.Top);
+                element.Position = previousPosition;
+                element.Arrange(new Vector2(element.DesiredSizeWithMargins.X, availableSize.Y));
+                previousPosition = element.Position + new Vector2(element.DesiredSizeWithMargins.X, 0);
             }
         }
 
@@ -50,14 +50,14 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        public static void DistributeVertically(Control parent, IEnumerable<UIElement> children)
+        public static void DistributeVertically(Vector2 availableSize, IEnumerable<UIElement> children)
         {
-            Vector2 previousPosition = parent.TopLeftPosition;
+            Vector2 previousPosition = Vector2.Zero; 
             foreach (UIElement element in children)
             {
-                var margin = element.Margin;
-                element.Position = previousPosition + new Vector2(margin.Left, margin.Top);
-                previousPosition = new Vector2(-margin.Left, element.Position.Y + element.Height + margin.Bottom);
+                element.Position = previousPosition;
+                element.Arrange(new Vector2(availableSize.X, element.DesiredSizeWithMargins.Y));
+                previousPosition = element.Position + new Vector2(0, element.DesiredSizeWithMargins.Y);
             }
         }
 

@@ -52,7 +52,7 @@ namespace Odyssey.Graphics.Drawing
             set { scaleY = value; }
         }
 
-        public Shape()
+        protected Shape()
         {
             CanRaiseEvents = false;
         }
@@ -125,12 +125,13 @@ namespace Odyssey.Graphics.Drawing
                 fill.Transform = Matrix3x2.Scaling(scaleX, scaleY) * Transform;
         }
 
-        protected override void Measure()
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Measure();
             if (Width == 0 || Height == 0)
-                IsVisible = false;
-
+            {
+                return Vector2.Zero;
+            }
+            return availableSizeWithoutMargins;
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)

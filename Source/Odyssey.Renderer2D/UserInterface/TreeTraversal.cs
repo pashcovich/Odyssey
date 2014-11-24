@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System;
 using Odyssey.UserInterface.Controls;
 using System.Collections.Generic;
 
@@ -26,7 +27,7 @@ namespace Odyssey.UserInterface
     {
         public static IEnumerable<UIElement> PostOrderInteractionVisit(UIElement root)
         {
-            IContainer containerControl = root as IContainer;
+            var containerControl = root as IContainer;
             if (containerControl != null)
                 foreach (UIElement control in containerControl.Controls.InteractionEnabled)
                     foreach (UIElement ctlChild in PostOrderInteractionVisit(control))
@@ -42,18 +43,31 @@ namespace Odyssey.UserInterface
 
         public static IEnumerable<UIElement> PreOrderVisit(UIElement root)
         {
+            return PreOrderVisit(root, c => true);
+        }
+
+        public static IEnumerable<UIElement> PreOrderVisit(UIElement root, Func<UIElement, bool> filterFunction)
+        {
+            if (!filterFunction(root)) yield break;
+
             yield return root;
-            IContainer containerControl = root as IContainer;
+            var containerControl = root as IContainer;
             if (containerControl != null)
                 foreach (UIElement control in containerControl.Controls)
-                    foreach (UIElement ctlChild in PreOrderVisit(control))
-                        yield return ctlChild;
-            else
-            {
-                var contentControl = root as IContentControl;
-                if (contentControl != null && contentControl.Content != null)
-                    yield return contentControl.Content;
-            }
+                    foreach (UIElement ctlChild in PreOrderVisit(control, filterFunction))
+                        if (filterFunction(ctlChild))
+                            yield return ctlChild;
+                        else
+                        {
+                            var contentControl = root as IContentControl;
+                            if (contentControl != null && contentControl.Content != null && filterFunction(root))
+                                yield return contentControl.Content;
+                        }
+        }
+
+        public static IEnumerable<UIElement> VisibleControls(UIElement root)
+        {
+            return PreOrderVisit(root, (c) => c.IsVisible);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Odyssey.UserInterface.Style;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -11,13 +12,11 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected override void Arrange()
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Arrange();
-            if (Controls.IsEmpty)
-                return;
+            LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls);
 
-            LayoutManager.DistributeHorizontally(this, Controls);
-        }
+            return availableSizeWithoutMargins;
+        }            
     }
 }

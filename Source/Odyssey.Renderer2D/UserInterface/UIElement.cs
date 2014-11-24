@@ -39,7 +39,6 @@ namespace Odyssey.UserInterface
 
         #region Private fields
 
-        private readonly PropertyContainer dependencyProperties;
         private readonly Dictionary<string, BindingExpression> bindings;
         private readonly BehaviorCollection behaviors;
         private readonly AnimationController animator;
@@ -63,11 +62,11 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Initializes a new instance of the <see cref="UIElement" /> class.
         /// </summary>
-        /// <param name="id">The id.</param>
         /// <remarks>
         /// </remarks>
         protected UIElement()
         {
+            MinimumHeight = minimumHeight;
             string type = GetType().Name;
 
             if (!TypeCounter.ContainsKey(type))
@@ -80,6 +79,13 @@ namespace Odyssey.UserInterface
             behaviors = new BehaviorCollection();
             animator = new AnimationController(this);
             DependencyProperties = new PropertyContainer(this);
+
+            width = float.NaN;
+            height = float.NaN;
+            MinimumWidth = 4;
+            MinimumHeight = 4;
+            MaximumWidth = float.PositiveInfinity;
+            MaximumHeight = float.PositiveInfinity;
         }
 
         #endregion Constructors
@@ -109,54 +115,9 @@ namespace Odyssey.UserInterface
             return string.Format("{0}: '{1}' [{2}] D:{3}", GetType().Name, Name, AbsolutePosition, Depth);
         }
 
-        public virtual void Layout()
-        {
-            Measure();
-            Arrange();
-        }
-
-        protected virtual void Arrange()
-        {
-            if (parent != null)
-            {
-                Vector2 oldAbsolutePosition = AbsolutePosition;
-                Vector2 newAbsolutePosition = parent.AbsolutePosition + new Vector2(Margin.Left, Margin.Top) + position;
-                
-                if (!IsInternal)
-                    newAbsolutePosition += parent.TopLeftPosition;
-
-                if (!newAbsolutePosition.Equals(oldAbsolutePosition))
-                    AbsolutePosition = newAbsolutePosition;
-
-                UpdateLayoutInternal();
-                OnLayoutUpdated(EventArgs.Empty);
-            }
-        }
-
-        protected virtual void Measure()
-        {
-            if (Width == 0)
-            {
-                float parentWidth = Parent.Width;
-                Width = parentWidth - Margin.Horizontal;
-            }
-            if (Height == 0)
-            {
-                float parentHeight = Parent.Height;
-                Height = parentHeight - Margin.Vertical;
-            }
-            
-            var parentControl = Parent as Control;
-            if (parentControl != null && !IsInternal)
-            {
-                Width -= parentControl.Padding.Horizontal;
-                Height -= parentControl.Padding.Vertical;
-            }
-        }
-
         internal void UpdateLayoutInternal()
         {
-            boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
+            boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, RenderSize.X, RenderSize.Y);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);
         }
     }
