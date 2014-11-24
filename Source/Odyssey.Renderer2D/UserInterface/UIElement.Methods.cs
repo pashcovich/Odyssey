@@ -116,7 +116,7 @@ namespace Odyssey.UserInterface
             DesiredSizeWithMargins = desiredSize + new Vector2(Margin.Horizontal, Margin.Vertical);
         }
 
-        public virtual void Layout(Vector2 availableSize)
+        public void Layout(Vector2 availableSize)
         {
             Measure(availableSize);
             Arrange(DesiredSizeWithMargins);

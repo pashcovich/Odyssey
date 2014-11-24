@@ -53,12 +53,18 @@ namespace Odyssey.UserInterface.Controls
                 Content.Initialize();
         }
 
-        public override void Layout(Vector2 availableSize)
+        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
         {
-            base.Layout(availableSize);
-            Content.Layout(availableSize);
+            Content.Arrange(availableSizeWithoutMargins);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
         }
-        
+
+        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        {
+            Content.Measure(availableSizeWithoutMargins);
+            return base.MeasureOverride(availableSizeWithoutMargins);
+        }
+
         protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
             base.OnSizeChanged(e);

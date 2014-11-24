@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.UserInterface.Style;
@@ -11,7 +10,8 @@ namespace Odyssey.UserInterface.Controls.Charts
     {
         private Control xAxisTitle;
 
-        protected Chart(string controlStyleClass, string textStyleClass = TextStyle.Default) : base(controlStyleClass, textStyleClass)
+        protected Chart(string controlStyleClass, string textStyleClass = TextStyle.Default)
+            : base(controlStyleClass, textStyleClass)
         {
         }
 
