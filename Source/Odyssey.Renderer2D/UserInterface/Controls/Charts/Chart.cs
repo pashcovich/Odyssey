@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.UserInterface.Style;
@@ -6,12 +7,27 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
-    public abstract class Chart : ItemsControl
+    public abstract class Chart : Grid
     {
         private Control xAxisTitle;
 
+        private IEnumerable itemsSource;
+
+        public IEnumerable ItemsSource
+        {
+            get { return itemsSource; }
+            set
+            {
+                if (!Equals(itemsSource, value))
+                {
+                    itemsSource = value;
+                    DataContext = value;
+                }
+            }
+        }
+
         protected Chart(string controlStyleClass, string textStyleClass = TextStyle.Default)
-            : base(controlStyleClass, textStyleClass)
+            : base()
         {
         }
 
@@ -32,13 +48,7 @@ namespace Odyssey.UserInterface.Controls.Charts
                     return;
                 Remove(xAxisTitle);
                 xAxisTitle = value;
-                xAxisTitle.IsInternal = true;
-                
-                xAxisTitle.Width = Width;
-                xAxisTitle.Height = LayoutManager.Units(1);
-                xAxisTitle.Position = new Vector2(0, Height - Padding.Bottom - XAxisTitle.Height);
                 Add(xAxisTitle);
-                Layout(RenderSize);
             }
         }
 
@@ -51,13 +61,6 @@ namespace Odyssey.UserInterface.Controls.Charts
                     areaHeight -= xAxisTitle.Height;
                 return areaHeight;
             }
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            foreach (var item in Controls.OfType<ChartItem>())
-                item.Chart = this;
-            base.OnInitialized(e);
         }
 
         protected override void OnTextStyleChanged(EventArgs e)

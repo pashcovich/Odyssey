@@ -12,7 +12,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls);
 

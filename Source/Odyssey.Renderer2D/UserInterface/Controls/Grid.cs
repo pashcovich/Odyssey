@@ -8,8 +8,9 @@ namespace Odyssey.UserInterface.Controls
 {
     public class Grid : GridBase
     {
-        private readonly StripDefinitionCollection[] stripDefinitions = new[]
+        private readonly StripDefinitionCollection[] stripDefinitions =
         {
+            new StripDefinitionCollection(),
             new StripDefinitionCollection(),
             new StripDefinitionCollection(),
         };
@@ -18,6 +19,7 @@ namespace Odyssey.UserInterface.Controls
         {
             new List<float>(),
             new List<float>(), 
+            new List<float>()
         };
 
 
@@ -25,10 +27,18 @@ namespace Odyssey.UserInterface.Controls
         {
             new List<float>(),
             new List<float>(), 
+            new List<float>()
         };
 
         public Grid() : base(typeof(Grid).Name)
         {
+        }
+
+        protected override void OnInitializing(EventArgs e)
+        {
+            base.OnInitializing(e);
+            if (stripDefinitions[2].Count == 0)
+                AddLayerDefinition(new StripDefinition(StripType.Fixed,1));
         }
 
         void CalculateStripPositions()
@@ -60,7 +70,7 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             for (int dim = 0; dim < stripDefinitions.Length; dim++)
             {
@@ -78,13 +88,13 @@ namespace Odyssey.UserInterface.Controls
             foreach (var control in Controls.Public)
             {
                 var gridPosition = GetElementGridPositions(control);
-                control.Measure(new Vector2(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y]));
+                control.Measure(new Vector3(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y], cachedStripSizes[2][gridPosition.Z]));
             }
 
             return availableSizeWithoutMargins;
         }
 
-        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             CalculateStripPositions();
             CalculateStripSizes();
@@ -93,11 +103,11 @@ namespace Odyssey.UserInterface.Controls
             {
                 var gridPosition = GetElementGridPositions(control);
                 control.Position = new Vector2(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y]);
-                control.Arrange(new Vector2(cachedStripSizes[0][gridPosition.X],cachedStripSizes[1][gridPosition.Y] ));
+                control.Arrange(new Vector3(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y], cachedStripSizes[2][gridPosition.Z]));
             }
 
-            Vector2 finalSize = Vector2.Zero;
-            for (int dim = 0; dim < 2; dim++)
+            var finalSize = Vector3.Zero;
+            for (int dim = 0; dim < 3; dim++)
                 finalSize[dim] = Math.Max(cachedStripPositions[dim][stripDefinitions[dim].Count], availableSizeWithoutMargins[dim]);
 
             return finalSize;
@@ -111,6 +121,11 @@ namespace Odyssey.UserInterface.Controls
         public void AddColumnDefinition(StripDefinition column)
         {
             stripDefinitions[0].Add(column);
+        }
+
+        public void AddLayerDefinition(StripDefinition layer)
+        {
+            stripDefinitions[2].Add(layer);
         }
     }
 }

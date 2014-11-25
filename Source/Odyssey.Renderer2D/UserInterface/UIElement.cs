@@ -45,7 +45,6 @@ namespace Odyssey.UserInterface
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
         private bool designMode = true;
-
         private bool isEnabled = true;
         private bool isFocusable = true;
         private bool isHighlighted;
@@ -54,6 +53,18 @@ namespace Odyssey.UserInterface
         private bool isVisible = true;
         private UIElement parent;
 
+        private Matrix3x2 transform;
+        private float height;
+        private float width;
+        private float depth;
+        private float minimumWidth;
+        private float minimumHeight;
+        private float minimumDepth;
+        private float maximumWidth;
+        private float maximumHeight;
+        private float maximumDepth;
+        private object dataContext;
+        private Vector3 renderSize;
         private Vector2 position;
         #endregion Private fields
 
@@ -82,10 +93,14 @@ namespace Odyssey.UserInterface
 
             width = float.NaN;
             height = float.NaN;
+            depth = float.NaN;
+
             MinimumWidth = 4;
             MinimumHeight = 4;
+            MinimumDepth = 0;
             MaximumWidth = float.PositiveInfinity;
             MaximumHeight = float.PositiveInfinity;
+            MaximumDepth = float.PositiveInfinity;
         }
 
         #endregion Constructors
@@ -112,7 +127,7 @@ namespace Odyssey.UserInterface
 
         public override string ToString()
         {
-            return string.Format("{0}: '{1}' [{2}] D:{3}", GetType().Name, Name, AbsolutePosition, Depth);
+            return string.Format("{0}: '{1}' [{2}]", GetType().Name, Name, AbsolutePosition);
         }
 
         internal void UpdateLayoutInternal()

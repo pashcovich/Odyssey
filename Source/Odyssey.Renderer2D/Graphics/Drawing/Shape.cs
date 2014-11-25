@@ -125,11 +125,11 @@ namespace Odyssey.Graphics.Drawing
                 fill.Transform = Matrix3x2.Scaling(scaleX, scaleY) * Transform;
         }
 
-        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             if (Width == 0 || Height == 0)
             {
-                return Vector2.Zero;
+                return Vector3.Zero;
             }
             return availableSizeWithoutMargins;
         }

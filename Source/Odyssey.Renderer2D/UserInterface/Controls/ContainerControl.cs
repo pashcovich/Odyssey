@@ -167,9 +167,9 @@ namespace Odyssey.UserInterface.Controls
             return copy;
         }
 
-        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            Vector2 requiredSize = DesiredSize;
+            var requiredSize = DesiredSize;
             foreach (UIElement ctl in Controls)
             {
                 ctl.Measure(availableSizeWithoutMargins);
@@ -177,7 +177,7 @@ namespace Odyssey.UserInterface.Controls
             return requiredSize;
         }
 
-        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             foreach (UIElement ctl in Controls)
             {

@@ -142,11 +142,11 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            Layout(new Vector2(float.PositiveInfinity));
+            Layout(new Vector3(float.PositiveInfinity));
             IsInited = true;
         }
 
-        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             var settings = Services.GetService<IDirectXDeviceSettings>();
             Width = settings.PreferredBackBufferWidth;
@@ -156,7 +156,7 @@ namespace Odyssey.UserInterface.Controls
             return Size;
         }
 
-        #region MyRegion
+        #region Input Handling Methods
         void IOverlay.ProcessPointerMovement(PointerEventArgs e)
         {
             // If an element as captured the pointer, send the event to it first

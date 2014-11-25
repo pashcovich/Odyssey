@@ -34,17 +34,8 @@ namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
-        private Matrix3x2 transform;
-        private float height;
-        private float width;
-        private float minimumWidth;
-        private float minimumHeight;
-        private float maximumWidth;
-        private float maximumHeight;
-        private object dataContext;
-        private Vector2 renderSize;
-
         internal protected bool IsInternal { get; set; }
+        internal Vector3 MarginInternal { get {  return new Vector3(Margin.Horizontal, Margin.Vertical, 0);} }
 
         public RectangleF BoundingRectangle
         {
@@ -131,10 +122,10 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Gets the height and width of the control.
         /// </summary>
-        /// <value>The <see cref = "Vector2">Size</see> that represents the height and width of the control in pixels.</value>
-        public Vector2 Size { get { return new Vector2(Width, Height);} }
+        /// <value>The <see cref = "Vector2">Size</see> that represents the height, width and depth of the control in pixels.</value>
+        public Vector3 Size { get { return new Vector3(Width, Height, Depth);} }
 
-        public Vector2 RenderSize
+        public Vector3 RenderSize
         {
             get { return renderSize; }
             private set
@@ -148,8 +139,8 @@ namespace Odyssey.UserInterface
             }
         }
 
-        public Vector2 DesiredSize { get; private set; }
-        public Vector2 DesiredSizeWithMargins { get; private set; }
+        public Vector3 DesiredSize { get; private set; }
+        public Vector3 DesiredSizeWithMargins { get; private set; }
 
         public Matrix3x2 Transform
         {
@@ -172,6 +163,8 @@ namespace Odyssey.UserInterface
             }
         }
 
+        public bool IsMeasureValid { get; private set; }
+
         public float MinimumWidth
         {
             get { return minimumWidth; }
@@ -184,6 +177,12 @@ namespace Odyssey.UserInterface
             set { minimumHeight = value; }
         }
 
+        public float MinimumDepth
+        {
+            get { return minimumDepth; }
+            set { minimumDepth = value; }
+        }
+
         public float MaximumWidth
         {
             get { return maximumWidth; }
@@ -194,6 +193,12 @@ namespace Odyssey.UserInterface
         {
             get { return maximumHeight; }
             set { maximumHeight = value; }
+        }
+
+        public float MaximumDepth
+        {
+            get { return maximumDepth; }
+            set { maximumDepth = value; }
         }
 
         public AnimationController Animator
@@ -210,7 +215,10 @@ namespace Odyssey.UserInterface
 
         internal bool IsBeingRemoved { get; set; }
 
-        protected internal virtual Depth Depth { get; set; }
+        /// <summary>
+        /// Currently not used.
+        /// </summary>
+        
 
         /// <summary>
         /// Gets or sets a value indicating whether the mouse cursor is currently inside.
@@ -221,6 +229,12 @@ namespace Odyssey.UserInterface
         {
             get { return isInside && canRaiseEvents; }
             set { isInside = value; }
+        }
+
+        public float Depth
+        {
+            get { return depth; }
+            set { depth = value; }
         }
 
         /// <summary>
@@ -376,7 +390,6 @@ namespace Odyssey.UserInterface
                     var formerParent = parent as IContainer;
                     if (formerParent != null)
                         formerParent.Controls.Remove(value);
-                    Depth = Depth.AsChildOf(parent.Depth);
                 }
                 DesignMode = parent.DesignMode;
             }

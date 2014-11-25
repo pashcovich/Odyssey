@@ -30,7 +30,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             float availableWidth = availableSizeWithoutMargins.X;
             float availableHeight = availableSizeWithoutMargins.Y;
@@ -43,22 +43,22 @@ namespace Odyssey.UserInterface.Controls
                 switch (dock)
                 {
                     case Dock.Bottom:
-                        control.Measure(new Vector2(availableWidth, control.Height));
+                        control.Measure(new Vector3(availableWidth, control.Height, control.Depth));
                         availableHeight -= control.DesiredSize.Y;
                         break;
 
                     case Dock.Right:
-                        control.Measure(new Vector2(control.Width, availableHeight));
+                        control.Measure(new Vector3(control.Width, availableHeight, control.Depth));
                         availableWidth -= control.DesiredSize.X;
                         break;
 
                     case Dock.Left:
-                        control.Measure(new Vector2(control.Width, availableHeight));
+                        control.Measure(new Vector3(control.Width, availableHeight, control.Depth));
                         availableWidth -= control.DesiredSize.X;
                         break;
 
                     case Dock.Top:
-                        control.Measure(new Vector2(availableWidth, control.Height));
+                        control.Measure(new Vector3(availableWidth, control.Height, control.Depth));
                         availableHeight -= control.DesiredSize.Y;
                         break;
                 }
@@ -67,10 +67,11 @@ namespace Odyssey.UserInterface.Controls
             return availableSizeWithoutMargins;
         }
 
-        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             float availableWidth = availableSizeWithoutMargins.X;
             float availableHeight = availableSizeWithoutMargins.Y;
+            float availableDepth = availableSizeWithoutMargins.Z;
             float topOffset=0;
             float rightOffset=0;
             float leftOffset=0;
@@ -85,7 +86,7 @@ namespace Odyssey.UserInterface.Controls
                     control.Position = new Vector2(leftOffset, topOffset);
                     control.Width = availableWidth;
                     control.Height = availableHeight;
-                    control.Arrange(new Vector2(availableWidth, availableHeight));
+                    control.Arrange(new Vector3(availableWidth, availableHeight, availableDepth));
                 }
                 else
                 {
@@ -94,28 +95,28 @@ namespace Odyssey.UserInterface.Controls
                     {
                         case Dock.Bottom:
                             control.Position = new Vector2(leftOffset, availableHeight - control.DesiredSizeWithMargins.Y - bottomOffset);
-                            control.Arrange(new Vector2(availableWidth, control.DesiredSizeWithMargins.Y));
+                            control.Arrange(new Vector3(availableWidth, control.DesiredSizeWithMargins.Y, availableDepth));
                             bottomOffset += control.DesiredSizeWithMargins.Y;
                             availableHeight -= control.DesiredSizeWithMargins.Y;
                             break;
 
                         case Dock.Right:
                             control.Position = new Vector2(availableWidth - control.DesiredSizeWithMargins.X - rightOffset, topOffset);
-                            control.Arrange(new Vector2(control.DesiredSizeWithMargins.X, availableHeight));
+                            control.Arrange(new Vector3(control.DesiredSizeWithMargins.X, availableHeight, availableDepth));
                             rightOffset += control.DesiredSizeWithMargins.X;
                             availableWidth -= control.DesiredSizeWithMargins.X;
                             break;
 
                         case Dock.Left:
                             control.Position = new Vector2(leftOffset, topOffset);
-                            control.Arrange(new Vector2(control.DesiredSizeWithMargins.X, availableHeight));
+                            control.Arrange(new Vector3(control.DesiredSizeWithMargins.X, availableHeight, availableDepth));
                             leftOffset += control.DesiredSizeWithMargins.X;
                             availableWidth -= control.DesiredSizeWithMargins.X;
                             break;
 
                         case Dock.Top:
                             control.Position = new Vector2(leftOffset, topOffset);
-                            control.Arrange(new Vector2(availableWidth, control.DesiredSizeWithMargins.Y));
+                            control.Arrange(new Vector3(availableWidth, control.DesiredSizeWithMargins.Y, availableDepth));
                             topOffset += control.DesiredSize.Y;
                             availableHeight -= control.DesiredSize.Y;
                             break;

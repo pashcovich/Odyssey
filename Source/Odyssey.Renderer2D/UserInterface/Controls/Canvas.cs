@@ -23,7 +23,8 @@ using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class Panel : PanelBase
+    public class Canvas : PanelBase
     {
+        
     }
 }

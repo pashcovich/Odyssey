@@ -53,13 +53,13 @@ namespace Odyssey.UserInterface.Controls
                 Content.Initialize();
         }
 
-        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             Content.Arrange(availableSizeWithoutMargins);
             return base.ArrangeOverride(availableSizeWithoutMargins);
         }
 
-        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             Content.Measure(availableSizeWithoutMargins);
             return base.MeasureOverride(availableSizeWithoutMargins);

@@ -30,13 +30,13 @@ namespace Odyssey.UserInterface.Style
                 CenterControlVertical(control, container));
         }
 
-        public static void DistributeHorizontally(Vector2 availableSize, IEnumerable<UIElement> children)
+        public static void DistributeHorizontally(Vector3 availableSize, IEnumerable<UIElement> children)
         {
             Vector2 previousPosition = Vector2.Zero;
             foreach (UIElement element in children)
             {
                 element.Position = previousPosition;
-                element.Arrange(new Vector2(element.DesiredSizeWithMargins.X, availableSize.Y));
+                element.Arrange(new Vector3(element.DesiredSizeWithMargins.X, availableSize.Y, element.DesiredSizeWithMargins.Z));
                 previousPosition = element.Position + new Vector2(element.DesiredSizeWithMargins.X, 0);
             }
         }
@@ -50,13 +50,13 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        public static void DistributeVertically(Vector2 availableSize, IEnumerable<UIElement> children)
+        public static void DistributeVertically(Vector3 availableSize, IEnumerable<UIElement> children)
         {
             Vector2 previousPosition = Vector2.Zero; 
             foreach (UIElement element in children)
             {
                 element.Position = previousPosition;
-                element.Arrange(new Vector2(availableSize.X, element.DesiredSizeWithMargins.Y));
+                element.Arrange(new Vector3(availableSize.X, element.DesiredSizeWithMargins.Y, element.DesiredSizeWithMargins.Z));
                 previousPosition = element.Position + new Vector2(0, element.DesiredSizeWithMargins.Y);
             }
         }

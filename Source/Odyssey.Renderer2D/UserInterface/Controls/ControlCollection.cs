@@ -167,7 +167,6 @@ namespace Odyssey.UserInterface.Controls
             //    else
             //        throw new ArgumentException("Windows can only be added to the Overlay.");
             control.Parent = Owner;
-            control.Depth = Depth.AsChildOf(Owner.Depth);
         }
 
         protected override void RemoveItem(int index)

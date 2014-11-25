@@ -33,11 +33,11 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             int sumIndex = Orientation == Orientation.Horizontal ? 0 : 1;
             int maximizeIndex = Orientation == Orientation.Horizontal ? 1 : 0;
-            var desiredSize = Vector2.Zero;
+            var desiredSize = Vector3.Zero;
 
             foreach (var control in Controls.Public)
             {
@@ -48,7 +48,7 @@ namespace Odyssey.UserInterface.Controls
             return desiredSize;
         }
 
-        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             if (Orientation == Orientation.Horizontal)
                 LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls);

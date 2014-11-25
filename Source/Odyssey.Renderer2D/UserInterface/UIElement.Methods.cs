@@ -55,7 +55,7 @@ namespace Odyssey.UserInterface
 
         #region Layout
 
-        public void Arrange(Vector2 availableSizeWithMargins)
+        public void Arrange(Vector3 availableSizeWithMargins)
         {
             Vector2 oldAbsolutePosition = AbsolutePosition;
             Vector2 newAbsolutePosition = new Vector2(Margin.Left, Margin.Top) + position;
@@ -69,37 +69,44 @@ namespace Odyssey.UserInterface
             if (!newAbsolutePosition.Equals(oldAbsolutePosition))
                 AbsolutePosition = newAbsolutePosition;
 
-            var elementSize = new Vector2(Width, Height);
-            var finalSizeWithoutMargins = availableSizeWithMargins - new Vector2(Margin.Horizontal, Margin.Vertical);
+            var elementSize = Size;
+            var finalSizeWithoutMargins = availableSizeWithMargins - MarginInternal;
             if (float.IsNaN(elementSize.X))
                 elementSize.X = finalSizeWithoutMargins.X;
             if (float.IsNaN(elementSize.Y))
                 elementSize.Y = finalSizeWithoutMargins.Y;
+            if (float.IsNaN(elementSize.Z))
+                elementSize.Z = finalSizeWithoutMargins.Z;
 
             if (float.IsNaN(elementSize.X))
                 elementSize.X = Math.Min(DesiredSize.X, finalSizeWithoutMargins.X);
             if (float.IsNaN(elementSize.Y))
                 elementSize.Y = Math.Min(DesiredSize.Y, finalSizeWithoutMargins.Y);
+            if (float.IsNaN(elementSize.Y))
+                elementSize.Z = Math.Min(DesiredSize.Z, finalSizeWithoutMargins.Z);
 
             // trunk the element size between the maximum and minimum width/height of the UIElement
-            elementSize = new Vector2(
+            elementSize = new Vector3(
                 Math.Max(MinimumWidth, Math.Min(MaximumWidth, elementSize.X)),
-                Math.Max(MinimumHeight, Math.Min(MaximumHeight, elementSize.Y)));
+                Math.Max(MinimumHeight, Math.Min(MaximumHeight, elementSize.Y)),
+                Math.Max(MinimumDepth, Math.Min(MaximumDepth, elementSize.Z)));
 
             elementSize = ArrangeOverride(elementSize);
             RenderSize = elementSize;
         }
 
-        public void Measure(Vector2 availableSize)
+        public void Measure(Vector3 availableSize)
         {
-            var desiredSize = new Vector2(Width, Height);
+            IsMeasureValid = true;
+            var desiredSize = new Vector3(Width, Height, Depth);
 
-            if (float.IsNaN(desiredSize.X) || float.IsNaN(desiredSize.Y))
+            if (float.IsNaN(desiredSize.X) || float.IsNaN(desiredSize.Y) || float.IsNaN(desiredSize.Z))
             {
-                Vector2 availableSizeWithoutMargins = availableSize - new Vector2(Margin.Horizontal, Margin.Vertical);
-                availableSizeWithoutMargins = new Vector2(
+                var availableSizeWithoutMargins = availableSize - MarginInternal;
+                availableSizeWithoutMargins = new Vector3(
                     Math.Max(MinimumWidth, Math.Min(MaximumWidth, !float.IsNaN(desiredSize.X) ? desiredSize.X : availableSizeWithoutMargins.X)),
-                    Math.Max(MinimumHeight, Math.Min(MaximumHeight, !float.IsNaN(desiredSize.Y) ? desiredSize.Y : availableSizeWithoutMargins.Y)));
+                    Math.Max(MinimumHeight, Math.Min(MaximumHeight, !float.IsNaN(desiredSize.Y) ? desiredSize.Y : availableSizeWithoutMargins.Y)),
+                    Math.Max(MinimumDepth, Math.Min(MaximumDepth, !float.IsNaN(desiredSize.Z) ? desiredSize.Z : availableSizeWithoutMargins.Z)));
 
                 var childrenDesiredSize = MeasureOverride(availableSizeWithoutMargins);
                 if (float.IsNaN(desiredSize.X))
@@ -108,28 +115,29 @@ namespace Odyssey.UserInterface
                     desiredSize.Y = childrenDesiredSize.Y;
             }
 
-            desiredSize = new Vector2(
+            desiredSize = new Vector3(
                     Math.Max(MinimumWidth, Math.Min(MaximumWidth, desiredSize.X)),
-                    Math.Max(MinimumHeight, Math.Min(MaximumHeight, desiredSize.Y)));
+                    Math.Max(MinimumHeight, Math.Min(MaximumHeight, desiredSize.Y)),
+                    Math.Max(MinimumDepth, Math.Min(MaximumDepth, desiredSize.Z)));
 
             DesiredSize = desiredSize;
-            DesiredSizeWithMargins = desiredSize + new Vector2(Margin.Horizontal, Margin.Vertical);
+            DesiredSizeWithMargins = desiredSize + MarginInternal;
         }
 
-        public void Layout(Vector2 availableSize)
+        public void Layout(Vector3 availableSize)
         {
             Measure(availableSize);
             Arrange(DesiredSizeWithMargins);
         }
 
-        protected virtual Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+        protected virtual Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             return availableSizeWithoutMargins;
         }
 
-        protected virtual Vector2 MeasureOverride(Vector2 availableSizeWithoutMargins)
+        protected virtual Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            return Vector2.Zero;
+            return Vector3.Zero;
         } 
 
         #endregion
@@ -146,7 +154,7 @@ namespace Odyssey.UserInterface
 
         public void BringToFront()
         {
-            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Foreground);
+            throw new NotImplementedException();
         }
 
         public void Initialize()
@@ -169,22 +177,9 @@ namespace Odyssey.UserInterface
             OnInitialized(args);
         }
 
-        ///// <summary>
-        ///// Returns the window that this control belongs to, if any.
-        ///// </summary>
-        ///// <returns>The <see cref="Window"/> reference the control belongs to; <c>null</c> if the control doesn't
-        ///// belong to any window.</returns>
-        //public Window FindWindow()
-        //{
-        //    if (depth.WindowLayer == 0)
-        //        return null;
-        //    else
-        //        return UserInterfaceManager.CurrentOverlay.WindowManager[depth.WindowLayer - 1];
-        //}
-
         public void SendToBack()
         {
-            Depth = new Depth(Depth.WindowLayer, Depth.ComponentLayer, Depth.Background);
+            throw new NotImplementedException();
         }
 
         public void SetBinding(Binding binding, string targetProperty)

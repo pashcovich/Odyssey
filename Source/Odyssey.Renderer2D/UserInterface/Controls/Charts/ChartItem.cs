@@ -5,7 +5,6 @@ namespace Odyssey.UserInterface.Controls.Charts
     public abstract class ChartItem : Control
     {
         private float actualValue;
-        internal Chart Chart { get; set; }
 
         protected ChartItem(string controlStyleClass) : base(controlStyleClass)
         { }
@@ -17,9 +16,10 @@ namespace Odyssey.UserInterface.Controls.Charts
             {
                 if (actualValue == value)
                     return;
-                actualValue = MathHelper.Clamp(value, Chart.MinimumValue, Chart.MaximumValue);
+                var chart = (Chart) Parent;
+                actualValue = MathHelper.Clamp(value, chart.MinimumValue, chart.MaximumValue);
 
-                Height = ItemHeight(Chart.ClientAreaHeight, Chart.MaximumValue, actualValue);
+                Height = ItemHeight(chart.ClientAreaHeight, chart.MaximumValue, actualValue);
             }
         }
 

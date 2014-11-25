@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using Odyssey.Graphics.Drawing;
+﻿using System;
+using System.Collections;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
@@ -9,38 +9,53 @@ namespace Odyssey.UserInterface.Controls.Charts
 {
     public class ColumnChart : Chart
     {
+        private readonly StackPanel chartArea;
+
         public ColumnChart()
-            : base("Panel")
+            : this("Panel", TextStyle.Default)
         {
         }
 
         public ColumnChart(string controlStyleClass, string textStyleClass) : base(controlStyleClass, textStyleClass)
-        { }
-
-        protected override DataTemplate CreateDefaultTemplate()
         {
-            string typeName = GetType().Name;
-            DataTemplate = new DataTemplate
+            chartArea = new StackPanel
             {
-                Key = string.Format("{0}.TemplateInternal", typeName),
-                DataType = GetType(),
-                VisualTree = new ColumnItem()
+                DataTemplate = new DataTemplate
                 {
-                    Name = typeof(ColumnItem).Name,
-                    Width = Width / ((ICollection)ItemsSource).Count,
-                    Height = 0,
-                    Margin = new Thickness(0, 0, 4, 0),
-                }
+                    Key = string.Format("{0}.TemplateInternal", GetType().Name),
+                    DataType = typeof(StackPanel),
+                    VisualTree = new ColumnItem()
+                    {
+                        Name = typeof (ColumnItem).Name,
+                        Margin = new Thickness(0, 0, 4, 0),
+                    }
+                },
+                Orientation = Orientation.Horizontal
             };
-            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(DataTemplate.VisualTree.Name, string.Empty));
-            return DataTemplate;
+
+            chartArea.DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(chartArea.DataTemplate.VisualTree.Name, string.Empty));
         }
 
-        protected override Vector2 ArrangeOverride(Vector2 availableSizeWithoutMargins)
+
+        protected override void OnInitializing(EventArgs e)
         {
-            LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls.Public);
-            LayoutManager.AlignBottom(this, Controls.Public);
-            return base.ArrangeOverride(availableSizeWithoutMargins);
+            base.OnInitializing(e);
+            AddColumnDefinition(new StripDefinition(StripType.Fixed, 1));
+            AddRowDefinition(new StripDefinition(StripType.Fixed, 4));
+            AddRowDefinition(new StripDefinition(StripType.Fixed, 1));
+            chartArea.DependencyProperties.Add(RowPropertyKey, 0);
+            XAxisTitle.DependencyProperties.Add(RowPropertyKey, 1);
+
+            chartArea.ItemsSource = ItemsSource;
+
+            Add(chartArea);
         }
+
+        //protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
+        //{
+        //    LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls.Public);
+        //    LayoutManager.AlignBottom(this, Controls.Public);
+        //    return base.ArrangeOverride(availableSizeWithoutMargins);
+        //}
     }
 }
