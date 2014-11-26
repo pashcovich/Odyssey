@@ -150,9 +150,19 @@ namespace Odyssey.UserInterface.Controls
             return newControl;
         }
 
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
+        {
+            if (IsVisual)
+                VisualState.Arrange(availableSizeWithoutMargins);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
+        }
+
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
+
+            if (IsVisual)
+                VisualState.Measure(availableSizeWithoutMargins);
             if (float.IsNaN(Width) || float.IsNaN(Height) || float.IsNaN(Depth))
             {
                 return availableSizeWithoutMargins - MarginInternal;

@@ -89,11 +89,11 @@ namespace Odyssey.UserInterface
             get { return height; }
             set
             {
-                var oldSize = RenderSize;
                 if (height == value)
                     return;
 
                 height = value;
+                InvalidateMeasure();
             }
         }
 
@@ -128,10 +128,14 @@ namespace Odyssey.UserInterface
             get { return renderSize; }
             private set
             {
+                var oldSize = renderSize;
                 if (renderSize == value)
                     return;
                 
                 renderSize = value;
+                if (!DesignMode)
+                    OnSizeChanged(new SizeChangedEventArgs(oldSize, RenderSize));
+
                 UpdateLayoutInternal();
                 OnLayoutUpdated(EventArgs.Empty);
             }
@@ -150,11 +154,11 @@ namespace Odyssey.UserInterface
             get { return width; }
             set
             {
-                var oldSize = RenderSize;
                 if (width == value)
                     return;
 
                 width = value;
+                InvalidateMeasure();
             }
         }
 

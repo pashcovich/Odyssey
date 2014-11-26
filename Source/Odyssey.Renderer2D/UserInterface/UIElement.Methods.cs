@@ -68,6 +68,21 @@ namespace Odyssey.UserInterface
 
         #region Layout
 
+        private void ForceMeasure()
+        {
+            IsMeasureValid = false;
+            if (Parent != null)
+                Parent.ForceMeasure();
+        }
+
+
+        protected void InvalidateMeasure()
+        {
+            ForceMeasure();
+            if (Parent!=null)
+                Parent.Measure(Parent.RenderSize + Parent.MarginInternal);
+        }
+
         public void Arrange(Vector3 availableSizeWithMargins)
         {
             Vector2 oldAbsolutePosition = AbsolutePosition;
@@ -111,6 +126,9 @@ namespace Odyssey.UserInterface
 
         public void Measure(Vector3 availableSize)
         {
+            if (IsMeasureValid)
+                return;
+
             IsMeasureValid = true;
             var desiredSize = new Vector3(Width, Height, Depth);
 
@@ -138,6 +156,18 @@ namespace Odyssey.UserInterface
 
             DesiredSize = desiredSize;
             DesiredSizeWithMargins = desiredSize + MarginInternal;
+        }
+
+        internal void SetSize(int dimension, float value)
+        {
+            if (dimension == 0)
+                width = value;
+            else if (dimension == 1)
+                height = value;
+            else if (dimension == 2)
+                depth = value;
+            else
+                throw new ArgumentOutOfRangeException("dimension");
         }
 
         protected virtual void LayoutComplete()

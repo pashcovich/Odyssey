@@ -21,39 +21,86 @@ namespace Odyssey.UserInterface.Style
             this.shapes = shapes.ToArray();
         }
 
+        public Shape this[string shapeName]
+        {
+            get { return shapes.FirstOrDefault(s => s.Name == shapeName); }
+        }
+
+        public Shape this[int index]
+        {
+            get { return shapes[index]; }
+        }
+
+        #region IEnumerable<Shape>
+
+        public IEnumerator<Shape> GetEnumerator()
+        {
+            foreach (Shape s in shapes)
+                yield return s;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return shapes.GetEnumerator();
+        }
+
+        #endregion
+
         public void Initialize()
         {
-            foreach (var shape in shapes)
+            foreach (Shape shape in shapes)
             {
                 ToDispose(shape);
                 shape.Initialize();
             }
         }
 
-        public void Layout()
+        public void Measure(Vector3 availableSizeWithoutMargins)
         {
-            foreach (var shape in shapes)
+            foreach (Shape shape in shapes)
             {
                 if (shape.IsInternal)
                 {
-                    var newSize = new Vector3(shape.ScaleX*parent.RenderSize.X, shape.ScaleY*parent.RenderSize.Y, parent.RenderSize.Z);
-                    shape.Width = newSize.X;
-                    shape.Height = newSize.Y;
+                    var newSize = new Vector3(shape.Width * availableSizeWithoutMargins.X, shape.Height * availableSizeWithoutMargins.Y,
+                        parent.RenderSize.Z);
+                    shape.SetSize(0, newSize.X);
+                    shape.SetSize(1, newSize.Y);
                 }
-                else
+                else 
+                    LogEvent.UserInterface.Info("1");
+                shape.Measure(availableSizeWithoutMargins);
+            }
+        }
+
+        public void Arrange(Vector3 availableSizeWithMargins)
+        {
+            foreach (Shape shape in shapes)
+            {
+                if (shape.IsInternal)
+                {
+                }
+                shape.Arrange(availableSizeWithMargins);
+
+            }
+        }
+
+        public void Layout()
+        {
+            foreach (Shape shape in shapes)
+            {
                 {
                     LogEvent.UserInterface.Info("!");
                 }
             }
-            
         }
 
-        internal static VisualState GenerateVisualStateForControl(Control control, VisualStateDefinition visualStateDefinition)
+        internal static VisualState GenerateVisualStateForControl(Control control,
+            VisualStateDefinition visualStateDefinition)
         {
             var shapeList = new List<Shape>();
-            foreach (var shape in visualStateDefinition.Shapes)
+            foreach (Shape shape in visualStateDefinition.Shapes)
             {
-                var newShape = (Shape)shape.Copy();
+                var newShape = (Shape) shape.Copy();
                 newShape.ScaleX *= shape.Width;
                 newShape.ScaleY *= shape.Height;
                 newShape.Parent = control;
@@ -88,11 +135,11 @@ namespace Odyssey.UserInterface.Style
 
         public void SynchronizeSize()
         {
-            foreach (var shape in shapes)
+            foreach (Shape shape in shapes)
             {
                 if (shape.Width > 0 && shape.Height > 0)
                 {
-                    var newSize = parent.RenderSize/shape.RenderSize;
+                    Vector3 newSize = parent.RenderSize/shape.RenderSize;
                     shape.Width *= newSize.X;
                     shape.Height *= newSize.Y;
                 }
@@ -101,6 +148,7 @@ namespace Odyssey.UserInterface.Style
         }
 
         #region IResourceProvider
+
         TResource IResourceProvider.GetResource<TResource>(string resourceName)
         {
             return shapes.FirstOrDefault(s => s.Name == resourceName) as TResource;
@@ -113,31 +161,7 @@ namespace Odyssey.UserInterface.Style
 
         public bool ContainsResource(string resourceName)
         {
-            return shapes.Any(s=> s.Name == resourceName);
-        }
-        #endregion
-
-        public Shape this[string shapeName]
-        {
-            get { return shapes.FirstOrDefault(s => s.Name == shapeName); }
-        }
-
-        public Shape this[int index]
-        {
-            get { return shapes[index]; }
-        }
-
-        #region IEnumerable<Shape>
-
-        public IEnumerator<Shape> GetEnumerator()
-        {
-            foreach (Shape s in shapes)
-                yield return s;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return shapes.GetEnumerator();
+            return shapes.Any(s => s.Name == resourceName);
         }
 
         #endregion
