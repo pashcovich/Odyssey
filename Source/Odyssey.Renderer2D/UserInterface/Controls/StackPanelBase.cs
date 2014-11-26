@@ -12,11 +12,10 @@ namespace Odyssey.UserInterface.Controls
 {
     public abstract class StackPanelBase : ItemsControl
     {
-        private const string ControlTag = "StackPanel";
         private Orientation orientation;
 
         protected StackPanelBase()
-            : base("Panel")
+            : base("Empty")
         {
         }
 

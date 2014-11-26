@@ -83,6 +83,7 @@
     <Compile Include="UserInterface\Controls\IDesktopOverlay.cs" />
     <Compile Include="UserInterface\Controls\RichTextBox.cs" />
     <Compile Include="UserInterface\Controls\TextEventArgs.cs" />
+    <Compile Include="UserInterface\Controls\UniformStackPanel.cs" />
     <Compile Include="UserInterface\Data\BindingCollection.cs" />
     <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
