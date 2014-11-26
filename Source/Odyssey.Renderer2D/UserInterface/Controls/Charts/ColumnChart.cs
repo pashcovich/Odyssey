@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
@@ -9,7 +10,7 @@ namespace Odyssey.UserInterface.Controls.Charts
 {
     public class ColumnChart : Chart
     {
-        private readonly StackPanel chartArea;
+        private readonly UniformStackPanel chartArea;
 
         public ColumnChart()
             : this("Panel", TextStyle.Default)
@@ -18,12 +19,12 @@ namespace Odyssey.UserInterface.Controls.Charts
 
         public ColumnChart(string controlStyleClass, string textStyleClass) : base(controlStyleClass, textStyleClass)
         {
-            chartArea = new StackPanel
+            chartArea = new UniformStackPanel
             {
                 DataTemplate = new DataTemplate
                 {
                     Key = string.Format("{0}.TemplateInternal", GetType().Name),
-                    DataType = typeof(StackPanel),
+                    DataType = typeof(UniformStackPanel),
                     VisualTree = new ColumnItem()
                     {
                         Name = typeof (ColumnItem).Name,
@@ -36,26 +37,30 @@ namespace Odyssey.UserInterface.Controls.Charts
             chartArea.DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(chartArea.DataTemplate.VisualTree.Name, string.Empty));
         }
 
+        public override Vector3 ChartArea
+        {
+            get { return chartArea.RenderSize; }
+        }
+
+        protected IEnumerable<ChartItem> Items
+        {
+            get { return chartArea.Controls.OfType<ChartItem>(); }
+        }
 
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            AddColumnDefinition(new StripDefinition(StripType.Fixed, 1));
-            AddRowDefinition(new StripDefinition(StripType.Fixed, 4));
-            AddRowDefinition(new StripDefinition(StripType.Fixed, 1));
-            chartArea.DependencyProperties.Add(RowPropertyKey, 0);
-            XAxisTitle.DependencyProperties.Add(RowPropertyKey, 1);
-
+            XAxisTitle.DependencyProperties.Add(DockPropertyKey, Dock.Bottom);
             chartArea.ItemsSource = ItemsSource;
 
             Add(chartArea);
         }
 
-        //protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
-        //{
-        //    LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls.Public);
-        //    LayoutManager.AlignBottom(this, Controls.Public);
-        //    return base.ArrangeOverride(availableSizeWithoutMargins);
-        //}
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
+        {
+            LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls.Public);
+            LayoutManager.AlignBottom(this, Controls.Public);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
+        }
     }
 }

@@ -20,6 +20,7 @@ using System.Diagnostics;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Style;
 using SharpDX.Direct2D1;
+using SharpDX.Mathematics;
 using Brush = Odyssey.Graphics.Brush;
 
 #endregion
@@ -97,5 +98,6 @@ namespace Odyssey.UserInterface.Controls
             DeviceContext context = Device;
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
         }
+
     }
 }

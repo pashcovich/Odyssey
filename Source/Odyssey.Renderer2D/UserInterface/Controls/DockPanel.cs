@@ -34,33 +34,47 @@ namespace Odyssey.UserInterface.Controls
         {
             float availableWidth = availableSizeWithoutMargins.X;
             float availableHeight = availableSizeWithoutMargins.Y;
+            float availableDepth = availableSizeWithoutMargins.Z;
 
             for (int i = 0; i < Controls.Count; i++)
             {
                 var control = Controls[i];
+                float controlWidth = float.IsNaN(control.Width) ? control.MinimumWidth : control.Width;
+                float controlHeight = float.IsNaN(control.Height) ? control.MinimumHeight : control.Height;
+                float controlDepth = float.IsNaN(control.Depth) ? control.MinimumDepth : control.Depth;
 
-                Dock dock = control.DependencyProperties.Get(DockPropertyKey);
-                switch (dock)
+                if (LastChildFill && i == Controls.Count - 1)
                 {
-                    case Dock.Bottom:
-                        control.Measure(new Vector3(availableWidth, control.Height, control.Depth));
-                        availableHeight -= control.DesiredSize.Y;
-                        break;
+                    control.Width = availableWidth;
+                    control.Height = availableHeight;
+                    control.Measure(new Vector3(availableWidth, availableHeight, availableDepth));
+                }
+                else
+                {
 
-                    case Dock.Right:
-                        control.Measure(new Vector3(control.Width, availableHeight, control.Depth));
-                        availableWidth -= control.DesiredSize.X;
-                        break;
+                    Dock dock = control.DependencyProperties.Get(DockPropertyKey);
+                    switch (dock)
+                    {
+                        case Dock.Bottom:
+                            control.Measure(new Vector3(availableWidth, controlHeight, controlDepth));
+                            availableHeight -= control.DesiredSize.Y;
+                            break;
 
-                    case Dock.Left:
-                        control.Measure(new Vector3(control.Width, availableHeight, control.Depth));
-                        availableWidth -= control.DesiredSize.X;
-                        break;
+                        case Dock.Right:
+                            control.Measure(new Vector3(controlWidth, availableHeight, controlDepth));
+                            availableWidth -= control.DesiredSize.X;
+                            break;
 
-                    case Dock.Top:
-                        control.Measure(new Vector3(availableWidth, control.Height, control.Depth));
-                        availableHeight -= control.DesiredSize.Y;
-                        break;
+                        case Dock.Left:
+                            control.Measure(new Vector3(controlWidth, availableHeight, controlDepth));
+                            availableWidth -= control.DesiredSize.X;
+                            break;
+
+                        case Dock.Top:
+                            control.Measure(new Vector3(availableWidth, controlHeight, controlDepth));
+                            availableHeight -= control.DesiredSize.Y;
+                            break;
+                    }
                 }
             }
 

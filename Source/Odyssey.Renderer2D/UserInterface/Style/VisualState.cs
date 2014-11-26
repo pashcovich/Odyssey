@@ -4,6 +4,7 @@ using System.Linq;
 using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Graphics.Drawing;
+using Odyssey.Logging;
 using Odyssey.UserInterface.Controls;
 using SharpDX.Mathematics;
 
@@ -12,7 +13,7 @@ namespace Odyssey.UserInterface.Style
     public sealed class VisualState : Component, IResourceProvider, IEnumerable<Shape>
     {
         private readonly Control parent;
-        private readonly  Shape[] shapes;
+        private readonly Shape[] shapes;
 
         private VisualState(Control parent, IEnumerable<Shape> shapes)
         {
@@ -27,6 +28,24 @@ namespace Odyssey.UserInterface.Style
                 ToDispose(shape);
                 shape.Initialize();
             }
+        }
+
+        public void Layout()
+        {
+            foreach (var shape in shapes)
+            {
+                if (shape.IsInternal)
+                {
+                    var newSize = new Vector3(shape.ScaleX*parent.RenderSize.X, shape.ScaleY*parent.RenderSize.Y, parent.RenderSize.Z);
+                    shape.Width = newSize.X;
+                    shape.Height = newSize.Y;
+                }
+                else
+                {
+                    LogEvent.UserInterface.Info("!");
+                }
+            }
+            
         }
 
         internal static VisualState GenerateVisualStateForControl(Control control, VisualStateDefinition visualStateDefinition)
@@ -51,9 +70,19 @@ namespace Odyssey.UserInterface.Style
         {
             foreach (Shape shape in shapes)
             {
-                shape.Width *= parent.RenderSize.X;
-                shape.Height *= parent.RenderSize.Y;
-                shape.Layout(parent.RenderSize);
+                //var newSize = parent.RenderSize / shape.RenderSize;
+                //shape.Width *= newSize.X;
+                //shape.Height *= newSize.Y;
+                ////shape.Width *= parent.RenderSize.X;
+                ////shape.Height *= parent.RenderSize.Y;
+                //shape.Layout(parent.RenderSize);
+                //if (shape.Width > 0 && shape.Height > 0)
+                //{
+                //    var newSize = parent.RenderSize / shape.RenderSize;
+                //    shape.Width *= newSize.X;
+                //    shape.Height *= newSize.Y;
+                //}
+                //else shape.IsVisible = false;
             }
         }
 
@@ -63,8 +92,9 @@ namespace Odyssey.UserInterface.Style
             {
                 if (shape.Width > 0 && shape.Height > 0)
                 {
-                    shape.Width *= parent.Width/shape.Width;
-                    shape.Height *= parent.Height/shape.Height;
+                    var newSize = parent.RenderSize/shape.RenderSize;
+                    shape.Width *= newSize.X;
+                    shape.Height *= newSize.Y;
                 }
                 else shape.IsVisible = false;
             }

@@ -94,8 +94,6 @@ namespace Odyssey.UserInterface
                     return;
 
                 height = value;
-                if (!DesignMode)
-                    OnSizeChanged(new SizeChangedEventArgs(oldSize, RenderSize));
             }
         }
 
@@ -157,9 +155,6 @@ namespace Odyssey.UserInterface
                     return;
 
                 width = value;
-
-                if (!DesignMode)
-                    OnSizeChanged(new SizeChangedEventArgs(oldSize, RenderSize));
             }
         }
 
@@ -417,7 +412,6 @@ namespace Odyssey.UserInterface
 
                 if (DesignMode) return;
 
-                Layout(RenderSize);
                 OnPositionChanged(EventArgs.Empty);
                 OnMove(EventArgs.Empty);
             }

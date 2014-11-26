@@ -153,10 +153,20 @@ namespace Odyssey.UserInterface.Controls
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
-            return Size - MarginInternal;
+            if (float.IsNaN(Width) || float.IsNaN(Height) || float.IsNaN(Depth))
+            {
+                return availableSizeWithoutMargins - MarginInternal;
+            }
+            else return Size - MarginInternal;
         }
 
-        protected virtual void ApplyControlDescription()
+        protected override void LayoutComplete()
+        {
+            if (IsVisual)
+                VisualState.Layout();
+        }
+
+        private void ApplyControlDescription()
         {
             if (StyleClass == ControlStyle.Empty)
                 return;
@@ -233,13 +243,6 @@ namespace Odyssey.UserInterface.Controls
             base.OnInitializing(e);
             ApplyControlDescription();
             ApplyTextDescription();
-        }
-
-        protected override void OnSizeChanged(SizeChangedEventArgs e)
-        {
-            base.OnSizeChanged(e);
-            if (IsVisual)
-                VisualState.SynchronizeSize();
         }
 
         /// <summary>

@@ -1,10 +1,22 @@
-﻿using Odyssey.Geometry;
+﻿using System;
+using Odyssey.Geometry;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
     public abstract class ChartItem : Control
     {
         private float actualValue;
+        private Chart chart;
+
+        private Chart Chart
+        {
+            get
+            {
+                if (chart == null)
+                    chart = FindAncestor<Chart>();
+                return chart;
+            }
+        }
 
         protected ChartItem(string controlStyleClass) : base(controlStyleClass)
         { }
@@ -16,12 +28,12 @@ namespace Odyssey.UserInterface.Controls.Charts
             {
                 if (actualValue == value)
                     return;
-                var chart = (Chart) Parent;
-                actualValue = MathHelper.Clamp(value, chart.MinimumValue, chart.MaximumValue);
+                actualValue = MathHelper.Clamp(value, Chart.MinimumValue, Chart.MaximumValue);
 
-                Height = ItemHeight(chart.ClientAreaHeight, chart.MaximumValue, actualValue);
+                Height = ItemHeight(Chart.ChartArea.Y, Chart.MaximumValue, actualValue);
             }
         }
+
 
         static float ItemHeight(float chartAreaHeight, float maximumValue, float value)
         {

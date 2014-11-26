@@ -439,7 +439,7 @@ namespace Odyssey.UserInterface
         ///     data.</param>
         protected virtual void OnSizeChanged(SizeChangedEventArgs e)
         {
-            Layout(RenderSize);
+            parent.Layout(parent.DesiredSize);
             RaiseEvent(SizeChanged, this, e);
         }
 

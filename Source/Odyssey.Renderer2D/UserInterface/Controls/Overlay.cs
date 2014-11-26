@@ -151,6 +151,7 @@ namespace Odyssey.UserInterface.Controls
             var settings = Services.GetService<IDirectXDeviceSettings>();
             Width = settings.PreferredBackBufferWidth;
             Height = settings.PreferredBackBufferHeight;
+            Depth = 0;
             
             Content.Measure(Size);
             return Size;
@@ -272,28 +273,28 @@ namespace Odyssey.UserInterface.Controls
 
             e.Handled = ProcessKeyUp(e);
         }
+        #endregion
 
         public override void Update(ITimeService time)
         {
-            var controlArray = TreeTraversal.PreOrderVisit(this).ToArray();
+            var controlArray = TreeTraversal.PreOrderVisit(Content).ToArray();
             for (int i = 1; i < controlArray.Length; i++)
             {
                 var control = controlArray[i];
                 control.Update(time);
             }
         } 
-        #endregion
 
         #region IResourceProvider
 
         protected override bool ContainsResource(string resourceName)
         {
-            return TreeTraversal.PreOrderVisit(this).Any(c => string.Equals(c.Name, resourceName));
+            return TreeTraversal.PreOrderVisit(Content).Any(c => string.Equals(c.Name, resourceName));
         }
 
         protected override TResource GetResource<TResource>(string resourceName)
         {
-            return TreeTraversal.PreOrderVisit(this).First(c => string.Equals(c.Name, resourceName)) as TResource;
+            return TreeTraversal.PreOrderVisit(Content).First(c => string.Equals(c.Name, resourceName)) as TResource;
         }
 
         protected override IEnumerable<IResource> Resources

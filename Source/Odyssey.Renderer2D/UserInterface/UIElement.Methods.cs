@@ -53,6 +53,19 @@ namespace Odyssey.UserInterface
                 OnGotFocus(EventArgs.Empty);
         }
 
+        public T FindAncestor<T>() where T : class
+        {
+            UIElement ancestor = parent;
+            while (ancestor != null)
+            {
+                var tAncestor = ancestor as T;
+                if (tAncestor != null)
+                    return tAncestor;
+                ancestor = ancestor.Parent;
+            }
+            return null;
+        }
+
         #region Layout
 
         public void Arrange(Vector3 availableSizeWithMargins)
@@ -93,6 +106,7 @@ namespace Odyssey.UserInterface
 
             elementSize = ArrangeOverride(elementSize);
             RenderSize = elementSize;
+            LayoutComplete();
         }
 
         public void Measure(Vector3 availableSize)
@@ -113,6 +127,8 @@ namespace Odyssey.UserInterface
                     desiredSize.X = childrenDesiredSize.X;
                 if (float.IsNaN(desiredSize.Y))
                     desiredSize.Y = childrenDesiredSize.Y;
+                if (float.IsNaN(desiredSize.Z))
+                    desiredSize.Z = childrenDesiredSize.Z;
             }
 
             desiredSize = new Vector3(
@@ -123,6 +139,9 @@ namespace Odyssey.UserInterface
             DesiredSize = desiredSize;
             DesiredSizeWithMargins = desiredSize + MarginInternal;
         }
+
+        protected virtual void LayoutComplete()
+        { }
 
         public void Layout(Vector3 availableSize)
         {

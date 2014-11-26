@@ -32,7 +32,7 @@ namespace Odyssey.Graphics.Drawing
         {
             if (Fill != null)
             {
-                Fill.Transform = Matrix3x2.Scaling(Width, Height) * Transform;
+                Fill.Transform = Matrix3x2.Scaling(RenderSize.X, RenderSize.Y) * Transform;
                 Device.FillRectangle(this, Fill);
             }
             if (Stroke!=null)

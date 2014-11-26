@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
-    public abstract class Chart : Grid
+    public abstract class Chart : DockPanel
     {
         private Control xAxisTitle;
 
@@ -31,11 +30,6 @@ namespace Odyssey.UserInterface.Controls.Charts
         {
         }
 
-        protected IEnumerable<ChartItem> Items
-        {
-            get { return Controls.OfType<ChartItem>(); }
-        }
-
         public float MinimumValue { get; set; }
         public float MaximumValue { get; set; }
 
@@ -52,17 +46,8 @@ namespace Odyssey.UserInterface.Controls.Charts
             }
         }
 
-        public override float ClientAreaHeight
-        {
-            get
-            {
-                float areaHeight = base.ClientAreaHeight;
-                if (xAxisTitle != null)
-                    areaHeight -= xAxisTitle.Height;
-                return areaHeight;
-            }
-        }
-
+        public abstract Vector3 ChartArea { get; }
+        
         protected override void OnTextStyleChanged(EventArgs e)
         {
             base.OnTextStyleChanged(e);
