@@ -7,7 +7,7 @@
     <ProjectGuid>{FF735354-FF98-4B1E-9560-AC65D028FDF8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Odyssey.Geometry</RootNamespace>
+    <RootNamespace>Odyssey</RootNamespace>
     <AssemblyName>Odyssey.Geometry</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
