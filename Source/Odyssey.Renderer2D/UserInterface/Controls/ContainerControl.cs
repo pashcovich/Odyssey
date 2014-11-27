@@ -196,6 +196,16 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
+        internal override IEnumerator<UIElement> GetEnumeratorInternal()
+        {
+            foreach (var child in Controls)
+            {
+                yield return child;
+            }
+
+            foreach (var child in (IEnumerable<UIElement>)base)
+        }
+
         #region Debug
 
 #if DEBUG

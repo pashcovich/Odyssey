@@ -15,6 +15,7 @@
 
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -32,7 +33,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface
 {
-    public abstract partial class UIElement
+    public abstract partial class UIElement: IEnumerable<UIElement>
     {
         public void DeserializeXml(IResourceProvider theme, XmlReader xmlReader)
         {
@@ -72,19 +73,63 @@ namespace Odyssey.UserInterface
         {
             IsMeasureValid = false;
             if (Parent != null)
+            {
                 Parent.ForceMeasure();
+                Measure(Parent.RenderSize + Parent.MarginInternal);
+            }
+            InvalidateArrange();
         }
 
+        private void ForceArrange()
+        {
+            IsArrangeValid = false;
+            if (Parent != null)
+            {
+                Parent.ForceArrange();
+                Arrange(Parent.DesiredSizeWithMargins);
+            }
+        }
 
         protected void InvalidateMeasure()
         {
             ForceMeasure();
-            if (Parent!=null)
-                Parent.Measure(Parent.RenderSize + Parent.MarginInternal);
+            PropagateMeasureInvalidationInternal();
+        }
+
+        protected void InvalidateArrange()
+        {
+            ForceArrange();
+            PropagateArrangeInvalidationInternal();
+        }
+
+        internal abstract void PropagateMeasureInvalidationInternal();
+        internal abstract void PropagateArrangeInvalidationInternal();
+
+        private void PropagateMeasureInvalidationToChildren()
+        {
+            foreach (var child in this)
+            {
+                child.IsMeasureValid = false;
+                child.PropagateMeasureInvalidationToChildren();
+                child.PropagateMeasureInvalidationInternal();
+            }
+        }
+
+        private void PropagateArrangeInvalidationToChildren()
+        {
+            foreach (var child in this)
+            {
+                child.IsArrangeValid = false;
+                child.PropagateArrangeInvalidationToChildren();
+                child.PropagateArrangeInvalidationInternal();
+            }
         }
 
         public void Arrange(Vector3 availableSizeWithMargins)
         {
+            if (IsArrangeValid)
+                return;
+            IsArrangeValid = true;
             Vector2 oldAbsolutePosition = AbsolutePosition;
             Vector2 newAbsolutePosition = new Vector2(Margin.Left, Margin.Top) + position;
             if (parent != null)
@@ -201,11 +246,6 @@ namespace Odyssey.UserInterface
             return new RectangleF(x, y, width, height);
         }
 
-        public void BringToFront()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Initialize()
         {
             var args = new EventArgs();
@@ -226,17 +266,11 @@ namespace Odyssey.UserInterface
             OnInitialized(args);
         }
 
-        public void SendToBack()
-        {
-            throw new NotImplementedException();
-        }
-
         public void SetBinding(Binding binding, string targetProperty)
         {
             Contract.Requires<ArgumentNullException>(binding != null, "binding");
 
             var bindingExpression = new BindingExpression(binding, this, targetProperty);
-
             bindings.Add(targetProperty, bindingExpression);
         }
 
@@ -371,6 +405,18 @@ namespace Odyssey.UserInterface
         {
             Vector2 offset =screenCoordinates - element.AbsolutePosition;
             return element.Position + offset;
+        }
+
+        public IEnumerator<UIElement> GetEnumerator()
+        {
+            return GetEnumeratorInternal();
+        }
+
+        internal abstract IEnumerator<UIElement> GetEnumeratorInternal();
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

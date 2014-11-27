@@ -170,12 +170,6 @@ namespace Odyssey.UserInterface.Controls
             else return Size - MarginInternal;
         }
 
-        protected override void LayoutComplete()
-        {
-            if (IsVisual)
-                VisualState.Layout();
-        }
-
         private void ApplyControlDescription()
         {
             if (StyleClass == ControlStyle.Empty)
@@ -269,6 +263,15 @@ namespace Odyssey.UserInterface.Controls
         public Shape GetShape(string shapeName)
         {
             return VisualState[shapeName];
+        }
+
+        internal override IEnumerator<UIElement> GetEnumeratorInternal()
+        {
+            if (IsVisual)
+            {
+                foreach (var child in VisualState)
+                    yield return child;
+            }
         }
 
         #region IResourceProvider

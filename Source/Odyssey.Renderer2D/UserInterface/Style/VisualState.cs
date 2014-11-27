@@ -84,16 +84,6 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        public void Layout()
-        {
-            foreach (Shape shape in shapes)
-            {
-                {
-                    LogEvent.UserInterface.Info("!");
-                }
-            }
-        }
-
         internal static VisualState GenerateVisualStateForControl(Control control,
             VisualStateDefinition visualStateDefinition)
         {

@@ -93,7 +93,8 @@ namespace Odyssey.UserInterface
                     return;
 
                 height = value;
-                InvalidateMeasure();
+                if (!DesignMode)
+                    InvalidateMeasure();
             }
         }
 
@@ -158,11 +159,13 @@ namespace Odyssey.UserInterface
                     return;
 
                 width = value;
-                InvalidateMeasure();
+                if (!DesignMode)
+                    InvalidateMeasure();
             }
         }
 
-        public bool IsMeasureValid { get; private set; }
+        public bool IsArrangeValid { get; internal set; }
+        public bool IsMeasureValid { get; internal set; }
 
         public float MinimumWidth
         {
