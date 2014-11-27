@@ -82,11 +82,12 @@
     <Compile Include="UserInterface\Controls\TextEventArgs.cs" />
     <Compile Include="UserInterface\Controls\UniformStackPanel.cs" />
     <Compile Include="UserInterface\Data\BindingCollection.cs" />
+    <Compile Include="UserInterface\Events\UIElementEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="Graphics\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\Rectangle.cs" />
-    <Compile Include="UserInterface\SizeChangedEventArgs.cs" />
+    <Compile Include="UserInterface\Events\SizeChangedEventArgs.cs" />
     <Compile Include="UserInterface\Style\CommandType.cs" />
     <Compile Include="UserInterface\Style\StripDefinition.cs" />
     <Compile Include="UserInterface\Style\StripDefinitionCollection.cs" />
@@ -112,7 +113,7 @@
     <Compile Include="UserInterface\Style\Exensions.cs" />
     <Compile Include="UserInterface\Controls\Button.cs" />
     <Compile Include="UserInterface\Controls\ButtonBase.cs" />
-    <Compile Include="UserInterface\Controls\ContainerControl.cs" />
+    <Compile Include="UserInterface\Controls\Panel.cs" />
     <Compile Include="UserInterface\Controls\ContentControl.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\ControlCollection.cs" />
@@ -151,7 +152,7 @@
     <Compile Include="UserInterface\Style\Figure.cs" />
     <Compile Include="UserInterface\Style\VisualState.cs" />
     <Compile Include="UserInterface\Style\VisualStateDefinition.cs" />
-    <Compile Include="UserInterface\TimeEventArgs.cs" />
+    <Compile Include="UserInterface\Events\TimeEventArgs.cs" />
     <Compile Include="UserInterface\TreeTraversal.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElement.Events.cs" />

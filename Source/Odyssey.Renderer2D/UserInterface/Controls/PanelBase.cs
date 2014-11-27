@@ -3,7 +3,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class PanelBase : ContainerControl
+    public abstract class PanelBase : Panel
     {
         protected const string ControlTag = "Panel";
 

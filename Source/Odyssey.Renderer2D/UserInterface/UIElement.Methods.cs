@@ -26,6 +26,7 @@ using Odyssey.Interaction;
 using Odyssey.Logging;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
@@ -93,17 +94,15 @@ namespace Odyssey.UserInterface
         protected void InvalidateMeasure()
         {
             ForceMeasure();
-            PropagateMeasureInvalidationInternal();
+            PropagateMeasureInvalidationToChildren();
         }
 
         protected void InvalidateArrange()
         {
             ForceArrange();
-            PropagateArrangeInvalidationInternal();
+            PropagateArrangeInvalidationToChildren();
         }
 
-        internal abstract void PropagateMeasureInvalidationInternal();
-        internal abstract void PropagateArrangeInvalidationInternal();
 
         private void PropagateMeasureInvalidationToChildren()
         {
@@ -111,7 +110,6 @@ namespace Odyssey.UserInterface
             {
                 child.IsMeasureValid = false;
                 child.PropagateMeasureInvalidationToChildren();
-                child.PropagateMeasureInvalidationInternal();
             }
         }
 
@@ -121,7 +119,6 @@ namespace Odyssey.UserInterface
             {
                 child.IsArrangeValid = false;
                 child.PropagateArrangeInvalidationToChildren();
-                child.PropagateArrangeInvalidationInternal();
             }
         }
 
@@ -166,7 +163,6 @@ namespace Odyssey.UserInterface
 
             elementSize = ArrangeOverride(elementSize);
             RenderSize = elementSize;
-            LayoutComplete();
         }
 
         public void Measure(Vector3 availableSize)
@@ -214,9 +210,6 @@ namespace Odyssey.UserInterface
             else
                 throw new ArgumentOutOfRangeException("dimension");
         }
-
-        protected virtual void LayoutComplete()
-        { }
 
         public void Layout(Vector3 availableSize)
         {
@@ -282,12 +275,9 @@ namespace Odyssey.UserInterface
         {
             var newElement = (UIElement) Activator.CreateInstance(GetType());
             newElement.Name = Name ?? newElement.Name;
-            newElement.Width = Width;
-            newElement.Height = Height;
             newElement.Margin = Margin;
 
             CopyEvents(typeof(UIElement), this, newElement);           
-
             newElement.Animator.AddAnimations(Animator.Animations);
             return newElement;
         }
@@ -409,10 +399,8 @@ namespace Odyssey.UserInterface
 
         public IEnumerator<UIElement> GetEnumerator()
         {
-            return GetEnumeratorInternal();
+            return Controls.GetEnumerator();
         }
-
-        internal abstract IEnumerator<UIElement> GetEnumeratorInternal();
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {

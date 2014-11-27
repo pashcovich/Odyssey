@@ -127,10 +127,6 @@ namespace Odyssey.Graphics.Drawing
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            if (Width == 0 || Height == 0)
-            {
-                return Vector3.Zero;
-            }
             return availableSizeWithoutMargins;
         }
 

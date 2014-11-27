@@ -1,6 +1,7 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Geometry;
 using Odyssey.Epos;
+using Odyssey.UserInterface.Events;
 using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Behaviors

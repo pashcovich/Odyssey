@@ -19,31 +19,26 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.UserInterface.Events;
 using SharpDX.Mathematics;
 
 #endregion
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class ContainerControl : Control, IContainer
+    public abstract class Panel : Control, IContainer
     {
-        protected ContainerControl(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default) : base(controlStyleClass, textStyleClass)
+        protected Panel(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default) : base(controlStyleClass, textStyleClass)
         {
-            Controls = new ControlCollection(this);
             IsFocusable = false;
         }
-
-        /// <summary>
-        /// Returns the publicly available collection of child controls.
-        /// </summary>
-        public virtual ControlCollection Controls { get; private set; }
 
         #region IContainer Members
 
         /// <summary>
         /// Occurs when a new control is added to the <see cref="ControlCollection"/>.
         /// </summary>
-        public event EventHandler<EventArgs> ControlAdded;
+        public event EventHandler<UIElementEventArgs> LogicalChildAdded;
 
         public override bool DesignMode
         {
@@ -57,13 +52,16 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="ControlAdded"/> event.
+        /// Raises the <see cref="LogicalChildAdded"/> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance
         /// containing the event data.</param>
-        protected virtual void OnControlAdded(EventArgs e)
+        protected virtual void OnLogicalChildAdded(UIElementEventArgs e)
         {
-            RaiseEvent(ControlAdded, this, e);
+            var newElement = e.Element;
+            newElement.Parent = this;
+            newElement.Index = Controls.Count;
+            RaiseEvent(LogicalChildAdded, this, e);
             if (!DesignMode)
                 Layout(RenderSize);
         }
@@ -85,10 +83,8 @@ namespace Odyssey.UserInterface.Controls
 
         public void Add(UIElement control)
         {
-            control.Parent = this;
-            control.Index = Controls.Count;
             Controls.Add(ToDispose(control));
-            OnControlAdded(new EventArgs());
+            OnLogicalChildAdded(new UIElementEventArgs(control, Controls.Count-1));
         }
 
         public virtual void AddRange(IEnumerable<UIElement> controls)
@@ -159,7 +155,7 @@ namespace Odyssey.UserInterface.Controls
         protected internal override UIElement Copy()
         {
             UIElement copy = base.Copy();
-            CopyEvents(typeof(ContainerControl), this, copy);
+            CopyEvents(typeof(Panel), this, copy);
             var containerCopy = (IContainer) copy;
             foreach (UIElement child in Controls)
                 containerCopy.Controls.Add(child.Copy());
@@ -194,16 +190,6 @@ namespace Odyssey.UserInterface.Controls
             {
                 element.Initialize();
             }
-        }
-
-        internal override IEnumerator<UIElement> GetEnumeratorInternal()
-        {
-            foreach (var child in Controls)
-            {
-                yield return child;
-            }
-
-            foreach (var child in (IEnumerable<UIElement>)base)
         }
 
         #region Debug

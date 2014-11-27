@@ -152,8 +152,10 @@ namespace Odyssey.UserInterface.Controls
 
         protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            if (IsVisual)
-                VisualState.Arrange(availableSizeWithoutMargins);
+            foreach (var child in Controls)
+                child.Arrange(availableSizeWithoutMargins - MarginInternal);
+            //if (IsVisual)
+            //    VisualState.Arrange(availableSizeWithoutMargins);
             return base.ArrangeOverride(availableSizeWithoutMargins);
         }
 
@@ -161,8 +163,9 @@ namespace Odyssey.UserInterface.Controls
         {
             TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
 
-            if (IsVisual)
-                VisualState.Measure(availableSizeWithoutMargins);
+            foreach (var child in Controls)
+                child.Measure(availableSizeWithoutMargins - MarginInternal);
+
             if (float.IsNaN(Width) || float.IsNaN(Height) || float.IsNaN(Depth))
             {
                 return availableSizeWithoutMargins - MarginInternal;
@@ -199,6 +202,8 @@ namespace Odyssey.UserInterface.Controls
             RemoveAndDispose(ref visualState);
             visualState = ToDispose(controlStyle.CreateVisualState(this));
             visualState.Initialize();
+            foreach (var s in visualState)
+                Controls.Add(s);
             LayoutUpdated += (s, e) => VisualState.Update();
             Style = controlStyle;
         }
@@ -263,15 +268,6 @@ namespace Odyssey.UserInterface.Controls
         public Shape GetShape(string shapeName)
         {
             return VisualState[shapeName];
-        }
-
-        internal override IEnumerator<UIElement> GetEnumeratorInternal()
-        {
-            if (IsVisual)
-            {
-                foreach (var child in VisualState)
-                    yield return child;
-            }
         }
 
         #region IResourceProvider

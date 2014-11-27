@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using Odyssey.Graphics;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 using SharpDX.DirectWrite;
@@ -41,7 +42,8 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            UpdateTextLayout();
+            if (!DesignMode)
+                UpdateTextLayout();
         }
 
         protected override void OnTextChanged(TextEventArgs e)
@@ -58,18 +60,14 @@ namespace Odyssey.UserInterface.Controls
             if (textLayout != null)
                 RemoveAndDispose(ref textLayout);
 
-            textLayout = ToDispose(new TextLayout(Device, Text, TextFormat, Width, Height));
+            textLayout = ToDispose(new TextLayout(Device, Text, TextFormat, RenderSize.X, RenderSize.Y));
             textMetrics = textLayout.Metrics;
         }
 
-        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
+        protected override void OnLayoutUpdated(EventArgs e)
         {
-            if (Width == 0)
-                Width = textMetrics.Width;
-            if (Height == 0)
-                Height = textMetrics.Height;
-
-            return base.MeasureOverride(availableSizeWithoutMargins);
+            base.OnLayoutUpdated(e);
+            UpdateTextLayout();
         }
 
         protected override void OnSizeChanged(SizeChangedEventArgs e)

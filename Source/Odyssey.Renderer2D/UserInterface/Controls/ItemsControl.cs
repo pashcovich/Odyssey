@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class ItemsControl : ContainerControl
+    public abstract class ItemsControl : Panel
     {
         private IEnumerable itemsSource;
 

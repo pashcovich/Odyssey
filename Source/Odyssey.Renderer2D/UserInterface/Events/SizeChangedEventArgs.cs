@@ -1,7 +1,7 @@
 ﻿using System;
 using SharpDX.Mathematics;
 
-namespace Odyssey.UserInterface
+namespace Odyssey.UserInterface.Events
 {
     public class SizeChangedEventArgs :EventArgs
     {

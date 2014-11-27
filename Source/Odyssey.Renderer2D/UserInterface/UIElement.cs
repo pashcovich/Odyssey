@@ -18,6 +18,7 @@ using Odyssey.Animations;
 using Odyssey.Core;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Behaviors;
+using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using SharpDX.Mathematics;
 using System;
@@ -77,7 +78,6 @@ namespace Odyssey.UserInterface
         /// </remarks>
         protected UIElement()
         {
-            MinimumHeight = minimumHeight;
             string type = GetType().Name;
 
             if (!TypeCounter.ContainsKey(type))
@@ -86,6 +86,8 @@ namespace Odyssey.UserInterface
                 ++TypeCounter[type];
 
             Name = string.Format("{0}{1}", type, TypeCounter[type]);
+
+            Controls = new ControlCollection(this);
             bindings = new Dictionary<string, BindingExpression>();
             behaviors = new BehaviorCollection();
             animator = new AnimationController(this);
@@ -94,7 +96,6 @@ namespace Odyssey.UserInterface
             width = float.NaN;
             height = float.NaN;
             depth = float.NaN;
-
             MinimumWidth = 4;
             MinimumHeight = 4;
             MinimumDepth = 0;

@@ -15,13 +15,13 @@
 
 #region Using Directives
 
-using System.Linq;
-using Odyssey.UserInterface.Style;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using Odyssey.Controls;
 
 #endregion Using Directives
 

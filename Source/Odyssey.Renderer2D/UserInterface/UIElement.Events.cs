@@ -21,6 +21,7 @@ using Odyssey.Interaction;
 using Odyssey.Logging;
 using Odyssey.UserInterface.Controls;
 using System;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Serialization;
 using SharpDX.Mathematics;
 

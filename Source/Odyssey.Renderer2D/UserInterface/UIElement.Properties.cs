@@ -23,6 +23,7 @@ using Odyssey.Engine;
 using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Mathematics;
@@ -36,6 +37,11 @@ namespace Odyssey.UserInterface
     {
         internal protected bool IsInternal { get; set; }
         internal Vector3 MarginInternal { get {  return new Vector3(Margin.Horizontal, Margin.Vertical, 0);} }
+
+        /// <summary>
+        /// Returns the publicly available collection of child controls.
+        /// </summary>
+        public virtual ControlCollection Controls { get; private set; }
 
         public RectangleF BoundingRectangle
         {
@@ -99,7 +105,7 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets the zero based index of this control in the <see cref = "ContainerControl" />.
+        /// Gets the zero based index of this control in the <see cref = "Panel" />.
         /// </summary>
         /// <value>The zero based index.</value>
         public int Index { get; internal set; }

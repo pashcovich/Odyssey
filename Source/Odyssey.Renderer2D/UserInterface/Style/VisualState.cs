@@ -91,8 +91,8 @@ namespace Odyssey.UserInterface.Style
             foreach (Shape shape in visualStateDefinition.Shapes)
             {
                 var newShape = (Shape) shape.Copy();
-                newShape.ScaleX *= shape.Width;
-                newShape.ScaleY *= shape.Height;
+                newShape.ScaleX = shape.Width;
+                newShape.ScaleY = shape.Height;
                 newShape.Parent = control;
                 newShape.DesignMode = true;
                 newShape.IsInternal = true;
