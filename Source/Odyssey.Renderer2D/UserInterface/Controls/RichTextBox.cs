@@ -18,7 +18,7 @@ namespace Odyssey.UserInterface.Controls
             : base(controlStyleClass, textStyleClass)
         { }
 
-        public IEnumerable<AdvancedLabel> Blocks { get { return Controls.OfType<AdvancedLabel>(); } }
+        public IEnumerable<Label> Blocks { get { return Controls.OfType<Label>(); } }
 
         public int LineHeight
         {
@@ -42,15 +42,15 @@ namespace Odyssey.UserInterface.Controls
             {
                 Key = string.Format("{0}.TemplateInternal", typeName),
                 DataType = GetType(),
-                VisualTree = new AdvancedLabel()
+                VisualTree = new Label()
                 {
-                    Name = string.Format("{0}Label", typeName),
+                    Name = string.Format("{0}TextBlock", typeName),
                     Width = Width - Padding.Horizontal,
                     Height = LineHeight,
                     TextStyleClass = TextStyleClass
                 }
             };
-            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((AdvancedLabel l) => l.Text), new Binding(DataTemplate.VisualTree.Name, string.Empty));
+            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((Label l) => l.Text), new Binding(DataTemplate.VisualTree.Name, string.Empty));
             return DataTemplate;
         }
 

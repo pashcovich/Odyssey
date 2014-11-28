@@ -43,11 +43,11 @@ namespace MiniUI
                     Height = 64,
                     Margin = new Thickness(4),
                     Name = "Button",
-                    Content = new Label() { Name = "Label", TextStyleClass = "Small" }
+                    Content = new TextBlock() { Name = "TextBlock", TextStyleClass = "Small" }
                 },
             };
 
-            commandTemplate.Bindings.Add("Text", new Binding("Label", "CommandName"));
+            commandTemplate.Bindings.Add("Text", new Binding("TextBlock", "CommandName"));
 
             stackPanel.DataTemplate = commandTemplate;
             stackPanel.ItemsSource = new SampleVM[]

@@ -67,7 +67,7 @@
     <Compile Include="UserInterface\Behaviors\BehaviorCollection.cs" />
     <Compile Include="UserInterface\Behaviors\DebugBehaviour.cs" />
     <Compile Include="UserInterface\Behaviors\DraggableBehavior.cs" />
-    <Compile Include="UserInterface\Controls\AdvancedLabel.cs" />
+    <Compile Include="UserInterface\Controls\Label.cs" />
     <Compile Include="UserInterface\Controls\Border.cs" />
     <Compile Include="UserInterface\Behaviors\GenericBehavior.cs" />
     <Compile Include="UserInterface\Controls\Charts\ColumnChart.cs" />
@@ -123,8 +123,8 @@
     <Compile Include="UserInterface\Controls\IContentControl.cs" />
     <Compile Include="UserInterface\Controls\IControl.cs" />
     <Compile Include="UserInterface\Controls\ItemsControl.cs" />
-    <Compile Include="UserInterface\Controls\Label.cs" />
-    <Compile Include="UserInterface\Controls\LabelBase.cs" />
+    <Compile Include="UserInterface\Controls\TextBlock.cs" />
+    <Compile Include="UserInterface\Controls\TextBlockBase.cs" />
     <Compile Include="UserInterface\Controls\ListBox.cs" />
     <Compile Include="UserInterface\Controls\ListBoxBase.cs" />
     <Compile Include="UserInterface\Controls\Overlay.cs" />

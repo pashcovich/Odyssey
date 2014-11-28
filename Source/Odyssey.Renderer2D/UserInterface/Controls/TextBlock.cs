@@ -29,9 +29,9 @@ using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class Label : LabelBase
+    public class TextBlock : TextBlockBase
     {
-        public Label()
+        public TextBlock()
             : base(DefaultTextClass)
         {
         }

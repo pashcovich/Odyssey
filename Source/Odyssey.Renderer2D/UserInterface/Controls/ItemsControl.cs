@@ -41,13 +41,13 @@ namespace Odyssey.UserInterface.Controls
             {
                 Key = string.Format("{0}.TemplateInternal", typeName),
                 DataType = GetType(),
-                VisualTree = new Label
+                VisualTree = new TextBlock
                 {
-                    Name = string.Format("{0}Label", typeName),
+                    Name = string.Format("{0}TextBlock", typeName),
                     TextStyleClass = TextStyleClass
                 }
             };
-            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((Label l) => l.Text), new Binding(DataTemplate.VisualTree.Name, string.Empty));
+            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((TextBlock l) => l.Text), new Binding(DataTemplate.VisualTree.Name, string.Empty));
             return DataTemplate;
         }
 

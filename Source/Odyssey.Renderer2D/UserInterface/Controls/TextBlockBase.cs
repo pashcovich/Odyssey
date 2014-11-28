@@ -32,7 +32,7 @@ using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 namespace Odyssey.UserInterface.Controls
 {
     [DebuggerDisplay("{Text} [{TextStyleClass}]")]
-    public abstract class LabelBase : Control
+    public abstract class TextBlockBase : Control
     {
         protected const string DefaultTextClass = "Default";
         private const string ControlTag = "Default";
@@ -43,12 +43,12 @@ namespace Odyssey.UserInterface.Controls
         protected TextLayout TextLayout { get { return textLayout; }}
         protected TextMetrics TextMetrics { get; private set; }
 
-        protected LabelBase()
+        protected TextBlockBase()
             : this(ControlTag)
         {
         }
 
-        protected LabelBase(string textDefinitionClass)
+        protected TextBlockBase(string textDefinitionClass)
             : base("Empty", textDefinitionClass)
         {
             CanRaiseEvents = false;

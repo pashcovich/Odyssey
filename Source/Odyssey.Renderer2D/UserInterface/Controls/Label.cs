@@ -8,14 +8,13 @@ using TextRenderer = Odyssey.Graphics.TextRenderer;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class AdvancedLabel : LabelBase
+    public class Label : TextBlockBase
     {
         private TextRenderer textRenderer;
-       
 
         public Brush Background { get; set; }
 
-        public AdvancedLabel()
+        public Label()
             : base(DefaultTextClass)
         {
         }
