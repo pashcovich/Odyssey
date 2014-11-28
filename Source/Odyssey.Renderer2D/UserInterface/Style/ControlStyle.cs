@@ -25,7 +25,6 @@ using Odyssey.Content;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Drawing;
 using Odyssey.Serialization;
-using Odyssey.Controls;
 using Odyssey.UserInterface.Controls;
 
 #endregion

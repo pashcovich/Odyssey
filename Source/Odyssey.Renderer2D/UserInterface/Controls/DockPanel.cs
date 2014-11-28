@@ -53,25 +53,23 @@ namespace Odyssey.UserInterface.Controls
                 {
 
                     Dock dock = control.DependencyProperties.Get(DockPropertyKey);
+                    control.Measure(availableSizeWithoutMargins);
+
                     switch (dock)
                     {
                         case Dock.Bottom:
-                            control.Measure(new Vector3(availableWidth, controlHeight, controlDepth));
                             availableHeight -= control.DesiredSize.Y;
                             break;
 
                         case Dock.Right:
-                            control.Measure(new Vector3(controlWidth, availableHeight, controlDepth));
                             availableWidth -= control.DesiredSize.X;
                             break;
 
                         case Dock.Left:
-                            control.Measure(new Vector3(controlWidth, availableHeight, controlDepth));
                             availableWidth -= control.DesiredSize.X;
                             break;
 
                         case Dock.Top:
-                            control.Measure(new Vector3(availableWidth, controlHeight, controlDepth));
                             availableHeight -= control.DesiredSize.Y;
                             break;
                     }

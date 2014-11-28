@@ -18,10 +18,14 @@
 using System;
 using System.Diagnostics;
 using Odyssey.Graphics;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
 using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
 using SharpDX.Mathematics;
 using Brush = Odyssey.Graphics.Brush;
+using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
+using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 
 #endregion
 
@@ -34,6 +38,10 @@ namespace Odyssey.UserInterface.Controls
         private const string ControlTag = "Default";
         private string text;
         private TextFormat textFormat;
+        private TextLayout textLayout;
+
+        protected TextLayout TextLayout { get { return textLayout; }}
+        protected TextMetrics TextMetrics { get; private set; }
 
         protected LabelBase()
             : this(ControlTag)
@@ -97,7 +105,44 @@ namespace Odyssey.UserInterface.Controls
             textFormat = styleService.GetTextResource(TextStyle);
             DeviceContext context = Device;
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
+
+            if (DesignMode)
+                return;
+            InvalidateMeasure();
         }
 
+
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
+        {
+            if (textLayout != null)
+                RemoveAndDispose(ref textLayout);
+
+            textLayout = ToDispose(new TextLayout(Device, Text, TextFormat, availableSizeWithoutMargins.X, availableSizeWithoutMargins.Y));
+            TextMetrics = textLayout.Metrics;
+            return new Vector3(TextMetrics.Width, TextMetrics.Height, availableSizeWithoutMargins.Z);
+        }
+
+        protected override void OnSizeChanged(SizeChangedEventArgs e)
+        {
+            base.OnSizeChanged(e);
+            textLayout.MaxWidth = Width;
+            textLayout.MaxHeight = Height;
+        }
+
+        public float MeasureText()
+        {
+            return TextMetrics.Width;
+        }
+
+        public float MeasureLineHeight()
+        {
+            return TextMetrics.Height;
+        }
+
+        public float MeasureText(int start, int length)
+        {
+            var metrics = textLayout.HitTestTextRange(start, length, 0, 0);
+            return metrics[0].Width;
+        }
     }
 }

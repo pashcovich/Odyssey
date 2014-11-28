@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Odyssey.UserInterface.Controls;
 using SharpDX.Mathematics;
 
-namespace Odyssey.Controls
+namespace Odyssey.UserInterface.Controls
 {
     public class UniformStackPanel :StackPanelBase
     {

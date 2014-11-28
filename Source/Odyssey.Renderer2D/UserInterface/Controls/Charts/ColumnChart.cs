@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Odyssey.Controls;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
@@ -57,11 +56,6 @@ namespace Odyssey.UserInterface.Controls.Charts
             Add(chartArea);
         }
 
-        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
-        {
-            LayoutManager.DistributeHorizontally(availableSizeWithoutMargins, Controls.Public);
-            LayoutManager.AlignBottom(this, Controls.Public);
-            return base.ArrangeOverride(availableSizeWithoutMargins);
-        }
+
     }
 }

@@ -13,7 +13,7 @@ namespace Odyssey.Daedalus.ViewModel
         private string label;
         private ICommand command;
 
-        public string Label { get { return label; } set { label = value; RaisePropertyChanged("Label"); } }
+        public string Label { get { return label; } set { label = value; RaisePropertyChanged("TextBlock"); } }
         public ICommand Command { get { return command; } set { command= value; RaisePropertyChanged("Command"); } }
     }
 }
