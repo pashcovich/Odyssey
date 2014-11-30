@@ -29,6 +29,7 @@ namespace Odyssey.UserInterface.Controls.Charts
                     {
                         Name = typeof (ColumnItem).Name,
                         Margin = new Thickness(0, 0, 4, 0),
+                        VerticalAlignment = VerticalAlignment.Bottom
                     }
                 },
                 Orientation = Orientation.Horizontal
@@ -55,7 +56,6 @@ namespace Odyssey.UserInterface.Controls.Charts
 
             Add(chartArea);
         }
-
 
     }
 }

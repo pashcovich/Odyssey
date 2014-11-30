@@ -1,14 +1,18 @@
-﻿using Real = System.Single;
+﻿using System;
+using SharpDX.Mathematics;
+using Real = System.Single;
 using Point = SharpDX.Mathematics.Vector2;
+using Point3 = SharpDX.Mathematics.Vector3;
+using Point4 = SharpDX.Mathematics.Vector4;
 
 namespace Odyssey.Geometry
 {
-    internal static class Vector2Extensions
+    public static class Vector2Extensions
     {
-        internal static void Offset(this Point vector, Real xOffset, Real yOffset)
+        internal static void Offset(this Point point, Real xOffset, Single yOffset)
         {
-            vector.X += xOffset;
-            vector.Y += yOffset;
+            point.X += xOffset;
+            point.Y += yOffset;
         }
 
         /// <summary>
@@ -19,6 +23,16 @@ namespace Odyssey.Geometry
         public static Point Perp(this Point value)
         {
             return new Point(-value.Y, value.X);
+        }
+
+        public static Point3 ToVector3(this Point vector2, float z = 0f)
+        {
+            return new Vector3(vector2, z);
+        }
+
+        public static Point4 ToVector4(this Point vector2, float z = 0f, float w = 0f)
+        {
+            return new Vector4(vector2, z, w);
         }
     }
 }

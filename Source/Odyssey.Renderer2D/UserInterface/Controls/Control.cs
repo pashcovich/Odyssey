@@ -27,7 +27,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class Control : UIElement, IControl, IResourceProvider
+    public abstract class Control : UIElement, IResourceProvider
     {
         private string controlStyleClass;
         private ControlStyle style;
@@ -89,10 +89,12 @@ namespace Odyssey.UserInterface.Controls
                     return;
 
                 textStyleClass = value;
+                
                 if (DesignMode)
                     return;
-                
+
                 ApplyTextDescription();
+                InvalidateMeasure();
                 OnTextStyleChanged(EventArgs.Empty);
             }
         }
@@ -126,14 +128,14 @@ namespace Odyssey.UserInterface.Controls
             if (!IsVisual)
                 return;
 
-            foreach (IShape shape in VisualState)
-                shape.Render();
+            foreach (var child in Controls)
+                child.Render();
         }
 
         /// <summary>
         /// Occurs when the <see cref="UserInterface.Style.ControlStyle"/> property value changes.
         /// </summary>
-        public event EventHandler<EventArgs> ControlDefinitionChanged;
+        public event EventHandler<EventArgs> ControlStyleChanged;
 
         /// <summary>
         /// Occurs when the <see cref="UserInterface.Style.TextStyle"/> property value changes.
@@ -154,14 +156,12 @@ namespace Odyssey.UserInterface.Controls
         {
             foreach (var child in Controls)
                 child.Arrange(availableSizeWithoutMargins - MarginInternal);
-            //if (IsVisual)
-            //    VisualState.Arrange(availableSizeWithoutMargins);
             return base.ArrangeOverride(availableSizeWithoutMargins);
         }
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
+            TopLeftPosition = new Vector3(Padding.Left, Padding.Top, 0);
 
             foreach (var child in Controls)
                 child.Measure(availableSizeWithoutMargins - MarginInternal);
@@ -198,17 +198,17 @@ namespace Odyssey.UserInterface.Controls
             if (Padding.IsEmpty && !controlStyle.Padding.IsEmpty)
                 Padding = controlStyle.Padding;
 
-            TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
+            TopLeftPosition = new Vector3(Padding.Left, Padding.Top, 0);
             RemoveAndDispose(ref visualState);
             visualState = ToDispose(controlStyle.CreateVisualState(this));
             visualState.Initialize();
+
             foreach (var s in visualState)
                 Controls.Add(s);
-            LayoutUpdated += (s, e) => VisualState.Update();
             Style = controlStyle;
         }
 
-        protected virtual void ApplyTextDescription()
+        protected void ApplyTextDescription()
         {
             if (!Overlay.Theme.ContainsResource(TextStyleClass))
             {
@@ -220,14 +220,14 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="ControlDefinitionChanged"/> event.
+        /// Raises the <see cref="ControlStyleChanged"/> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event
         /// data.</param>
         protected virtual void OnControlDefinitionChanged(EventArgs e)
         {
             if (!DesignMode)
-                RaiseEvent(ControlDefinitionChanged, this, e);
+                RaiseEvent(ControlStyleChanged, this, e);
         }
 
         protected override void OnDesignModeChanged(EventArgs e)
@@ -243,6 +243,10 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
+            foreach (UIElement element in Controls)
+            {
+                element.Initialize();
+            }
             if (string.Equals(StyleClass, "Empty")) return;
             ActiveStatus = IsEnabled ? ControlStatus.Enabled : ControlStatus.Disabled;
         }

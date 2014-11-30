@@ -14,6 +14,8 @@
 #endregion License
 
 #region Using Directives
+
+using System.Diagnostics;
 using Odyssey.Animations;
 using Odyssey.Core;
 using Odyssey.Serialization;
@@ -33,8 +35,8 @@ namespace Odyssey.UserInterface
     /// The <b>UIElement</b> class is the root class of all controls in the library. It provides
     /// inheritors with a comprehensive range of properties and methods common to all controls.
     /// </summary>
-    /// [DebuggerDisplay("UIElement: {Name}")]
-    public abstract partial class UIElement : Component, IUIElement, IAnimator, IComparable<UIElement>, ISerializableResource
+    [DebuggerDisplay("[{GetType().Name}]: {Name}")]
+    public abstract partial class UIElement : Component, IAnimator, IComparable<UIElement>, ISerializableResource
     {
         private static readonly Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
 
@@ -66,7 +68,12 @@ namespace Odyssey.UserInterface
         private float maximumDepth;
         private object dataContext;
         private Vector3 renderSize;
-        private Vector2 position;
+        private Vector3 position;
+        private Vector3 absolutePosition;
+        private Vector3 positionOffsets;
+
+        private VerticalAlignment verticalAlignment;
+        private HorizontalAlignment horizontalAlignment;
         #endregion Private fields
 
         #region Constructors
@@ -102,6 +109,8 @@ namespace Odyssey.UserInterface
             MaximumWidth = float.PositiveInfinity;
             MaximumHeight = float.PositiveInfinity;
             MaximumDepth = float.PositiveInfinity;
+            verticalAlignment = VerticalAlignment.Stretch;
+            horizontalAlignment = HorizontalAlignment.Stretch;
         }
 
         #endregion Constructors
@@ -131,7 +140,7 @@ namespace Odyssey.UserInterface
             return string.Format("{0}: '{1}' [{2}]", GetType().Name, Name, AbsolutePosition);
         }
 
-        internal void UpdateLayoutInternal()
+        private void UpdateLayoutInternal()
         {
             boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, RenderSize.X, RenderSize.Y);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);

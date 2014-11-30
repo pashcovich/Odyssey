@@ -102,7 +102,7 @@ namespace Odyssey.UserInterface.Controls
             foreach (var control in Controls.Public)
             {
                 var gridPosition = GetElementGridPositions(control);
-                control.Position = new Vector2(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y]);
+                control.Position = new Vector3(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y], cachedStripPositions[2][gridPosition.Z]);
                 control.Arrange(new Vector3(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y], cachedStripSizes[2][gridPosition.Z]));
             }
 

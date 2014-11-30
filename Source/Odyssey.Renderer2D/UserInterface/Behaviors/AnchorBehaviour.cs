@@ -13,7 +13,7 @@ namespace Odyssey.UserInterface.Behaviors
         private readonly ICamera cameraProvider;
         private Vector3 lastPosition;
 
-        public Vector2 Offset { get; set; }
+        public Vector3 Offset { get; set; }
 
         public AnchorBehaviour(IPosition positionProvider, ICamera cameraProvider)
         {
@@ -34,7 +34,7 @@ namespace Odyssey.UserInterface.Behaviors
 
             if (!Vector3.NearEqual(currentPosition, lastPosition, Epsilon))
             {
-                AssociatedElement.Position = new Vector2(lastPosition.X, lastPosition.Y) + Offset;
+                AssociatedElement.Position = lastPosition + Offset;
                 lastPosition = currentPosition;
             }
         }

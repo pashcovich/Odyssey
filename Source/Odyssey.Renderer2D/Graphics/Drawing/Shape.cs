@@ -116,6 +116,9 @@ namespace Odyssey.Graphics.Drawing
                 ScaleX = LayoutManager.Scale;
             if (ScaleY == 0)
                 ScaleY = LayoutManager.Scale;
+
+            if (IsInternal && Parent != null)
+                Parent.PositionChanged += (s, ePos) => AbsolutePosition = ePos.NewPosition;
         }
 
         protected override void OnLayoutUpdated(EventArgs e)

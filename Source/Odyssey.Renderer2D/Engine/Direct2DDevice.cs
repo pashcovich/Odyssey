@@ -2,6 +2,7 @@
 
 using System.Runtime.InteropServices;
 using Odyssey.Core;
+using Odyssey.Geometry;
 using Odyssey.Graphics.Drawing;
 using Odyssey.Reflection;
 using SharpDX.Mathematics;
@@ -153,7 +154,7 @@ namespace Odyssey.Engine
 
         public void DrawLine(Line line, Brush brush, float strokeThickness = 1.0f)
         {
-            deviceContext.DrawLine(line.P0 + line.Position, line.P1 + line.Position, brush, strokeThickness);
+            deviceContext.DrawLine(line.P0 + line.Position.XY(), line.P1 + line.Position.XY(), brush, strokeThickness);
         }
 
         public void DrawText(string text, TextFormat textFormat, RectangleF layoutRect, Brush foregroundBrush,

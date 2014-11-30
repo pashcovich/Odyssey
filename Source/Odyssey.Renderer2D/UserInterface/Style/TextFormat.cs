@@ -1,10 +1,7 @@
 ﻿using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
-using Odyssey.Graphics;
-using SharpDX.Mathematics;
 using SharpDX.DirectWrite;
-using SharpDX.DXGI;
 
 namespace Odyssey.UserInterface.Style
 {

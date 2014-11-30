@@ -1,4 +1,5 @@
 ﻿using System;
+using Odyssey.UserInterface.Events;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
@@ -20,7 +21,7 @@ namespace Odyssey.Graphics.Drawing
                 Device.DrawEllipse(this, Stroke);
         }
 
-        protected override void OnPositionChanged(EventArgs e)
+        protected override void OnPositionChanged(PositionChangedEventArgs e)
         {
             base.OnPositionChanged(e);
             ellipse.Point = new Vector2(BoundingRectangle.X, BoundingRectangle.Y);

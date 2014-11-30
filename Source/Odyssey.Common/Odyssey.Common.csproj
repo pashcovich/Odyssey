@@ -158,7 +158,6 @@
     <Compile Include="Engine\Param.cs" />
     <Compile Include="Engine\ServiceRegistry.cs" />
     <Compile Include="Engine\StereoParameters.cs" />
-    <Compile Include="Geometry\Extensions.cs" />
     <Compile Include="Geometry\MathHelper.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Graphics\DisplayOrientation.cs" />

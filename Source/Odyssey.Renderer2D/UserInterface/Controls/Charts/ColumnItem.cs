@@ -23,7 +23,6 @@ namespace Odyssey.UserInterface.Controls.Charts
             }
         }
 
-
         static float ItemHeight(float chartAreaHeight, float maximumValue, float value)
         {
             return (value / maximumValue) * chartAreaHeight;

@@ -183,15 +183,6 @@ namespace Odyssey.UserInterface.Controls
             return availableSizeWithoutMargins;
         }
 
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-            foreach (UIElement element in Controls)
-            {
-                element.Initialize();
-            }
-        }
-
         #region Debug
 
 #if DEBUG

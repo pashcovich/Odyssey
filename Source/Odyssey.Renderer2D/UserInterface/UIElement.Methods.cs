@@ -127,23 +127,21 @@ namespace Odyssey.UserInterface
             if (IsArrangeValid)
                 return;
             IsArrangeValid = true;
-            Vector2 oldAbsolutePosition = AbsolutePosition;
-            Vector2 newAbsolutePosition = new Vector2(Margin.Left, Margin.Top) + position;
+
+            Vector3 oldAbsolutePosition = absolutePosition;
+            positionOffsets = TopLeftPosition + new Vector3(Margin.Left, Margin.Top, 0);
+            var newAbsolutePosition = Position + positionOffsets;
             if (parent != null)
-            {
                 newAbsolutePosition += parent.AbsolutePosition;
-                if (!IsInternal)
-                    newAbsolutePosition += parent.TopLeftPosition;
-            }
 
             if (!newAbsolutePosition.Equals(oldAbsolutePosition))
-                AbsolutePosition = newAbsolutePosition;
+                absolutePosition = newAbsolutePosition;
 
             var elementSize = Size;
             var finalSizeWithoutMargins = availableSizeWithMargins - MarginInternal;
-            if (float.IsNaN(elementSize.X))
+            if (float.IsNaN(elementSize.X) && HorizontalAlignment == HorizontalAlignment.Stretch)
                 elementSize.X = finalSizeWithoutMargins.X;
-            if (float.IsNaN(elementSize.Y))
+            if (float.IsNaN(elementSize.Y) && VerticalAlignment == VerticalAlignment.Stretch)
                 elementSize.Y = finalSizeWithoutMargins.Y;
             if (float.IsNaN(elementSize.Z))
                 elementSize.Z = finalSizeWithoutMargins.Z;
@@ -162,6 +160,10 @@ namespace Odyssey.UserInterface
                 Math.Max(MinimumDepth, Math.Min(MaximumDepth, elementSize.Z)));
 
             elementSize = ArrangeOverride(elementSize);
+
+            CalculatePosition(availableSizeWithMargins, elementSize, ref positionOffsets);
+            if (positionOffsets != Vector3.Zero)
+                AbsolutePosition += positionOffsets;
             RenderSize = elementSize;
         }
 
@@ -197,6 +199,37 @@ namespace Odyssey.UserInterface
 
             DesiredSize = desiredSize;
             DesiredSizeWithMargins = desiredSize + MarginInternal;
+        }
+
+        private void CalculatePosition(Vector3 availableSpace, Vector3 usedSpace, ref Vector3 absolutePosition)
+        {
+            switch (VerticalAlignment)
+            {
+                case VerticalAlignment.Bottom:
+                    absolutePosition.Y += availableSpace.Y - usedSpace.Y;
+
+                    break;
+
+                case VerticalAlignment.Center:
+                    absolutePosition.Y += (availableSpace.Y - usedSpace.Y) / 2;
+                    break;
+            }
+
+            switch (HorizontalAlignment)
+            {
+                case HorizontalAlignment.Center:
+                    absolutePosition.X += (availableSpace.X - usedSpace.X)/2;
+                    break;
+
+                case HorizontalAlignment.Right:
+                    absolutePosition.X += availableSpace.X - usedSpace.X;
+                    break;
+            }
+        }
+
+        internal void SetPosition(Vector3 newPosition)
+        {
+            position = newPosition;
         }
 
         internal void SetSize(int dimension, float value)
@@ -276,6 +309,8 @@ namespace Odyssey.UserInterface
             var newElement = (UIElement) Activator.CreateInstance(GetType());
             newElement.Name = Name ?? newElement.Name;
             newElement.Margin = Margin;
+            newElement.horizontalAlignment = horizontalAlignment;
+            newElement.verticalAlignment = verticalAlignment;
 
             CopyEvents(typeof(UIElement), this, newElement);           
             newElement.Animator.AddAnimations(Animator.Animations);
@@ -391,9 +426,9 @@ namespace Odyssey.UserInterface
             Overlay.CaptureElement = null;
         }
 
-        public static Vector2 ScreenToLocalCoordinates(UIElement element, Vector2 screenCoordinates)
+        public static Vector3 ScreenToLocalCoordinates(UIElement element, Vector2 screenCoordinates)
         {
-            Vector2 offset =screenCoordinates - element.AbsolutePosition;
+            Vector3 offset = new Vector3(screenCoordinates,0) - element.AbsolutePosition;
             return element.Position + offset;
         }
 

@@ -41,7 +41,7 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Returns the publicly available collection of child controls.
         /// </summary>
-        public virtual ControlCollection Controls { get; private set; }
+        public ControlCollection Controls { get; private set; }
 
         public RectangleF BoundingRectangle
         {
@@ -123,6 +123,32 @@ namespace Odyssey.UserInterface
         public bool IsInited { get; protected set; }
 
         public Thickness Margin { get; set; }
+
+        public VerticalAlignment VerticalAlignment
+        {
+            get { return verticalAlignment; }
+            set
+            {
+                if (verticalAlignment == value)
+                    return;
+                verticalAlignment = value;
+                if (!DesignMode)
+                    InvalidateArrange();
+            }
+        }
+
+        public HorizontalAlignment HorizontalAlignment
+        {
+            get { return horizontalAlignment; }
+            set
+            {
+                if (horizontalAlignment == value)
+                    return;
+                horizontalAlignment = value;
+                if (!DesignMode)
+                    InvalidateArrange();
+            }
+        }
 
         /// <summary>
         /// Gets the height and width of the control.
@@ -289,12 +315,11 @@ namespace Odyssey.UserInterface
 
         public PropertyContainer DependencyProperties;
 
-
         /// <summary>
         /// Gets the top left position in the client area of the control.
         /// </summary>
         /// <value>The top left position.</value>
-        protected internal Vector2 TopLeftPosition { get; protected set; }
+        protected Vector3 TopLeftPosition { get; set; }
 
         protected Direct2DDevice Device
         {
@@ -307,7 +332,22 @@ namespace Odyssey.UserInterface
         /// </summary>
         /// <value>A <see cref = "Vector2" /> that represents the absolute
         /// position of the upper-left corner in screen coordinates for this control.</value>
-        public Vector2 AbsolutePosition { get; private set; }
+        public Vector3 AbsolutePosition
+        {
+            get { return absolutePosition; }
+            protected set
+            {
+                var oldPosition = absolutePosition;
+                absolutePosition = value;
+                
+                if (absolutePosition == oldPosition)
+                    return;
+
+                UpdateLayoutInternal();
+                if (!DesignMode)
+                    OnPositionChanged(new PositionChangedEventArgs(oldPosition, absolutePosition));
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value that will be used by the interface to know whether that control can
@@ -414,7 +454,7 @@ namespace Odyssey.UserInterface
         /// <b>PositionV3</b> property value represents the upper-left corner of the control in
         /// screen coordinates.
         /// </remarks>
-        public Vector2 Position
+        public Vector3 Position
         {
             get { return position; }
             set
@@ -424,9 +464,8 @@ namespace Odyssey.UserInterface
                 position = value;
 
                 if (DesignMode) return;
-
-                OnPositionChanged(EventArgs.Empty);
-                OnMove(EventArgs.Empty);
+                InvalidateArrange();
+                OnPositionChanged(new PositionChangedEventArgs(position, position));
             }
         }
     }

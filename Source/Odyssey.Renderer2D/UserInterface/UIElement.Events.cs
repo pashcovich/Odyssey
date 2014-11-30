@@ -268,12 +268,12 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Occurs when the <see cref="Position"/> property value changes.
         /// </summary>
-        public event EventHandler<EventArgs> PositionChanged;
+        public event EventHandler<PositionChangedEventArgs> PositionChanged;
 
         /// <summary>
         /// Occurs when <see cref="RenderSize"/> property value changes.
         /// </summary>
-        public event EventHandler<EventArgs> SizeChanged;
+        public event EventHandler<SizeChangedEventArgs> SizeChanged;
 
         /// <summary>
         /// Occurs when the <see cref="IsVisible"/> property value changes.
@@ -418,7 +418,7 @@ namespace Odyssey.UserInterface
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event
         /// data.</param>
-        protected virtual void OnPositionChanged(EventArgs e)
+        protected virtual void OnPositionChanged(PositionChangedEventArgs e)
         {
             RaiseEvent(PositionChanged, this, e);
         }
@@ -475,7 +475,7 @@ namespace Odyssey.UserInterface
             Name = reader.GetAttribute("Name");
             
             string sPosition = reader.GetAttribute("Position");
-            Position = string.IsNullOrEmpty(sPosition) ? Vector2.Zero : Text.TextHelper.DecodeVector2(sPosition);
+            Position = string.IsNullOrEmpty(sPosition) ? Vector3.Zero : Text.TextHelper.DecodeVector3(sPosition);
 
             string sWidth = reader.GetAttribute("Width");
             string sHeight = reader.GetAttribute("Height");
@@ -487,7 +487,7 @@ namespace Odyssey.UserInterface
         {
             var writer = e.XmlWriter;
             writer.WriteAttributeString("Name", Name);
-            writer.WriteAttributeString("Position", Text.TextHelper.EncodeVector2(Position));
+            writer.WriteAttributeString("Position", Text.TextHelper.EncodeVector3(Position));
             writer.WriteAttributeString("Width", Width.ToString("F"));
             writer.WriteAttributeString("Height", Height.ToString("F"));
         }

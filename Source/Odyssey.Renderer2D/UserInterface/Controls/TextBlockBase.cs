@@ -31,7 +31,7 @@ using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 
 namespace Odyssey.UserInterface.Controls
 {
-    [DebuggerDisplay("{Text} [{TextStyleClass}]")]
+    [DebuggerDisplay("[{GetType().Name}] \"{Text}\" [{TextStyleClass}]")]
     public abstract class TextBlockBase : Control
     {
         protected const string DefaultTextClass = "Default";
@@ -90,6 +90,9 @@ namespace Odyssey.UserInterface.Controls
 
             if (string.IsNullOrEmpty(Text))
                 Text = Name;
+
+            var styleService = Overlay.Services.GetService<IStyleService>();
+            textFormat = styleService.GetTextResource(TextStyle);
         }
 
         protected override void OnTextStyleChanged(EventArgs e)
@@ -105,28 +108,23 @@ namespace Odyssey.UserInterface.Controls
             textFormat = styleService.GetTextResource(TextStyle);
             DeviceContext context = Device;
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
-
-            if (DesignMode)
-                return;
-            InvalidateMeasure();
         }
-
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             if (textLayout != null)
                 RemoveAndDispose(ref textLayout);
-
+            
             textLayout = ToDispose(new TextLayout(Device, Text, TextFormat, availableSizeWithoutMargins.X, availableSizeWithoutMargins.Y));
             TextMetrics = textLayout.Metrics;
-            return new Vector3(TextMetrics.Width, TextMetrics.Height, availableSizeWithoutMargins.Z);
+            return new Vector3((float)Math.Ceiling(TextMetrics.Width), (float)Math.Ceiling(TextMetrics.Height), availableSizeWithoutMargins.Z);
         }
 
         protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
             base.OnSizeChanged(e);
-            textLayout.MaxWidth = Width;
-            textLayout.MaxHeight = Height;
+            textLayout.MaxWidth = e.NewSize.X;
+            textLayout.MaxHeight = e.NewSize.Y;
         }
 
         public float MeasureText()
