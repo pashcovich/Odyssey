@@ -21,7 +21,7 @@ namespace Odyssey.UserInterface.Controls.Charts
         {
             chartArea = new UniformStackPanel
             {
-                DataTemplate = new DataTemplate
+                ItemTemplate = new DataTemplate
                 {
                     Key = string.Format("{0}.TemplateInternal", GetType().Name),
                     DataType = typeof(UniformStackPanel),
@@ -35,7 +35,7 @@ namespace Odyssey.UserInterface.Controls.Charts
                 Orientation = Orientation.Horizontal
             };
 
-            chartArea.DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(chartArea.DataTemplate.VisualTree.Name, string.Empty));
+            chartArea.ItemTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(chartArea.ItemTemplate.VisualTree.Name, string.Empty));
         }
 
         public override Vector3 ChartArea

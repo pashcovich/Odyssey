@@ -16,6 +16,7 @@
 #region Using Directives
 
 using Odyssey.Graphics;
+using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
@@ -23,8 +24,13 @@ using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class Canvas : PanelBase
+    public class Canvas : Panel
     {
-        
+        public Canvas() : this(ControlStyle.Empty)
+        { }
+
+        public Canvas(string controlStyleClass, string textStyleClass = TextStyle.Default) : base(controlStyleClass, textStyleClass)
+        {
+        }
     }
 }

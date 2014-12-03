@@ -81,13 +81,15 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        public void Add(UIElement control)
+        public void Add(UIElement item)
         {
-            Controls.Add(ToDispose(control));
-            OnLogicalChildAdded(new UIElementEventArgs(control, Controls.Count-1));
+            Contract.Requires<ArgumentNullException>(item != null, "control");
+            Contract.Requires<InvalidOperationException>(this != item, "cannot add self");
+            Controls.Add(ToDispose(item));
+            OnLogicalChildAdded(new UIElementEventArgs(item, Controls.Count-1));
         }
-
-        public virtual void AddRange(IEnumerable<UIElement> controls)
+       
+        public void AddRange(IEnumerable<UIElement> controls)
         {
             foreach (UIElement ctl in controls)
                 Add(ctl);
@@ -135,14 +137,9 @@ namespace Odyssey.UserInterface.Controls
                 .FirstOrDefault(control => control.Contains(cursorLocation));
         }
 
-        public void Insert(int index, UIElement control)
+        public void Remove(UIElement item)
         {
-            Controls.Insert(index, control);
-        }
-
-        public void Remove(UIElement control)
-        {
-            Controls.Remove(control);
+            Controls.Remove(item);
         }
 
         public override void Render()

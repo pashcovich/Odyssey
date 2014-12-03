@@ -118,7 +118,7 @@ namespace Odyssey.UserInterface.Controls
 
         public UIElement[] ToArray()
         {
-            UIElement[] controlArray = new UIElement[Count];
+            var controlArray = new UIElement[Count];
             for (int i = 0; i < Count; i++)
             {
                 controlArray[i] = this[i];
@@ -132,7 +132,7 @@ namespace Odyssey.UserInterface.Controls
             base.InsertItem(index, item);
         }
 
-        protected void ProcessForDeletion(UIElement control)
+        private void ProcessForDeletion(UIElement control)
         {
             //Overlay Overlay = Owner as Overlay;
 
@@ -144,7 +144,7 @@ namespace Odyssey.UserInterface.Controls
             control.CanRaiseEvents = false;
             control.IsBeingRemoved = true;
 
-            IContainer containerControl = control as IContainer;
+            var containerControl = control as IContainer;
 
             if (containerControl != null)
                 foreach (UIElement childControl in containerControl.Controls)
@@ -154,7 +154,7 @@ namespace Odyssey.UserInterface.Controls
                 }
         }
 
-        protected void ProcessForInsertion(UIElement control)
+        private void ProcessForInsertion(UIElement control)
         {
             Contract.Requires<ArgumentNullException>(control != null);
             Contract.Requires<InvalidOperationException>(!Contains(control), "Control is already in collection.");

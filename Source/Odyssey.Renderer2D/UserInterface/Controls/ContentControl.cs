@@ -75,5 +75,6 @@ namespace Odyssey.UserInterface.Controls
                 Content.Height = Height;
             }
         }
+
     }
 }

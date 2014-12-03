@@ -12,7 +12,7 @@ namespace Odyssey.UserInterface.Controls
         Bottom
     }
 
-    public class DockPanel : PanelBase
+    public class DockPanel : Panel
     {
         /// <summary>
         /// The key to the Dock attached dependency property. This defines the position of a child item within the panel.

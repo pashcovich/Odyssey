@@ -10,7 +10,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class StackPanelBase : ItemsControl
+    public abstract class StackPanelBase : Panel
     {
         private Orientation orientation;
 
@@ -30,6 +30,13 @@ namespace Odyssey.UserInterface.Controls
                     OnLayoutUpdated(EventArgs.Empty);
                 }
             }
+        }
+
+        protected internal override UIElement Copy()
+        {
+            var sp =(StackPanel)base.Copy();
+            sp.orientation = Orientation;
+            return sp;
         }
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)

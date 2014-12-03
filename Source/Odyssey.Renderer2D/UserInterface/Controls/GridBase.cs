@@ -4,7 +4,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class GridBase : PanelBase
+    public abstract class GridBase : Panel
     {
         /// <summary>
         /// The key to the Column attached dependency property. This defines the column an item is inserted into.

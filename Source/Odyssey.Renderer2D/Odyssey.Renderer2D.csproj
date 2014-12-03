@@ -129,7 +129,6 @@
     <Compile Include="UserInterface\Controls\ListBoxBase.cs" />
     <Compile Include="UserInterface\Controls\Overlay.cs" />
     <Compile Include="UserInterface\Controls\Canvas.cs" />
-    <Compile Include="UserInterface\Controls\PanelBase.cs" />
     <Compile Include="UserInterface\Controls\StackPanel.cs" />
     <Compile Include="UserInterface\Controls\StackPanelBase.cs" />
     <Compile Include="UserInterface\Data\DataTemplate.cs" />
