@@ -51,18 +51,10 @@ namespace Odyssey.UserInterface
             if (!filterFunction(root)) yield break;
 
             yield return root;
-            var containerControl = root as IContainer;
-            if (containerControl != null)
-                foreach (UIElement control in containerControl.Controls)
-                    foreach (UIElement ctlChild in PreOrderVisit(control, filterFunction))
-                        if (filterFunction(ctlChild))
-                            yield return ctlChild;
-                        else
-                        {
-                            var contentControl = root as IContentControl;
-                            if (contentControl != null && contentControl.Content != null && filterFunction(root))
-                                yield return contentControl.Content;
-                        }
+
+            foreach (var child in root)
+                if (filterFunction(child))
+                    yield return child;
         }
 
         public static IEnumerable<UIElement> VisibleControls(UIElement root)

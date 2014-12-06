@@ -1,58 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+﻿using Odyssey.UserInterface.Style;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
-    public abstract class Chart : DockPanel
+    public abstract class Chart : ItemsControl
     {
-        private Control xAxisTitle;
+        internal const string IdXAxisTitle = "XAxisTitle";
+        internal const string IdChartArea = "ChartArea";
 
-        private IEnumerable itemsSource;
-
-        public IEnumerable ItemsSource
-        {
-            get { return itemsSource; }
-            set
-            {
-                if (!Equals(itemsSource, value))
-                {
-                    itemsSource = value;
-                    DataContext = value;
-                }
-            }
-        }
-
+        protected internal UIElement XAxisTitle { get; internal set; }
+        protected internal UIElement ChartArea { get; internal set; }
+        
         protected Chart(string controlStyleClass, string textStyleClass = TextStyle.Default)
-            : base()
+            : base(controlStyleClass, textStyleClass)
         {
         }
 
         public float MinimumValue { get; set; }
         public float MaximumValue { get; set; }
-
-        public Control XAxisTitle
-        {
-            get { return xAxisTitle; }
-            set
-            {
-                if (xAxisTitle == value)
-                    return;
-                Remove(xAxisTitle);
-                xAxisTitle = value;
-                Add(xAxisTitle);
-            }
-        }
-
-        public abstract Vector3 ChartArea { get; }
-        
-        protected override void OnTextStyleChanged(EventArgs e)
-        {
-            base.OnTextStyleChanged(e);
-            foreach (var control in Controls.OfType<Control>())
-                control.TextStyleClass = TextStyleClass;
-        }
     }
 }

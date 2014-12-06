@@ -63,20 +63,20 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Gets or sets a value indicating whether the control is in design mode.
         /// </summary>
-        /// <value><c>true</c> if the control is in design mode; otherwise, /c>.</value>
+        /// <value><c>true</c> if the <see cref="UIElement"/> is in design mode; otherwise, /c>.</value>
         /// <remarks>
         /// While in design mode, certain events are not fired.
         /// </remarks>
-        public virtual bool DesignMode
+        public bool DesignMode
         {
             get { return designMode; }
             protected internal set
             {
-                if (designMode != value)
-                {
-                    designMode = value;
-                    OnDesignModeChanged(new EventArgs());
-                }
+                if (designMode == value)
+                    return;
+                designMode = value;
+                foreach (UIElement childControl in Controls)
+                    childControl.DesignMode = value;
             }
         }
 

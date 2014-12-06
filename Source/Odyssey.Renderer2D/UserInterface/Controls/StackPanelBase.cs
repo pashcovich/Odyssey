@@ -34,7 +34,7 @@ namespace Odyssey.UserInterface.Controls
 
         protected internal override UIElement Copy()
         {
-            var sp =(StackPanel)base.Copy();
+            var sp =(StackPanelBase)base.Copy();
             sp.orientation = Orientation;
             return sp;
         }

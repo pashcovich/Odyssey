@@ -41,10 +41,10 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        public static void AlignBottom(Control parent, IEnumerable<UIElement> children)
+        public static void AlignBottom(UIElement parent)
         {
-            float clientAreaHeight = parent.ClientAreaHeight;
-            foreach (UIElement element in children)
+            float clientAreaHeight = parent.RenderSize.Y;
+            foreach (UIElement element in parent.Controls)
             {
                 element.Position = new Vector3(element.Position.X, clientAreaHeight - element.Height, element.Position.Z);
             }

@@ -19,7 +19,7 @@ namespace Odyssey.UserInterface.Controls.Charts
                     return;
                 actualValue = MathHelper.Clamp(value, Chart.MinimumValue, Chart.MaximumValue);
 
-                Height = ItemHeight(Chart.ChartArea.Y, Chart.MaximumValue, Value);
+                Height = ItemHeight(Chart.ChartArea.RenderSize.Y, Chart.MaximumValue, Value);
             }
         }
 

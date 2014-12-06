@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
@@ -42,9 +43,6 @@ namespace Odyssey.UserInterface.Controls
         }
 
         public Thickness Padding { get; set; }
-
-        public virtual float ClientAreaHeight { get { return Height - Padding.Vertical; }}
-        public virtual float ClientAreaWidth { get { return Width - Padding.Horizontal; } }
 
         public string StyleClass
         {
@@ -76,6 +74,8 @@ namespace Odyssey.UserInterface.Controls
             {
                 if (textStyle == value) return;
                 textStyle = value;
+                foreach (var child in Controls.OfType<Control>())
+                    child.TextStyle = textStyle;
                 OnTextStyleChanged(EventArgs.Empty);
             }
         }
@@ -89,7 +89,10 @@ namespace Odyssey.UserInterface.Controls
                     return;
 
                 textStyleClass = value;
-                
+
+                foreach (var child in Controls.OfType<Control>())
+                    child.TextStyleClass = textStyleClass;
+
                 if (DesignMode)
                     return;
 

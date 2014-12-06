@@ -21,6 +21,8 @@ namespace Odyssey.UserInterface.Controls
         protected ItemsControl(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
             : base(controlStyleClass, textStyleClass) {}
 
+        protected Panel Container { get { return container; } }
+
         public DataTemplate ItemTemplate { get; set; }
         public DataTemplate ItemsPanelTemplate { get; set; }
 
@@ -50,7 +52,7 @@ namespace Odyssey.UserInterface.Controls
                     TextStyleClass = TextStyleClass
                 }
             };
-            itemTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((TextBlock l) => l.Text), new Binding(ItemTemplate.VisualTree.Name, string.Empty));
+            itemTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((TextBlock l) => l.Text), new Binding(itemTemplate.VisualTree.Name, string.Empty));
             return itemTemplate;
         }
 
@@ -80,14 +82,46 @@ namespace Odyssey.UserInterface.Controls
         void CreateContainer()
         {
             Contract.Requires<InvalidOperationException>(ItemTemplate.VisualTree is Panel, "VisualTree root must be a Panel");
-            container = (Panel)ToDispose(ItemsPanelTemplate.VisualTree.Copy());
-            Controls.Add(container);
+            var panel = (Panel)ToDispose(ItemsPanelTemplate.VisualTree.Copy());
+            if (panel.IsItemsHost)
+                container = panel;
+            else
+            {
+                foreach (var child in TreeTraversal.PreOrderVisit(panel))
+                {
+                    var childPanel = child as Panel;
+
+                    if (childPanel != null && childPanel.IsItemsHost)
+                    {
+                        container = childPanel;
+                        break;
+                    }
+                }
+            }
+
+            foreach (var kvp in ItemsPanelTemplate.Bindings)
+            {
+                var target = panel.Find(kvp.Value.TargetElement);
+                if (target != null)
+                {
+                    target.DataContext = DataContext;
+                    target.SetBinding(kvp.Value, kvp.Key);
+                    break;
+                }
+            }
+
+            if (container == null)
+                container = panel;
+
+            Controls.Add(panel);
         }
 
         void PopulateItems()
         {
-            Contract.Requires<ArgumentNullException>(ItemTemplate.DataType != null, "No DataType specified");
-            if (!ReflectionHelper.IsTypeDerived(ItemTemplate.DataType, GetType()))
+            if (ItemsSource == null)
+                return;
+
+            if (ItemTemplate.DataType != null && !ReflectionHelper.IsTypeDerived(ItemTemplate.DataType, GetType()))
             {
                 LogEvent.UserInterface.Warning(string.Format("ItemTemplate '{0}' expects type {1}. Element '{2}' is of type {3}",
                     ItemTemplate.Key, ItemTemplate.DataType.Name, Name, GetType().Name));
@@ -98,7 +132,7 @@ namespace Odyssey.UserInterface.Controls
             foreach (var item in ItemsSource)
             {
                 UIElement previousElement = this;
-                foreach (UIElement element in TreeTraversal.PreOrderVisit(ItemTemplate.VisualTree, c => true))
+                foreach (UIElement element in TreeTraversal.PreOrderVisit(ItemTemplate.VisualTree))
                 {
                     UIElement newItem = ToDispose(element.Copy());
 

@@ -4,57 +4,65 @@ using System.Linq;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
     public class ColumnChart : Chart
     {
-        private readonly UniformStackPanel chartArea;
-
         public ColumnChart()
-            : this("Panel", TextStyle.Default)
+            : base(ControlStyle.Empty, TextStyle.Default)
         {
-        }
-
-        public ColumnChart(string controlStyleClass, string textStyleClass) : base(controlStyleClass, textStyleClass)
-        {
-            chartArea = new UniformStackPanel
-            {
-                ItemTemplate = new DataTemplate
-                {
-                    Key = string.Format("{0}.TemplateInternal", GetType().Name),
-                    DataType = typeof(UniformStackPanel),
-                    VisualTree = new ColumnItem()
-                    {
-                        Name = typeof (ColumnItem).Name,
-                        Margin = new Thickness(0, 0, 4, 0),
-                        VerticalAlignment = VerticalAlignment.Bottom
-                    }
-                },
-                Orientation = Orientation.Horizontal
-            };
-
-            chartArea.ItemTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(chartArea.ItemTemplate.VisualTree.Name, string.Empty));
-        }
-
-        public override Vector3 ChartArea
-        {
-            get { return chartArea.RenderSize; }
         }
 
         protected IEnumerable<ChartItem> Items
         {
-            get { return chartArea.Controls.OfType<ChartItem>(); }
+            get { return ChartArea.Controls.OfType<ChartItem>(); }
         }
 
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            XAxisTitle.DependencyProperties.Add(DockPropertyKey, Dock.Bottom);
-            chartArea.ItemsSource = ItemsSource;
+            var dockpanel = FindDescendant<DockPanel>();
+            XAxisTitle = dockpanel.Controls[IdXAxisTitle];
+            XAxisTitle.DependencyProperties.Add(DockPanel.DockPropertyKey, Dock.Bottom);
+            ChartArea = dockpanel.Controls[IdChartArea];
+            //ChartArea.StyleClass = StyleClass;
+            //ChartArea.ItemsSource = ItemsSource;
+        }
 
-            Add(chartArea);
+        protected override DataTemplate CreateDefaultItemTemplate()
+        {
+            var itemTemplate = new DataTemplate
+            {
+                Key = string.Format("{0}.TemplateInternal", GetType().Name),
+                DataType = GetType(),
+                VisualTree = new ColumnItem()
+                {
+                    Name = typeof (ColumnItem).Name,
+                    Margin = new Thickness(0, 0, 4, 0),
+                    VerticalAlignment = VerticalAlignment.Bottom
+                }
+            };
+            itemTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((ChartItem c) => c.Value), new Binding(itemTemplate.VisualTree.Name, string.Empty));
+
+            return itemTemplate;
+        }
+
+        protected override DataTemplate CreateDefaultPanelTemplate()
+        {
+            string typeName = GetType().Name;
+            var panelTemplate = new DataTemplate()
+            {
+                Key = string.Format("{0}.PanelTemplate", typeName),
+                DataType = GetType(),
+                VisualTree = new DockPanel()
+                {
+                    new Label() {Name = IdXAxisTitle},
+                    new UniformStackPanel {Name = IdChartArea, IsItemsHost = true}
+                }
+            };
+            panelTemplate.Bindings.Add((ReflectionHelper.GetPropertyName((TextBlock t) => t.Text)), new Binding(IdXAxisTitle, IdXAxisTitle));
+            return panelTemplate;
         }
 
     }

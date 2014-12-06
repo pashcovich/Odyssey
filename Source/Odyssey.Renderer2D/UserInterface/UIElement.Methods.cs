@@ -55,15 +55,26 @@ namespace Odyssey.UserInterface
                 OnGotFocus(EventArgs.Empty);
         }
 
-        public T FindAncestor<T>() where T : class
+        public TElement FindAncestor<TElement>() where TElement : UIElement
         {
             UIElement ancestor = parent;
             while (ancestor != null)
             {
-                var tAncestor = ancestor as T;
+                var tAncestor = ancestor as TElement;
                 if (tAncestor != null)
                     return tAncestor;
                 ancestor = ancestor.Parent;
+            }
+            return null;
+        }
+
+        public TElement FindDescendant<TElement>() where TElement : UIElement
+        {
+            foreach (var item in TreeTraversal.PreOrderVisit(this))
+            {
+                var tDescendant = item as TElement;
+                if (tDescendant != null)
+                    return tDescendant;
             }
             return null;
         }
@@ -160,11 +171,15 @@ namespace Odyssey.UserInterface
                 Math.Max(MinimumDepth, Math.Min(MaximumDepth, elementSize.Z)));
 
             elementSize = ArrangeOverride(elementSize);
+            RenderSize = elementSize;
 
             CalculatePosition(availableSizeWithMargins, elementSize, ref positionOffsets);
             if (positionOffsets != Vector3.Zero)
+            {
                 AbsolutePosition += positionOffsets;
-            RenderSize = elementSize;
+                foreach (var shape in Controls.Where(shape => shape.IsInternal))
+                    shape.AbsolutePosition += positionOffsets;
+            }
         }
 
         public void Measure(Vector3 availableSize)

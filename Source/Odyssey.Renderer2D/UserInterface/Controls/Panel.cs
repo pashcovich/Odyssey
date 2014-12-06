@@ -40,16 +40,7 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         public event EventHandler<UIElementEventArgs> LogicalChildAdded;
 
-        public override bool DesignMode
-        {
-            get { return base.DesignMode; }
-            protected internal set
-            {
-                base.DesignMode = value;
-                foreach (UIElement childControl in Controls)
-                    childControl.DesignMode = value;
-            }
-        }
+        public bool IsItemsHost { get; set; }
 
         /// <summary>
         /// Raises the <see cref="LogicalChildAdded"/> event.
@@ -124,8 +115,6 @@ namespace Odyssey.UserInterface.Controls
             {
                 if (ctl.Name == id)
                     return ctl;
-                else
-                    continue;
             }
             return null;
         }
@@ -153,7 +142,8 @@ namespace Odyssey.UserInterface.Controls
         {
             UIElement copy = base.Copy();
             CopyEvents(typeof(Panel), this, copy);
-            var containerCopy = (IContainer) copy;
+            var containerCopy = (Panel) copy;
+            containerCopy.IsItemsHost = IsItemsHost;
             foreach (UIElement child in Controls)
                 containerCopy.Controls.Add(child.Copy());
 

@@ -4,7 +4,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class UniformStackPanel :StackPanelBase
+    public class UniformStackPanel : StackPanelBase
     {
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {

@@ -99,12 +99,8 @@ namespace Odyssey.UserInterface.Controls
         {
             base.OnTextStyleChanged(e);
             var styleService = Overlay.Services.GetService<IStyleService>();
-            if (Foreground == null)
-            {
-                var brushResource = Overlay.Theme.GetResource<ColorResource>(TextStyle.Foreground);
-                Foreground = styleService.GetBrushResource(brushResource);
-            }
-
+            var brushResource = Overlay.Theme.GetResource<ColorResource>(TextStyle.Foreground);
+            Foreground = styleService.GetBrushResource(brushResource);
             textFormat = styleService.GetTextResource(TextStyle);
             DeviceContext context = Device;
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
