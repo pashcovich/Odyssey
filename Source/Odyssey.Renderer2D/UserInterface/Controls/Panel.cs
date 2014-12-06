@@ -49,9 +49,6 @@ namespace Odyssey.UserInterface.Controls
         /// containing the event data.</param>
         protected virtual void OnLogicalChildAdded(UIElementEventArgs e)
         {
-            var newElement = e.Element;
-            newElement.Parent = this;
-            newElement.Index = Controls.Count;
             RaiseEvent(LogicalChildAdded, this, e);
             if (!DesignMode)
                 Layout(RenderSize);
@@ -145,7 +142,7 @@ namespace Odyssey.UserInterface.Controls
             var containerCopy = (Panel) copy;
             containerCopy.IsItemsHost = IsItemsHost;
             foreach (UIElement child in Controls)
-                containerCopy.Controls.Add(child.Copy());
+                containerCopy.Add(child.Copy());
 
             return copy;
         }

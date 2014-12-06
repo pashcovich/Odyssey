@@ -22,7 +22,7 @@ namespace Odyssey.UserInterface.Controls.Charts
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            var dockpanel = FindDescendant<DockPanel>();
+            var dockpanel = FindDescendants<DockPanel>().First();
             XAxisTitle = dockpanel.Controls[IdXAxisTitle];
             XAxisTitle.DependencyProperties.Add(DockPanel.DockPropertyKey, Dock.Bottom);
             ChartArea = dockpanel.Controls[IdChartArea];
@@ -57,7 +57,7 @@ namespace Odyssey.UserInterface.Controls.Charts
                 DataType = GetType(),
                 VisualTree = new DockPanel()
                 {
-                    new Label() {Name = IdXAxisTitle},
+                    new Label() {Name = IdXAxisTitle, TextStyleClass = TextStyle.TemplatedParent},
                     new UniformStackPanel {Name = IdChartArea, IsItemsHost = true}
                 }
             };

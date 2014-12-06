@@ -27,7 +27,6 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            textRenderer = new TextRenderer(Device, Foreground);
             var styleService = Overlay.Services.GetService<IStyleService>();
             if (Background == null)
             {
@@ -42,5 +41,10 @@ namespace Odyssey.UserInterface.Controls
             TextLayout.SetDrawingEffect(brush, new TextRange(start, length));
         }
 
+        protected override void OnTextStyleChanged(EventArgs e)
+        {
+            base.OnTextStyleChanged(e);
+            textRenderer = new TextRenderer(Device, Foreground);
+        }
     }
 }

@@ -67,6 +67,7 @@ namespace Odyssey.UserInterface.Style
                 newShape.IsInternal = true;
                 newShape.HorizontalAlignment = control.HorizontalAlignment;
                 newShape.VerticalAlignment = control.VerticalAlignment;
+                newShape.PositionOffsets = control.Position;
                 shapeList.Add(newShape);
             }
 

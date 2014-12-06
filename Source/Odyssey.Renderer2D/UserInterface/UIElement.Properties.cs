@@ -468,5 +468,11 @@ namespace Odyssey.UserInterface
                 OnPositionChanged(new PositionChangedEventArgs(position, position));
             }
         }
+
+        internal Vector3 PositionOffsets
+        {
+            get { return positionOffsets; }
+            set { positionOffsets = value; }
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace Odyssey.UserInterface.Controls
                     return;
                 controlStyleClass = value;
                 if (!DesignMode)
-                    ApplyControlDescription();
+                    ApplyControlStyle();
             }
         }
 
@@ -74,8 +74,7 @@ namespace Odyssey.UserInterface.Controls
             {
                 if (textStyle == value) return;
                 textStyle = value;
-                foreach (var child in Controls.OfType<Control>())
-                    child.TextStyle = textStyle;
+
                 OnTextStyleChanged(EventArgs.Empty);
             }
         }
@@ -90,13 +89,10 @@ namespace Odyssey.UserInterface.Controls
 
                 textStyleClass = value;
 
-                foreach (var child in Controls.OfType<Control>())
-                    child.TextStyleClass = textStyleClass;
-
                 if (DesignMode)
                     return;
 
-                ApplyTextDescription();
+                ApplyTextStyle();
                 InvalidateMeasure();
                 OnTextStyleChanged(EventArgs.Empty);
             }
@@ -132,7 +128,8 @@ namespace Odyssey.UserInterface.Controls
                 return;
 
             foreach (var child in Controls)
-                child.Render();
+                if (child.IsVisible)
+                    child.Render();
         }
 
         /// <summary>
@@ -176,7 +173,7 @@ namespace Odyssey.UserInterface.Controls
             else return Size - MarginInternal;
         }
 
-        private void ApplyControlDescription()
+        private void ApplyControlStyle()
         {
             if (StyleClass == ControlStyle.Empty)
                 return;
@@ -188,12 +185,12 @@ namespace Odyssey.UserInterface.Controls
             }
             var controlStyle = Overlay.Theme.GetResource<ControlStyle>(StyleClass);
 
-            if (Width == 0 && controlStyle.Width > 0)
+            if (float.IsNaN(Width) && controlStyle.Width > 0)
             {
                 Width = controlStyle.Width;
             }
 
-            if (Height == 0 && controlStyle.Height > 0)
+            if (float.IsNaN(Height) && controlStyle.Height > 0)
             {
                 Height = controlStyle.Height;
             }
@@ -211,15 +208,23 @@ namespace Odyssey.UserInterface.Controls
             Style = controlStyle;
         }
 
-        protected void ApplyTextDescription()
+        protected void ApplyTextStyle()
         {
-            if (!Overlay.Theme.ContainsResource(TextStyleClass))
+            if (string.Equals(TextStyleClass, TextStyle.TemplatedParent))
             {
-                LogEvent.UserInterface.Warning("TextStyle '{0}' not found", TextStyleClass);
-                return;
+                var templatedParent = FindAncestor<ItemsControl>();
+                if (templatedParent != null)
+                    TextStyle = templatedParent.TextStyle;
             }
-
-            TextStyle = Overlay.Theme.GetResource<TextStyle>(TextStyleClass);
+            else
+            {
+                if (!Overlay.Theme.ContainsResource(TextStyleClass))
+                {
+                    LogEvent.UserInterface.Warning("TextStyle '{0}' not found", TextStyleClass);
+                    return;
+                }
+                TextStyle = Overlay.Theme.GetResource<TextStyle>(TextStyleClass);
+            }
         }
 
         /// <summary>
@@ -257,8 +262,8 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            ApplyControlDescription();
-            ApplyTextDescription();
+            ApplyControlStyle();
+            ApplyTextStyle();
         }
 
         /// <summary>

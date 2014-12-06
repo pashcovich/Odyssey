@@ -12,6 +12,7 @@ namespace Odyssey.UserInterface.Style
     public sealed class TextStyle : ISerializableResource, IResource
     {
         public const string Default = "Default";
+        public const string TemplatedParent = "TemplatedParent";
         public string Name { get; private set; }
         public string Foreground { get; private set; }
         public int Size { get; private set; }

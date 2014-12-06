@@ -29,26 +29,10 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
+        protected override void OnInitialized(EventArgs e)
         {
-            Content.Arrange(availableSizeWithoutMargins);
-            return base.ArrangeOverride(availableSizeWithoutMargins);
-        }
-
-        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
-        {
-            Content.Measure(availableSizeWithoutMargins);
-            return base.MeasureOverride(availableSizeWithoutMargins);
-        }
-
-        protected override void OnSizeChanged(SizeChangedEventArgs e)
-        {
-            base.OnSizeChanged(e);
-            if (Content != null)
-            {
-                Content.Width = Width;
-                Content.Height = Height;
-            }
+            base.OnInitialized(e);
+            Content.BringToFront();
         }
 
     }

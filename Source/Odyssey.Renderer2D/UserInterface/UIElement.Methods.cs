@@ -55,6 +55,25 @@ namespace Odyssey.UserInterface
                 OnGotFocus(EventArgs.Empty);
         }
 
+        internal TElement FindAncestor<TElement>(Func<TElement, bool> f)
+            where TElement:UIElement
+        {
+            var ancestor = (TElement)parent;
+            while (ancestor != null)
+            {
+                if (f(ancestor))
+                    return ancestor;
+                ancestor = (TElement)ancestor.Parent;
+            }
+            return null;
+        }
+
+        internal IEnumerable<TElement> FindDescendants<TElement>(Func<TElement, bool> f)
+            where TElement : UIElement
+        {
+            return TreeTraversal.PreOrderVisit(this).OfType<TElement>().Where(f);
+        }
+
         public TElement FindAncestor<TElement>() where TElement : UIElement
         {
             UIElement ancestor = parent;
@@ -68,15 +87,9 @@ namespace Odyssey.UserInterface
             return null;
         }
 
-        public TElement FindDescendant<TElement>() where TElement : UIElement
+        public IEnumerable<TElement> FindDescendants<TElement>() where TElement : UIElement
         {
-            foreach (var item in TreeTraversal.PreOrderVisit(this))
-            {
-                var tDescendant = item as TElement;
-                if (tDescendant != null)
-                    return tDescendant;
-            }
-            return null;
+            return TreeTraversal.PreOrderVisit(this).OfType<TElement>();
         }
 
         #region Layout
@@ -257,6 +270,13 @@ namespace Odyssey.UserInterface
                 depth = value;
             else
                 throw new ArgumentOutOfRangeException("dimension");
+        }
+
+        public void BringToFront()
+        {
+            float zIndex = Parent.Controls.Max(e => e.Position.Z);
+            Position = new Vector3(position.X, position.Y, ++zIndex);
+            Parent.Controls.Sort(e=> e.Position.Z);
         }
 
         public void Layout(Vector3 availableSize)

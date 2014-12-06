@@ -27,16 +27,18 @@ namespace Odyssey.UserInterface
     {
         public static IEnumerable<UIElement> PostOrderInteractionVisit(UIElement root)
         {
-            var containerControl = root as IContainer;
-            if (containerControl != null)
-                foreach (UIElement control in containerControl.Controls.InteractionEnabled)
-                    foreach (UIElement ctlChild in PostOrderInteractionVisit(control))
-                        yield return ctlChild;
-            else
+            return PostOrderVisit(root, e => e.IsEnabled && e.CanRaiseEvents);
+        }
+
+        public static IEnumerable<UIElement> PostOrderVisit(UIElement root, Func<UIElement, bool> filter)
+        {
+            foreach (var child in root)
             {
-                var contentControl = root as IContentControl;
-                if (contentControl != null && contentControl.Content != null)
-                    yield return contentControl.Content;
+                if (!filter(child))
+                    continue;
+
+                foreach (var descendant in PostOrderInteractionVisit(child))
+                    yield return descendant;
             }
             yield return root;
         }
@@ -46,15 +48,16 @@ namespace Odyssey.UserInterface
             return PreOrderVisit(root, c => true);
         }
 
-        public static IEnumerable<UIElement> PreOrderVisit(UIElement root, Func<UIElement, bool> filterFunction)
+        public static IEnumerable<UIElement> PreOrderVisit(UIElement root, Func<UIElement, bool> filter)
         {
-            if (!filterFunction(root)) yield break;
-
-            yield return root;
+            if (filter(root));
+                yield return root;
 
             foreach (var child in root)
-                if (filterFunction(child))
-                    yield return child;
+            {
+                foreach (var descendant in PreOrderVisit(child, filter))
+                    yield return descendant;
+            }
         }
 
         public static IEnumerable<UIElement> VisibleControls(UIElement root)

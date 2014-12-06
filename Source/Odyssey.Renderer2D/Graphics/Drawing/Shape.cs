@@ -86,6 +86,7 @@ namespace Odyssey.Graphics.Drawing
             copy.StrokeThickness = StrokeThickness;
             copy.ScaleX = LayoutManager.Scale * ScaleX;
             copy.ScaleY = LayoutManager.Scale * ScaleY;
+            copy.Depth = Depth;
             return copy;
         }
 
@@ -127,7 +128,12 @@ namespace Odyssey.Graphics.Drawing
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            return availableSizeWithoutMargins;
+            return availableSizeWithoutMargins*new Vector3(ScaleX, ScaleY, 1);
+        }
+
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
+        {
+            return availableSizeWithoutMargins * new Vector3(ScaleX, ScaleY, 1);
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)

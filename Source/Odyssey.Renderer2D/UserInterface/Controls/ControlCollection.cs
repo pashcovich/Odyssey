@@ -130,6 +130,7 @@ namespace Odyssey.UserInterface.Controls
         {
             ProcessForInsertion(item);
             base.InsertItem(index, item);
+            Sort(e=> e.Position.Z);
         }
 
         private void ProcessForDeletion(UIElement control)
@@ -159,13 +160,8 @@ namespace Odyssey.UserInterface.Controls
             Contract.Requires<ArgumentNullException>(control != null);
             Contract.Requires<InvalidOperationException>(!Contains(control), "Control is already in collection.");
 
-            //Window window = control as Window;
-            //if (window != null)
-            //    if (Owner is Overlay)
-            //        windowLayer = UserInterfaceManager.CurrentOverlay.WindowManager.RegisterWindow(window);
-            //    else
-            //        throw new ArgumentException("Windows can only be added to the Overlay.");
             control.Parent = Owner;
+            control.Index = Count;
         }
 
         protected override void RemoveItem(int index)

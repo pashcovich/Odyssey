@@ -2,9 +2,11 @@
 
 using System;
 using System.Diagnostics.Contracts;
+using System.Runtime.InteropServices;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.Logging;
+using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 using System.Collections;
 using System.Linq;
@@ -147,19 +149,10 @@ namespace Odyssey.UserInterface.Controls
                         newItem.SetBinding(kvp.Value, kvp.Key);
 
                     newItem.Name = string.Format("{0}{1:D2}", newItem.Name, itemCount++);
+
                     previousElement = newItem;
                 }
             }
         }
-
-        #region IContainer members
-
-        public override void Render()
-        {
-            foreach (UIElement control in Controls.Where(control => control.IsVisible))
-                control.Render();
-        }
-
-        #endregion IContainer members
     }
 }

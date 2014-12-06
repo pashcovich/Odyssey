@@ -37,7 +37,6 @@ namespace Odyssey.UserInterface.Controls
                 Content = new TextBlock() { Text = Name };
                 Content.Initialize();
             }
-            ToDispose(Content);
         }
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
@@ -57,13 +56,5 @@ namespace Odyssey.UserInterface.Controls
             base.OnPointerEnter(e);
             ActiveStatus = ControlStatus.Highlighted;
         }
-
-        public override void Render()
-        {
-            base.Render();
-            if (Content != null)
-                Content.Render();
-        }
-
     }
 }

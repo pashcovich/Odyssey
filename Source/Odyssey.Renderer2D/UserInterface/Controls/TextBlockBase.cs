@@ -86,7 +86,7 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(EventArgs e)
         {
             if (TextStyle == null)
-                ApplyTextDescription();
+                ApplyTextStyle();
 
             if (string.IsNullOrEmpty(Text))
                 Text = Name;
@@ -100,7 +100,7 @@ namespace Odyssey.UserInterface.Controls
             base.OnTextStyleChanged(e);
             var styleService = Overlay.Services.GetService<IStyleService>();
             var brushResource = Overlay.Theme.GetResource<ColorResource>(TextStyle.Foreground);
-            Foreground = styleService.GetBrushResource(brushResource);
+            Foreground = styleService.GetBrushResource(brushResource, brushResource.Shared);
             textFormat = styleService.GetTextResource(TextStyle);
             DeviceContext context = Device;
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
