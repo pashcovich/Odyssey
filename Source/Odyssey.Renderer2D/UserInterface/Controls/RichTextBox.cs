@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
@@ -20,7 +19,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        public IEnumerable<Label> Blocks { get { return Controls.OfType<Label>(); } }
+        public IEnumerable<Label> Blocks { get { return FindDescendants<Label>(); } }
 
         public int LineHeight
         {

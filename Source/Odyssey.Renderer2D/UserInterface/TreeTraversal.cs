@@ -50,11 +50,11 @@ namespace Odyssey.UserInterface
 
         public static IEnumerable<UIElement> PreOrderVisit(UIElement root, Func<UIElement, bool> filter)
         {
-            if (filter(root));
-                yield return root;
-
+            yield return root;
             foreach (var child in root)
             {
+                if (!filter(child))
+                    continue;
                 foreach (var descendant in PreOrderVisit(child, filter))
                     yield return descendant;
             }

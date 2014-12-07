@@ -32,5 +32,6 @@ namespace Odyssey.UserInterface.Controls
         public Canvas(string controlStyleClass, string textStyleClass = TextStyle.Default) : base(controlStyleClass, textStyleClass)
         {
         }
+
     }
 }

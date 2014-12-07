@@ -1,17 +1,31 @@
-﻿#region Using Directives
+﻿#region License
+
+// Copyright © 2013-2014 Iter Astris - Adalberto L. Simeone
+// Web: http://www.iterastris.uk E-mail: adal@iterastris.uk
+// 
+// The Odyssey Engine is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License Version 3 as published by
+// the Free Software Foundation.
+// 
+// The Odyssey Engine is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details at http://gplv3.fsf.org/
+
+#endregion
+
+#region Using Directives
 
 using System;
+using System.Collections;
 using System.Diagnostics.Contracts;
-using System.Runtime.InteropServices;
+using System.Linq;
+using Odyssey.Logging;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
-using Odyssey.Logging;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
-using System.Collections;
-using System.Linq;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -20,10 +34,15 @@ namespace Odyssey.UserInterface.Controls
         private Panel container;
         private IEnumerable itemsSource;
 
-        protected ItemsControl(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
-            : base(controlStyleClass, textStyleClass) {}
+        protected ItemsControl(string controlStyleClass, string textStyleClass = TextStyle.Default)
+            : base(controlStyleClass, textStyleClass)
+        {
+        }
 
-        protected Panel Container { get { return container; } }
+        protected Panel Container
+        {
+            get { return container; }
+        }
 
         public DataTemplate ItemTemplate { get; set; }
         public DataTemplate ItemsPanelTemplate { get; set; }
@@ -61,11 +80,11 @@ namespace Odyssey.UserInterface.Controls
         protected virtual DataTemplate CreateDefaultPanelTemplate()
         {
             string typeName = GetType().Name;
-            var panelTemplate = new DataTemplate()
+            var panelTemplate = new DataTemplate
             {
                 Key = string.Format("{0}.PanelTemplate", typeName),
                 DataType = GetType(),
-                VisualTree  = new StackPanel() {Orientation = Orientation.Vertical}
+                VisualTree = new StackPanel {Orientation = Orientation.Vertical}
             };
             return panelTemplate;
         }
@@ -81,10 +100,10 @@ namespace Odyssey.UserInterface.Controls
             PopulateItems();
         }
 
-        void CreateContainer()
+        private void CreateContainer()
         {
             Contract.Requires<InvalidOperationException>(ItemTemplate.VisualTree is Panel, "VisualTree root must be a Panel");
-            var panel = (Panel)ToDispose(ItemsPanelTemplate.VisualTree.Copy());
+            var panel = (Panel) ToDispose(ItemsPanelTemplate.VisualTree.Copy());
             if (panel.IsItemsHost)
                 container = panel;
             else
@@ -118,7 +137,7 @@ namespace Odyssey.UserInterface.Controls
             Controls.Add(panel);
         }
 
-        void PopulateItems()
+        private void PopulateItems()
         {
             if (ItemsSource == null)
                 return;
@@ -139,7 +158,7 @@ namespace Odyssey.UserInterface.Controls
                     UIElement newItem = ToDispose(element.Copy());
 
                     if (element.Parent is ContentControl)
-                        ((ContentControl)previousElement).Content = newItem;
+                        ((ContentControl) previousElement).Content = newItem;
                     else
                         container.Add(newItem);
 

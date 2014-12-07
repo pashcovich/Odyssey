@@ -159,7 +159,7 @@ namespace Odyssey.UserInterface
                 newAbsolutePosition += parent.AbsolutePosition;
 
             if (!newAbsolutePosition.Equals(oldAbsolutePosition))
-                absolutePosition = newAbsolutePosition;
+                AbsolutePosition = newAbsolutePosition;
 
             var elementSize = Size;
             var finalSizeWithoutMargins = availableSizeWithMargins - MarginInternal;
