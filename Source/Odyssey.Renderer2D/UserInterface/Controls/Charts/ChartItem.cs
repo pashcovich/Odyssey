@@ -3,7 +3,7 @@ using Odyssey.Geometry;
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
-    public abstract class ChartItem : Control
+    public abstract class ChartItem : VisualElement
     {
         private Chart chart;
 

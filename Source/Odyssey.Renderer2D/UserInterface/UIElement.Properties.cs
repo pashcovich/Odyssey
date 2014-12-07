@@ -41,7 +41,7 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Returns the publicly available collection of child controls.
         /// </summary>
-        public ControlCollection Controls { get; private set; }
+        public UIElementCollection Children { get; private set; }
 
         public RectangleF BoundingRectangle
         {
@@ -75,7 +75,7 @@ namespace Odyssey.UserInterface
                 if (designMode == value)
                     return;
                 designMode = value;
-                foreach (UIElement childControl in Controls)
+                foreach (UIElement childControl in Children)
                     childControl.DesignMode = value;
             }
         }
@@ -314,12 +314,7 @@ namespace Odyssey.UserInterface
         }
 
         public PropertyContainer DependencyProperties;
-
-        /// <summary>
-        /// Gets the top left position in the client area of the control.
-        /// </summary>
-        /// <value>The top left position.</value>
-        protected Vector3 TopLeftPosition { get; set; }
+        private Vector3 positionOffsets;
 
         protected Direct2DDevice Device
         {
@@ -437,7 +432,7 @@ namespace Odyssey.UserInterface
                     OnParentChanged(EventArgs.Empty);
                     var formerParent = parent as IContainer;
                     if (formerParent != null)
-                        formerParent.Controls.Remove(value);
+                        formerParent.Children.Remove(value);
                 }
                 DesignMode = parent.DesignMode;
             }
@@ -472,7 +467,11 @@ namespace Odyssey.UserInterface
         internal Vector3 PositionOffsets
         {
             get { return positionOffsets; }
-            set { positionOffsets = value; }
+            set
+            {
+                positionOffsets = value; 
+                
+            }
         }
     }
 }

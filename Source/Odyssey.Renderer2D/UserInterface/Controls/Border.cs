@@ -2,7 +2,7 @@
 {
     public class Border : ContentControl
     {
-        public Border() : base(typeof(Border).Name)
+        public Border() : base(typeof (Border).Name)
         {
         }
     }

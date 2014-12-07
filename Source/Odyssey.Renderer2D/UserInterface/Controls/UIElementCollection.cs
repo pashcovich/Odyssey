@@ -21,14 +21,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Geometry;
+using SharpDX.Mathematics;
 
 #endregion Using Directives
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class ControlCollection : Collection<UIElement>, IEnumerable<UIElement>
+    public class UIElementCollection : Collection<UIElement>, IEnumerable<UIElement>
     {
-        public ControlCollection(UIElement owner)
+        public UIElementCollection(UIElement owner)
         {
             Owner = owner;
         }
@@ -41,9 +43,14 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        public IEnumerable<UIElement> Public
+        public IEnumerable<UIElement> Visual
         {
             get { return this.Where(c => !c.IsInternal); }
+        }
+
+        internal IEnumerable<UIElement> Internal
+        {
+            get { return this.Where(c => c.IsInternal); }
         }
 
         public bool IsEmpty
@@ -148,7 +155,7 @@ namespace Odyssey.UserInterface.Controls
             var containerControl = control as IContainer;
 
             if (containerControl != null)
-                foreach (UIElement childControl in containerControl.Controls)
+                foreach (UIElement childControl in containerControl.Children)
                 {
                     childControl.CanRaiseEvents = false;
                     childControl.IsBeingRemoved = true;
@@ -162,6 +169,8 @@ namespace Odyssey.UserInterface.Controls
 
             control.Parent = Owner;
             control.Index = Count;
+            if (!control.IsInternal)
+                control.SetPosition(new Vector3(control.Position.XY(), control.Position.Z+1));
         }
 
         protected override void RemoveItem(int index)

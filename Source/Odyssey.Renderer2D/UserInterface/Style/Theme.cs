@@ -122,7 +122,7 @@ namespace Odyssey.UserInterface.Style
                     var name = xmlReader.LocalName;
                     switch (name)
                     {
-                        case "ControlStyle":
+                        case "VisualStyle":
                             ParseControlStyle(xmlReader);
                             break;
 
@@ -188,8 +188,8 @@ namespace Odyssey.UserInterface.Style
 
         private void ParseControlStyle(XmlReader reader)
         {
-            var style = new ControlStyle();
-            AddResource(reader.GetAttribute(ReflectionHelper.GetPropertyName((ControlStyle c) => c.Name)), style);
+            var style = new VisualStyle();
+            AddResource(reader.GetAttribute(ReflectionHelper.GetPropertyName((VisualStyle c) => c.Name)), style);
             style.DeserializeXml(this, reader);
         }
 

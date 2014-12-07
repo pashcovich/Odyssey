@@ -134,7 +134,7 @@ namespace Odyssey.UserInterface.Controls
             if (container == null)
                 container = panel;
 
-            Controls.Add(panel);
+            Children.Add(panel);
         }
 
         private void PopulateItems()

@@ -26,13 +26,13 @@
       <GradientStop Color="{Transparent}" Offset="1.0"/>
     </RadialGradient>
   </Resources>
-  <ControlStyle Name="Button" Width="200" Height="50" TextStyle="{Default}">
+  <VisualStyle Name="Button" Width="192" Height="64" TextStyle="{Default}">
     <VisualState>
       <Shapes>
-        <Rectangle Name="Main" Position="0,0" StrokeThickness="1" Width="1" Height="1" Fill="{DimGray}" />
-        <Rectangle Name="GlowEffect" Position="0,0" Width="1" Height="1" Fill="{ButtonFillGlow}"/>
-        <Rectangle Name="Foreground" Position="0,0" Width="1" Height="1" Fill="{ButtonFillForeground}" Stroke="{DarkGray}"/>
-        <Rectangle Name="GlassEffect" Position="0,0" Width="1" Height="0.5" Fill="{ButtonFillShine}"/>
+        <Rectangle Name="Main" Position="0,0,0" StrokeThickness="1" Width="1" Height="1" Fill="{DimGray}" />
+        <Rectangle Name="GlowEffect" Position="0,0,0" Width="1" Height="1" Fill="{ButtonFillGlow}"/>
+        <Rectangle Name="Foreground" Position="0,0,0" Width="1" Height="1" Fill="{ButtonFillForeground}" Stroke="{DarkGray}"/>
+        <Rectangle Name="GlassEffect" Position="0,0,0" Width="1" Height="0.5" Fill="{ButtonFillShine}"/>
       </Shapes>
       <Animations>
         <Animation Name="Highlighted">
@@ -47,14 +47,21 @@
         </Animation>
       </Animations>
     </VisualState>
-  </ControlStyle>
-  <ControlStyle Name="Panel" BorderSize="2">
+  </VisualStyle>
+  <VisualStyle Name="Panel">
     <VisualState>
       <Shapes>
         <Rectangle StrokeThickness="1" Width="1" Height="1" Fill="{DefaultPanel}" Stroke="{DarkGray}"/>
       </Shapes>
     </VisualState>
-  </ControlStyle>
+  </VisualStyle>
+  <VisualStyle Name="ListBox">
+    <VisualState>
+      <Shapes>
+        <Rectangle StrokeThickness="1" Width="1" Height="1" Stroke="{DarkGray}"/>
+      </Shapes>
+    </VisualState>
+  </VisualStyle>
   <TextStyle Name="Default" Size="30" FontFamily="Arial" FontStyle="Normal" TextAlignment="Leading" ParagraphAlignment="Near" Foreground="{White}"/>
   <TextStyle Name="Small" Size="20" FontFamily="Arial" FontStyle="Normal" TextAlignment="Leading" ParagraphAlignment="Center" Foreground="{White}"/>
   <TextStyle Name="SmallCenter" Size="20" FontFamily="Arial" FontStyle="Normal" TextAlignment="Center" ParagraphAlignment="Center" Foreground="{White}"/>

@@ -26,12 +26,5 @@ namespace Odyssey.UserInterface.Controls
 {
     public class Canvas : Panel
     {
-        public Canvas() : this(ControlStyle.Empty)
-        { }
-
-        public Canvas(string controlStyleClass, string textStyleClass = TextStyle.Default) : base(controlStyleClass, textStyleClass)
-        {
-        }
-
     }
 }

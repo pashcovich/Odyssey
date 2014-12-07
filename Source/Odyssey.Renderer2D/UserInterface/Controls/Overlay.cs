@@ -75,7 +75,7 @@ namespace Odyssey.UserInterface.Controls
         #endregion Properties
 
         public Overlay(IServiceRegistry services)
-            : base("Empty")
+            : base(VisualStyle.Empty)
         {
             Contract.Requires<ArgumentNullException>(services != null, "services");
 

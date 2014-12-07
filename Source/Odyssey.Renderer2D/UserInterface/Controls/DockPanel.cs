@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Odyssey.Core;
 using SharpDX.Mathematics;
 
@@ -19,16 +20,12 @@ namespace Odyssey.UserInterface.Controls
         /// </summary>
         public readonly static PropertyKey<Dock> DockPropertyKey = new PropertyKey<Dock>("DockKey", typeof(DockPanel), DefaultValueMetadata.Static(Dock.Left));
 
-        public DockPanel(string controlClass) : base(controlClass)
+        public DockPanel()
         {
             LastChildFill = true;
         }
 
         public bool LastChildFill { get; set; }
-
-        public DockPanel(): this("Empty")
-        {
-        }
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
@@ -36,17 +33,17 @@ namespace Odyssey.UserInterface.Controls
             float availableHeight = availableSizeWithoutMargins.Y;
             float availableDepth = availableSizeWithoutMargins.Z;
 
-            for (int i = 0; i < Controls.Count; i++)
+            var visualChildren = Children.Visual.ToArray();
+
+            for (int i = 0; i < visualChildren.Length; i++)
             {
-                var control = Controls[i];
+                var control = visualChildren[i];
                 float controlWidth = float.IsNaN(control.Width) ? control.MinimumWidth : control.Width;
                 float controlHeight = float.IsNaN(control.Height) ? control.MinimumHeight : control.Height;
                 float controlDepth = float.IsNaN(control.Depth) ? control.MinimumDepth : control.Depth;
 
-                if (LastChildFill && i == Controls.Count - 1)
+                if (LastChildFill && i == visualChildren.Length - 1)
                 {
-                    control.Width = availableWidth;
-                    control.Height = availableHeight;
                     control.Measure(new Vector3(availableWidth, availableHeight, availableDepth));
                 }
                 else
@@ -76,6 +73,9 @@ namespace Odyssey.UserInterface.Controls
                 }
             }
 
+            foreach (var shape in Children.Internal)
+                shape.Measure(availableSizeWithoutMargins);
+
             return availableSizeWithoutMargins;
         }
 
@@ -90,15 +90,15 @@ namespace Odyssey.UserInterface.Controls
             float bottomOffset=0;
             float depthOffset = 0;
 
-            for (int i = 0; i < Controls.Count; i++)
-            {
-                var control = Controls[i];
+            var visualChildren = Children.Visual.ToArray();
 
-                if (LastChildFill && i == Controls.Count - 1)
+            for (int i = 0; i < visualChildren.Length; i++)
+            {
+                var control = visualChildren[i];
+
+                if (LastChildFill && i == visualChildren.Length - 1)
                 {
                     control.Position = new Vector3(leftOffset, topOffset, depthOffset);
-                    control.Width = availableWidth;
-                    control.Height = availableHeight;
                     control.Arrange(new Vector3(availableWidth, availableHeight, availableDepth));
                 }
                 else
@@ -130,12 +130,15 @@ namespace Odyssey.UserInterface.Controls
                         case Dock.Top:
                             control.Position = new Vector3(leftOffset, topOffset, depthOffset);
                             control.Arrange(new Vector3(availableWidth, control.DesiredSizeWithMargins.Y, availableDepth));
-                            topOffset += control.DesiredSize.Y;
-                            availableHeight -= control.DesiredSize.Y;
+                            topOffset += control.DesiredSizeWithMargins.Y;
+                            availableHeight -= control.DesiredSizeWithMargins.Y;
                             break;
                     }
                 }
             }
+
+            foreach (var shape in Children.Internal)
+                shape.Arrange(availableSizeWithoutMargins);
 
             return availableSizeWithoutMargins;
         }

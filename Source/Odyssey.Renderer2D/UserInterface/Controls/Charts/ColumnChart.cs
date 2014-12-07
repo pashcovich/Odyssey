@@ -10,22 +10,22 @@ namespace Odyssey.UserInterface.Controls.Charts
     public class ColumnChart : Chart
     {
         public ColumnChart()
-            : base(ControlStyle.Empty, TextStyle.Default)
+            : base(VisualStyle.Empty, TextStyle.Default)
         {
         }
 
         protected IEnumerable<ChartItem> Items
         {
-            get { return ChartArea.Controls.OfType<ChartItem>(); }
+            get { return ChartArea.Children.OfType<ChartItem>(); }
         }
 
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             var dockpanel = FindDescendants<DockPanel>().First();
-            XAxisTitle = dockpanel.Controls[IdXAxisTitle];
+            XAxisTitle = dockpanel.Children[IdXAxisTitle];
             XAxisTitle.DependencyProperties.Add(DockPanel.DockPropertyKey, Dock.Bottom);
-            ChartArea = dockpanel.Controls[IdChartArea];
+            ChartArea = dockpanel.Children[IdChartArea];
             //ChartArea.StyleClass = StyleClass;
             //ChartArea.ItemsSource = ItemsSource;
         }

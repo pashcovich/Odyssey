@@ -24,10 +24,6 @@ namespace Odyssey.UserInterface.Controls
         /// <remarks>First row has 0 as index</remarks>
         public readonly static PropertyKey<int> LayerPropertyKey = new PropertyKey<int>("LayerKey", typeof(GridBase), DefaultValueMetadata.Static(0));
 
-        protected GridBase(string controlClass) : base(controlClass)
-        {
-        }
-
         protected Int3 GetElementGridPositions(UIElement element)
         {
             return new Int3(

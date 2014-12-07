@@ -24,7 +24,11 @@ using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class ListBox : ListBoxBase
+    public class ListBox : ItemsControl
     {
+        public ListBox()
+            : base(typeof(ListBox).Name)
+        {
+        }
     }
 }

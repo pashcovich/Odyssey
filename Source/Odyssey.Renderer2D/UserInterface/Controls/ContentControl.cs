@@ -1,6 +1,8 @@
-﻿using System;
-using Odyssey.UserInterface.Events;
-using SharpDX.Mathematics;
+﻿#region Using Directives
+
+using System;
+
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -8,12 +10,10 @@ namespace Odyssey.UserInterface.Controls
     {
         private UIElement content;
 
-        protected ContentControl(string controlStyleClass, string textStyleClass)
+        protected ContentControl(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
             : base(controlStyleClass, textStyleClass)
         {
         }
-
-        protected ContentControl(string controlStyleClass) : base(controlStyleClass) { }
 
         public UIElement Content
         {
@@ -23,9 +23,9 @@ namespace Odyssey.UserInterface.Controls
                 if (content == value)
                     return;
 
-                Controls.Remove(content);
+                Children.Remove(content);
                 content = ToDispose(value);
-                Controls.Add(content);
+                Children.Add(content);
             }
         }
 
@@ -34,6 +34,5 @@ namespace Odyssey.UserInterface.Controls
             base.OnInitialized(e);
             Content.BringToFront();
         }
-
     }
 }

@@ -30,10 +30,6 @@ namespace Odyssey.UserInterface.Controls
             new List<float>()
         };
 
-        public Grid() : base(typeof(Grid).Name)
-        {
-        }
-
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
@@ -85,7 +81,7 @@ namespace Odyssey.UserInterface.Controls
             CalculateStripPositions();
             CalculateStripSizes();
 
-            foreach (var control in Controls.Public)
+            foreach (var control in Children.Visual)
             {
                 var gridPosition = GetElementGridPositions(control);
                 control.Measure(new Vector3(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y], cachedStripSizes[2][gridPosition.Z]));
@@ -99,7 +95,7 @@ namespace Odyssey.UserInterface.Controls
             CalculateStripPositions();
             CalculateStripSizes();
 
-            foreach (var control in Controls.Public)
+            foreach (var control in Children.Visual)
             {
                 var gridPosition = GetElementGridPositions(control);
                 control.Position = new Vector3(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y], cachedStripPositions[2][gridPosition.Z]);

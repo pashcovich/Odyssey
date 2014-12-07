@@ -16,6 +16,7 @@
 #region Using Directives
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -31,6 +32,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
 {
+    [DebuggerDisplay("[{GetType().Name}]: {Parent.Name}:{Name}")]
     public abstract class Shape : UIElement, IShape, IRequiresCaching
     {
         private float scaleX;
@@ -84,8 +86,8 @@ namespace Odyssey.Graphics.Drawing
             copy.fillBrushClass = fillBrushClass;
             copy.strokeBrushClass = strokeBrushClass;
             copy.StrokeThickness = StrokeThickness;
-            copy.ScaleX = LayoutManager.Scale * ScaleX;
-            copy.ScaleY = LayoutManager.Scale * ScaleY;
+            copy.ScaleX = ScaleX;
+            copy.ScaleY = ScaleY;
             copy.Depth = Depth;
             return copy;
         }
@@ -112,18 +114,6 @@ namespace Odyssey.Graphics.Drawing
 
             if (stroke == null)
                 stroke = CreateOrRetrieveBrush(strokeBrushClass);
-            
-            if (ScaleX == 0)
-                ScaleX = LayoutManager.Scale;
-            if (ScaleY == 0)
-                ScaleY = LayoutManager.Scale;
-        }
-
-        protected override void OnLayoutUpdated(EventArgs e)
-        {
-            base.OnLayoutUpdated(e);
-            if (fill != null)
-                fill.Transform = Matrix3x2.Scaling(scaleX, scaleY) * Transform;
         }
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)

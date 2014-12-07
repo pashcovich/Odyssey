@@ -153,8 +153,8 @@ namespace Odyssey.UserInterface
             IsArrangeValid = true;
 
             Vector3 oldAbsolutePosition = absolutePosition;
-            positionOffsets = TopLeftPosition + new Vector3(Margin.Left, Margin.Top, 0);
-            var newAbsolutePosition = Position + positionOffsets;
+            PositionOffsets += new Vector3(Margin.Left, Margin.Top, 0);
+            var newAbsolutePosition = Position + PositionOffsets;
             if (parent != null)
                 newAbsolutePosition += parent.AbsolutePosition;
 
@@ -186,12 +186,12 @@ namespace Odyssey.UserInterface
             elementSize = ArrangeOverride(elementSize);
             RenderSize = elementSize;
 
-            CalculatePosition(availableSizeWithMargins, elementSize, ref positionOffsets);
-            if (positionOffsets != Vector3.Zero)
+            PositionOffsets = CalculatePosition(availableSizeWithMargins, elementSize);
+            if (PositionOffsets != Vector3.Zero)
             {
-                AbsolutePosition += positionOffsets;
-                foreach (var shape in Controls.Where(shape => shape.IsInternal))
-                    shape.AbsolutePosition += positionOffsets;
+                AbsolutePosition += PositionOffsets;
+                foreach (var element in Children)
+                    element.PositionOffsets += PositionOffsets;
             }
         }
 
@@ -229,30 +229,32 @@ namespace Odyssey.UserInterface
             DesiredSizeWithMargins = desiredSize + MarginInternal;
         }
 
-        private void CalculatePosition(Vector3 availableSpace, Vector3 usedSpace, ref Vector3 absolutePosition)
+        private Vector3 CalculatePosition(Vector3 availableSpace, Vector3 usedSpace)
         {
+            Vector3 offsets = Vector3.Zero;
             switch (VerticalAlignment)
             {
                 case VerticalAlignment.Bottom:
-                    absolutePosition.Y += availableSpace.Y - usedSpace.Y;
+                    offsets.Y += availableSpace.Y - usedSpace.Y;
 
                     break;
 
                 case VerticalAlignment.Center:
-                    absolutePosition.Y += (availableSpace.Y - usedSpace.Y) / 2;
+                    offsets.Y += (availableSpace.Y - usedSpace.Y) / 2;
                     break;
             }
 
             switch (HorizontalAlignment)
             {
                 case HorizontalAlignment.Center:
-                    absolutePosition.X += (availableSpace.X - usedSpace.X)/2;
+                    offsets.X += (availableSpace.X - usedSpace.X) / 2;
                     break;
 
                 case HorizontalAlignment.Right:
-                    absolutePosition.X += availableSpace.X - usedSpace.X;
+                    offsets.X += availableSpace.X - usedSpace.X;
                     break;
             }
+            return offsets;
         }
 
         internal void SetPosition(Vector3 newPosition)
@@ -274,9 +276,9 @@ namespace Odyssey.UserInterface
 
         public void BringToFront()
         {
-            float zIndex = Parent.Controls.Max(e => e.Position.Z);
+            float zIndex = Parent.Children.Max(e => e.Position.Z);
             Position = new Vector3(position.X, position.Y, ++zIndex);
-            Parent.Controls.Sort(e=> e.Position.Z);
+            Parent.Children.Sort(e=> e.Position.Z);
         }
 
         public void Layout(Vector3 availableSize)
@@ -323,6 +325,9 @@ namespace Odyssey.UserInterface
 
             if (Animator.HasAnimations)
                 Animator.Initialize();
+
+            foreach (UIElement element in Children)
+                element.Initialize();
 
             OnInitialized(args);
         }
@@ -469,7 +474,7 @@ namespace Odyssey.UserInterface
 
         public IEnumerator<UIElement> GetEnumerator()
         {
-            return Controls.GetEnumerator();
+            return Children.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

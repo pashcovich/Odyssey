@@ -31,7 +31,7 @@ using Odyssey.UserInterface.Controls;
 
 namespace Odyssey.UserInterface.Style
 {
-    public sealed class ControlStyle : ISerializableResource, IResourceProvider
+    public sealed class VisualStyle : ISerializableResource, IResourceProvider
     {
         public const string Empty = "Empty";
         internal const string Error = "Error";
@@ -41,12 +41,11 @@ namespace Odyssey.UserInterface.Style
         public float Width { get; private set; }
         public float Height { get; private set; }
         public Thickness Margin { get; private set; }
-        public Thickness Padding { get; private set; }
         public string TextStyleClass { get; private set; }
 
         public string Name { get; private set; }
 
-        public VisualState CreateVisualState(Control control)
+        public VisualState CreateVisualState(VisualElement control)
         {
             return VisualState.GenerateVisualStateForControl(control, visualStateDefinition);
         }
@@ -62,9 +61,6 @@ namespace Odyssey.UserInterface.Style
 
             string textStyleClass = xmlReader.GetAttribute("TextStyle");
             TextStyleClass = String.IsNullOrEmpty(textStyleClass) ? "Default" : textStyleClass;
-
-            string padding = xmlReader.GetAttribute("Padding");
-            Padding = String.IsNullOrEmpty(padding) ? Thickness.Empty : StyleHelper.DecodeThickness(padding);
 
             string width = xmlReader.GetAttribute("Width");
             string height = xmlReader.GetAttribute("Height");

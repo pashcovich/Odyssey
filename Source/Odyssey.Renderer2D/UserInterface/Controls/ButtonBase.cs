@@ -34,7 +34,7 @@ namespace Odyssey.UserInterface.Controls
             base.OnInitializing(e);
             if (Content == null)
             {
-                Content = new TextBlock() { Text = Name };
+                Content = new TextBlock() { Text = Name, TextStyleClass = TextStyleClass};
                 Content.Initialize();
             }
         }

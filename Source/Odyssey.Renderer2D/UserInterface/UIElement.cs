@@ -26,7 +26,7 @@ using SharpDX.Mathematics;
 using System;
 using System.Collections.Generic;
 using SharpDX.Mathematics.Interop;
-using Control = Odyssey.UserInterface.Controls.Control;
+
 #endregion Using Directives
 
 namespace Odyssey.UserInterface
@@ -70,7 +70,6 @@ namespace Odyssey.UserInterface
         private Vector3 renderSize;
         private Vector3 position;
         private Vector3 absolutePosition;
-        private Vector3 positionOffsets;
 
         private VerticalAlignment verticalAlignment;
         private HorizontalAlignment horizontalAlignment;
@@ -94,7 +93,7 @@ namespace Odyssey.UserInterface
 
             Name = string.Format("{0}{1}", type, TypeCounter[type]);
 
-            Controls = new ControlCollection(this);
+            Children = new UIElementCollection(this);
             bindings = new Dictionary<string, BindingExpression>();
             behaviors = new BehaviorCollection();
             animator = new AnimationController(this);

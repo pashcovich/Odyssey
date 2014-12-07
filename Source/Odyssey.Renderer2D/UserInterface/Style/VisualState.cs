@@ -10,10 +10,10 @@ namespace Odyssey.UserInterface.Style
 {
     public sealed class VisualState : Component, IResourceProvider, IEnumerable<Shape>
     {
-        private readonly Control parent;
+        private readonly VisualElement parent;
         private readonly Shape[] shapes;
 
-        private VisualState(Control parent, IEnumerable<Shape> shapes)
+        private VisualState(VisualElement parent, IEnumerable<Shape> shapes)
         {
             this.parent = parent;
             this.shapes = shapes.ToArray();
@@ -53,7 +53,7 @@ namespace Odyssey.UserInterface.Style
             }
         }
         
-        internal static VisualState GenerateVisualStateForControl(Control control,
+        internal static VisualState GenerateVisualStateForControl(VisualElement control,
             VisualStateDefinition visualStateDefinition)
         {
             var shapeList = new List<Shape>();
@@ -67,7 +67,7 @@ namespace Odyssey.UserInterface.Style
                 newShape.IsInternal = true;
                 newShape.HorizontalAlignment = control.HorizontalAlignment;
                 newShape.VerticalAlignment = control.VerticalAlignment;
-                newShape.PositionOffsets = control.Position;
+                newShape.PositionOffsets = control.PositionOffsets;
                 shapeList.Add(newShape);
             }
 

@@ -31,8 +31,8 @@ using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 
 namespace Odyssey.UserInterface.Controls
 {
-    [DebuggerDisplay("[{GetType().Name}] \"{Text}\" [{TextStyleClass}]")]
-    public abstract class TextBlockBase : Control
+    [DebuggerDisplay("[{GetType().Name}] {Text} [{TextStyleClass}]")]
+    public abstract class TextBlockBase : VisualElement
     {
         protected const string DefaultTextClass = "Default";
         private const string ControlTag = "Default";
@@ -52,6 +52,7 @@ namespace Odyssey.UserInterface.Controls
             : base("Empty", textDefinitionClass)
         {
             CanRaiseEvents = false;
+            Text = string.Empty;
         }
 
         protected TextFormat TextFormat
@@ -113,7 +114,15 @@ namespace Odyssey.UserInterface.Controls
             
             textLayout = ToDispose(new TextLayout(Device, Text, TextFormat, availableSizeWithoutMargins.X, availableSizeWithoutMargins.Y));
             TextMetrics = textLayout.Metrics;
-            return new Vector3((float)Math.Ceiling(TextMetrics.Width), (float)Math.Ceiling(TextMetrics.Height), availableSizeWithoutMargins.Z);
+            switch (HorizontalAlignment)
+            {
+                case HorizontalAlignment.Stretch:
+                    return new Vector3(availableSizeWithoutMargins.X, (float) Math.Ceiling(TextMetrics.Height), availableSizeWithoutMargins.Z);
+
+                default:
+                    return new Vector3((float) Math.Ceiling(TextMetrics.Width), (float) Math.Ceiling(TextMetrics.Height), availableSizeWithoutMargins.Z);
+            }
+
         }
 
         protected override void OnSizeChanged(SizeChangedEventArgs e)

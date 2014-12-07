@@ -4,11 +4,11 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class UniformStackPanel : StackPanelBase
+    public class UniformStackPanel : StackPanel
     {
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            int count = Controls.Public.Count();
+            int count = Children.Visual.Count();
 
             var size = Orientation == Orientation.Horizontal
                 ? new Vector3(availableSizeWithoutMargins.X/count, availableSizeWithoutMargins.Y, availableSizeWithoutMargins.Z)
@@ -18,7 +18,7 @@ namespace Odyssey.UserInterface.Controls
             int maximizeIndex = Orientation == Orientation.Horizontal ? 1 : 0;
             var desiredSize = Vector3.Zero;
 
-            foreach (var control in Controls.Public)
+            foreach (var control in Children.Visual)
             {
                 control.Measure(size);
                 desiredSize[sumIndex] += control.DesiredSizeWithMargins[sumIndex];

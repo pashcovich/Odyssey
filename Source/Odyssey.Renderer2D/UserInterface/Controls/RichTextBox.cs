@@ -76,12 +76,12 @@ namespace Odyssey.UserInterface.Controls
             if (lineHeight == 0)
                 LineHeight = TextStyle.Size;
             if (ItemTemplate != null)
-                ((Control)ItemTemplate.VisualTree).TextStyleClass = TextStyleClass;
+                ((VisualElement)ItemTemplate.VisualTree).TextStyleClass = TextStyleClass;
         }
 
         protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            LayoutManager.DistributeVertically(availableSizeWithoutMargins, Controls);
+            LayoutManager.DistributeVertically(availableSizeWithoutMargins, this);
             return base.ArrangeOverride(availableSizeWithoutMargins);
         }
     }

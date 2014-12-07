@@ -26,9 +26,9 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class Panel : Control, IContainer
+    public abstract class Panel : UIElement, IContainer
     {
-        protected Panel(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default) : base(controlStyleClass, textStyleClass)
+        protected Panel()
         {
             IsFocusable = false;
         }
@@ -36,7 +36,7 @@ namespace Odyssey.UserInterface.Controls
         #region IContainer Members
 
         /// <summary>
-        /// Occurs when a new control is added to the <see cref="ControlCollection"/>.
+        /// Occurs when a new control is added to the <see cref="UIElementCollection"/>.
         /// </summary>
         public event EventHandler<UIElementEventArgs> LogicalChildAdded;
 
@@ -64,7 +64,7 @@ namespace Odyssey.UserInterface.Controls
                 if (base.Parent == value) return;
 
                 base.Parent = value;
-                foreach (UIElement control in Controls)
+                foreach (UIElement control in Children)
                     control.Parent = this;
             }
         }
@@ -73,8 +73,8 @@ namespace Odyssey.UserInterface.Controls
         {
             Contract.Requires<ArgumentNullException>(item != null, "control");
             Contract.Requires<InvalidOperationException>(this != item, "cannot add self");
-            Controls.Add(ToDispose(item));
-            OnLogicalChildAdded(new UIElementEventArgs(item, Controls.Count-1));
+            Children.Add(ToDispose(item));
+            OnLogicalChildAdded(new UIElementEventArgs(item, Children.Count-1));
         }
        
         public void AddRange(IEnumerable<UIElement> controls)
@@ -98,12 +98,12 @@ namespace Odyssey.UserInterface.Controls
         {
             Contract.Requires<ArgumentNullException>(control != null, "control is null");
 
-            return Controls.Contains(control);
+            return Children.Contains(control);
         }
 
         public bool ContainsControl(string name)
         {
-            return Controls.Any(c => string.Equals(c.Name, name));
+            return Children.Any(c => string.Equals(c.Name, name));
         }
 
         public UIElement Find(string id)
@@ -125,14 +125,16 @@ namespace Odyssey.UserInterface.Controls
 
         public void Remove(UIElement item)
         {
-            Controls.Remove(item);
+            Children.Remove(item);
         }
 
         public override void Render()
         {
-            base.Render();
-            foreach (UIElement control in Controls.Where(control => control.IsVisible))
-                control.Render();
+            foreach (UIElement control in Children)
+            {
+                if (control.IsVisible)
+                    control.Render();
+            }
         }
 
         protected internal override UIElement Copy()
@@ -141,7 +143,7 @@ namespace Odyssey.UserInterface.Controls
             CopyEvents(typeof(Panel), this, copy);
             var containerCopy = (Panel) copy;
             containerCopy.IsItemsHost = IsItemsHost;
-            foreach (UIElement child in Controls)
+            foreach (UIElement child in Children)
                 containerCopy.Add(child.Copy());
 
             return copy;
@@ -150,7 +152,7 @@ namespace Odyssey.UserInterface.Controls
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             var requiredSize = DesiredSize;
-            foreach (UIElement ctl in Controls)
+            foreach (UIElement ctl in Children)
             {
                 ctl.Measure(availableSizeWithoutMargins);
             }
@@ -159,7 +161,7 @@ namespace Odyssey.UserInterface.Controls
 
         protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            foreach (UIElement ctl in Controls)
+            foreach (UIElement ctl in Children)
             {
                 ctl.Arrange(availableSizeWithoutMargins);
             }
