@@ -17,8 +17,8 @@ namespace Odyssey.Daedalus.Viewer
             Overlay overlay = new Overlay(services) { Width = 576, Height = 576};
             overlay.BeginDesign();
 
-            Button bCaptureFrame = new Button() { Width = 64, Height = 64, Content = new Label{Text = "D"} };
-            Button bSwitchToCube = new Button() { Width = 64, Height = 64, Content = new Label { Text = "C" } };
+            Button bCaptureFrame = new Button() { Width = 64, Height = 64, Content = new TextBlock{Text = "D"} };
+            Button bSwitchToCube = new Button() { Width = 64, Height = 64, Content = new TextBlock { Text = "C" } };
 
             overlay.Add(bCaptureFrame);
             overlay.Add(bSwitchToCube);

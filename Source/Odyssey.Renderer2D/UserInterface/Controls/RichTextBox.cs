@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
@@ -11,14 +10,16 @@ namespace Odyssey.UserInterface.Controls
     public class RichTextBox : ItemsControl
     {
         private int lineHeight;
+        private int lines;
 
         public RichTextBox() : this(typeof(RichTextBox).Name) { }
 
         protected RichTextBox(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
             : base(controlStyleClass, textStyleClass)
-        { }
+        {
+        }
 
-        public IEnumerable<AdvancedLabel> Blocks { get { return Controls.OfType<AdvancedLabel>(); } }
+        public IEnumerable<Label> Blocks { get { return FindDescendants<Label>(); } }
 
         public int LineHeight
         {
@@ -35,23 +36,38 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        protected override DataTemplate CreateDefaultTemplate()
+        protected override DataTemplate CreateDefaultItemTemplate()
         {
             string typeName = GetType().Name;
-            DataTemplate = new DataTemplate
+            var itemTemplate = new DataTemplate
             {
-                Key = string.Format("{0}.TemplateInternal", typeName),
+                Key = string.Format("{0}.ItemTemplate", typeName),
                 DataType = GetType(),
-                VisualTree = new AdvancedLabel()
+                VisualTree = new Label()
                 {
-                    Name = string.Format("{0}Label", typeName),
-                    Width = Width - Padding.Horizontal,
+                    Name = string.Format("{0}.TextBlock", typeName),
                     Height = LineHeight,
                     TextStyleClass = TextStyleClass
                 }
             };
-            DataTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((AdvancedLabel l) => l.Text), new Binding(DataTemplate.VisualTree.Name, string.Empty));
-            return DataTemplate;
+            itemTemplate.Bindings.Add(ReflectionHelper.GetPropertyName((Label l) => l.Text), new Binding(ItemTemplate.VisualTree.Name, string.Empty));
+            return ItemTemplate;
+        }
+
+        protected override DataTemplate CreateDefaultPanelTemplate()
+        {
+            string typeName = GetType().Name;
+            var panelTemplate = new DataTemplate
+            {
+                Key = string.Format("{0}.PanelTemplate", typeName),
+                DataType = GetType(),
+                VisualTree = new StackPanel()
+                {
+                    Name = string.Format("{0}.{1}", typeName, typeof(StackPanel).Name),
+                    Orientation = Orientation.Vertical
+                }
+            };
+            return panelTemplate;
         }
 
         protected override void OnTextStyleChanged(EventArgs e)
@@ -59,15 +75,14 @@ namespace Odyssey.UserInterface.Controls
             base.OnTextStyleChanged(e);
             if (lineHeight == 0)
                 LineHeight = TextStyle.Size;
-            if (DataTemplate != null)
-                ((Control)DataTemplate.VisualTree).TextStyleClass = TextStyleClass;
+            if (ItemTemplate != null)
+                ((Control)ItemTemplate.VisualTree).TextStyleClass = TextStyleClass;
         }
 
-        protected override void Arrange()
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            base.Arrange();
-            if (!Controls.IsEmpty)
-                LayoutManager.DistributeVertically(this, Controls);
+            LayoutManager.DistributeVertically(availableSizeWithoutMargins, Controls);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
         }
     }
 }

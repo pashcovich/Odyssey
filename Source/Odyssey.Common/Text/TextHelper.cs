@@ -16,7 +16,7 @@ namespace Odyssey.Text
         {
             Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(value));
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (char c in value)
             {
@@ -39,7 +39,7 @@ namespace Odyssey.Text
 
         internal static int ArgbToRgba(int abgr)
         {
-            byte[] bytes = BitConverter.GetBytes(abgr);
+            var bytes = BitConverter.GetBytes(abgr);
             return BitConverter.ToInt32(new[] { bytes[2], bytes[1], bytes[0], bytes[3]}, 0);
         }
 
@@ -55,16 +55,16 @@ namespace Odyssey.Text
 
         internal static Vector2 DecodeFloatVector2(string s)
         {
-            string[] matches = s.Split(',');
-            float x = Single.Parse(matches[0], CultureInfo.InvariantCulture);
-            float y = Single.Parse(matches[1], CultureInfo.InvariantCulture);
+            var matches = s.Split(',');
+            var x = Single.Parse(matches[0], CultureInfo.InvariantCulture);
+            var y = Single.Parse(matches[1], CultureInfo.InvariantCulture);
             return new Vector2(x, y);
         }
 
         internal static Vector2 DecodeVector2(string s)
         {
-            Regex regex = new Regex(@"(?<x>\d+),(?<y>\d+)");
-            Match m = regex.Match(s);
+            var regex = new Regex(@"(?<x>\d+),(?<y>\d+)");
+            var m = regex.Match(s);
             int x = Int16.Parse(m.Groups["x"].Value, CultureInfo.InvariantCulture);
             int y = Int16.Parse(m.Groups["y"].Value, CultureInfo.InvariantCulture);
 
@@ -74,19 +74,19 @@ namespace Odyssey.Text
         internal static Vector3 DecodeVector3(string value)
         {
             const string pattern = @"\s*(?<values>[0-9.,\-\s]*)";
-            Regex regex = new Regex(pattern);
+            var regex = new Regex(pattern);
             var matches = regex.Match(value);
-            string[] values = matches.Groups["values"].Value.Split(',');
+            var values = matches.Groups["values"].Value.Split(',');
             if (values.Length != 3)
                 throw new InvalidOperationException(string.Format("Vector3 values are not in the correct format: {0}", value));
-            float[] vValues = (from s in values select float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+            var vValues = (from s in values select float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
             return new Vector3(vValues);
         }
 
         internal static Vector3 DecodeVector3LongForm(string s)
         {
-            Regex regex = new Regex(@"X:\s?(?<x>\d+)\s?Y:\s?(?<y>\d+)\s?Z:\s?(?<z>\d+)\s?");
-            Match m = regex.Match(s);
+            var regex = new Regex(@"X:\s?(?<x>\d+)\s?Y:\s?(?<y>\d+)\s?Z:\s?(?<z>\d+)\s?");
+            var m = regex.Match(s);
             int x = Int16.Parse(m.Groups["x"].Value, CultureInfo.InvariantCulture);
             int y = Int16.Parse(m.Groups["y"].Value, CultureInfo.InvariantCulture);
             int z = Int16.Parse(m.Groups["z"].Value, CultureInfo.InvariantCulture);
@@ -127,9 +127,9 @@ namespace Odyssey.Text
         public static bool IsExpressionArray(string expression, out string arrayName, out int index)
         {
             const string rArrayPattern = @"(?<array>\w*)\[(?<index>\d+)\]";
-            Regex rArray = new Regex(rArrayPattern);
+            var rArray = new Regex(rArrayPattern);
 
-            Match match = rArray.Match(expression);
+            var match = rArray.Match(expression);
             if (match.Success)
             {
                 arrayName = match.Groups["array"].Value;
@@ -147,9 +147,9 @@ namespace Odyssey.Text
         public static bool IsExpressionArray(string expression, out string arrayName, out string index)
         {
             const string rArrayPattern = @"(?<array>\w*)\[(?<index>[a-zA-Z0-9\[\]]+)\]";
-            Regex rArray = new Regex(rArrayPattern);
+            var rArray = new Regex(rArrayPattern);
 
-            Match match = rArray.Match(expression);
+            var match = rArray.Match(expression);
             if (match.Success)
             {
                 arrayName = match.Groups["array"].Value;

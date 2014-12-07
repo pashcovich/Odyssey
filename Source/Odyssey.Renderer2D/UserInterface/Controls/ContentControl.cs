@@ -1,4 +1,6 @@
 ﻿using System;
+using Odyssey.UserInterface.Events;
+using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -18,55 +20,20 @@ namespace Odyssey.UserInterface.Controls
             get { return content; }
             set
             {
+                if (content == value)
+                    return;
+
+                Controls.Remove(content);
                 content = ToDispose(value);
-                content.Parent = this;
+                Controls.Add(content);
             }
         }
 
-        public override bool DesignMode
+        protected override void OnInitialized(EventArgs e)
         {
-            get
-            {
-                return base.DesignMode;
-            }
-
-            protected internal set
-            {
-                base.DesignMode = value;
-                if (Content != null)
-                    Content.DesignMode = value;
-            }
+            base.OnInitialized(e);
+            Content.BringToFront();
         }
 
-        public override void Render()
-        {
-            base.Render();
-            if (Content != null)
-                Content.Render();
-        }
-
-        protected override void OnInitializing(EventArgs e)
-        {
-            base.OnInitializing(e);
-            if (Content != null)
-                Content.Initialize();
-        }
-
-        protected override void OnLayoutUpdated(EventArgs e)
-        {
-            base.OnLayoutUpdated(e);
-            if (Content != null)
-                Content.Layout();
-        }
-
-        protected override void OnSizeChanged(SizeChangedEventArgs e)
-        {
-            base.OnSizeChanged(e);
-            if (Content != null)
-            {
-                Content.Width = Width;
-                Content.Height = Height;
-            }
-        }
     }
 }

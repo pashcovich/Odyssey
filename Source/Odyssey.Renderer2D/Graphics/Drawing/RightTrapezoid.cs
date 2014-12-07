@@ -9,14 +9,6 @@ namespace Odyssey.Graphics.Drawing
     {
         internal float TopBaseRatio { get; private set; }
 
-        protected override void OnInitializing(EventArgs e)
-        {
-            var d = new FigureDesigner();
-            d.DrawRightTrapezoid(Position, Width*TopBaseRatio, Width, Height);
-            Data = d.Result;
-            base.OnInitializing(e);
-        }
-
         protected internal override UIElement Copy()
         {
             var copy = (RightTrapezoid)base.Copy();
@@ -29,6 +21,14 @@ namespace Odyssey.Graphics.Drawing
             base.OnReadXml(e);
             float r;
             TopBaseRatio = float.TryParse(e.XmlReader.GetAttribute(ReflectionHelper.GetPropertyName((RightTrapezoid t) => t.TopBaseRatio)), out r) ? r : 0.75f;
+        }
+
+        protected override void Redraw()
+        {
+            var d = new FigureDesigner();
+            d.DrawRightTrapezoid(Position, RenderSize.X * TopBaseRatio, RenderSize.X, RenderSize.Y);
+            Data = d.Result;
+            base.Redraw();
         }
     }
 }

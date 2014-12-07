@@ -23,6 +23,7 @@ using Odyssey.Engine;
 using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
 using SharpDX;
 using SharpDX.Mathematics;
@@ -34,12 +35,13 @@ namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
-        private float height;
-        private Matrix3x2 transform;
-        private float width;
-        private object dataContext;
-
         internal protected bool IsInternal { get; set; }
+        internal Vector3 MarginInternal { get {  return new Vector3(Margin.Horizontal, Margin.Vertical, 0);} }
+
+        /// <summary>
+        /// Returns the publicly available collection of child controls.
+        /// </summary>
+        public ControlCollection Controls { get; private set; }
 
         public RectangleF BoundingRectangle
         {
@@ -61,20 +63,20 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Gets or sets a value indicating whether the control is in design mode.
         /// </summary>
-        /// <value><c>true</c> if the control is in design mode; otherwise, /c>.</value>
+        /// <value><c>true</c> if the <see cref="UIElement"/> is in design mode; otherwise, /c>.</value>
         /// <remarks>
         /// While in design mode, certain events are not fired.
         /// </remarks>
-        public virtual bool DesignMode
+        public bool DesignMode
         {
             get { return designMode; }
             protected internal set
             {
-                if (designMode != value)
-                {
-                    designMode = value;
-                    OnDesignModeChanged(new EventArgs());
-                }
+                if (designMode == value)
+                    return;
+                designMode = value;
+                foreach (UIElement childControl in Controls)
+                    childControl.DesignMode = value;
             }
         }
 
@@ -93,18 +95,17 @@ namespace Odyssey.UserInterface
             get { return height; }
             set
             {
-                var oldSize = Size;
                 if (height == value)
                     return;
 
                 height = value;
-
-                OnSizeChanged(new SizeChangedEventArgs(oldSize, Size));
+                if (!DesignMode)
+                    InvalidateMeasure();
             }
         }
 
         /// <summary>
-        /// Gets the zero based index of this control in the <see cref = "ContainerControl" />.
+        /// Gets the zero based index of this control in the <see cref = "Panel" />.
         /// </summary>
         /// <value>The zero based index.</value>
         public int Index { get; internal set; }
@@ -123,15 +124,58 @@ namespace Odyssey.UserInterface
 
         public Thickness Margin { get; set; }
 
+        public VerticalAlignment VerticalAlignment
+        {
+            get { return verticalAlignment; }
+            set
+            {
+                if (verticalAlignment == value)
+                    return;
+                verticalAlignment = value;
+                if (!DesignMode)
+                    InvalidateArrange();
+            }
+        }
+
+        public HorizontalAlignment HorizontalAlignment
+        {
+            get { return horizontalAlignment; }
+            set
+            {
+                if (horizontalAlignment == value)
+                    return;
+                horizontalAlignment = value;
+                if (!DesignMode)
+                    InvalidateArrange();
+            }
+        }
+
         /// <summary>
         /// Gets the height and width of the control.
         /// </summary>
-        /// <value>The <see cref = "Vector2">Size</see> that represents the height and
-        /// width of the control in pixels.</value>
-        public Vector2 Size
+        /// <value>The <see cref = "Vector2">Size</see> that represents the height, width and depth of the control in pixels.</value>
+        public Vector3 Size { get { return new Vector3(Width, Height, Depth);} }
+
+        public Vector3 RenderSize
         {
-            get { return new Vector2(Width, Height); }
+            get { return renderSize; }
+            private set
+            {
+                var oldSize = renderSize;
+                if (renderSize == value)
+                    return;
+                
+                renderSize = value;
+                if (!DesignMode)
+                    OnSizeChanged(new SizeChangedEventArgs(oldSize, RenderSize));
+
+                UpdateLayoutInternal();
+                OnLayoutUpdated(EventArgs.Empty);
+            }
         }
+
+        public Vector3 DesiredSize { get; private set; }
+        public Vector3 DesiredSizeWithMargins { get; private set; }
 
         public Matrix3x2 Transform
         {
@@ -143,14 +187,52 @@ namespace Odyssey.UserInterface
             get { return width; }
             set
             {
-                var oldSize = Size;
                 if (width == value)
                     return;
 
                 width = value;
-
-                OnSizeChanged(new SizeChangedEventArgs(oldSize, Size));
+                if (!DesignMode)
+                    InvalidateMeasure();
             }
+        }
+
+        public bool IsArrangeValid { get; internal set; }
+        public bool IsMeasureValid { get; internal set; }
+
+        public float MinimumWidth
+        {
+            get { return minimumWidth; }
+            set { minimumWidth = value; }
+        }
+
+        public float MinimumHeight
+        {
+            get { return minimumHeight; }
+            set { minimumHeight = value; }
+        }
+
+        public float MinimumDepth
+        {
+            get { return minimumDepth; }
+            set { minimumDepth = value; }
+        }
+
+        public float MaximumWidth
+        {
+            get { return maximumWidth; }
+            set { maximumWidth = value; }
+        }
+
+        public float MaximumHeight
+        {
+            get { return maximumHeight; }
+            set { maximumHeight = value; }
+        }
+
+        public float MaximumDepth
+        {
+            get { return maximumDepth; }
+            set { maximumDepth = value; }
         }
 
         public AnimationController Animator
@@ -167,7 +249,10 @@ namespace Odyssey.UserInterface
 
         internal bool IsBeingRemoved { get; set; }
 
-        protected internal virtual Depth Depth { get; set; }
+        /// <summary>
+        /// Currently not used.
+        /// </summary>
+        
 
         /// <summary>
         /// Gets or sets a value indicating whether the mouse cursor is currently inside.
@@ -178,6 +263,12 @@ namespace Odyssey.UserInterface
         {
             get { return isInside && canRaiseEvents; }
             set { isInside = value; }
+        }
+
+        public float Depth
+        {
+            get { return depth; }
+            set { depth = value; }
         }
 
         /// <summary>
@@ -228,7 +319,7 @@ namespace Odyssey.UserInterface
         /// Gets the top left position in the client area of the control.
         /// </summary>
         /// <value>The top left position.</value>
-        protected internal Vector2 TopLeftPosition { get; protected set; }
+        protected Vector3 TopLeftPosition { get; set; }
 
         protected Direct2DDevice Device
         {
@@ -241,7 +332,22 @@ namespace Odyssey.UserInterface
         /// </summary>
         /// <value>A <see cref = "Vector2" /> that represents the absolute
         /// position of the upper-left corner in screen coordinates for this control.</value>
-        public Vector2 AbsolutePosition { get; private set; }
+        public Vector3 AbsolutePosition
+        {
+            get { return absolutePosition; }
+            protected set
+            {
+                var oldPosition = absolutePosition;
+                absolutePosition = value;
+                
+                if (absolutePosition == oldPosition)
+                    return;
+
+                UpdateLayoutInternal();
+                if (!DesignMode)
+                    OnPositionChanged(new PositionChangedEventArgs(oldPosition, absolutePosition));
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value that will be used by the interface to know whether that control can
@@ -332,7 +438,6 @@ namespace Odyssey.UserInterface
                     var formerParent = parent as IContainer;
                     if (formerParent != null)
                         formerParent.Controls.Remove(value);
-                    Depth = Depth.AsChildOf(parent.Depth);
                 }
                 DesignMode = parent.DesignMode;
             }
@@ -349,7 +454,7 @@ namespace Odyssey.UserInterface
         /// <b>PositionV3</b> property value represents the upper-left corner of the control in
         /// screen coordinates.
         /// </remarks>
-        public Vector2 Position
+        public Vector3 Position
         {
             get { return position; }
             set
@@ -359,11 +464,15 @@ namespace Odyssey.UserInterface
                 position = value;
 
                 if (DesignMode) return;
-
-                Layout();
-                OnPositionChanged(EventArgs.Empty);
-                OnMove(EventArgs.Empty);
+                InvalidateArrange();
+                OnPositionChanged(new PositionChangedEventArgs(position, position));
             }
+        }
+
+        internal Vector3 PositionOffsets
+        {
+            get { return positionOffsets; }
+            set { positionOffsets = value; }
         }
     }
 }

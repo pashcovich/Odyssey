@@ -4,14 +4,11 @@
   <Import Project="$(SolutionDir)\Odyssey.proj" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8CC127C8-19F0-42DF-8454-129B3566EF54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Odyssey</RootNamespace>
     <AssemblyName>Odyssey.Renderer2D</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
@@ -65,29 +62,34 @@
     <Compile Include="Graphics\Drawing\Line.cs" />
     <Compile Include="Graphics\TextRenderer.cs" />
     <Compile Include="Organization\Commands\UserInterfaceRenderCommand.cs" />
+    <Compile Include="UserInterface\Alignment.cs" />
     <Compile Include="UserInterface\Behaviors\AnchorBehaviour.cs" />
     <Compile Include="UserInterface\Behaviors\Behavior.cs" />
     <Compile Include="UserInterface\Behaviors\BehaviorCollection.cs" />
     <Compile Include="UserInterface\Behaviors\DebugBehaviour.cs" />
     <Compile Include="UserInterface\Behaviors\DraggableBehavior.cs" />
-    <Compile Include="UserInterface\Controls\AdvancedLabel.cs" />
+    <Compile Include="UserInterface\Controls\Label.cs" />
     <Compile Include="UserInterface\Controls\Border.cs" />
     <Compile Include="UserInterface\Behaviors\GenericBehavior.cs" />
     <Compile Include="UserInterface\Controls\Charts\ColumnChart.cs" />
     <Compile Include="UserInterface\Controls\Charts\Chart.cs" />
     <Compile Include="UserInterface\Controls\Charts\ChartItem.cs" />
     <Compile Include="UserInterface\Controls\Charts\ColumnItem.cs" />
+    <Compile Include="UserInterface\Controls\DockPanel.cs" />
     <Compile Include="UserInterface\Controls\Grid.cs" />
     <Compile Include="UserInterface\Controls\GridBase.cs" />
     <Compile Include="UserInterface\Controls\IDesktopOverlay.cs" />
     <Compile Include="UserInterface\Controls\RichTextBox.cs" />
     <Compile Include="UserInterface\Controls\TextEventArgs.cs" />
+    <Compile Include="UserInterface\Controls\UniformStackPanel.cs" />
     <Compile Include="UserInterface\Data\BindingCollection.cs" />
+    <Compile Include="UserInterface\Events\PositionChangedEventArgs.cs" />
+    <Compile Include="UserInterface\Events\UIElementEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlSerializationEventArgs.cs" />
     <Compile Include="UserInterface\Serialization\XmlDeserializationEventArgs.cs" />
     <Compile Include="Graphics\LinearGradientBrush.cs" />
     <Compile Include="Graphics\Drawing\Rectangle.cs" />
-    <Compile Include="UserInterface\SizeChangedEventArgs.cs" />
+    <Compile Include="UserInterface\Events\SizeChangedEventArgs.cs" />
     <Compile Include="UserInterface\Style\CommandType.cs" />
     <Compile Include="UserInterface\Style\StripDefinition.cs" />
     <Compile Include="UserInterface\Style\StripDefinitionCollection.cs" />
@@ -110,10 +112,9 @@
     <Compile Include="Graphics\SolidColorBrush.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInterface\Controls\IOverlay.cs" />
-    <Compile Include="UserInterface\Style\Exensions.cs" />
     <Compile Include="UserInterface\Controls\Button.cs" />
     <Compile Include="UserInterface\Controls\ButtonBase.cs" />
-    <Compile Include="UserInterface\Controls\ContainerControl.cs" />
+    <Compile Include="UserInterface\Controls\Panel.cs" />
     <Compile Include="UserInterface\Controls\ContentControl.cs" />
     <Compile Include="UserInterface\Controls\Control.cs" />
     <Compile Include="UserInterface\Controls\ControlCollection.cs" />
@@ -121,15 +122,13 @@
     <Compile Include="UserInterface\Controls\FpsCounter.cs" />
     <Compile Include="UserInterface\Controls\IContainer.cs" />
     <Compile Include="UserInterface\Controls\IContentControl.cs" />
-    <Compile Include="UserInterface\Controls\IControl.cs" />
     <Compile Include="UserInterface\Controls\ItemsControl.cs" />
-    <Compile Include="UserInterface\Controls\Label.cs" />
-    <Compile Include="UserInterface\Controls\LabelBase.cs" />
+    <Compile Include="UserInterface\Controls\TextBlock.cs" />
+    <Compile Include="UserInterface\Controls\TextBlockBase.cs" />
     <Compile Include="UserInterface\Controls\ListBox.cs" />
     <Compile Include="UserInterface\Controls\ListBoxBase.cs" />
     <Compile Include="UserInterface\Controls\Overlay.cs" />
-    <Compile Include="UserInterface\Controls\Panel.cs" />
-    <Compile Include="UserInterface\Controls\PanelBase.cs" />
+    <Compile Include="UserInterface\Controls\Canvas.cs" />
     <Compile Include="UserInterface\Controls\StackPanel.cs" />
     <Compile Include="UserInterface\Controls\StackPanelBase.cs" />
     <Compile Include="UserInterface\Data\DataTemplate.cs" />
@@ -137,11 +136,9 @@
     <Compile Include="UserInterface\Data\BindingExpression.cs" />
     <Compile Include="UserInterface\Data\BindingValueChangedEventArgs.cs" />
     <Compile Include="UserInterface\Data\UpdateSourceTrigger.cs" />
-    <Compile Include="UserInterface\IUIElement.cs" />
     <Compile Include="UserInterface\IUserInterfaceState.cs" />
     <Compile Include="UserInterface\Style\ControlStyle.cs" />
     <Compile Include="UserInterface\Style\Depth.cs" />
-    <Compile Include="UserInterface\Style\Enums.cs" />
     <Compile Include="UserInterface\Style\IStyleService.cs" />
     <Compile Include="UserInterface\Style\LayoutManager.cs" />
     <Compile Include="UserInterface\Style\VectorArtParser.cs" />
@@ -152,7 +149,7 @@
     <Compile Include="UserInterface\Style\Figure.cs" />
     <Compile Include="UserInterface\Style\VisualState.cs" />
     <Compile Include="UserInterface\Style\VisualStateDefinition.cs" />
-    <Compile Include="UserInterface\TimeEventArgs.cs" />
+    <Compile Include="UserInterface\Events\TimeEventArgs.cs" />
     <Compile Include="UserInterface\TreeTraversal.cs" />
     <Compile Include="UserInterface\UIElement.cs" />
     <Compile Include="UserInterface\UIElement.Events.cs" />

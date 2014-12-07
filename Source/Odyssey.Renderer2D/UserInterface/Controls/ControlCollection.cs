@@ -15,13 +15,12 @@
 
 #region Using Directives
 
-using System.Linq;
-using Odyssey.UserInterface.Style;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 #endregion Using Directives
 
@@ -119,7 +118,7 @@ namespace Odyssey.UserInterface.Controls
 
         public UIElement[] ToArray()
         {
-            UIElement[] controlArray = new UIElement[Count];
+            var controlArray = new UIElement[Count];
             for (int i = 0; i < Count; i++)
             {
                 controlArray[i] = this[i];
@@ -131,9 +130,10 @@ namespace Odyssey.UserInterface.Controls
         {
             ProcessForInsertion(item);
             base.InsertItem(index, item);
+            Sort(e=> e.Position.Z);
         }
 
-        protected void ProcessForDeletion(UIElement control)
+        private void ProcessForDeletion(UIElement control)
         {
             //Overlay Overlay = Owner as Overlay;
 
@@ -145,7 +145,7 @@ namespace Odyssey.UserInterface.Controls
             control.CanRaiseEvents = false;
             control.IsBeingRemoved = true;
 
-            IContainer containerControl = control as IContainer;
+            var containerControl = control as IContainer;
 
             if (containerControl != null)
                 foreach (UIElement childControl in containerControl.Controls)
@@ -155,19 +155,13 @@ namespace Odyssey.UserInterface.Controls
                 }
         }
 
-        protected void ProcessForInsertion(UIElement control)
+        private void ProcessForInsertion(UIElement control)
         {
             Contract.Requires<ArgumentNullException>(control != null);
             Contract.Requires<InvalidOperationException>(!Contains(control), "Control is already in collection.");
 
-            //Window window = control as Window;
-            //if (window != null)
-            //    if (Owner is Overlay)
-            //        windowLayer = UserInterfaceManager.CurrentOverlay.WindowManager.RegisterWindow(window);
-            //    else
-            //        throw new ArgumentException("Windows can only be added to the Overlay.");
             control.Parent = Owner;
-            control.Depth = Depth.AsChildOf(Owner.Depth);
+            control.Index = Count;
         }
 
         protected override void RemoveItem(int index)

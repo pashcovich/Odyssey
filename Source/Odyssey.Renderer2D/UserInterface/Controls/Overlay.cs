@@ -16,6 +16,7 @@
 #region Using Directives
 
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
@@ -32,7 +33,7 @@ using SharpDX.Direct2D1;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public sealed class Overlay : ContainerControl, IOverlay, IDesktopOverlay
+    public sealed class Overlay : ContentControl, IOverlay, IDesktopOverlay
     {
         private const string DefaultControlTheme = "DefaultTheme";
         private const string DefaultTextTheme = "DefaultText";
@@ -123,7 +124,7 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
-            foreach (var control in Controls.Where(control => control.IsVisible))
+            foreach (var control in TreeTraversal.VisibleControls(Content))
                 control.Render();
         }
 
@@ -132,7 +133,7 @@ namespace Odyssey.UserInterface.Controls
             base.Dispose(disposeManagedResources);
             if (disposeManagedResources)
             {
-                foreach (UIElement uiElement in Controls)
+                foreach (UIElement uiElement in TreeTraversal.PreOrderVisit(Content))
                     uiElement.Dispose();
             }
             IsInited = false;
@@ -141,19 +142,22 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            Layout();
-            
+            Layout(new Vector3(float.PositiveInfinity));
             IsInited = true;
         }
 
-        protected override void Measure()
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             var settings = Services.GetService<IDirectXDeviceSettings>();
             Width = settings.PreferredBackBufferWidth;
             Height = settings.PreferredBackBufferHeight;
-            base.Measure();
+            Depth = 0;
+            
+            Content.Measure(Size);
+            return Size;
         }
 
+        #region Input Handling Methods
         void IOverlay.ProcessPointerMovement(PointerEventArgs e)
         {
             // If an element as captured the pointer, send the event to it first
@@ -269,27 +273,28 @@ namespace Odyssey.UserInterface.Controls
 
             e.Handled = ProcessKeyUp(e);
         }
+        #endregion
 
         public override void Update(ITimeService time)
         {
-            var controlArray = TreeTraversal.PreOrderVisit(this).ToArray();
+            var controlArray = TreeTraversal.PreOrderVisit(Content).ToArray();
             for (int i = 1; i < controlArray.Length; i++)
             {
                 var control = controlArray[i];
                 control.Update(time);
             }
-        }
+        } 
 
         #region IResourceProvider
 
         protected override bool ContainsResource(string resourceName)
         {
-            return TreeTraversal.PreOrderVisit(this).Any(c=> string.Equals(c.Name, resourceName));
+            return TreeTraversal.PreOrderVisit(Content).Any(c => string.Equals(c.Name, resourceName));
         }
 
         protected override TResource GetResource<TResource>(string resourceName)
         {
-            return TreeTraversal.PreOrderVisit(this).First(c => string.Equals(c.Name, resourceName)) as TResource;
+            return TreeTraversal.PreOrderVisit(Content).First(c => string.Equals(c.Name, resourceName)) as TResource;
         }
 
         protected override IEnumerable<IResource> Resources

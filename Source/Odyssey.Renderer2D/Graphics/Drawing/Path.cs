@@ -4,6 +4,7 @@ using Odyssey.Reflection;
 using Odyssey.Text;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
@@ -32,11 +33,17 @@ namespace Odyssey.Graphics.Drawing
             Device.Transform = Matrix3x2.Identity;
         }
 
-        protected override void OnInitializing(EventArgs e)
+        protected override void OnLayoutUpdated(EventArgs e)
         {
-            base.OnInitializing(e);
-            if (Data == null)
+            base.OnLayoutUpdated(e);
+            Redraw();
+        }
+
+        protected virtual void Redraw()
+        {
+            if (IsVisible && Data == null)
                 throw new InvalidOperationException("'Data' cannot be null");
+            RemoveAndDispose(ref pathGeometry);
             pathGeometry = ToDispose(PathGeometry.New(string.Format("{0}.Figure", Name), Device));
             pathGeometry.Initialize();
             pathGeometry.RunCommands(Data);
@@ -63,10 +70,14 @@ namespace Odyssey.Graphics.Drawing
         protected override void OnSizeChanged(SizeChangedEventArgs e)
         {
             base.OnSizeChanged(e);
-            if (e.OldSize.X == 0 || e.OldSize.Y == 0)
+
+            if (e.OldSize.X == 0 || e.OldSize.Y == 0) 
                 return;
             ScaleX *= e.NewSize.X/e.OldSize.X;
             ScaleY *= e.NewSize.Y/e.OldSize.Y;
+
+            if (e.NewSize.X > 0 && e.NewSize.Y > 0)
+                Redraw();
         }
 
         protected internal override UIElement Copy()

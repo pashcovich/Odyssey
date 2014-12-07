@@ -1,36 +1,45 @@
+#region Using Directives
+
 using System;
 using System.ComponentModel;
+
+#endregion
+
+#region Other Licenses
+// Copyright (c) 2014 Silicon Studio Corp. (http://siliconstudio.co.jp)
+// This file is distributed under GPL v3. See LICENSE.md for details.
+#endregion
 
 namespace Odyssey.Core
 {
     /// <summary>
-    /// A lightweight Component base class.
+    ///     A lightweight Component base class.
     /// </summary>
     public abstract class ComponentBase : INotifyPropertyChanged
     {
         /// <summary>
-        /// Occurs while this component is disposing and before it is disposed.
-        /// </summary>
-        //internal event EventHandler<EventArgs> Disposing;
-        private string name;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the name of this instance is immutable.
+        ///     Gets or sets a value indicating whether the name of this instance is immutable.
         /// </summary>
         /// <value><c>true</c> if this instance is name immutable; otherwise, <c>false</c>.</value>
         private readonly bool isNameImmutable;
 
+        /// <summary>
+        ///     Occurs while this component is disposing and before it is disposed.
+        /// </summary>
+        //internal event EventHandler<EventArgs> Disposing;
+        private string name;
+
         private object tag;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentBase" /> class with a mutable name.
+        ///     Initializes a new instance of the <see cref="ComponentBase" /> class with a mutable name.
         /// </summary>
         protected ComponentBase()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComponentBase" /> class with an immutable name.
+        ///     Initializes a new instance of the <see cref="ComponentBase" /> class with an immutable name.
         /// </summary>
         /// <param name="name">The name.</param>
         protected ComponentBase(string name)
@@ -38,12 +47,12 @@ namespace Odyssey.Core
             if (name != null)
             {
                 this.name = name;
-                this.isNameImmutable = true;
+                isNameImmutable = true;
             }
         }
 
         /// <summary>
-        /// Gets the name of this component.
+        ///     Gets the name of this component.
         /// </summary>
         /// <value>The name.</value>
         [DefaultValue(null)]
@@ -61,7 +70,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Gets or sets the tag associated to this object.
+        ///     Gets or sets the tag associated to this object.
         /// </summary>
         /// <value>The tag.</value>
 #if !W8CORE
@@ -70,10 +79,7 @@ namespace Odyssey.Core
         [DefaultValue(null)]
         public object Tag
         {
-            get
-            {
-                return tag;
-            }
+            get { return tag; }
             set
             {
                 if (ReferenceEquals(tag, value)) return;
@@ -83,7 +89,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Occurs when a property value changes.
+        ///     Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 

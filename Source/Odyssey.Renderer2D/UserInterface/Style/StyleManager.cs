@@ -32,7 +32,6 @@ namespace Odyssey.UserInterface.Style
         }
 
         private readonly IAssetProvider content;
-        private readonly Dictionary<string, IResource> uniqueResources;
         private readonly Dictionary<string, ResourceDescription> sharedResources;
         private FontCollection fontCollection;
         private NativeFontLoader fontLoader;
@@ -49,7 +48,6 @@ namespace Odyssey.UserInterface.Style
 
             content.AssetsLoaded += InitializeFontCollection;
             sharedResources = new Dictionary<string, ResourceDescription>();
-            uniqueResources= new Dictionary<string, IResource>();
         }
 
         void InitializeFontCollection(object sender, AssetsLoadedEventArgs e)
@@ -148,7 +146,7 @@ namespace Odyssey.UserInterface.Style
                 var brushes = GetResources<SolidColorBrush>();
                 result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color) && b.Shared == shared);
             }
-            return result ?? CreateColorResource(device, shared ? colorResource : colorResource.CopyAs('u' + colorResource.Name, false));
+            return result ?? CreateColorResource(device, shared ? colorResource : colorResource.CopyAs('u'+colorResource.Name, false));
         }
 
         public Brush GetBrushResource(string name, Theme theme, bool shared = true)

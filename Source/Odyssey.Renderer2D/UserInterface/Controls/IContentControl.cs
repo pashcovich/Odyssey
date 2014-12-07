@@ -15,7 +15,7 @@
 
 namespace Odyssey.UserInterface.Controls
 {
-    public interface IContentControl : IControl
+    public interface IContentControl
     {
         UIElement Content { get; }
     }

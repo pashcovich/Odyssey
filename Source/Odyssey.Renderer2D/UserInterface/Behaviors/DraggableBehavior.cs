@@ -5,7 +5,7 @@ namespace Odyssey.UserInterface.Behaviors
 {
     public class DraggableBehavior : Behavior<UIElement>
     {
-        private Vector2 offset;
+        private Vector3 offset;
 
         protected override void OnAttached()
         {
@@ -18,7 +18,7 @@ namespace Odyssey.UserInterface.Behaviors
         {
             if (e.CurrentPoint.IsLeftButtonPressed)
             {
-                offset = e.CurrentPoint.Position - AssociatedElement.AbsolutePosition;
+                offset = new Vector3(e.CurrentPoint.Position, 0) - AssociatedElement.AbsolutePosition;
                 AssociatedElement.CapturePointer();
             }
         }

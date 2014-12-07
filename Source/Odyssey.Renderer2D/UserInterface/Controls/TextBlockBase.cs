@@ -18,28 +18,37 @@
 using System;
 using System.Diagnostics;
 using Odyssey.Graphics;
+using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
 using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
+using SharpDX.Mathematics;
 using Brush = Odyssey.Graphics.Brush;
+using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
+using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 
 #endregion
 
 namespace Odyssey.UserInterface.Controls
 {
-    [DebuggerDisplay("{Text} [{TextStyleClass}]")]
-    public abstract class LabelBase : Control
+    [DebuggerDisplay("[{GetType().Name}] \"{Text}\" [{TextStyleClass}]")]
+    public abstract class TextBlockBase : Control
     {
         protected const string DefaultTextClass = "Default";
         private const string ControlTag = "Default";
         private string text;
         private TextFormat textFormat;
+        private TextLayout textLayout;
 
-        protected LabelBase()
+        protected TextLayout TextLayout { get { return textLayout; }}
+        protected TextMetrics TextMetrics { get; private set; }
+
+        protected TextBlockBase()
             : this(ControlTag)
         {
         }
 
-        protected LabelBase(string textDefinitionClass)
+        protected TextBlockBase(string textDefinitionClass)
             : base("Empty", textDefinitionClass)
         {
             CanRaiseEvents = false;
@@ -77,25 +86,57 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(EventArgs e)
         {
             if (TextStyle == null)
-                ApplyTextDescription();
+                ApplyTextStyle();
 
             if (string.IsNullOrEmpty(Text))
                 Text = Name;
+
+            var styleService = Overlay.Services.GetService<IStyleService>();
+            textFormat = styleService.GetTextResource(TextStyle);
         }
 
         protected override void OnTextStyleChanged(EventArgs e)
         {
             base.OnTextStyleChanged(e);
             var styleService = Overlay.Services.GetService<IStyleService>();
-            if (Foreground == null)
-            {
-                var brushResource = Overlay.Theme.GetResource<ColorResource>(TextStyle.Foreground);
-                Foreground = styleService.GetBrushResource(brushResource);
-            }
-
+            var brushResource = Overlay.Theme.GetResource<ColorResource>(TextStyle.Foreground);
+            Foreground = styleService.GetBrushResource(brushResource, brushResource.Shared);
             textFormat = styleService.GetTextResource(TextStyle);
             DeviceContext context = Device;
             context.TextAntialiasMode = TextAntialiasMode.Grayscale;
+        }
+
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
+        {
+            if (textLayout != null)
+                RemoveAndDispose(ref textLayout);
+            
+            textLayout = ToDispose(new TextLayout(Device, Text, TextFormat, availableSizeWithoutMargins.X, availableSizeWithoutMargins.Y));
+            TextMetrics = textLayout.Metrics;
+            return new Vector3((float)Math.Ceiling(TextMetrics.Width), (float)Math.Ceiling(TextMetrics.Height), availableSizeWithoutMargins.Z);
+        }
+
+        protected override void OnSizeChanged(SizeChangedEventArgs e)
+        {
+            base.OnSizeChanged(e);
+            textLayout.MaxWidth = e.NewSize.X;
+            textLayout.MaxHeight = e.NewSize.Y;
+        }
+
+        public float MeasureText()
+        {
+            return TextMetrics.Width;
+        }
+
+        public float MeasureLineHeight()
+        {
+            return TextMetrics.Height;
+        }
+
+        public float MeasureText(int start, int length)
+        {
+            var metrics = textLayout.HitTestTextRange(start, length, 0, 0);
+            return metrics[0].Width;
         }
     }
 }

@@ -14,10 +14,13 @@
 #endregion License
 
 #region Using Directives
+
+using System.Diagnostics;
 using Odyssey.Animations;
 using Odyssey.Core;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Behaviors;
+using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using SharpDX.Mathematics;
 using System;
@@ -32,21 +35,19 @@ namespace Odyssey.UserInterface
     /// The <b>UIElement</b> class is the root class of all controls in the library. It provides
     /// inheritors with a comprehensive range of properties and methods common to all controls.
     /// </summary>
-    /// [DebuggerDisplay("UIElement: {Name}")]
-    public abstract partial class UIElement : Component, IUIElement, IAnimator, IComparable<UIElement>, ISerializableResource
+    [DebuggerDisplay("[{GetType().Name}]: {Name}")]
+    public abstract partial class UIElement : Component, IAnimator, IComparable<UIElement>, ISerializableResource
     {
         private static readonly Dictionary<string, int> TypeCounter = new Dictionary<string, int>();
 
         #region Private fields
 
-        private readonly PropertyContainer dependencyProperties;
         private readonly Dictionary<string, BindingExpression> bindings;
         private readonly BehaviorCollection behaviors;
         private readonly AnimationController animator;
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
         private bool designMode = true;
-
         private bool isEnabled = true;
         private bool isFocusable = true;
         private bool isHighlighted;
@@ -55,7 +56,24 @@ namespace Odyssey.UserInterface
         private bool isVisible = true;
         private UIElement parent;
 
-        private Vector2 position;
+        private Matrix3x2 transform;
+        private float height;
+        private float width;
+        private float depth;
+        private float minimumWidth;
+        private float minimumHeight;
+        private float minimumDepth;
+        private float maximumWidth;
+        private float maximumHeight;
+        private float maximumDepth;
+        private object dataContext;
+        private Vector3 renderSize;
+        private Vector3 position;
+        private Vector3 absolutePosition;
+        private Vector3 positionOffsets;
+
+        private VerticalAlignment verticalAlignment;
+        private HorizontalAlignment horizontalAlignment;
         #endregion Private fields
 
         #region Constructors
@@ -63,7 +81,6 @@ namespace Odyssey.UserInterface
         /// <summary>
         /// Initializes a new instance of the <see cref="UIElement" /> class.
         /// </summary>
-        /// <param name="id">The id.</param>
         /// <remarks>
         /// </remarks>
         protected UIElement()
@@ -76,10 +93,24 @@ namespace Odyssey.UserInterface
                 ++TypeCounter[type];
 
             Name = string.Format("{0}{1}", type, TypeCounter[type]);
+
+            Controls = new ControlCollection(this);
             bindings = new Dictionary<string, BindingExpression>();
             behaviors = new BehaviorCollection();
             animator = new AnimationController(this);
             DependencyProperties = new PropertyContainer(this);
+
+            width = float.NaN;
+            height = float.NaN;
+            depth = float.NaN;
+            MinimumWidth = 4;
+            MinimumHeight = 4;
+            MinimumDepth = 0;
+            MaximumWidth = float.PositiveInfinity;
+            MaximumHeight = float.PositiveInfinity;
+            MaximumDepth = float.PositiveInfinity;
+            verticalAlignment = VerticalAlignment.Stretch;
+            horizontalAlignment = HorizontalAlignment.Stretch;
         }
 
         #endregion Constructors
@@ -106,57 +137,12 @@ namespace Odyssey.UserInterface
 
         public override string ToString()
         {
-            return string.Format("{0}: '{1}' [{2}] D:{3}", GetType().Name, Name, AbsolutePosition, Depth);
+            return string.Format("{0}: '{1}' [{2}]", GetType().Name, Name, AbsolutePosition);
         }
 
-        public virtual void Layout()
+        private void UpdateLayoutInternal()
         {
-            Measure();
-            Arrange();
-        }
-
-        protected virtual void Arrange()
-        {
-            if (parent != null)
-            {
-                Vector2 oldAbsolutePosition = AbsolutePosition;
-                Vector2 newAbsolutePosition = parent.AbsolutePosition + new Vector2(Margin.Left, Margin.Top) + position;
-                
-                if (!IsInternal)
-                    newAbsolutePosition += parent.TopLeftPosition;
-
-                if (!newAbsolutePosition.Equals(oldAbsolutePosition))
-                    AbsolutePosition = newAbsolutePosition;
-
-                UpdateLayoutInternal();
-                OnLayoutUpdated(EventArgs.Empty);
-            }
-        }
-
-        protected virtual void Measure()
-        {
-            if (Width == 0)
-            {
-                float parentWidth = Parent.Width;
-                Width = parentWidth - Margin.Horizontal;
-            }
-            if (Height == 0)
-            {
-                float parentHeight = Parent.Height;
-                Height = parentHeight - Margin.Vertical;
-            }
-            
-            var parentControl = Parent as Control;
-            if (parentControl != null && !IsInternal)
-            {
-                Width -= parentControl.Padding.Horizontal;
-                Height -= parentControl.Padding.Vertical;
-            }
-        }
-
-        internal void UpdateLayoutInternal()
-        {
-            boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, Width, Height);
+            boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, RenderSize.X, RenderSize.Y);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);
         }
     }

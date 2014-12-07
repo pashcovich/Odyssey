@@ -12,17 +12,10 @@
     <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8CodeAnalysis|AnyCPU'">
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Win8Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX">
@@ -59,12 +52,14 @@
     <Compile Include="Animations\Vector3Curve.cs" />
     <Compile Include="Animations\Vector3KeyFrame.cs" />
     <Compile Include="Collections\ComponentCollection.cs" />
+    <Compile Include="Core\AccessorMetadata.cs" />
     <Compile Include="Core\Component.cs" />
     <Compile Include="Core\ComponentBase.cs" />
     <Compile Include="Core\DefaultValueMetadata.cs" />
     <Compile Include="Core\PropertyContainer.cs" />
     <Compile Include="Core\PropertyKey.cs" />
     <Compile Include="Core\PropertyKeyMetadata.cs" />
+    <Compile Include="Core\ValidateValueMetadata.cs" />
     <Compile Include="Geometry\IFunction.cs" />
     <Compile Include="Core\IServiceRegistry.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />
@@ -165,7 +160,6 @@
     <Compile Include="Engine\Param.cs" />
     <Compile Include="Engine\ServiceRegistry.cs" />
     <Compile Include="Engine\StereoParameters.cs" />
-    <Compile Include="Geometry\Extensions.cs" />
     <Compile Include="Geometry\MathHelper.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Graphics\DisplayOrientation.cs" />

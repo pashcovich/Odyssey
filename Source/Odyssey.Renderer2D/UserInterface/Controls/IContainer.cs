@@ -1,8 +1,9 @@
+using SharpDX.Mathematics;
+
 namespace Odyssey.UserInterface.Controls
 {
-    public interface IContainer : IControl
+    public interface IContainer
     {
         ControlCollection Controls { get; }
-        void Layout();
     }
 }

@@ -33,7 +33,7 @@ namespace Odyssey.Graphics.Drawing
 
         }
 
-        public void DrawRightTrapezoid(Vector2 topLeft, float baseTop, float baseBottom, float height)
+        public void DrawRightTrapezoid(Vector3 topLeft, float baseTop, float baseBottom, float height)
         {
             AddCommand(CommandType.Move, new[] { topLeft.X, topLeft.Y });
             AddCommand(CommandType.Line, new[] { baseTop, 0 }, true);

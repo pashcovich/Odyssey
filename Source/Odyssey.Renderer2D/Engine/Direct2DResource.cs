@@ -1,7 +1,5 @@
 ﻿using Odyssey.Content;
 using Odyssey.Core;
-using Odyssey.Graphics;
-using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using System;
 using System.Diagnostics.Contracts;
@@ -19,7 +17,7 @@ namespace Odyssey.Engine
             Device = device;
         }
 
-        public Direct2DDevice Device { get; internal set; }
+        public Direct2DDevice Device { get; private set; }
 
         /// <summary>
         /// The attached Direct2D1 resource to this instance.

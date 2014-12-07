@@ -52,7 +52,7 @@ namespace Odyssey.Graphics.Drawing
             set { scaleY = value; }
         }
 
-        public Shape()
+        protected Shape()
         {
             CanRaiseEvents = false;
         }
@@ -86,6 +86,7 @@ namespace Odyssey.Graphics.Drawing
             copy.StrokeThickness = StrokeThickness;
             copy.ScaleX = LayoutManager.Scale * ScaleX;
             copy.ScaleY = LayoutManager.Scale * ScaleY;
+            copy.Depth = Depth;
             return copy;
         }
 
@@ -123,6 +124,16 @@ namespace Odyssey.Graphics.Drawing
             base.OnLayoutUpdated(e);
             if (fill != null)
                 fill.Transform = Matrix3x2.Scaling(scaleX, scaleY) * Transform;
+        }
+
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
+        {
+            return availableSizeWithoutMargins*new Vector3(ScaleX, ScaleY, 1);
+        }
+
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
+        {
+            return availableSizeWithoutMargins * new Vector3(ScaleX, ScaleY, 1);
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)

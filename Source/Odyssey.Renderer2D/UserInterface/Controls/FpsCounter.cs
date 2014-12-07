@@ -8,7 +8,7 @@ using SolidColorBrush = Odyssey.Graphics.SolidColorBrush;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public class FpsCounter : Label
+    public class FpsCounter : TextBlock
     {
         private readonly FpsTimer timer;
 

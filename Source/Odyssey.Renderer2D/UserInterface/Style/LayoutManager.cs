@@ -19,9 +19,9 @@ namespace Odyssey.UserInterface.Style
             return Scale*Unit*units;
         }
 
-        public static Vector2 Units(float unitsX, float unitsY)
+        public static Vector3 Point(float unitsX, float unitsY, float depthZ = 0)
         {
-            return Scale*Unit*new Vector2(unitsX, unitsY);
+            return Scale*Unit*new Vector3(unitsX, unitsY, depthZ);
         }
 
         public static Vector2 CenterControl(UIElement control, UIElement container)
@@ -30,34 +30,34 @@ namespace Odyssey.UserInterface.Style
                 CenterControlVertical(control, container));
         }
 
-        public static void DistributeHorizontally(Controls.Control parent, IEnumerable<UIElement> children)
+        public static void DistributeHorizontally(Vector3 availableSize, IEnumerable<UIElement> children)
         {
-            Vector2 previousPosition = parent.TopLeftPosition;
+            var previousPosition = Vector3.Zero;
             foreach (UIElement element in children)
             {
-                var margin = element.Margin;
-                element.Position = previousPosition + new Vector2(margin.Left, margin.Top);
-                previousPosition = element.Position + new Vector2(element.Width + margin.Right, -margin.Top);
+                element.Position = previousPosition;
+                element.Arrange(new Vector3(element.DesiredSizeWithMargins.X, availableSize.Y, element.DesiredSizeWithMargins.Z));
+                previousPosition = element.Position + new Vector3(element.DesiredSizeWithMargins.X, 0, 0);
             }
         }
 
-        public static void AlignBottom(Control parent, IEnumerable<UIElement> children)
+        public static void AlignBottom(UIElement parent)
         {
-            float clientAreaHeight = parent.ClientAreaHeight;
-            foreach (UIElement element in children)
+            float clientAreaHeight = parent.RenderSize.Y;
+            foreach (UIElement element in parent.Controls)
             {
-                element.Position = new Vector2(element.Position.X, clientAreaHeight - element.Height);
+                element.Position = new Vector3(element.Position.X, clientAreaHeight - element.Height, element.Position.Z);
             }
         }
 
-        public static void DistributeVertically(Control parent, IEnumerable<UIElement> children)
+        public static void DistributeVertically(Vector3 availableSize, IEnumerable<UIElement> children)
         {
-            Vector2 previousPosition = parent.TopLeftPosition;
+            var previousPosition = Vector3.Zero; 
             foreach (UIElement element in children)
             {
-                var margin = element.Margin;
-                element.Position = previousPosition + new Vector2(margin.Left, margin.Top);
-                previousPosition = new Vector2(-margin.Left, element.Position.Y + element.Height + margin.Bottom);
+                element.Position = previousPosition;
+                element.Arrange(new Vector3(availableSize.X, element.DesiredSizeWithMargins.Y, element.DesiredSizeWithMargins.Z));
+                previousPosition = element.Position + new Vector3(0, element.DesiredSizeWithMargins.Y, element.Position.Z);
             }
         }
 

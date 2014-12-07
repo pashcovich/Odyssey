@@ -1,42 +1,44 @@
 ﻿#region License
 
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
-// 
+//
 // The Odyssey Engine is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License Version 3 as published by
 // the Free Software Foundation.
-// 
+//
 // The Odyssey Engine is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
-#endregion
+#endregion License
 
 #region Using Directives
 
+using System.Diagnostics;
+using Odyssey.Graphics;
+using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
+using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
+using Brush = Odyssey.Graphics.Brush;
+using SolidColorBrush = Odyssey.Graphics.SolidColorBrush;
+using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
 
-#endregion
+#endregion Using Directives
 
-namespace Odyssey.Graphics.Drawing
+namespace Odyssey.UserInterface.Controls
 {
-    public class Rectangle : Shape
+    public class TextBlock : TextBlockBase
     {
-        public override bool Contains(Vector2 cursorLocation)
+        public TextBlock()
+            : base(DefaultTextClass)
         {
-            return BoundingRectangle.Contains(cursorLocation);
         }
 
         public override void Render()
         {
-            if (Fill != null)
-            {
-                Fill.Transform = Matrix3x2.Scaling(RenderSize.X, RenderSize.Y) * Transform;
-                Device.FillRectangle(this, Fill);
-            }
-            if (Stroke!=null)
-                Device.DrawRectangle(this, Stroke, StrokeThickness);
+            Device.DrawText(Text, TextFormat, BoundingRectangle, Foreground);
         }
     }
 }

@@ -1,42 +1,37 @@
 ﻿#region License
 
 // Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
-// 
+//
 // The Odyssey Engine is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License Version 3 as published by
 // the Free Software Foundation.
-// 
+//
 // The Odyssey Engine is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details at http://gplv3.fsf.org/
 
-#endregion
+#endregion License
 
 #region Using Directives
 
+using Odyssey.Graphics;
+using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
+using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
-#endregion
+#endregion Using Directives
 
-namespace Odyssey.Graphics.Drawing
+namespace Odyssey.UserInterface.Controls
 {
-    public class Rectangle : Shape
+    public class Canvas : Panel
     {
-        public override bool Contains(Vector2 cursorLocation)
+        public Canvas() : this(ControlStyle.Empty)
+        { }
+
+        public Canvas(string controlStyleClass, string textStyleClass = TextStyle.Default) : base(controlStyleClass, textStyleClass)
         {
-            return BoundingRectangle.Contains(cursorLocation);
         }
 
-        public override void Render()
-        {
-            if (Fill != null)
-            {
-                Fill.Transform = Matrix3x2.Scaling(RenderSize.X, RenderSize.Y) * Transform;
-                Device.FillRectangle(this, Fill);
-            }
-            if (Stroke!=null)
-                Device.DrawRectangle(this, Stroke, StrokeThickness);
-        }
     }
 }

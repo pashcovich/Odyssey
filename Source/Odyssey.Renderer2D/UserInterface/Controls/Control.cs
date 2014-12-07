@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
 using Odyssey.UserInterface.Style;
@@ -27,7 +28,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class Control : UIElement, IControl, IResourceProvider
+    public abstract class Control : UIElement, IResourceProvider
     {
         private string controlStyleClass;
         private ControlStyle style;
@@ -43,9 +44,6 @@ namespace Odyssey.UserInterface.Controls
 
         public Thickness Padding { get; set; }
 
-        public virtual float ClientAreaHeight { get { return Height - Padding.Vertical; }}
-        public virtual float ClientAreaWidth { get { return Width - Padding.Horizontal; } }
-
         public string StyleClass
         {
             get { return controlStyleClass; }
@@ -55,7 +53,7 @@ namespace Odyssey.UserInterface.Controls
                     return;
                 controlStyleClass = value;
                 if (!DesignMode)
-                    ApplyControlDescription();
+                    ApplyControlStyle();
             }
         }
 
@@ -76,6 +74,7 @@ namespace Odyssey.UserInterface.Controls
             {
                 if (textStyle == value) return;
                 textStyle = value;
+
                 OnTextStyleChanged(EventArgs.Empty);
             }
         }
@@ -89,10 +88,12 @@ namespace Odyssey.UserInterface.Controls
                     return;
 
                 textStyleClass = value;
+
                 if (DesignMode)
                     return;
-                
-                ApplyTextDescription();
+
+                ApplyTextStyle();
+                InvalidateMeasure();
                 OnTextStyleChanged(EventArgs.Empty);
             }
         }
@@ -126,14 +127,15 @@ namespace Odyssey.UserInterface.Controls
             if (!IsVisual)
                 return;
 
-            foreach (IShape shape in VisualState)
-                shape.Render();
+            foreach (var child in Controls)
+                if (child.IsVisible)
+                    child.Render();
         }
 
         /// <summary>
         /// Occurs when the <see cref="UserInterface.Style.ControlStyle"/> property value changes.
         /// </summary>
-        public event EventHandler<EventArgs> ControlDefinitionChanged;
+        public event EventHandler<EventArgs> ControlStyleChanged;
 
         /// <summary>
         /// Occurs when the <see cref="UserInterface.Style.TextStyle"/> property value changes.
@@ -150,13 +152,28 @@ namespace Odyssey.UserInterface.Controls
             return newControl;
         }
 
-        protected override void Measure()
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            base.Measure();
-            TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
+            foreach (var child in Controls)
+                child.Arrange(availableSizeWithoutMargins - MarginInternal);
+            return base.ArrangeOverride(availableSizeWithoutMargins);
         }
 
-        protected virtual void ApplyControlDescription()
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
+        {
+            TopLeftPosition = new Vector3(Padding.Left, Padding.Top, 0);
+
+            foreach (var child in Controls)
+                child.Measure(availableSizeWithoutMargins - MarginInternal);
+
+            if (float.IsNaN(Width) || float.IsNaN(Height) || float.IsNaN(Depth))
+            {
+                return availableSizeWithoutMargins - MarginInternal;
+            }
+            else return Size - MarginInternal;
+        }
+
+        private void ApplyControlStyle()
         {
             if (StyleClass == ControlStyle.Empty)
                 return;
@@ -168,12 +185,12 @@ namespace Odyssey.UserInterface.Controls
             }
             var controlStyle = Overlay.Theme.GetResource<ControlStyle>(StyleClass);
 
-            if (Width == 0 && controlStyle.Width > 0)
+            if (float.IsNaN(Width) && controlStyle.Width > 0)
             {
                 Width = controlStyle.Width;
             }
 
-            if (Height == 0 && controlStyle.Height > 0)
+            if (float.IsNaN(Height) && controlStyle.Height > 0)
             {
                 Height = controlStyle.Height;
             }
@@ -181,34 +198,44 @@ namespace Odyssey.UserInterface.Controls
             if (Padding.IsEmpty && !controlStyle.Padding.IsEmpty)
                 Padding = controlStyle.Padding;
 
-            TopLeftPosition = new Vector2(Padding.Left, Padding.Top);
+            TopLeftPosition = new Vector3(Padding.Left, Padding.Top, 0);
             RemoveAndDispose(ref visualState);
             visualState = ToDispose(controlStyle.CreateVisualState(this));
             visualState.Initialize();
-            LayoutUpdated += (s, e) => VisualState.Update();
+
+            foreach (var s in visualState)
+                Controls.Add(s);
             Style = controlStyle;
         }
 
-        protected virtual void ApplyTextDescription()
+        protected void ApplyTextStyle()
         {
-            if (!Overlay.Theme.ContainsResource(TextStyleClass))
+            if (string.Equals(TextStyleClass, TextStyle.TemplatedParent))
             {
-                LogEvent.UserInterface.Warning("TextStyle '{0}' not found", TextStyleClass);
-                return;
+                var templatedParent = FindAncestor<ItemsControl>();
+                if (templatedParent != null)
+                    TextStyle = templatedParent.TextStyle;
             }
-
-            TextStyle = Overlay.Theme.GetResource<TextStyle>(TextStyleClass);
+            else
+            {
+                if (!Overlay.Theme.ContainsResource(TextStyleClass))
+                {
+                    LogEvent.UserInterface.Warning("TextStyle '{0}' not found", TextStyleClass);
+                    return;
+                }
+                TextStyle = Overlay.Theme.GetResource<TextStyle>(TextStyleClass);
+            }
         }
 
         /// <summary>
-        /// Raises the <see cref="ControlDefinitionChanged"/> event.
+        /// Raises the <see cref="ControlStyleChanged"/> event.
         /// </summary>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event
         /// data.</param>
         protected virtual void OnControlDefinitionChanged(EventArgs e)
         {
             if (!DesignMode)
-                RaiseEvent(ControlDefinitionChanged, this, e);
+                RaiseEvent(ControlStyleChanged, this, e);
         }
 
         protected override void OnDesignModeChanged(EventArgs e)
@@ -224,6 +251,10 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
+            foreach (UIElement element in Controls)
+            {
+                element.Initialize();
+            }
             if (string.Equals(StyleClass, "Empty")) return;
             ActiveStatus = IsEnabled ? ControlStatus.Enabled : ControlStatus.Disabled;
         }
@@ -231,15 +262,8 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            ApplyControlDescription();
-            ApplyTextDescription();
-        }
-
-        protected override void OnSizeChanged(SizeChangedEventArgs e)
-        {
-            base.OnSizeChanged(e);
-            if (IsVisual)
-                VisualState.SynchronizeSize();
+            ApplyControlStyle();
+            ApplyTextStyle();
         }
 
         /// <summary>

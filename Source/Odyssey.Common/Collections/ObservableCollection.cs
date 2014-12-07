@@ -1,25 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region Using Directives
+
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#endregion
+
+#region Other Licenses
+// Copyright (c) 2014 Silicon Studio Corp. (http://siliconstudio.co.jp)
+// This file is distributed under GPL v3. See LICENSE.md for details.
+#endregion
 
 namespace Odyssey.Collections
 {
     /// <summary>
-    /// An observable collection.
+    ///     An observable collection.
     /// </summary>
     /// <typeparam name="T">Type of a collection item</typeparam>
     public class ObservableCollection<T> : Collection<T>
     {
         /// <summary>
-        /// Raised when an item is added to this instance.
+        ///     Raised when an item is added to this instance.
         /// </summary>
         public event EventHandler<ObservableCollectionEventArgs<T>> ItemAdded;
 
         /// <summary>
-        /// Raised when a item is removed from this instance.
+        ///     Raised when a item is removed from this instance.
         /// </summary>
         public event EventHandler<ObservableCollectionEventArgs<T>> ItemRemoved;
 
