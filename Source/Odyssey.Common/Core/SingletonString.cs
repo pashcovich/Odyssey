@@ -1,15 +1,26 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using Odyssey.Serialization;
+
+#endregion
+
+#region Other Licenses
+
+// Copyright (c) 2014 Silicon Studio Corp. (http://siliconstudio.co.jp)
+// This file is distributed under GPL v3. See LICENSE.md for details.
+
+#endregion
 
 namespace Odyssey.Core
 {
     /// <summary>
-    /// A singleton string is a string that has a unique instance in memory, See remarks for usage scenarios.
+    ///     A singleton string is a string that has a unique instance in memory, See remarks for usage scenarios.
     /// </summary>
     /// <remarks>
-    /// This class should mostly be used internally for performance reasons, in scenarios where equals/hashcode
-    /// could be invoked frequently, and the set of strings is limited. Internally, <see cref="SingletonString"/> 
-    /// string is using the method <see cref="string.Intern"/> and also is precaching the hashcode of the string.
+    ///     This class should mostly be used internally for performance reasons, in scenarios where equals/hashcode
+    ///     could be invoked frequently, and the set of strings is limited. Internally, <see cref="SingletonString" />
+    ///     string is using the method <see cref="string.Intern" /> and also is precaching the hashcode of the string.
     /// </remarks>
     public struct SingletonString : IEquatable<SingletonString>, IDataSerializable
     {
@@ -17,7 +28,7 @@ namespace Odyssey.Core
         private string text;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SingletonString" /> struct.
+        ///     Initializes a new instance of the <see cref="SingletonString" /> struct.
         /// </summary>
         /// <param name="text">The text.</param>
         public SingletonString(string text)
@@ -31,6 +42,14 @@ namespace Odyssey.Core
             hashCode = text != null ? text.GetHashCode() : 0;
         }
 
+        public void Serialize(BinarySerializer serializer)
+        {
+            serializer.Serialize(ref text, SerializeFlags.Nullable);
+
+            if (serializer.Mode == SerializerMode.Read)
+                hashCode = text != null ? text.GetHashCode() : 0;
+        }
+
         public bool Equals(SingletonString other)
         {
             // Optimized equals, only using references.
@@ -40,7 +59,7 @@ namespace Odyssey.Core
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is SingletonString && Equals((SingletonString)obj);
+            return obj is SingletonString && Equals((SingletonString) obj);
         }
 
         public override int GetHashCode()
@@ -48,16 +67,8 @@ namespace Odyssey.Core
             return hashCode;
         }
 
-        public void Serialize(BinarySerializer serializer)
-        {
-            serializer.Serialize(ref text, SerializeFlags.Nullable);
-
-            if (serializer.Mode == SerializerMode.Read)
-                hashCode = text != null ? text.GetHashCode() : 0;
-        }
-
         /// <summary>
-        /// Implements the operator ==.
+        ///     Implements the operator ==.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
@@ -68,7 +79,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Implements the operator !=.
+        ///     Implements the operator !=.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
@@ -79,7 +90,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Implements the operator ==.
+        ///     Implements the operator ==.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
@@ -90,7 +101,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Implements the operator !=.
+        ///     Implements the operator !=.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
@@ -101,7 +112,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SingletonString"/> to <see cref="string"/>.
+        ///     Performs an implicit conversion from <see cref="SingletonString" /> to <see cref="string" />.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -111,7 +122,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Performs an explicit conversion from <see cref="string"/> to <see cref="SingletonString"/>.
+        ///     Performs an explicit conversion from <see cref="string" /> to <see cref="SingletonString" />.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

@@ -1,11 +1,20 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
+#endregion
+
+#region Other Licenses
+// Copyright (c) 2014 Silicon Studio Corp. (http://siliconstudio.co.jp)
+// This file is distributed under GPL v3. See LICENSE.md for details.
+#endregion
 
 namespace Odyssey.Collections
 {
     /// <summary>
-    /// Exposes an array as readonly with readonly elements with support for improved performance for equality.
+    ///     Exposes an array as readonly with readonly elements with support for improved performance for equality.
     /// </summary>
     public class ReadOnlyArray<T> : IEnumerable<T>, IEquatable<ReadOnlyArray<T>>
     {
@@ -13,7 +22,7 @@ namespace Odyssey.Collections
         internal T[] Elements;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReadOnlyArray{T}" /> class.
+        ///     Initializes a new instance of the <see cref="ReadOnlyArray{T}" /> class.
         /// </summary>
         /// <param name="elements">The elements.</param>
         public ReadOnlyArray(T[] elements)
@@ -22,17 +31,17 @@ namespace Odyssey.Collections
                 throw new ArgumentNullException("elements");
 
             Elements = elements;
-            
+
             // precompute the hashcode
             hashCode = elements.Length;
-            for(int i = 0; i < elements.Length; i++)
+            for (int i = 0; i < elements.Length; i++)
             {
-                hashCode = (hashCode * 397) ^ elements[i].GetHashCode();
+                hashCode = (hashCode*397) ^ elements[i].GetHashCode();
             }
         }
 
         /// <summary>
-        /// Gets number of elements.
+        ///     Gets number of elements.
         /// </summary>
         /// <value>The number of elements.</value>
         public int Length
@@ -44,10 +53,7 @@ namespace Odyssey.Collections
         /// <param name="index">Index of the value to get.</param>
         public T this[int index]
         {
-            get
-            {
-                return Elements[index];
-            }
+            get { return Elements[index]; }
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -85,8 +91,8 @@ namespace Odyssey.Collections
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((ReadOnlyArray<T>)obj);
+            if (obj.GetType() != GetType()) return false;
+            return Equals((ReadOnlyArray<T>) obj);
         }
 
         public override int GetHashCode()
@@ -95,7 +101,7 @@ namespace Odyssey.Collections
         }
 
         /// <summary>
-        /// Implements the operator ==.
+        ///     Implements the operator ==.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>
@@ -106,7 +112,7 @@ namespace Odyssey.Collections
         }
 
         /// <summary>
-        /// Implements the operator !=.
+        ///     Implements the operator !=.
         /// </summary>
         /// <param name="left">The left.</param>
         /// <param name="right">The right.</param>

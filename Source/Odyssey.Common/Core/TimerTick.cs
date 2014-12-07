@@ -1,19 +1,28 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Diagnostics;
 
+#endregion
+
+#region Other Licenses
+// Copyright (c) 2014 Silicon Studio Corp. (http://siliconstudio.co.jp)
+// This file is distributed under GPL v3. See LICENSE.md for details.
+#endregion
 namespace Odyssey.Core
 {
     /// <summary>
-    /// This provides timing information similar to <see cref="System.Diagnostics.Stopwatch"/> but an update occurring only on a <see cref="Tick"/> method.
+    ///     This provides timing information similar to <see cref="System.Diagnostics.Stopwatch" /> but an update occurring
+    ///     only on a <see cref="Tick" /> method.
     /// </summary>
     public class TimerTick
     {
         #region Fields
 
-        private long startRawTime;
         private long lastRawTime;
         private int pauseCount;
         private long pauseStartTime;
+        private long startRawTime;
         private long timePaused;
 
         #endregion
@@ -21,7 +30,7 @@ namespace Odyssey.Core
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimerTick"/> class.
+        ///     Initializes a new instance of the <see cref="TimerTick" /> class.
         /// </summary>
         public TimerTick()
         {
@@ -33,30 +42,28 @@ namespace Odyssey.Core
         #region Public Properties
 
         /// <summary>
-        /// Gets the total time elapsed since the last reset or when this timer was created.
+        ///     Gets the total time elapsed since the last reset or when this timer was created.
         /// </summary>
         public TimeSpan TotalTime { get; private set; }
 
         /// <summary>
-        /// Gets the elapsed adjusted time since the previous call to <see cref="Tick"/> taking into account <see cref="Pause"/> time.
+        ///     Gets the elapsed adjusted time since the previous call to <see cref="Tick" /> taking into account
+        ///     <see cref="Pause" /> time.
         /// </summary>
         public TimeSpan ElapsedAdjustedTime { get; private set; }
 
         /// <summary>
-        /// Gets the elapsed time since the previous call to <see cref="Tick"/>.
+        ///     Gets the elapsed time since the previous call to <see cref="Tick" />.
         /// </summary>
         public TimeSpan ElapsedTime { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is paused.
+        ///     Gets a value indicating whether this instance is paused.
         /// </summary>
         /// <value><c>true</c> if this instance is paused; otherwise, <c>false</c>.</value>
         public bool IsPaused
         {
-            get
-            {
-                return pauseCount > 0;
-            }
+            get { return pauseCount > 0; }
         }
 
         #endregion
@@ -64,7 +71,7 @@ namespace Odyssey.Core
         #region Public Methods and Operators
 
         /// <summary>
-        /// Resets this instance. <see cref="TotalTime"/> is set to zero.
+        ///     Resets this instance. <see cref="TotalTime" /> is set to zero.
         /// </summary>
         public void Reset()
         {
@@ -74,7 +81,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Resumes this instance, only if a call to <see cref="Pause"/> has been already issued.
+        ///     Resumes this instance, only if a call to <see cref="Pause" /> has been already issued.
         /// </summary>
         public void Resume()
         {
@@ -87,10 +94,10 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Update the <see cref="TotalTime"/> and <see cref="ElapsedTime"/>,
+        ///     Update the <see cref="TotalTime" /> and <see cref="ElapsedTime" />,
         /// </summary>
         /// <remarks>
-        /// This method must be called on a regular basis at every *tick*.
+        ///     This method must be called on a regular basis at every *tick*.
         /// </remarks>
         public void Tick()
         {
@@ -115,7 +122,7 @@ namespace Odyssey.Core
         }
 
         /// <summary>
-        /// Pauses this instance.
+        ///     Pauses this instance.
         /// </summary>
         public void Pause()
         {
@@ -131,13 +138,13 @@ namespace Odyssey.Core
         #region Methods
 
         /// <summary>
-        /// Converts a <see cref="Stopwatch" /> raw time to a <see cref="TimeSpan" />.
+        ///     Converts a <see cref="Stopwatch" /> raw time to a <see cref="TimeSpan" />.
         /// </summary>
         /// <param name="delta">The delta.</param>
         /// <returns>The <see cref="TimeSpan" />.</returns>
         private static TimeSpan ConvertRawToTimestamp(long delta)
         {
-            return TimeSpan.FromTicks((delta * 10000000) / Stopwatch.Frequency);
+            return TimeSpan.FromTicks((delta*10000000)/Stopwatch.Frequency);
         }
 
         #endregion
