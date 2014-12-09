@@ -16,6 +16,12 @@ namespace Odyssey.Graphics.Drawing
             commands = new List<VectorCommand>();
         }
 
+        public void DrawLine(Vector3 from, float xTo, float yTo, bool isRelative = false)
+        {
+            AddCommand(CommandType.Move, new [] {from.X, from.Y});
+            AddCommand(CommandType.Line, new [] {xTo, yTo}, isRelative);
+        }
+
         public void DrawRingSegment(float angleFrom, float angleTo, Vector2 center, float outerRadius, float innerRadius, bool isClosed = true)
         {
             float t0 = angleFrom;

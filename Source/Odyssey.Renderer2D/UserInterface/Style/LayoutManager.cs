@@ -24,17 +24,6 @@ namespace Odyssey.UserInterface.Style
             return Scale*Unit*new Vector3(unitsX, unitsY, depthZ);
         }
 
-        public static void DistributeHorizontally(Vector3 availableSize, IEnumerable<UIElement> children)
-        {
-            var previousPosition = Vector3.Zero;
-            foreach (UIElement element in children)
-            {
-                element.Position += previousPosition;
-                element.Arrange(new Vector3(element.DesiredSizeWithMargins.X, availableSize.Y, element.DesiredSizeWithMargins.Z));
-                previousPosition = element.Position + new Vector3(element.DesiredSizeWithMargins.X, 0, 0);
-            }
-        }
-
         public static void AlignHorizontalCenter(Vector3 availableSize, IEnumerable<UIElement> children)
         {
             float availableWidth = availableSize.X;
@@ -58,7 +47,18 @@ namespace Odyssey.UserInterface.Style
             float availableHeight = parent.RenderSize.Y;
             foreach (UIElement element in parent.Children)
             {
-                element.Position = new Vector3(element.Position.X, availableHeight - element.Height, element.Position.Z);
+                element.PositionOffsets = new Vector3(element.Position.X, availableHeight - element.Height, element.Position.Z);
+            }
+        }
+
+        public static void DistributeHorizontally(Vector3 availableSize, IEnumerable<UIElement> children)
+        {
+            var previousPosition = Vector3.Zero;
+            foreach (UIElement element in children)
+            {
+                element.SetPosition(previousPosition);
+                element.Arrange(new Vector3(element.DesiredSizeWithMargins.X, availableSize.Y, element.DesiredSizeWithMargins.Z));
+                previousPosition = element.Position + new Vector3(element.DesiredSizeWithMargins.X, 0, 0);
             }
         }
 
@@ -67,9 +67,9 @@ namespace Odyssey.UserInterface.Style
             var previousPosition = Vector3.Zero;
             foreach (UIElement element in children)
             {
-                element.Position += previousPosition;
+                element.PositionOffsets += previousPosition;
                 element.Arrange(new Vector3(availableSize.X, element.DesiredSizeWithMargins.Y, element.DesiredSizeWithMargins.Z));
-                previousPosition = element.Position + new Vector3(0, element.DesiredSizeWithMargins.Y, element.Position.Z);
+                previousPosition = element.Position + element.PositionOffsets + new Vector3(0, element.DesiredSizeWithMargins.Y, element.Position.Z);
             }
         }
         

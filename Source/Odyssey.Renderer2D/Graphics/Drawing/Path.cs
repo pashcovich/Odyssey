@@ -14,6 +14,7 @@ namespace Odyssey.Graphics.Drawing
     public class Path : Shape
     {
         private PathGeometry pathGeometry;
+
         public IEnumerable<VectorCommand> Data { get; set; }
 
         public override bool Contains(Vector2 cursorLocation)
@@ -33,15 +34,15 @@ namespace Odyssey.Graphics.Drawing
             Device.Transform = Matrix3x2.Identity;
         }
 
-        protected override void OnLayoutUpdated(EventArgs e)
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            base.OnLayoutUpdated(e);
             Redraw();
+            return availableSizeWithoutMargins;
         }
 
         protected virtual void Redraw()
         {
-            if (IsVisible && Data == null)
+            if (Data == null)
                 throw new InvalidOperationException("'Data' cannot be null");
             RemoveAndDispose(ref pathGeometry);
             pathGeometry = ToDispose(PathGeometry.New(string.Format("{0}.Figure", Name), Device));

@@ -153,8 +153,7 @@ namespace Odyssey.UserInterface
             IsArrangeValid = true;
 
             Vector3 oldAbsolutePosition = absolutePosition;
-            PositionOffsets += new Vector3(Margin.Left, Margin.Top, 0);
-            var newAbsolutePosition = Position + PositionOffsets;
+            var newAbsolutePosition = Position;
             if (parent != null)
                 newAbsolutePosition += parent.AbsolutePosition;
 
@@ -190,8 +189,8 @@ namespace Odyssey.UserInterface
             if (PositionOffsets != Vector3.Zero)
             {
                 AbsolutePosition += PositionOffsets;
-                foreach (var element in Children)
-                    element.PositionOffsets += PositionOffsets;
+                foreach (var child in Children)
+                    child.AbsolutePosition += PositionOffsets;
             }
         }
 
@@ -231,7 +230,7 @@ namespace Odyssey.UserInterface
 
         private Vector3 CalculatePosition(Vector3 availableSpace, Vector3 usedSpace)
         {
-            Vector3 offsets = Vector3.Zero;
+            var offsets = new Vector3(Margin.Left, Margin.Top, 0);
             switch (VerticalAlignment)
             {
                 case VerticalAlignment.Bottom:

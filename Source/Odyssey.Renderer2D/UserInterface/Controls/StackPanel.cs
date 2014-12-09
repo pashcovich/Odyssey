@@ -1,8 +1,6 @@
 ﻿#region Using Directives
 
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 

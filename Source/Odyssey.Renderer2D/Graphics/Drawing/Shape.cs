@@ -28,19 +28,25 @@ using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Graphics.Drawing
 {
     [DebuggerDisplay("[{GetType().Name}]: {Parent.Name}:{Name}")]
     public abstract class Shape : UIElement, IShape, IRequiresCaching
     {
+        private Brush fill;
+        private string fillBrushClass;
         private float scaleX;
         private float scaleY;
-        private string fillBrushClass;
-        private string strokeBrushClass;
-        private Brush fill;
         private Brush stroke;
+        private string strokeBrushClass;
+
+        protected Shape()
+        {
+            CanRaiseEvents = false;
+            ScaleX = ScaleY = 1.0f;
+        }
 
         protected internal float ScaleX
         {
@@ -54,24 +60,16 @@ namespace Odyssey.Graphics.Drawing
             set { scaleY = value; }
         }
 
-        protected Shape()
-        {
-            CanRaiseEvents = false;
-        }
-
         [Animatable]
-        [CacheAnimation(typeof(GradientStop), "Color")]
+        [CacheAnimation(typeof (GradientStop), "Color")]
         public Brush Fill
         {
             get { return fill; }
-            set
-            {
-                fill = value;
-            }
+            set { fill = value; }
         }
 
         [Animatable]
-        [CacheAnimation(typeof(GradientStop), "Color")]
+        [CacheAnimation(typeof (GradientStop), "Color")]
         public Brush Stroke
         {
             get { return stroke; }
@@ -82,7 +80,7 @@ namespace Odyssey.Graphics.Drawing
 
         protected internal override UIElement Copy()
         {
-            var copy = (Shape)base.Copy();
+            var copy = (Shape) base.Copy();
             copy.fillBrushClass = fillBrushClass;
             copy.strokeBrushClass = strokeBrushClass;
             copy.StrokeThickness = StrokeThickness;
@@ -123,7 +121,7 @@ namespace Odyssey.Graphics.Drawing
 
         protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            return availableSizeWithoutMargins * new Vector3(ScaleX, ScaleY, 1);
+            return availableSizeWithoutMargins*new Vector3(ScaleX, ScaleY, 1);
         }
 
         protected override void OnReadXml(XmlDeserializationEventArgs e)
@@ -149,14 +147,15 @@ namespace Odyssey.Graphics.Drawing
         }
 
         #region IRequiresCaching
+
         public IAnimationCurve CacheAnimation(Type type, string propertyName, IAnimationCurve animationCurve)
         {
             // Checks whether the curve affects a property marked with the CacheAnimationAttribute
             var property = (from p in ReflectionHelper.GetProperties(GetType())
-                            let attributes = p.GetCustomAttributes<CacheAnimationAttribute>()
-                            from attribute in attributes
-                            where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
-                            select p).FirstOrDefault();
+                let attributes = p.GetCustomAttributes<CacheAnimationAttribute>()
+                from attribute in attributes
+                where attribute != null && attribute.Type == type && attribute.PropertyName == propertyName
+                select p).FirstOrDefault();
 
             if (property != null)
             {
@@ -165,11 +164,12 @@ namespace Odyssey.Graphics.Drawing
                 var bGradient = value as GradientBrush;
                 if (value == null)
                     throw new NotImplementedException("Solid Color animation not yet supported");
-                return GradientBrushCurve.FromColor4Curve(Device, (Color4Curve)animationCurve, bGradient);
+                return GradientBrushCurve.FromColor4Curve(Device, (Color4Curve) animationCurve, bGradient);
             }
 
             return null;
         }
+
         #endregion
     }
 }

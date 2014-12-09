@@ -41,8 +41,8 @@ namespace Odyssey.UserInterface.Controls
                 Vector3 size = availableSizeWithoutMargins;
                 if (!child.IsInternal)
                 {
-                    child.Position += new Vector3(Padding.Left, Padding.Top, 0);
-                    size -=new Vector3(Padding.Left, Padding.Top, 0);
+                    child.PositionOffsets = new Vector3(Padding.Left, Padding.Top, 0);
+                    size -= new Vector3(Padding.Left, Padding.Top, 0);
                 }
 
                 child.Arrange(size);
