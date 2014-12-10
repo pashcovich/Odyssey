@@ -1,32 +1,27 @@
 ﻿#region Using Directives
 
-using System.Runtime.InteropServices;
+using System;
 using Odyssey.Core;
 using Odyssey.Geometry;
 using Odyssey.Graphics.Drawing;
 using Odyssey.Reflection;
-using SharpDX.Mathematics;
+using Odyssey.UserInterface.Style;
 using SharpDX.Direct2D1;
-using System;
-using System.Diagnostics.Contracts;
+using SharpDX.Mathematics;
 using SharpDX.Mathematics.Interop;
 using Brush = Odyssey.Graphics.Brush;
-using TextFormat = Odyssey.UserInterface.Style.TextFormat;
 using D2DFactory = SharpDX.Direct2D1.Factory1;
-using Device = SharpDX.Direct2D1.Device;
-using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using DWFactory = SharpDX.DirectWrite.Factory1;
 using Ellipse = Odyssey.Graphics.Drawing.Ellipse;
-using FactoryType = SharpDX.Direct2D1.FactoryType;
+using Factory = SharpDX.DirectWrite.Factory;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Engine
 {
     public class Direct2DDevice : Component, IDirect2DDevice
     {
         private readonly DebugLevel debugLevel;
-        private readonly IDirectXDeviceService dx11Service;
         private readonly IServiceRegistry services;
         private BackBufferSurface backBuffer;
         private Device device;
@@ -35,38 +30,26 @@ namespace Odyssey.Engine
         private D2DFactory factory;
         private Direct2DSurface target;
 
-        public Direct2DDevice(IServiceRegistry services)
-            : this(services, DebugLevel.None)
-        {
-        }
-
         /// <summary>
-        /// Initializes a new instance of <see cref="Direct2DDevice" />.
-        /// events via
-        /// <see cref="IDirectXDeviceService" />.
+        ///     Initializes a new instance of <see cref="Direct2DDevice" />.
+        ///     events via
+        ///     <see cref="IDirectXDeviceService" />.
         /// </summary>
         /// <exception cref="ArgumentNullException">If <paramref name="services" /> is null.</exception>
-        public Direct2DDevice(IServiceRegistry services, DebugLevel debugLevel)
-        {
-            Contract.Requires<ArgumentNullException>(services != null, "services");
-            dx11Service = services.GetService<IDirectXDeviceService>();
-            this.services = services;
-            this.debugLevel = debugLevel;
-        }
-
         public Direct2DDevice(IServiceRegistry services, SharpDX.Direct3D11.Device d3dDevice, DebugLevel debugLevel)
         {
             this.services = services;
+            this.debugLevel = debugLevel;
+
             using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
             {
-                factory = ToDispose(new SharpDX.Direct2D1.Factory1(FactoryType.SingleThreaded, debugLevel));
+                factory = ToDispose(new Factory1(FactoryType.SingleThreaded, debugLevel));
                 device = ToDispose(new Device(factory, dxgiDevice));
                 deviceContext = ToDispose(new DeviceContext(device, DeviceContextOptions.None));
             }
 
             backBuffer = ToDispose(BackBufferSurface.New(this));
             backBuffer.Initialize();
-            
             directWriteFactory = ToDispose(new DWFactory());
         }
 
@@ -83,30 +66,6 @@ namespace Odyssey.Engine
         public float VerticalDpi
         {
             get { return deviceContext.DotsPerInch.Height; }
-        }
-
-        /// <summary>
-        /// Gets a reference to the Direct2D device.
-        /// </summary>
-        public Device Device
-        {
-            get { return device; }
-        }
-
-        /// <summary>
-        /// Gets a reference to the default <see cref="Direct2D1.DeviceContext" />.
-        /// </summary>
-        public DeviceContext DeviceContext
-        {
-            get { return deviceContext; }
-        }
-
-        /// <summary>
-        /// Gets a reference to the default <see cref="SharpDX.DirectWrite.Factory1" />.
-        /// </summary>
-        public DWFactory DirectWriteFactory
-        {
-            get { return directWriteFactory; }
         }
 
         public bool IsDebugMode
@@ -130,6 +89,36 @@ namespace Odyssey.Engine
         internal IServiceRegistry Services
         {
             get { return services; }
+        }
+
+        public Matrix3x2 Transform
+        {
+            get { return deviceContext.Transform; }
+            set { deviceContext.Transform = value; }
+        }
+
+        /// <summary>
+        ///     Gets a reference to the Direct2D device.
+        /// </summary>
+        public Device Device
+        {
+            get { return device; }
+        }
+
+        /// <summary>
+        ///     Gets a reference to the default <see cref="DeviceContext" />.
+        /// </summary>
+        public DeviceContext DeviceContext
+        {
+            get { return deviceContext; }
+        }
+
+        /// <summary>
+        ///     Gets a reference to the default <see cref="SharpDX.DirectWrite.Factory1" />.
+        /// </summary>
+        public DWFactory DirectWriteFactory
+        {
+            get { return directWriteFactory; }
         }
 
         public void DrawGeometry(Graphics.Drawing.Geometry geometry, Brush brush, float strokeThickness = 1.0f)
@@ -170,7 +159,7 @@ namespace Odyssey.Engine
 
         public void FillRectangle(Shape shape, Brush brush)
         {
-           FillRectangle(shape.BoundingRectangle, brush);
+            FillRectangle(shape.BoundingRectangle, brush);
         }
 
         public void FillRectangle(RectangleF rectangle, Brush brush)
@@ -183,25 +172,19 @@ namespace Odyssey.Engine
             deviceContext.AntialiasMode = antialiasMode;
         }
 
-        static RawRectangleF Convert(RectangleF rectangle)
+        private static RawRectangleF Convert(RectangleF rectangle)
         {
             object s = rectangle;
             return ReflectionHelper.CopyStruct<RawRectangleF>(ref s);
         }
 
-        public Matrix3x2 Transform
-        {
-            get { return deviceContext.Transform; }
-            set { deviceContext.Transform = value; }
-        }
-
         public void SetPrimitiveBlend(PrimitiveBlend blendMode)
         {
-            deviceContext.PrimitiveBlend = blendMode; 
+            deviceContext.PrimitiveBlend = blendMode;
         }
 
         /// <summary>
-        /// Diposes all resources associated with the current <see cref="Direct2DDevice" /> instance.
+        ///     Diposes all resources associated with the current <see cref="Direct2DDevice" /> instance.
         /// </summary>
         /// <param name="disposeManagedResources">Indicates whether to dispose management resources.</param>
         protected override void Dispose(bool disposeManagedResources)
@@ -212,8 +195,8 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Disposes the <see cref="Direct2DDevice.Device" />, <see cref="DeviceContext" /> and its render target
-        /// associated with the current <see cref="Direct2DDevice" /> instance.
+        ///     Disposes the <see cref="Direct2DDevice.Device" />, <see cref="DeviceContext" /> and its render target
+        ///     associated with the current <see cref="Direct2DDevice" /> instance.
         /// </summary>
         public void DisposeAll()
         {
@@ -222,7 +205,7 @@ namespace Odyssey.Engine
             if (target != backBuffer)
                 RemoveAndDispose(ref target);
             RemoveAndDispose(ref backBuffer);
-            
+
             RemoveAndDispose(ref directWriteFactory);
             RemoveAndDispose(ref factory);
             RemoveAndDispose(ref deviceContext);
@@ -246,7 +229,7 @@ namespace Odyssey.Engine
             return from == null ? null : from.dx11Service.DirectXDevice.Device;
         }
 
-        public static implicit operator SharpDX.DirectWrite.Factory(Direct2DDevice from)
+        public static implicit operator Factory(Direct2DDevice from)
         {
             return from == null ? null : from.directWriteFactory;
         }

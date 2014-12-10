@@ -4,7 +4,7 @@ using Odyssey.Engine;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpDX.Mathematics;
 using System;
 using System.Collections.Generic;

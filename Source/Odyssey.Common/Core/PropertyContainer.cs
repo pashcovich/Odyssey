@@ -35,8 +35,8 @@ namespace Odyssey.Core
         /// <summary>
         ///     Property changed delegate.
         /// </summary>
-        /// <param name="container">The property container.</param>
-        /// <param name="key">The property key.</param>
+        /// <param name="propertyContainer">The property container.</param>
+        /// <param name="propertyKey">The property key.</param>
         /// <param name="newValue">The property new value.</param>
         /// <param name="oldValue">The property old value.</param>
         public delegate void PropertyUpdatedDelegate(ref PropertyContainer propertyContainer, PropertyKey propertyKey, object newValue, object oldValue);
@@ -281,7 +281,7 @@ namespace Odyssey.Core
                 return;
             }
 
-            SetObject((PropertyKey)propertyKey, tagValue, false);
+            SetObject(propertyKey, tagValue, false);
         }
 
         private object Get(PropertyKey propertyKey, bool keep)

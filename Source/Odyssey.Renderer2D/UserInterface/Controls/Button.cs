@@ -15,12 +15,9 @@
 
 #region Using Directives
 
-using Odyssey.Graphics;
 using Odyssey.Interaction;
-using SharpDX.Mathematics;
-using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {

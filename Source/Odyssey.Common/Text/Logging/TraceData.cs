@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Diagnostics.Contracts;
+﻿#region Using Directives
 
-namespace Odyssey.Logging
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Reflection;
+
+#endregion
+
+namespace Odyssey.Text.Logging
 {
     public struct TraceData
     {
-        public Type Type { get; private set; }
-        public MethodInfo Method { get; private set; }
-        public ParameterInfo[] Parameters { get; private set; }
         public Dictionary<string, string> AdditionalData;
 
         public TraceData(Type type, MethodInfo method, params KeyValuePair<string, string>[] additionalData)
@@ -23,17 +24,16 @@ namespace Odyssey.Logging
                 AdditionalData.Add(kvp.Key, kvp.Value);
         }
 
-        public TraceData(Type type, string method, params KeyValuePair<string, string>[] additionalData) 
+        public TraceData(Type type, string method, params KeyValuePair<string, string>[] additionalData)
             : this(type, type.GetTypeInfo().GetDeclaredMethod(method), additionalData)
         {
         }
 
-        public void AddData(string key, string value)
-        {
-            AdditionalData.Add(key, value);
-        }
+        public Type Type { get; private set; }
+        public MethodInfo Method { get; private set; }
+        public ParameterInfo[] Parameters { get; private set; }
 
-        public string MethodSignature 
+        public string MethodSignature
         {
             get
             {
@@ -41,12 +41,17 @@ namespace Odyssey.Logging
                 for (int i = 0; i < Parameters.Length; i++)
                 {
                     arguments += string.Format("{0} {1}", Parameters[i].ParameterType.Name, Parameters[i].Name);
-                    if (i < Parameters.Length-1)
+                    if (i < Parameters.Length - 1)
                         arguments += ", ";
                 }
 
                 return string.Format("{0}.{1}({2})", Type.Name, Method.Name, arguments);
             }
+        }
+
+        public void AddData(string key, string value)
+        {
+            AdditionalData.Add(key, value);
         }
 
         public string GetValue(string key)

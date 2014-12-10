@@ -9,7 +9,7 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Organization;
 using Odyssey.Organization.Commands;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.Epos.Systems
 {

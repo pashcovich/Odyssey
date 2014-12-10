@@ -17,7 +17,7 @@
 
 using Odyssey.Engine;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpDX.Diagnostics;
 using System.Windows;
 

@@ -1,9 +1,13 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
+
+#endregion
 
 namespace Odyssey.UserInterface.Controls.Charts
 {
@@ -36,7 +40,7 @@ namespace Odyssey.UserInterface.Controls.Charts
             {
                 Key = string.Format("{0}.TemplateInternal", GetType().Name),
                 DataType = GetType(),
-                VisualTree = new ColumnItem()
+                VisualTree = new ColumnItem
                 {
                     Name = typeof (ColumnItem).Name,
                     Margin = new Thickness(0, 0, 4, 0),
@@ -51,19 +55,18 @@ namespace Odyssey.UserInterface.Controls.Charts
         protected override DataTemplate CreateDefaultPanelTemplate()
         {
             string typeName = GetType().Name;
-            var panelTemplate = new DataTemplate()
+            var panelTemplate = new DataTemplate
             {
                 Key = string.Format("{0}.PanelTemplate", typeName),
                 DataType = GetType(),
-                VisualTree = new DockPanel()
+                VisualTree = new DockPanel
                 {
-                    new Label() {Name = IdXAxisTitle, TextStyleClass = TextStyle.TemplatedParent},
+                    new Label {Name = IdXAxisTitle, TextStyleClass = TextStyle.TemplatedParent},
                     new UniformStackPanel {Name = IdChartArea, IsItemsHost = true}
                 }
             };
             panelTemplate.Bindings.Add((ReflectionHelper.GetPropertyName((TextBlock t) => t.Text)), new Binding(IdXAxisTitle, IdXAxisTitle));
             return panelTemplate;
         }
-
     }
 }

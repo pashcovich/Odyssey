@@ -1,4 +1,6 @@
-﻿// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
+﻿#region Other Licenses
+
+// Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,16 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#endregion
+
+#region Using Directives
+
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.DirectWrite;
+
+#endregion
 
 namespace Odyssey.Content
 {
     /// <summary>
-    /// Resource FontFileEnumerator.
+    ///     Resource FontFileEnumerator.
     /// </summary>
-    public class NativeFontFileEnumerator : CallbackBase, SharpDX.DirectWrite.FontFileEnumerator
+    public class NativeFontFileEnumerator : CallbackBase, FontFileEnumerator
     {
         private readonly Factory _factory;
         private readonly FontFileLoader _loader;
@@ -35,7 +42,7 @@ namespace Odyssey.Content
         private FontFile _currentFontFile;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NativeFontFileEnumerator"/> class.
+        ///     Initializes a new instance of the <see cref="NativeFontFileEnumerator" /> class.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="loader">The loader.</param>
@@ -48,13 +55,15 @@ namespace Odyssey.Content
         }
 
         /// <summary>
-        /// Advances to the next font file in the collection. When it is first created, the enumerator is positioned before the first element of the collection and the first call to MoveNext advances to the first file.
+        ///     Advances to the next font file in the collection. When it is first created, the enumerator is positioned before the
+        ///     first element of the collection and the first call to MoveNext advances to the first file.
         /// </summary>
         /// <returns>
-        /// the value TRUE if the enumerator advances to a file; otherwise, FALSE if the enumerator advances past the last file in the collection.
+        ///     the value TRUE if the enumerator advances to a file; otherwise, FALSE if the enumerator advances past the last file
+        ///     in the collection.
         /// </returns>
         /// <unmanaged>HRESULT IDWriteFontFileEnumerator::MoveNext([Out] BOOL* hasCurrentFile)</unmanaged>
-        bool SharpDX.DirectWrite.FontFileEnumerator.MoveNext()
+        bool FontFileEnumerator.MoveNext()
         {
             bool moveNext = keyStream.RemainingLength != 0;
             if (moveNext)
@@ -69,16 +78,16 @@ namespace Odyssey.Content
         }
 
         /// <summary>
-        /// Gets a reference to the current font file.
+        ///     Gets a reference to the current font file.
         /// </summary>
         /// <value></value>
-        /// <returns>a reference to the newly created <see cref="SharpDX.DirectWrite.FontFile"/> object.</returns>
+        /// <returns>a reference to the newly created <see cref="SharpDX.DirectWrite.FontFile" /> object.</returns>
         /// <unmanaged>HRESULT IDWriteFontFileEnumerator::GetCurrentFontFile([Out] IDWriteFontFile** fontFile)</unmanaged>
-        FontFile SharpDX.DirectWrite.FontFileEnumerator.CurrentFontFile
+        FontFile FontFileEnumerator.CurrentFontFile
         {
             get
             {
-                ((IUnknown)_currentFontFile).AddReference();
+                ((IUnknown) _currentFontFile).AddReference();
                 return _currentFontFile;
             }
         }

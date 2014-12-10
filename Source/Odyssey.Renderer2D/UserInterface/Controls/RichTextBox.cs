@@ -30,7 +30,6 @@ namespace Odyssey.UserInterface.Controls
     public class RichTextBox : ItemsControl
     {
         private int lineHeight;
-        private int lines;
 
         public RichTextBox() : this(typeof (RichTextBox).Name)
         {

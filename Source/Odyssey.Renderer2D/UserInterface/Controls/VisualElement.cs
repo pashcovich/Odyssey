@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
+using Odyssey.Text.Logging;
 using Odyssey.UserInterface.Style;
-using Odyssey.Logging;
 using SharpDX.Mathematics;
 
 #endregion
@@ -60,10 +60,12 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Gets or sets the <see cref = "TextStyle" /> to use for this control.
+        ///     Gets or sets the <see cref="TextStyle" /> to use for this control.
         /// </summary>
-        /// <value>The <see cref = "TextStyle" /> object that contains information on how to
-        /// format the text of this control.</value>
+        /// <value>
+        ///     The <see cref="TextStyle" /> object that contains information on how to
+        ///     format the text of this control.
+        /// </value>
         public TextStyle TextStyle
         {
             get { return textStyle; }
@@ -103,10 +105,12 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Gets or sets the <see cref = "Style" /> to use for this control.
+        ///     Gets or sets the <see cref="Style" /> to use for this control.
         /// </summary>
-        /// <value>The <see cref = "Style" /> object that contains information on how to style
-        /// the text appearance of this control.</value>
+        /// <value>
+        ///     The <see cref="Style" /> object that contains information on how to style
+        ///     the text appearance of this control.
+        /// </value>
         public VisualStyle Style
         {
             get { return style; }
@@ -130,12 +134,12 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Occurs when the <see cref="VisualStyle"/> property value changes.
+        ///     Occurs when the <see cref="VisualStyle" /> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> ControlStyleChanged;
 
         /// <summary>
-        /// Occurs when the <see cref="UserInterface.Style.TextStyle"/> property value changes.
+        ///     Occurs when the <see cref="UserInterface.Style.TextStyle" /> property value changes.
         /// </summary>
         public event EventHandler<EventArgs> TextStyleChanged;
 
@@ -164,7 +168,7 @@ namespace Odyssey.UserInterface.Controls
             {
                 return availableSizeWithoutMargins - MarginInternal;
             }
-            else return Size - MarginInternal;
+            return Size - MarginInternal;
         }
 
         private void ApplyVisualStyle()
@@ -218,10 +222,12 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="ControlStyleChanged"/> event.
+        ///     Raises the <see cref="ControlStyleChanged" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event
-        /// data.</param>
+        /// <param name="e">
+        ///     The <see cref="EventArgs" /> instance containing the event
+        ///     data.
+        /// </param>
         protected virtual void OnControlDefinitionChanged(EventArgs e)
         {
             if (!DesignMode)
@@ -253,10 +259,12 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Raises the <see cref="TextStyleChanged"/> event.
+        ///     Raises the <see cref="TextStyleChanged" /> event.
         /// </summary>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event
-        /// data.</param>
+        /// <param name="e">
+        ///     The <see cref="EventArgs" /> instance containing the event
+        ///     data.
+        /// </param>
         protected virtual void OnTextStyleChanged(EventArgs e)
         {
             if (!DesignMode)

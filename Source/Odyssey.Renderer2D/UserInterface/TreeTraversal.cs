@@ -16,10 +16,9 @@
 #region Using Directives
 
 using System;
-using Odyssey.UserInterface.Controls;
 using System.Collections.Generic;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface
 {
@@ -62,7 +61,7 @@ namespace Odyssey.UserInterface
 
         public static IEnumerable<UIElement> VisibleControls(UIElement root)
         {
-            return PreOrderVisit(root, (c) => c.IsVisible);
+            return PreOrderVisit(root, c => c.IsVisible);
         }
     }
 }

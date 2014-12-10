@@ -1,7 +1,9 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
+﻿#region Using Directives
+
+using System.Xml;
 using Odyssey.Animations;
-using Odyssey.Engine;
+
+#endregion
 
 namespace Odyssey.Content
 {
@@ -9,7 +11,7 @@ namespace Odyssey.Content
     {
         public object ReadContent(IAssetProvider assetManager, ref ContentReaderParameters parameters)
         {
-            var xmlReaderSettings = new XmlReaderSettings()
+            var xmlReaderSettings = new XmlReaderSettings
             {
                 IgnoreComments = true,
                 IgnoreWhitespace = true,

@@ -1,9 +1,11 @@
-﻿using System;
-using System.Globalization;
+﻿#region Using Directives
+
 using System.Linq;
 using Odyssey.Content;
 using Odyssey.Geometry;
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Animations
 {
@@ -21,7 +23,7 @@ namespace Odyssey.Animations
             FloatKeyFrame end = this.Last();
             if (time <= start.Time)
                 return function.Evaluate(0);
-            else if (time > end.Time)
+            if (time > end.Time)
                 return function.Evaluate(1);
 
             start = this.LastOrDefault(kf => kf.Time < time) ?? start;
@@ -49,14 +51,14 @@ namespace Odyssey.Animations
             float newValue = Map(start.Time, end.Time, time);
             float t = MathUtil.Lerp(start.Value, end.Value, newValue);
 
-            var function = (IFunction)options;
+            var function = (IFunction) options;
             return function.Evaluate(t);
         }
 
         public static object DiscretePath(FloatKeyFrame start, FloatKeyFrame end, float time, object options = null)
         {
             float t = time < end.Time ? start.Value : end.Value;
-            var function = (IFunction)options;
+            var function = (IFunction) options;
             return function.Evaluate(t);
         }
     }

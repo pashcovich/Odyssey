@@ -1,14 +1,18 @@
-﻿using SharpDX;
-using SharpDX.Mathematics;
+﻿#region Using Directives
+
+using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Graphics
 {
     public class TextRenderer : TextRendererBase
     {
-        private readonly RenderTarget renderTarget;
         private readonly Brush defaultBrush;
+        private readonly RenderTarget renderTarget;
 
         public TextRenderer(RenderTarget renderTarget, Brush defaultBrush)
         {
@@ -16,12 +20,13 @@ namespace Odyssey.Graphics
             this.defaultBrush = defaultBrush;
         }
 
-        public override Result DrawGlyphRun(object clientDrawingContext, float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode, GlyphRun glyphRun, GlyphRunDescription glyphRunDescription, ComObject clientDrawingEffect)
+        public override Result DrawGlyphRun(object clientDrawingContext, float baselineOriginX, float baselineOriginY, MeasuringMode measuringMode,
+            GlyphRun glyphRun, GlyphRunDescription glyphRunDescription, ComObject clientDrawingEffect)
         {
             SharpDX.Direct2D1.Brush brush = defaultBrush;
             if (clientDrawingEffect != null && clientDrawingEffect is SharpDX.Direct2D1.Brush)
             {
-                brush = (SharpDX.Direct2D1.Brush)clientDrawingEffect;
+                brush = (SharpDX.Direct2D1.Brush) clientDrawingEffect;
             }
 
             try

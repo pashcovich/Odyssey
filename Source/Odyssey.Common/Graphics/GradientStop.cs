@@ -1,19 +1,15 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using Odyssey.Animations;
-using Odyssey.ViewModel;
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Graphics
 {
     public class GradientStop : IEquatable<GradientStop>
     {
-        internal int Index { get; set; }
-
-        [Animatable]
-        public Color4 Color { get; set; }
-
-        public float Offset { get; set; }
-
         public GradientStop(Color4 color, float offset)
             : this()
         {
@@ -39,15 +35,15 @@ namespace Odyssey.Graphics
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(GradientStop)) return false;
-            return Equals((GradientStop)obj);
+            if (obj.GetType() != typeof (GradientStop)) return false;
+            return Equals((GradientStop) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (Color.GetHashCode() * 397) ^ Offset.GetHashCode();
+                return (Color.GetHashCode()*397) ^ Offset.GetHashCode();
             }
         }
 
@@ -68,10 +64,16 @@ namespace Odyssey.Graphics
 
         #endregion Equality
 
+        internal int Index { get; set; }
+
+        [Animatable]
+        public Color4 Color { get; set; }
+
+        public float Offset { get; set; }
+
         public static explicit operator SharpDX.Direct2D1.GradientStop(GradientStop from)
         {
-            return from == null ? default(SharpDX.Direct2D1.GradientStop) : new SharpDX.Direct2D1.GradientStop() {Color = from.Color, Position = from.Offset};
+            return from == null ? default(SharpDX.Direct2D1.GradientStop) : new SharpDX.Direct2D1.GradientStop {Color = from.Color, Position = from.Offset};
         }
-
     }
 }

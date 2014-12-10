@@ -1,7 +1,7 @@
 ﻿#region Using Directives
 
 using Odyssey.Graphics;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpDX;
 using SharpDX.DXGI;
 using System;

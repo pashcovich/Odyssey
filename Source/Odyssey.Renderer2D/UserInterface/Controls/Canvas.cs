@@ -13,15 +13,6 @@
 
 #endregion License
 
-#region Using Directives
-
-using Odyssey.Graphics;
-using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
-using Rectangle = Odyssey.Graphics.Drawing.Rectangle;
-
-#endregion Using Directives
-
 namespace Odyssey.UserInterface.Controls
 {
     public class Canvas : Panel

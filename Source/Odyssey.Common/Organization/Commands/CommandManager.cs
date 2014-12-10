@@ -1,10 +1,13 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Core;
-using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Organization.Commands
 {
@@ -19,7 +22,7 @@ namespace Odyssey.Organization.Commands
 
         public CommandManager()
         {
-            this.commands = new LinkedList<Command>();
+            commands = new LinkedList<Command>();
         }
 
         public int Count
@@ -34,10 +37,7 @@ namespace Odyssey.Organization.Commands
 
         public bool IsEmpty
         {
-            get
-            {
-                return commands.Count == 0;
-            }
+            get { return commands.Count == 0; }
         }
 
         public bool IsInited { get; protected set; }
@@ -47,11 +47,21 @@ namespace Odyssey.Organization.Commands
             get { return commands.ElementAt(index); }
         }
 
+        public IEnumerator<Command> GetEnumerator()
+        {
+            return commands.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         public void AddBefore(Command command, Command newCommand)
         {
             Contract.Requires<ArgumentNullException>(command != null);
             Contract.Requires<ArgumentNullException>(newCommand != null);
-            commands.AddBefore(commands.Find(command), ToDispose(newCommand)); 
+            commands.AddBefore(commands.Find(command), ToDispose(newCommand));
         }
 
         public void AddFirst(Command command)
@@ -78,22 +88,12 @@ namespace Odyssey.Organization.Commands
             commands.Clear();
         }
 
-        public IEnumerator<Command> GetEnumerator()
-        {
-            return commands.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
         public void Initialize()
         {
             foreach (Command command in commands.Where(c => !c.IsInited))
                 command.Initialize();
 
-            IsInited = commands.All(c=> c.IsInited);
+            IsInited = commands.All(c => c.IsInited);
         }
 
         public void Run()

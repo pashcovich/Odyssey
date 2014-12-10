@@ -72,8 +72,6 @@ namespace Odyssey.Graphics.Drawing
         {
             base.OnSizeChanged(e);
 
-            if (e.OldSize.X == 0 || e.OldSize.Y == 0) 
-                return;
             ScaleX *= e.NewSize.X/e.OldSize.X;
             ScaleY *= e.NewSize.Y/e.OldSize.Y;
 

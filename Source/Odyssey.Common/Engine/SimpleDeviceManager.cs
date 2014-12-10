@@ -1,16 +1,15 @@
 ﻿#region Using Directives
 
+using System;
 using Odyssey.Core;
-using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using System;
 using Device = SharpDX.Direct3D11.Device;
 using Device1 = SharpDX.Direct3D11.Device1;
 using Resource = SharpDX.Direct3D11.Resource;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Engine
 {
@@ -25,24 +24,9 @@ namespace Odyssey.Engine
 
         public SimpleDeviceManager(IServiceRegistry services)
         {
-            services.AddService(typeof(IDirectXDeviceService), this);
-            services.AddService(typeof(IDirectXDeviceSettings), this);
-            services.AddService(typeof(ISwapChainPresenterService), this);
-        }
-
-        public event EventHandler<EventArgs> DeviceChangeBegin;
-
-        public event EventHandler<EventArgs> DeviceChangeEnd;
-
-        public event EventHandler<EventArgs> DeviceCreated;
-
-        public event EventHandler<EventArgs> DeviceDisposing;
-
-        public event EventHandler<EventArgs> DeviceLost;
-
-        public RenderTargetView BackBuffer
-        {
-            get { return renderTargetView; }
+            services.AddService(typeof (IDirectXDeviceService), this);
+            services.AddService(typeof (IDirectXDeviceSettings), this);
+            services.AddService(typeof (ISwapChainPresenterService), this);
         }
 
         public DeviceContext1 Context
@@ -55,14 +39,24 @@ namespace Odyssey.Engine
             get { return device; }
         }
 
+        public bool IsDebugMode { get; private set; }
+
+        public event EventHandler<EventArgs> DeviceChangeBegin;
+
+        public event EventHandler<EventArgs> DeviceChangeEnd;
+
+        public event EventHandler<EventArgs> DeviceCreated;
+
+        public event EventHandler<EventArgs> DeviceDisposing;
+
+        public event EventHandler<EventArgs> DeviceLost;
+
         public IDirect3DProvider DirectXDevice
         {
             get { return this; }
         }
 
         public float HorizontalDpi { get; set; }
-
-        public bool IsDebugMode { get; private set; }
 
         public bool IsFullScreen { get; set; }
 
@@ -78,24 +72,29 @@ namespace Odyssey.Engine
 
         public int PreferredMultiSampleCount { get; set; }
 
+        public float VerticalDpi { get; set; }
+
+        public RenderTargetView BackBuffer
+        {
+            get { return renderTargetView; }
+        }
+
         public SwapChain SwapChain
         {
             get { return swapChain; }
         }
 
-        public float VerticalDpi { get; set; }
-
         public void CreateDevice(object hostControl, DeviceCreationFlags flags)
         {
             OnDeviceChangeBegin(this, EventArgs.Empty);
             // SwapChain description
-            var desc = new SwapChainDescription()
+            var desc = new SwapChainDescription
             {
                 BufferCount = 1,
                 ModeDescription = new ModeDescription(PreferredBackBufferWidth, PreferredBackBufferHeight, new Rational(60, 1),
                     PreferredBackBufferFormat),
                 IsWindowed = true,
-                OutputHandle = (IntPtr)hostControl,
+                OutputHandle = (IntPtr) hostControl,
                 SampleDescription = new SampleDescription(1, 0),
                 SwapEffect = SwapEffect.Discard,
                 Usage = Usage.RenderTargetOutput

@@ -1,7 +1,10 @@
+#region Using Directives
+
 using Odyssey.Content;
-using Odyssey.Engine;
 using Odyssey.Graphics;
 using SharpDX.DirectWrite;
+
+#endregion
 
 namespace Odyssey.UserInterface.Style
 {

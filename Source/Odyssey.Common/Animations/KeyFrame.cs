@@ -1,14 +1,16 @@
+#region Using Directives
+
 using System;
 using System.Xml;
 using Odyssey.Content;
-using Odyssey.Graphics;
 using Odyssey.Serialization;
+
+#endregion
 
 namespace Odyssey.Animations
 {
     public abstract class KeyFrame<T> : IComparable<KeyFrame<T>>, IKeyFrame, ISerializableResource
     {
-        public float Time { get ; set; }
         public T Value { get; set; }
 
         public int CompareTo(KeyFrame<T> other)
@@ -16,13 +18,16 @@ namespace Odyssey.Animations
             return Time.CompareTo(other.Time);
         }
 
+        public float Time { get; set; }
+
         object IKeyFrame.Value
         {
             get { return Value; }
-            set { Value = (T)value; }
+            set { Value = (T) value; }
         }
 
         #region IStyleSerializable
+
         public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
         {
             throw new NotImplementedException();

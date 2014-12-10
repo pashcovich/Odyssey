@@ -1,35 +1,24 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Xml;
 using Odyssey.Animations;
 using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Graphics.Organization;
 using Odyssey.Serialization;
-using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Organization.Commands
 {
     public class PlayAnimationCommand : Command, ISerializableResource
     {
-        private IAnimatable target;
         private string animationName;
+        private IAnimatable target;
         private float time;
-
-        public IAnimatable Target
-        {
-            get { return target; }
-        }
-
-        public string AnimationName
-        {
-            get { return animationName; }
-        }
-
-        public float Time
-        {
-            get { return time; }
-        }
 
         public PlayAnimationCommand(IServiceRegistry services)
             : base(services, CommandType.PlayAnimation)
@@ -46,6 +35,35 @@ namespace Odyssey.Organization.Commands
             time = startTime;
         }
 
+        public IAnimatable Target
+        {
+            get { return target; }
+        }
+
+        public string AnimationName
+        {
+            get { return animationName; }
+        }
+
+        public float Time
+        {
+            get { return time; }
+        }
+
+        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
+        {
+            string targetName = xmlReader.GetAttribute("TargetName");
+            target = resourceProvider.GetResource<IAnimatable>(targetName);
+            animationName = xmlReader.GetAttribute("AnimationName");
+            time = float.Parse(xmlReader.GetAttribute("Time"), CultureInfo.InvariantCulture);
+            xmlReader.ReadStartElement();
+        }
+
         public override void Initialize()
         {
         }
@@ -56,20 +74,6 @@ namespace Odyssey.Organization.Commands
                 target.Play();
             else
                 target.Play(animationName);
-        }
-
-        public void SerializeXml(IResourceProvider resourceProvider, System.Xml.XmlWriter xmlWriter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeserializeXml(IResourceProvider resourceProvider, System.Xml.XmlReader xmlReader)
-        {
-            string targetName = xmlReader.GetAttribute("TargetName");
-            target = resourceProvider.GetResource<IAnimatable>(targetName);
-            animationName = xmlReader.GetAttribute("AnimationName");
-            time = float.Parse(xmlReader.GetAttribute("Time"), CultureInfo.InvariantCulture);
-            xmlReader.ReadStartElement();
         }
     }
 }

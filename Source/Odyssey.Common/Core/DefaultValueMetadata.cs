@@ -66,7 +66,7 @@ namespace Odyssey.Core
         private readonly bool keepDefaultValue;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="StaticDefaultValueMetadata" /> class.
+        ///     Initializes a new instance of the <see cref="StaticDefaultValueMetadata{T}" /> class.
         /// </summary>
         /// <param name="defaultValue">The default value.</param>
         /// <param name="keepDefaultValue">if set to <c>true</c> [keep default value].</param>
@@ -104,7 +104,7 @@ namespace Odyssey.Core
         public delegate T DefaultValueCallback(ref PropertyContainer container);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DelegateDefaultValueMetadata"/> class.
+        /// Initializes a new instance of the <see cref="DelegateDefaultValueMetadata{T}"/> class.
         /// </summary>
         /// <param name="callback">The callback.</param>
         public DelegateDefaultValueMetadata(DefaultValueCallback callback)

@@ -1,22 +1,25 @@
-﻿using System;
+﻿#region Using Directives
+
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Odyssey.Graphics.Effects;
 using Odyssey.Serialization;
+
+#endregion
 
 namespace Odyssey.Engine
 {
     public sealed class EngineReference : IXmlSerializable, IDataSerializable
     {
-        private string value;
-        private string type;
+        private static readonly IEqualityComparer<EngineReference> ComparerInstance = new ValueTypeEqualityComparer();
         private int index;
+        private string type;
+        private string value;
 
         public EngineReference() : this("Undefined", "Undefined")
-        { }
+        {
+        }
 
         public EngineReference(string type, string value)
         {
@@ -38,6 +41,11 @@ namespace Odyssey.Engine
         {
             get { return index; }
             set { index = value; }
+        }
+
+        internal static IEqualityComparer<EngineReference> Comparer
+        {
+            get { return ComparerInstance; }
         }
 
         #region IXmlSerializable
@@ -91,13 +99,6 @@ namespace Odyssey.Engine
                     return ((obj.value != null ? obj.value.GetHashCode() : 0)*397) ^ (obj.type != null ? obj.type.GetHashCode() : 0);
                 }
             }
-        }
-
-        private static readonly IEqualityComparer<EngineReference> ComparerInstance = new ValueTypeEqualityComparer();
-
-        internal static IEqualityComparer<EngineReference> Comparer
-        {
-            get { return ComparerInstance; }
         }
     }
 }

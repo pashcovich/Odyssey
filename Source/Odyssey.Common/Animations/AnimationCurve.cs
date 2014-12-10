@@ -45,7 +45,7 @@ namespace Odyssey.Animations
             get { return functionOptions; }
         }
 
-        public AnimationCurve()
+        protected AnimationCurve()
         {
             keyFrames = new List<TKeyFrame>();
         }

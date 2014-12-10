@@ -1,24 +1,27 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Odyssey.Content;
 using Odyssey.Core;
+using Odyssey.Engine;
 using Odyssey.Organization.Commands;
 using Odyssey.Serialization;
-using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Animations
 {
-    [ContentReader(typeof(CutsceneContentReader))]
+    [ContentReader(typeof (CutsceneContentReader))]
     public class Cutscene : AnimationController, ISerializableResource
     {
-        private readonly IServiceRegistry services;
         private readonly CommandManager commandManager;
         private readonly List<Command> executedCommands;
+        private readonly IServiceRegistry services;
         private float elapsedTime;
         private AnimationStatus status;
-        public AnimationStatus Status { get { return status; }}
 
         public Cutscene(IServiceRegistry services)
         {
@@ -27,7 +30,12 @@ namespace Odyssey.Animations
             executedCommands = new List<Command>();
         }
 
-        public override void Update(Engine.ITimeService time)
+        public AnimationStatus Status
+        {
+            get { return status; }
+        }
+
+        public override void Update(ITimeService time)
         {
             if (status == AnimationStatus.Stopped)
                 return;
@@ -57,13 +65,13 @@ namespace Odyssey.Animations
         public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
         {
             string sCutscene = typeof (Cutscene).Name;
-            string sAnimation = typeof(Animation).Name;
+            string sAnimation = typeof (Animation).Name;
             const string sCommands = "Commands";
             Target = resourceProvider;
 
             // Deserialize animations
             xmlReader.ReadStartElement(sCutscene);
-            
+
             while (xmlReader.IsStartElement(sAnimation))
             {
                 var animation = new Animation();

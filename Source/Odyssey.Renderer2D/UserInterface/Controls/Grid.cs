@@ -1,24 +1,21 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 
+#endregion
+
 namespace Odyssey.UserInterface.Controls
 {
     public class Grid : GridBase
     {
-        private readonly StripDefinitionCollection[] stripDefinitions =
-        {
-            new StripDefinitionCollection(),
-            new StripDefinitionCollection(),
-            new StripDefinitionCollection(),
-        };
-
         private readonly List<float>[] cachedStripPositions =
         {
             new List<float>(),
-            new List<float>(), 
+            new List<float>(),
             new List<float>()
         };
 
@@ -26,18 +23,25 @@ namespace Odyssey.UserInterface.Controls
         private readonly List<float>[] cachedStripSizes =
         {
             new List<float>(),
-            new List<float>(), 
+            new List<float>(),
             new List<float>()
+        };
+
+        private readonly StripDefinitionCollection[] stripDefinitions =
+        {
+            new StripDefinitionCollection(),
+            new StripDefinitionCollection(),
+            new StripDefinitionCollection()
         };
 
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
             if (stripDefinitions[2].Count == 0)
-                AddLayerDefinition(new StripDefinition(StripType.Fixed,1));
+                AddLayerDefinition(new StripDefinition(StripType.Fixed, 1));
         }
 
-        void CalculateStripPositions()
+        private void CalculateStripPositions()
         {
             for (int dim = 0; dim < stripDefinitions.Length; dim++)
             {
@@ -53,7 +57,7 @@ namespace Odyssey.UserInterface.Controls
             }
         }
 
-        void CalculateStripSizes()
+        private void CalculateStripSizes()
         {
             for (int dim = 0; dim < stripDefinitions.Length; dim++)
             {
@@ -98,7 +102,8 @@ namespace Odyssey.UserInterface.Controls
             foreach (var control in Children.Visual)
             {
                 var gridPosition = GetElementGridPositions(control);
-                control.Position = new Vector3(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y], cachedStripPositions[2][gridPosition.Z]);
+                control.Position = new Vector3(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y],
+                    cachedStripPositions[2][gridPosition.Z]);
                 control.Arrange(new Vector3(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y], cachedStripSizes[2][gridPosition.Z]));
             }
 

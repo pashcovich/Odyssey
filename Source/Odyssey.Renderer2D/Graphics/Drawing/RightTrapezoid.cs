@@ -1,7 +1,10 @@
-﻿using System;
+﻿#region Using Directives
+
 using Odyssey.Reflection;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Serialization;
+
+#endregion
 
 namespace Odyssey.Graphics.Drawing
 {
@@ -11,7 +14,7 @@ namespace Odyssey.Graphics.Drawing
 
         protected internal override UIElement Copy()
         {
-            var copy = (RightTrapezoid)base.Copy();
+            var copy = (RightTrapezoid) base.Copy();
             copy.TopBaseRatio = TopBaseRatio;
             return copy;
         }
@@ -20,13 +23,13 @@ namespace Odyssey.Graphics.Drawing
         {
             base.OnReadXml(e);
             float r;
-            TopBaseRatio = float.TryParse(e.XmlReader.GetAttribute(ReflectionHelper.GetPropertyName((RightTrapezoid t) => t.TopBaseRatio)), out r) ? r : 0.75f;
+            TopBaseRatio =float.TryParse(e.XmlReader.GetAttribute(ReflectionHelper.GetPropertyName((RightTrapezoid t) => t.TopBaseRatio)), out r) ? r : 0.75f;
         }
 
         protected override void Redraw()
         {
             var d = new FigureDesigner();
-            d.DrawRightTrapezoid(Position, RenderSize.X * TopBaseRatio, RenderSize.X, RenderSize.Y);
+            d.DrawRightTrapezoid(Position, RenderSize.X*TopBaseRatio, RenderSize.X, RenderSize.Y);
             Data = d.Result;
             base.Redraw();
         }

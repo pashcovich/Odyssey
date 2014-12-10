@@ -51,7 +51,7 @@ namespace Odyssey.Engine
 
         public static BitmapTarget New(string name, Direct2DDevice device, int width, int height, PixelFormat format)
         {
-            Texture2DDescription renderTargetDescription = new Texture2DDescription
+            var renderTargetDescription = new Texture2DDescription
                 {
                     Width = width,
                     Height = height,
@@ -65,15 +65,15 @@ namespace Odyssey.Engine
                     OptionFlags = ResourceOptionFlags.None
                 };
 
-            Texture2D texture = new Texture2D(device, renderTargetDescription);
+            var texture = new Texture2D(device, renderTargetDescription);
 
             return new BitmapTarget(name, device, texture.QueryInterface<Surface>(), CreateDescription(device.HorizontalDpi, device.VerticalDpi, format));
         }
 
         private static int CalculateMipMapCount(int width, int height)
         {
-            int size = Math.Max(Math.Max(width, height), 0);
-            int maxMipMap = 1 + (int)Math.Log(size, 2);
+            var size = Math.Max(Math.Max(width, height), 0);
+            var maxMipMap = 1 + (int)Math.Log(size, 2);
             return maxMipMap;
         }
 

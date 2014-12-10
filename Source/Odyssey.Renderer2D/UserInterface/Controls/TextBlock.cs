@@ -13,20 +13,6 @@
 
 #endregion License
 
-#region Using Directives
-
-using System.Diagnostics;
-using Odyssey.Graphics;
-using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
-using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
-using Brush = Odyssey.Graphics.Brush;
-using SolidColorBrush = Odyssey.Graphics.SolidColorBrush;
-using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
-
-#endregion Using Directives
-
 namespace Odyssey.UserInterface.Controls
 {
     public class TextBlock : TextBlockBase

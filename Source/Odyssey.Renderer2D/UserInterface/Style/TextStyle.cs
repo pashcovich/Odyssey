@@ -1,11 +1,13 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Xml;
 using Odyssey.Content;
-using Odyssey.Engine;
 using Odyssey.Reflection;
 using Odyssey.Serialization;
-using SharpDX.Mathematics;
-using SharpDX.DirectWrite;
+using Odyssey.Text;
+
+#endregion
 
 namespace Odyssey.UserInterface.Style
 {
@@ -13,7 +15,6 @@ namespace Odyssey.UserInterface.Style
     {
         public const string Default = "Default";
         public const string TemplatedParent = "TemplatedParent";
-        public string Name { get; private set; }
         public string Foreground { get; private set; }
         public int Size { get; private set; }
         public string FontFamily { get; private set; }
@@ -23,26 +24,29 @@ namespace Odyssey.UserInterface.Style
         public FontWeight FontWeight { get; private set; }
 
         #region ISerializableResource
+
         public void DeserializeXml(IResourceProvider theme, XmlReader xmlReader)
         {
             Name = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Name));
-            Foreground = Text.TextHelper.ParseResource(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Foreground)));
+            Foreground = TextHelper.ParseResource(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Foreground)));
             if (!theme.ContainsResource(Foreground))
                 throw new InvalidOperationException(string.Format("Resource '{0}' not found", Foreground));
             Size = int.Parse(xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.Size)));
             FontFamily = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.FontFamily));
 
             string eTextAlignment = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.TextAlignment));
-            TextAlignment = string.IsNullOrEmpty(eTextAlignment) ? TextAlignment.Leading : Text.TextHelper.ParseEnum<TextAlignment>(eTextAlignment);
+            TextAlignment = string.IsNullOrEmpty(eTextAlignment) ? TextAlignment.Leading : TextHelper.ParseEnum<TextAlignment>(eTextAlignment);
 
             string eParagraphAlignment = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.ParagraphAlignment));
-            ParagraphAlignment = string.IsNullOrEmpty(eParagraphAlignment) ? ParagraphAlignment.Near : Text.TextHelper.ParseEnum<ParagraphAlignment>(eParagraphAlignment);
+            ParagraphAlignment = string.IsNullOrEmpty(eParagraphAlignment)
+                ? ParagraphAlignment.Near
+                : TextHelper.ParseEnum<ParagraphAlignment>(eParagraphAlignment);
 
             string eFontStyle = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.FontStyle));
-            FontStyle = string.IsNullOrEmpty(eFontStyle) ? FontStyle.Normal : Text.TextHelper.ParseEnum<FontStyle>(eFontStyle);
+            FontStyle = string.IsNullOrEmpty(eFontStyle) ? FontStyle.Normal : TextHelper.ParseEnum<FontStyle>(eFontStyle);
 
             string eFontWeight = xmlReader.GetAttribute(ReflectionHelper.GetPropertyName((TextStyle t) => t.FontWeight));
-            FontWeight = string.IsNullOrEmpty(eFontWeight) ? FontWeight.Normal : Text.TextHelper.ParseEnum<FontWeight>(eFontWeight);
+            FontWeight = string.IsNullOrEmpty(eFontWeight) ? FontWeight.Normal : TextHelper.ParseEnum<FontWeight>(eFontWeight);
 
             xmlReader.ReadStartElement();
         }
@@ -51,8 +55,9 @@ namespace Odyssey.UserInterface.Style
         {
             throw new NotImplementedException();
         }
+
         #endregion
 
-       
+        public string Name { get; private set; }
     }
 }

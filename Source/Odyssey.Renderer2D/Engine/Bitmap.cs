@@ -1,15 +1,14 @@
 ﻿#region Using Directives
 
+using System;
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
-using System;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using PixelFormat = Odyssey.Graphics.PixelFormat;
 using Resource = SharpDX.Direct2D1.Resource;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Engine
 {
@@ -19,14 +18,6 @@ namespace Odyssey.Engine
 
         private long bitmapId;
 
-        protected Bitmap(string name, Direct2DDevice device, Size2 size, BitmapProperties1 bitmapProperties)
-            : base(name, device)
-        {
-            Properties = bitmapProperties;
-            Resource = ToDispose(new Bitmap1(device, size, bitmapProperties));
-            Size = size;
-        }
-
         protected Bitmap(string name, Direct2DDevice device, Surface surface, BitmapProperties1 bitmapProperties)
             : base(name, device)
         {
@@ -35,7 +26,7 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Gets the texture format.
+        ///     Gets the texture format.
         /// </summary>
         /// <value>The texture format.</value>
         public PixelFormat Format
@@ -44,7 +35,7 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Common description for this texture.
+        ///     Common description for this texture.
         /// </summary>
         public BitmapProperties1 Properties { get; private set; }
 
@@ -53,7 +44,8 @@ namespace Odyssey.Engine
             return bitmapId.CompareTo(obj.bitmapId);
         }
 
-        protected static BitmapProperties1 NewDescription(float dpiX, float dpiY, PixelFormat format, AlphaMode alphaMode,
+        protected static BitmapProperties1 NewDescription(float dpiX, float dpiY, PixelFormat format,
+            AlphaMode alphaMode,
             BitmapOptions bitmapOptions, ColorContext colorContext)
         {
             var pixelFormat = new SharpDX.Direct2D1.PixelFormat(format, alphaMode);

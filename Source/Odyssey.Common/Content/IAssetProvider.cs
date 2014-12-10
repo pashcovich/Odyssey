@@ -1,11 +1,10 @@
 ﻿#region Using Directives
 
+using System;
 using System.Collections.Generic;
 using Odyssey.Core;
-using SharpDX.Mathematics;
-using System;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Content
 {
@@ -16,7 +15,7 @@ namespace Odyssey.Content
         bool Contains(string assetName);
 
         T Load<T>(string assetName, object options = null);
-        
+
         IEnumerable<T> GetAll<T>();
 
         void Store<T>(string assetName, T asset);

@@ -27,7 +27,7 @@ using Odyssey.Epos.Maps;
 using Odyssey.Epos.Messages;
 using Odyssey.Epos.Systems;
 using Odyssey.Graphics;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpDX.Mathematics;
 using Component = Odyssey.Epos.Components.Component;
 #endregion

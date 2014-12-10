@@ -1,11 +1,9 @@
 ﻿#region Using Directives
 
-using System.Linq;
-using Odyssey.UserInterface.Controls;
-using SharpDX.Mathematics;
 using System.Collections.Generic;
+using SharpDX.Mathematics;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Style
 {
@@ -29,7 +27,7 @@ namespace Odyssey.UserInterface.Style
             float availableWidth = availableSize.X;
             foreach (UIElement element in children)
             {
-                element.PositionOffsets = new Vector3((availableWidth - element.DesiredSizeWithMargins.X) / 2, element.Position.Y , element.Position.Z);
+                element.PositionOffsets = new Vector3((availableWidth - element.DesiredSizeWithMargins.X)/2, element.Position.Y, element.Position.Z);
             }
         }
 
@@ -38,7 +36,7 @@ namespace Odyssey.UserInterface.Style
             float availableHeight = availableSize.Y;
             foreach (UIElement element in children)
             {
-                element.PositionOffsets = new Vector3(element.Position.X, (availableHeight - element.DesiredSizeWithMargins.Y) / 2, element.Position.Z);
+                element.PositionOffsets = new Vector3(element.Position.X, (availableHeight - element.DesiredSizeWithMargins.Y)/2, element.Position.Z);
             }
         }
 
@@ -72,6 +70,5 @@ namespace Odyssey.UserInterface.Style
                 previousPosition = element.Position + new Vector3(0, element.DesiredSizeWithMargins.Y, element.Position.Z);
             }
         }
-        
     }
 }

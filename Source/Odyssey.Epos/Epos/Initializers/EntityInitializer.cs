@@ -23,7 +23,7 @@ using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpDX.Mathematics;
 
 #endregion

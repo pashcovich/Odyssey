@@ -1,9 +1,8 @@
-﻿using System;
-using System.Globalization;
-using Odyssey.Content;
-using Odyssey.Geometry;
-using Odyssey.Epos;
+﻿#region Using Directives
+
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Animations
 {
@@ -20,6 +19,5 @@ namespace Odyssey.Animations
 
             return MathUtil.Lerp(start.Value, end.Value, newValue);
         }
-
     }
 }

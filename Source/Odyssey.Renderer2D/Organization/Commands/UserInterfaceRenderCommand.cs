@@ -1,7 +1,10 @@
-﻿using Odyssey.Core;
+﻿#region Using Directives
+
+using Odyssey.Core;
 using Odyssey.Graphics.Organization;
 using Odyssey.UserInterface.Controls;
-using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Organization.Commands
 {

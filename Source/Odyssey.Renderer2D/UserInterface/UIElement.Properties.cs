@@ -25,9 +25,7 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
-using SharpDX;
 using SharpDX.Mathematics;
-using SharpDX.Mathematics.Interop;
 
 #endregion
 
@@ -35,11 +33,17 @@ namespace Odyssey.UserInterface
 {
     public abstract partial class UIElement
     {
-        internal protected bool IsInternal { get; set; }
-        internal Vector3 MarginInternal { get {  return new Vector3(Margin.Horizontal, Margin.Vertical, 0);} }
+        public PropertyContainer DependencyProperties;
+        private Vector3 positionOffsets;
+        protected internal bool IsInternal { get; set; }
+
+        internal Vector3 MarginInternal
+        {
+            get { return new Vector3(Margin.Horizontal, Margin.Vertical, 0); }
+        }
 
         /// <summary>
-        /// Returns the publicly available collection of child controls.
+        ///     Returns the publicly available collection of child controls.
         /// </summary>
         public UIElementCollection Children { get; private set; }
 
@@ -61,11 +65,11 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the control is in design mode.
+        ///     Gets or sets a value indicating whether the control is in design mode.
         /// </summary>
-        /// <value><c>true</c> if the <see cref="UIElement"/> is in design mode; otherwise, /c>.</value>
+        /// <value><c>true</c> if the <see cref="UIElement" /> is in design mode; otherwise, /c>.</value>
         /// <remarks>
-        /// While in design mode, certain events are not fired.
+        ///     While in design mode, certain events are not fired.
         /// </remarks>
         public bool DesignMode
         {
@@ -81,12 +85,14 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Determines whether this control has captured the mouse pointer.
+        ///     Determines whether this control has captured the mouse pointer.
         /// </summary>
-        /// <value><c>true</c> if the control has captured the mouse cursor, <c>false</c>
-        /// otherwise.</value>
+        /// <value>
+        ///     <c>true</c> if the control has captured the mouse cursor, <c>false</c>
+        ///     otherwise.
+        /// </value>
         /// <remarks>
-        /// When a control captures the mouse pointer, events are only sent to that control.
+        ///     When a control captures the mouse pointer, events are only sent to that control.
         /// </remarks>
         public bool IsPointerCaptured { get; internal set; }
 
@@ -105,15 +111,15 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets the zero based index of this control in the <see cref = "Panel" />.
+        ///     Gets the zero based index of this control in the <see cref="Panel" />.
         /// </summary>
         /// <value>The zero based index.</value>
         public int Index { get; internal set; }
 
         /// <summary>
-        /// Determines whether this control can be focused.
+        ///     Determines whether this control can be focused.
         /// </summary>
-        /// <value><c>true</b> if the control can be focused; <c>false</c> otherwise.</value>
+        /// <value> <c>true</c> if the control can be focused; <c>false</c> otherwise.</value>
         public bool IsFocusable
         {
             get { return isFocusable; }
@@ -151,10 +157,13 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets the height and width of the control.
+        ///     Gets the height and width of the control.
         /// </summary>
-        /// <value>The <see cref = "Vector2">Size</see> that represents the height, width and depth of the control in pixels.</value>
-        public Vector3 Size { get { return new Vector3(Width, Height, Depth);} }
+        /// <value>The <see cref="Vector2">Size</see> that represents the height, width and depth of the control in pixels.</value>
+        public Vector3 Size
+        {
+            get { return new Vector3(Width, Height, Depth); }
+        }
 
         public Vector3 RenderSize
         {
@@ -164,7 +173,7 @@ namespace Odyssey.UserInterface
                 var oldSize = renderSize;
                 if (renderSize == value)
                     return;
-                
+
                 renderSize = value;
                 if (!DesignMode)
                     OnSizeChanged(new SizeChangedEventArgs(oldSize, RenderSize));
@@ -235,30 +244,28 @@ namespace Odyssey.UserInterface
             set { maximumDepth = value; }
         }
 
-        public AnimationController Animator
-        {
-            get { return animator; }
-        }
-
         internal IEnumerable<BindingExpression> Bindings
         {
             get { return bindings.Values; }
         }
 
-        public BehaviorCollection Behaviors { get { return behaviors; } }
+        public BehaviorCollection Behaviors
+        {
+            get { return behaviors; }
+        }
 
         internal bool IsBeingRemoved { get; set; }
 
         /// <summary>
-        /// Currently not used.
+        ///     Currently not used.
         /// </summary>
-        
-
         /// <summary>
-        /// Gets or sets a value indicating whether the mouse cursor is currently inside.
+        ///     Gets or sets a value indicating whether the mouse cursor is currently inside.
         /// </summary>
-        /// <value><c>true</c> if the mouse pointer is currently inside; otherwise,
-        /// <c>false</c>.</value>
+        /// <value>
+        ///     <c>true</c> if the mouse pointer is currently inside; otherwise,
+        ///     <c>false</c>.
+        /// </value>
         protected internal bool IsInside
         {
             get { return isInside && canRaiseEvents; }
@@ -272,16 +279,16 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this control is clicked.
+        ///     Gets or sets a value indicating whether this control is clicked.
         /// </summary>
         /// <value><c>true</c> if this control is clicked; otherwise, <c>false</c>.</value>
         /// <remarks>
-        /// This value stays <c>true</c> for as long as the user presses the mouse button.
+        ///     This value stays <c>true</c> for as long as the user presses the mouse button.
         /// </remarks>
         protected internal bool IsPressed { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this control is selected.
+        ///     Gets or sets a value indicating whether this control is selected.
         /// </summary>
         /// <value><c>true</c> if this control is selected; otherwise, <c>false</c>.</value>
         protected internal bool IsSelected
@@ -313,20 +320,19 @@ namespace Odyssey.UserInterface
             }
         }
 
-        public PropertyContainer DependencyProperties;
-        private Vector3 positionOffsets;
-
         protected Direct2DDevice Device
         {
             get { return Overlay.Device; }
         }
 
         /// <summary>
-        /// Gets the absolute position in screen coordinates of the upper-left corner of this
-        /// control.
+        ///     Gets the absolute position in screen coordinates of the upper-left corner of this
+        ///     control.
         /// </summary>
-        /// <value>A <see cref = "Vector2" /> that represents the absolute
-        /// position of the upper-left corner in screen coordinates for this control.</value>
+        /// <value>
+        ///     A <see cref="Vector2" /> that represents the absolute
+        ///     position of the upper-left corner in screen coordinates for this control.
+        /// </value>
         public Vector3 AbsolutePosition
         {
             get { return absolutePosition; }
@@ -334,7 +340,7 @@ namespace Odyssey.UserInterface
             {
                 var oldPosition = absolutePosition;
                 absolutePosition = value;
-                
+
                 if (absolutePosition == oldPosition)
                     return;
 
@@ -345,12 +351,12 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets a value that will be used by the interface to know whether that control can
-        /// raise events or not.
+        ///     Gets or sets a value that will be used by the interface to know whether that control can
+        ///     raise events or not.
         /// </summary>
         /// <value><c>true</c> if the control can react to events; <c>false</c> otherwise.</value>
         /// <remarks>
-        /// Setting this property to <b>false</b> will lock the control in its current state.
+        ///     Setting this property to <b>false</b> will lock the control in its current state.
         /// </remarks>
         public bool CanRaiseEvents
         {
@@ -359,11 +365,11 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the control can be interacted with.
+        ///     Gets or sets a value that indicates whether the control can be interacted with.
         /// </summary>
         /// <remarks>
-        /// This consequently causes the <see cref = "UIElement.CanRaiseEvents" /> property to be
-        /// set.
+        ///     This consequently causes the <see cref="UIElement.CanRaiseEvents" /> property to be
+        ///     set.
         /// </remarks>
         public bool IsEnabled
         {
@@ -372,13 +378,13 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Determines whether this control is focused.
+        ///     Determines whether this control is focused.
         /// </summary>
         /// <value><c>true</c> if this control is focused; <c>false</c> otherwise.</value>
         public bool IsFocused { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this control is highlighted.
+        ///     Gets or sets a value indicating whether this control is highlighted.
         /// </summary>
         /// <value><c>true</c> if this control is highlighted; otherwise, <c>false</c>.</value>
         public bool IsHighlighted
@@ -395,12 +401,12 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the control is visible or not.
+        ///     Gets or sets a value that indicates whether the control is visible or not.
         /// </summary>
         /// <value><c>true</c> if the control is visible; <c>false</c> otherwise.</value>
         /// <remarks>
-        /// Setting this property to a different value that the one it had before the assignment,
-        /// will cause the UI to be recomputed if the control is not in <see cref = "DesignMode" />
+        ///     Setting this property to a different value that the one it had before the assignment,
+        ///     will cause the UI to be recomputed if the control is not in <see cref="DesignMode" />
         /// </remarks>
         [Animatable]
         public virtual bool IsVisible
@@ -417,8 +423,8 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or Sets the parent control. When a new parent control is set the absolute position
-        /// of the child control is also computed.
+        ///     Gets or Sets the parent control. When a new parent control is set the absolute position
+        ///     of the child control is also computed.
         /// </summary>
         /// <value>The parent control.</value>
         public virtual UIElement Parent
@@ -439,15 +445,17 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets the coordinates of the upper-left corner of the control relative to the
-        /// upper-left corner of its container.
+        ///     Gets or sets the coordinates of the upper-left corner of the control relative to the
+        ///     upper-left corner of its container.
         /// </summary>
-        /// <value>A Vector2 that represents the upper-left corner of the control relative to the
-        /// upper-left corner of its container.</value>
+        /// <value>
+        ///     A Vector2 that represents the upper-left corner of the control relative to the
+        ///     upper-left corner of its container.
+        /// </value>
         /// <remarks>
-        /// If the controls's <see cref = "Parent" /> is the <see cref = "Odyssey.UserInterface.Controls.Overlay" />, the
-        /// <b>PositionV3</b> property value represents the upper-left corner of the control in
-        /// screen coordinates.
+        ///     If the controls's <see cref="Parent" /> is the <see cref="Odyssey.UserInterface.Controls.Overlay" />, the
+        ///     <b>PositionV3</b> property value represents the upper-left corner of the control in
+        ///     screen coordinates.
         /// </remarks>
         public Vector3 Position
         {
@@ -467,11 +475,12 @@ namespace Odyssey.UserInterface
         internal Vector3 PositionOffsets
         {
             get { return positionOffsets; }
-            set
-            {
-                positionOffsets = value; 
-                
-            }
+            set { positionOffsets = value; }
+        }
+
+        public AnimationController Animator
+        {
+            get { return animator; }
         }
     }
 }

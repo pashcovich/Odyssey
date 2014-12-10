@@ -111,7 +111,6 @@
     <Compile Include="Graphics\Effects\Enums.cs" />
     <Compile Include="Graphics\Effects\IMaterial.cs" />
     <Compile Include="Graphics\Effects\ReferenceEnums.cs" />
-    <Compile Include="Graphics\GradientStopChanged.cs" />
     <Compile Include="Graphics\IColorResource.cs" />
     <Compile Include="Graphics\Interop.cs" />
     <Compile Include="Content\IResource.cs" />

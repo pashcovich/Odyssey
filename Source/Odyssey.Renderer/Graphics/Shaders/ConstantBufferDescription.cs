@@ -1,9 +1,9 @@
 ﻿using Odyssey.Graphics.Effects;
-using Odyssey.Logging;
 using Odyssey.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Odyssey.Text.Logging;
 using EngineReference = Odyssey.Engine.EngineReference;
 
 namespace Odyssey.Graphics.Shaders

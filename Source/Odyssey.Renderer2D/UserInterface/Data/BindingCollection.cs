@@ -1,11 +1,14 @@
-﻿using System;
+﻿#region Using Directives
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
+#endregion
+
 namespace Odyssey.UserInterface.Data
 {
-    public class BindingCollection : IEnumerable<KeyValuePair<string,Binding>>
+    public class BindingCollection : IEnumerable<KeyValuePair<string, Binding>>
     {
         private readonly Dictionary<string, Binding> bindings;
 
@@ -26,6 +29,7 @@ namespace Odyssey.UserInterface.Data
         }
 
         #region IEnumerable<Binding>
+
         public IEnumerator<KeyValuePair<string, Binding>> GetEnumerator()
         {
             return bindings.GetEnumerator();
@@ -35,7 +39,7 @@ namespace Odyssey.UserInterface.Data
         {
             return GetEnumerator();
         }
-        #endregion
 
+        #endregion
     }
 }

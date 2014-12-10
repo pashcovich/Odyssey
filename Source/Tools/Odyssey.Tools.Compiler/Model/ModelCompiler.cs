@@ -8,7 +8,7 @@ using Assimp;
 using Assimp.Unmanaged;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Models;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;

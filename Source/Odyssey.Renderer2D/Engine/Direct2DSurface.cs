@@ -1,12 +1,10 @@
 ﻿#region Using Directives
 
-using Odyssey.Core;
-using SharpDX.Mathematics;
-using SharpDX.Direct2D1;
 using System;
-using System.Diagnostics.Contracts;
+using Odyssey.Core;
+using SharpDX.Direct2D1;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Engine
 {
@@ -17,16 +15,15 @@ namespace Odyssey.Engine
         private bool isVisible;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Direct2DSurface"/> class.
+        ///     Initializes a new instance of the <see cref="Direct2DSurface" /> class.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="device"></param>
-        /// <param name="services">The service provider from where to get <see cref="IDirectXDeviceService"/> and <see cref="IDirect2DDevice"/>.</param>
-        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="services"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown when <paramref name="device" /> is null.</exception>
         protected Direct2DSurface(string name, Direct2DDevice device)
             : base(name, device)
         {
-            this.services = device.Services;
+            services = device.Services;
 
             IsDirty = true;
             IsVisible = true;
@@ -35,7 +32,7 @@ namespace Odyssey.Engine
         protected BitmapTarget BitmapTarget { get; set; }
 
         /// <summary>
-        /// The service provider to retrieve additional services in derived classes.
+        ///     The service provider to retrieve additional services in derived classes.
         /// </summary>
         protected IServiceRegistry Services
         {
@@ -43,15 +40,18 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Indicates whether this surface needs to be redrawn.
+        ///     Indicates whether this surface needs to be redrawn.
         /// </summary>
         public bool IsDirty { get; private set; }
 
 
         /// <summary>
-        /// Gets of sets the value indicating whether this surface is visible.
+        ///     Gets of sets the value indicating whether this surface is visible.
         /// </summary>
-        /// <remarks>When this flag is changed from <c>false</c> to <c>true</c> - the surface is redrawn (<see cref="IsDirty"/> is set to true).</remarks>
+        /// <remarks>
+        ///     When this flag is changed from <c>false</c> to <c>true</c> - the surface is redrawn (<see cref="IsDirty" /> is
+        ///     set to true).
+        /// </remarks>
         internal bool IsVisible
         {
             get { return isVisible; }
@@ -62,12 +62,12 @@ namespace Odyssey.Engine
             }
         }
 
-        public bool IsInited { get; private set; }
-
         public override void Initialize()
         {
             var settings = services.GetService<IDirectXDeviceSettings>();
-            BitmapTarget = ToDispose(BitmapTarget.New(Name, Device, settings.PreferredBackBufferWidth, settings.PreferredBackBufferHeight, settings.PreferredBackBufferFormat));
+            BitmapTarget =
+                ToDispose(BitmapTarget.New(Name, Device, settings.PreferredBackBufferWidth,
+                    settings.PreferredBackBufferHeight, settings.PreferredBackBufferFormat));
 
             Initialize(BitmapTarget);
         }
@@ -79,12 +79,12 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// RenderTargetView casting operator.
+        ///     RenderTargetView casting operator.
         /// </summary>
         /// <param name="from">Source for the.</param>
         public static implicit operator Bitmap1(Direct2DSurface from)
         {
-            return from == null ? null : from.Resource != null ? (Bitmap1)from.Resource : null;
+            return from == null ? null : from.Resource != null ? (Bitmap1) from.Resource : null;
         }
     }
 }

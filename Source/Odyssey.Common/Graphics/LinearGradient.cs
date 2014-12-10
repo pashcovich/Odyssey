@@ -1,25 +1,28 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Xml;
 using Odyssey.Serialization;
+using Odyssey.Text;
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Graphics
 {
     public sealed class LinearGradient : Gradient, IEquatable<LinearGradient>
     {
-        private static int count = 0;
-        public Vector2 StartPoint { get; private set; }
-        public Vector2 EndPoint { get; private set; }
+        private static int count;
 
         public LinearGradient()
-            : this(string.Format("{0}{1:D2}", typeof(LinearGradient).Name, ++count), Vector2.Zero, Vector2.UnitX, Enumerable.Empty<GradientStop>())
+            : this(string.Format("{0}{1:D2}", typeof (LinearGradient).Name, ++count), Vector2.Zero, Vector2.UnitX, Enumerable.Empty<GradientStop>())
         {
         }
 
-        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode = ExtendMode.Clamp, float opacity = 1.0f, bool shared=true)  
+        public LinearGradient(string name, Vector2 startPoint, Vector2 endPoint, IEnumerable<GradientStop> gradientStops,
+            ExtendMode extendMode = ExtendMode.Clamp, float opacity = 1.0f, bool shared = true)
             : base(name, gradientStops, extendMode, ColorType.LinearGradient, opacity, shared)
         {
             Contract.Requires<ArgumentNullException>(gradientStops != null, "gradientStops");
@@ -27,9 +30,12 @@ namespace Odyssey.Graphics
             EndPoint = endPoint;
         }
 
+        public Vector2 StartPoint { get; private set; }
+        public Vector2 EndPoint { get; private set; }
+
         public static LinearGradient Vertical(string name, IEnumerable<GradientStop> gradientStops)
         {
-            return new LinearGradient(name, new Vector2(0.5f, 0), new Vector2(0.5f, 1),new GradientStopCollection(gradientStops));
+            return new LinearGradient(name, new Vector2(0.5f, 0), new Vector2(0.5f, 1), new GradientStopCollection(gradientStops));
         }
 
         public static LinearGradient Horizontal(string name, IEnumerable<GradientStop> gradientStops)
@@ -42,8 +48,8 @@ namespace Odyssey.Graphics
             var reader = e.XmlReader;
             string sStart = reader.GetAttribute("StartPoint");
             string sEnd = reader.GetAttribute("EndPoint");
-            StartPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : Text.TextHelper.DecodeFloatVector2(sStart);
-            EndPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : Text.TextHelper.DecodeFloatVector2(sEnd);
+            StartPoint = string.IsNullOrEmpty(sStart) ? Vector2.Zero : TextHelper.DecodeFloatVector2(sStart);
+            EndPoint = string.IsNullOrEmpty(sEnd) ? Vector2.Zero : TextHelper.DecodeFloatVector2(sEnd);
             base.OnReadXml(e);
         }
 
@@ -65,7 +71,7 @@ namespace Odyssey.Graphics
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((LinearGradient) obj);
         }
 
@@ -74,8 +80,8 @@ namespace Odyssey.Graphics
             unchecked
             {
                 int hashCode = Name.GetHashCode();
-                hashCode = (hashCode * 397) ^ Type.GetHashCode();
-                hashCode = (hashCode * 397) ^ GradientStops.GetHashCode();
+                hashCode = (hashCode*397) ^ Type.GetHashCode();
+                hashCode = (hashCode*397) ^ GradientStops.GetHashCode();
                 return hashCode;
             }
         }

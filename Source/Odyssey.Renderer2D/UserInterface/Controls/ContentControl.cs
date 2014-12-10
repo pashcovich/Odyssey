@@ -6,7 +6,7 @@ using System;
 
 namespace Odyssey.UserInterface.Controls
 {
-    public abstract class ContentControl : Control, IContentControl
+    public abstract class ContentControl : Control
     {
         private UIElement content;
 

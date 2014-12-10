@@ -33,7 +33,7 @@ using SharpDX.Mathematics;
 namespace Odyssey.Graphics.Drawing
 {
     [DebuggerDisplay("[{GetType().Name}]: {Parent.Name}:{Name}")]
-    public abstract class Shape : UIElement, IShape, IRequiresCaching
+    public abstract class Shape : UIElement, IRequiresCaching
     {
         private Brush fill;
         private string fillBrushClass;

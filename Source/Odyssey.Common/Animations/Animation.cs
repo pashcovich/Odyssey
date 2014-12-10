@@ -29,6 +29,7 @@ using Odyssey.Serialization;
 namespace Odyssey.Animations
 {
     public delegate void CurveUpdateCallback(IAnimationCurve curve, object currentValue);
+
     public class Animation : ISerializableResource, IResource
     {
         private readonly Dictionary<string, IAnimationCurve> animationCurves;

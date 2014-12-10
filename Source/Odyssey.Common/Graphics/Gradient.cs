@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿#region Using Directives
+
 using System.Collections.Generic;
 using System.Globalization;
 using Odyssey.Serialization;
+using Odyssey.Text;
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Graphics
 {
@@ -11,18 +14,18 @@ namespace Odyssey.Graphics
     {
         private readonly GradientStopCollection gradientStops;
 
-        public GradientStopCollection GradientStops
-        {
-            get { return gradientStops; }
-        }
-
-        protected Gradient(string name, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode, ColorType type, float opacity, bool shared) 
+        protected Gradient(string name, IEnumerable<GradientStop> gradientStops, ExtendMode extendMode, ColorType type, float opacity, bool shared)
             : base(name, type, opacity, shared)
         {
             this.gradientStops = new GradientStopCollection(gradientStops);
             this.gradientStops.ExtendMode = extendMode;
         }
-        
+
+        public GradientStopCollection GradientStops
+        {
+            get { return gradientStops; }
+        }
+
         protected override void OnReadXml(XmlDeserializationEventArgs e)
         {
             base.OnReadXml(e);
@@ -32,11 +35,11 @@ namespace Odyssey.Graphics
             {
                 Color4 color;
                 string colorValue = reader.GetAttribute("Color");
-                string colorAsResource = Text.TextHelper.ParseResource(colorValue);
+                string colorAsResource = TextHelper.ParseResource(colorValue);
                 if (!string.IsNullOrEmpty(colorAsResource))
                     color = e.ResourceProvider.GetResource<SolidColor>(colorAsResource).Color;
-                else 
-                    color = string.IsNullOrEmpty(colorValue) ? new Color4(0, 0, 0, 0) : Text.TextHelper.DecodeColor4Abgr(colorValue);
+                else
+                    color = string.IsNullOrEmpty(colorValue) ? new Color4(0, 0, 0, 0) : TextHelper.DecodeColor4Abgr(colorValue);
 
                 string offset = reader.GetAttribute("Offset");
                 var gradientStop = new GradientStop
@@ -50,6 +53,5 @@ namespace Odyssey.Graphics
 
             reader.ReadEndElement();
         }
-
     }
 }

@@ -15,20 +15,19 @@
 
 #region Using Directives
 
-using Odyssey.Collections;
-using Odyssey.Core;
-using SharpDX.Mathematics;
-using SharpDX.Collections;
-using SharpDX.IO;
-using SharpYaml.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Odyssey.Collections;
+using Odyssey.Core;
+using SharpDX;
+using SharpDX.IO;
+using SharpYaml.Serialization;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Content
 {
@@ -43,8 +42,6 @@ namespace Odyssey.Content
         private readonly List<IResourceResolver> registeredContentResolvers;
         private readonly IServiceRegistry services;
         private string rootDirectory;
-
-        public event EventHandler<AssetsLoadedEventArgs> AssetsLoaded;
 
         public ContentManager(IServiceRegistry services)
         {
@@ -71,17 +68,17 @@ namespace Odyssey.Content
         }
 
         /// <summary>
-        /// Add or remove registered <see cref="IContentReader"/> to this instance.
+        ///     Add or remove registered <see cref="IContentReader" /> to this instance.
         /// </summary>
         public ObservableDictionary<Type, IContentReader> Readers { get; private set; }
 
         /// <summary>
-        /// Add or remove registered <see cref="IResourceResolver"/> to this instance.
+        ///     Add or remove registered <see cref="IResourceResolver" /> to this instance.
         /// </summary>
         public ObservableCollection<IResourceResolver> Resolvers { get; private set; }
 
         /// <summary>
-        /// Gets or sets the root directory.
+        ///     Gets or sets the root directory.
         /// </summary>
         public string RootDirectory
         {
@@ -98,6 +95,8 @@ namespace Odyssey.Content
                 rootDirectory = value;
             }
         }
+
+        public event EventHandler<AssetsLoadedEventArgs> AssetsLoaded;
 
         public IServiceRegistry Services
         {
@@ -116,7 +115,7 @@ namespace Odyssey.Content
         }
 
         /// <summary>
-        /// Loads an asset that has been processed by the Content Pipeline.  Reference page contains code sample.
+        ///     Loads an asset that has been processed by the Content Pipeline.  Reference page contains code sample.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetName">The asset name </param>
@@ -162,7 +161,7 @@ namespace Odyssey.Content
         }
 
         /// <summary>
-        /// Returns all loaded assets of type T.
+        ///     Returns all loaded assets of type T.
         /// </summary>
         /// <typeparam name="T">The asset type to return.</typeparam>
         /// <returns>A sequence of asset of type T.</returns>
@@ -187,13 +186,6 @@ namespace Odyssey.Content
             }
 
             OnAssetsLoaded(new AssetsLoadedEventArgs(assetListFile));
-        }
-
-        private void OnAssetsLoaded(AssetsLoadedEventArgs e)
-        {
-            var handler = AssetsLoaded;
-            if (handler != null)
-                handler(this, e);
         }
 
         public Type Map(string type)
@@ -235,6 +227,23 @@ namespace Odyssey.Content
                 }
         }
 
+        /// <summary>
+        ///     Unloads and disposes an asset.
+        /// </summary>
+        /// <param name="assetName">The asset name</param>
+        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
+        public virtual bool Unload<T>(string assetName)
+        {
+            return Unload(assetName);
+        }
+
+        private void OnAssetsLoaded(AssetsLoadedEventArgs e)
+        {
+            var handler = AssetsLoaded;
+            if (handler != null)
+                handler(this, e);
+        }
+
         public void AddResolver(IResourceResolver resolver)
         {
             Resolvers.Add(resolver);
@@ -246,24 +255,12 @@ namespace Odyssey.Content
         }
 
         /// <summary>
-        /// Unloads and disposes an asset.
+        ///     Unloads and disposes an asset.
         /// </summary>
         /// <param name="assetName">The asset name</param>
         /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
-        public virtual bool Unload<T>(string assetName)
+        public virtual bool Unload(string assetName)
         {
-            return Unload(typeof (T), assetName);
-        }
-
-        /// <summary>
-        /// Unloads and disposes an asset.
-        /// </summary>
-        /// <param name="assetType">The asset type</param>
-        /// <param name="assetName">The asset name</param>
-        /// <returns><c>true</c> if the asset exists and was unloaded, <c>false</c> otherwise.</returns>
-        public virtual bool Unload(Type assetType, string assetName)
-        {
-            Contract.Requires<ArgumentNullException>(assetType != null, "assetType");
             Contract.Requires<ArgumentNullException>(assetName != null, "assetName");
             object asset;
 
@@ -411,7 +408,7 @@ namespace Odyssey.Content
                     {
 #if WIN8METRO
                         var contentReaderAttribute =
-                            SharpDX.Utilities.GetCustomAttribute<ContentReaderAttribute>(type.GetTypeInfo(), true);
+                            Utilities.GetCustomAttribute<ContentReaderAttribute>(type.GetTypeInfo(), true);
 #else
                         var contentReaderAttribute = SharpDX.Utilities.GetCustomAttribute<ContentReaderAttribute>(type, true);
 #endif
@@ -428,8 +425,8 @@ namespace Odyssey.Content
                 if (contentReader == null)
                 {
                     throw new NotSupportedException(string.Format(
-                            "Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader for it.",
-                            type.FullName));
+                        "Type [{0}] doesn't provide a ContentReaderAttribute, and there is no registered content reader for it.",
+                        type.FullName));
                 }
 
                 result = contentReader.ReadContent(this, ref parameters);
@@ -437,8 +434,8 @@ namespace Odyssey.Content
                 if (result == null)
                 {
                     throw new NotSupportedException(string.Format(
-                            "Registered ContentReader of type [{0}] fails to load content of type [{1}] from file [{2}].",
-                            contentReader.GetType(), type.FullName, assetName));
+                        "Registered ContentReader of type [{0}] fails to load content of type [{1}] from file [{2}].",
+                        contentReader.GetType(), type.FullName, assetName));
                 }
             }
             finally

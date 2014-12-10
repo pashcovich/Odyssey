@@ -15,21 +15,19 @@
 
 #region Using Directives
 
+using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Diagnostics.Contracts;
+using System.Linq;
 using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
-using Odyssey.Graphics;
 using Odyssey.Interaction;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
-using System;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using SharpDX.Direct2D1;
+using SharpDX.Mathematics;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -45,11 +43,17 @@ namespace Odyssey.UserInterface.Controls
 
         #region Properties
 
-        public Theme Theme { get { return theme; } }
+        public Theme Theme
+        {
+            get { return theme; }
+        }
 
         public string TextTheme { get; private set; }
 
-        public new Direct2DDevice Device { get { return device; } }
+        public new Direct2DDevice Device
+        {
+            get { return device; }
+        }
 
         internal UIElement CaptureElement
         {
@@ -70,7 +74,10 @@ namespace Odyssey.UserInterface.Controls
         internal UIElement EnteredElement { get; set; }
         internal UIElement FocusedElement { get; set; }
 
-        public IServiceRegistry Services { get { return services; } }
+        public IServiceRegistry Services
+        {
+            get { return services; }
+        }
 
         #endregion Properties
 
@@ -88,7 +95,7 @@ namespace Odyssey.UserInterface.Controls
             TextTheme = DefaultTextTheme;
             styleService = ToDispose(services.GetService<IStyleService>());
             theme = styleService.GetTheme(DefaultControlTheme);
-            
+
             EnteredElement = this;
             FocusedElement = this;
         }
@@ -152,12 +159,88 @@ namespace Odyssey.UserInterface.Controls
             Width = settings.PreferredBackBufferWidth;
             Height = settings.PreferredBackBufferHeight;
             Depth = 0;
-            
+
             Content.Measure(Size);
             return Size;
         }
 
+        public override void Update(ITimeService time)
+        {
+            var controlArray = TreeTraversal.PreOrderVisit(Content).ToArray();
+            for (int i = 1; i < controlArray.Length; i++)
+            {
+                var control = controlArray[i];
+                control.Update(time);
+            }
+        }
+
+        #region IResourceProvider
+
+        protected override IEnumerable<IResource> Resources
+        {
+            get { return TreeTraversal.PreOrderVisit(this); }
+        }
+
+        protected override bool ContainsResource(string resourceName)
+        {
+            return TreeTraversal.PreOrderVisit(Content).Any(c => string.Equals(c.Name, resourceName));
+        }
+
+        protected override TResource GetResource<TResource>(string resourceName)
+        {
+            return TreeTraversal.PreOrderVisit(Content).First(c => string.Equals(c.Name, resourceName)) as TResource;
+        }
+
+        #endregion
+
         #region Input Handling Methods
+
+        void IDesktopOverlay.ProcessKeyDown(KeyEventArgs e)
+        {
+            // If an element as captured the pointer, send the event to it first
+            if (CaptureElement != null)
+                e.Handled = CaptureElement.ProcessKeyDown(e);
+
+            if (e.Handled)
+                return;
+
+            // Then, send it to the currently focused control
+            if (FocusedElement != null)
+                e.Handled = FocusedElement.ProcessKeyDown(e);
+
+            if (e.Handled)
+                return;
+
+            //Proceeds with the rest
+            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(this))
+            {
+                e.Handled = control.ProcessKeyDown(e);
+                if (e.Handled)
+                    break;
+            }
+
+            if (e.Handled)
+                return;
+
+            e.Handled = ProcessKeyDown(e);
+        }
+
+        void IDesktopOverlay.ProcessKeyUp(KeyEventArgs e)
+        {
+            // If an element as captured the pointer, send the event to it first
+            if (CaptureElement != null)
+                e.Handled = CaptureElement.ProcessKeyUp(e);
+
+            if (e.Handled)
+                return;
+
+            // Then, send it to the currently focused control
+            if (FocusedElement != null)
+                e.Handled = FocusedElement.ProcessKeyUp(e);
+
+            e.Handled = ProcessKeyUp(e);
+        }
+
         void IOverlay.ProcessPointerMovement(PointerEventArgs e)
         {
             // If an element as captured the pointer, send the event to it first
@@ -226,80 +309,6 @@ namespace Odyssey.UserInterface.Controls
 
             ProcessPointerRelease(e);
             e.Handled = true;
-        }
-
-        void IDesktopOverlay.ProcessKeyDown(KeyEventArgs e)
-        {
-            // If an element as captured the pointer, send the event to it first
-            if (CaptureElement != null)
-                e.Handled = CaptureElement.ProcessKeyDown(e);
-
-            if (e.Handled)
-                return;
-
-            // Then, send it to the currently focused control
-            if (FocusedElement != null)
-                e.Handled = FocusedElement.ProcessKeyDown(e);
-
-            if (e.Handled)
-                return;
-
-            //Proceeds with the rest
-            foreach (UIElement control in TreeTraversal.PostOrderInteractionVisit(this))
-            {
-                e.Handled = control.ProcessKeyDown(e);
-                if (e.Handled)
-                    break;
-            }
-
-            if (e.Handled)
-                return;
-
-            e.Handled = ProcessKeyDown(e);
-        }
-
-        void IDesktopOverlay.ProcessKeyUp(KeyEventArgs e)
-        {
-            // If an element as captured the pointer, send the event to it first
-            if (CaptureElement != null)
-                e.Handled = CaptureElement.ProcessKeyUp(e);
-
-            if (e.Handled)
-                return;
-
-            // Then, send it to the currently focused control
-            if (FocusedElement != null)
-                e.Handled = FocusedElement.ProcessKeyUp(e);
-
-            e.Handled = ProcessKeyUp(e);
-        }
-        #endregion
-
-        public override void Update(ITimeService time)
-        {
-            var controlArray = TreeTraversal.PreOrderVisit(Content).ToArray();
-            for (int i = 1; i < controlArray.Length; i++)
-            {
-                var control = controlArray[i];
-                control.Update(time);
-            }
-        } 
-
-        #region IResourceProvider
-
-        protected override bool ContainsResource(string resourceName)
-        {
-            return TreeTraversal.PreOrderVisit(Content).Any(c => string.Equals(c.Name, resourceName));
-        }
-
-        protected override TResource GetResource<TResource>(string resourceName)
-        {
-            return TreeTraversal.PreOrderVisit(Content).First(c => string.Equals(c.Name, resourceName)) as TResource;
-        }
-
-        protected override IEnumerable<IResource> Resources
-        {
-            get { return TreeTraversal.PreOrderVisit(this); }
         }
 
         #endregion

@@ -2,10 +2,10 @@
 
 using System;
 using Odyssey.Interaction;
-using System.Linq;
+using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -18,7 +18,7 @@ namespace Odyssey.UserInterface.Controls
         {
         }
 
-        protected ButtonBase(string controlStyleClass, string textStyleClass = UserInterface.Style.TextStyle.Default)
+        protected ButtonBase(string controlStyleClass, string textStyleClass = TextStyle.Default)
             : base(controlStyleClass, textStyleClass)
         {
         }
@@ -34,7 +34,7 @@ namespace Odyssey.UserInterface.Controls
             base.OnInitializing(e);
             if (Content == null)
             {
-                Content = new TextBlock() { Text = Name, TextStyleClass = TextStyleClass};
+                Content = new TextBlock {Text = Name, TextStyleClass = TextStyleClass};
                 Content.Initialize();
             }
         }

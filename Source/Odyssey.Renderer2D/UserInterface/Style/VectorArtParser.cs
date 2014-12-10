@@ -19,17 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Style
 {
     public static class VectorArtParser
     {
         /// <summary>
-        /// Parses a string representing a XAML Path object in the Abbreviated Geometry Syntax
+        ///     Parses a string representing a XAML Path object in the Abbreviated Geometry Syntax
         /// </summary>
         /// <param name="pathString"></param>
         public static IEnumerable<VectorCommand> ParsePathData(string pathString)
@@ -91,13 +90,12 @@ namespace Odyssey.UserInterface.Style
                     return CommandType.Close;
                 default:
                     throw new ArgumentOutOfRangeException(string.Format("Command '{0}' is not valid", cmd));
-
             }
         }
 
         internal static char ConvertBack(CommandType command, bool relative)
         {
-            char cmd='?';
+            char cmd = '?';
             switch (command)
             {
                 case CommandType.FillRule:

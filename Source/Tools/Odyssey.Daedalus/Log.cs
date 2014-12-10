@@ -1,6 +1,6 @@
 ﻿using Odyssey.Daedalus.Properties;
-using Odyssey.Logging;
 using System.IO;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.Daedalus
 {

@@ -1,42 +1,29 @@
 ﻿#region Using Directives
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.IO;
+using System.Linq;
 using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics;
-using SharpDX.Mathematics;
-using System;
-using System.Linq;
+using SharpDX;
 using SharpDX.DirectWrite;
 using Font = Odyssey.Content.Font;
-using Path = System.IO.Path;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface.Style
 {
     public class StyleManager : Component, IStyleService
     {
-        private struct ResourceDescription
-        {
-            public IResource Value { get; private set; }
-            public bool IsShared { get; private set; }
-
-            public ResourceDescription(bool isShared, IResource value) : this()
-            {
-                IsShared = isShared;
-                Value = value;
-            }
-        }
-
         private readonly IAssetProvider content;
+        private readonly IServiceRegistry services;
         private readonly Dictionary<string, ResourceDescription> sharedResources;
         private FontCollection fontCollection;
         private NativeFontLoader fontLoader;
-        private readonly IServiceRegistry services;
-        public FontCollection FontCollection { get { return fontCollection; } }
 
         public StyleManager(IServiceRegistry services)
         {
@@ -44,24 +31,15 @@ namespace Odyssey.UserInterface.Style
             content = services.GetService<IAssetProvider>();
 
             content.AddMapping("Theme", typeof (Theme));
-            content.AddMapping("Font", typeof(Font));
+            content.AddMapping("Font", typeof (Font));
 
             content.AssetsLoaded += InitializeFontCollection;
             sharedResources = new Dictionary<string, ResourceDescription>();
         }
 
-        void InitializeFontCollection(object sender, AssetsLoadedEventArgs e)
+        public FontCollection FontCollection
         {
-            var assetListName = Path.GetFileNameWithoutExtension(e.AssetListPath);
-            if (!string.Equals(assetListName, "fonts"))
-                return;
-
-            var d2DService = services.GetService<IDirect2DService>();
-            d2DService.DeviceDisposing += (s, args) => Unload();
-
-            fontLoader = new NativeFontLoader(services);
-            fontCollection = new FontCollection(d2DService.Direct2DDevice, fontLoader, fontLoader.Key);
-            content.AssetsLoaded -= InitializeFontCollection;
+            get { return fontCollection; }
         }
 
         [Pure]
@@ -93,43 +71,20 @@ namespace Odyssey.UserInterface.Style
 
         public TResource GetResource<TResource>(string resourceName) where TResource : class, IResource
         {
-            if (!ContainsResource(resourceName)) 
+            if (!ContainsResource(resourceName))
                 throw new ArgumentException(string.Format("Resource '{0}' not found", resourceName));
 
             var resource = sharedResources[resourceName].Value;
             var resultResource = resource as TResource;
             if (resultResource == null)
                 throw new ArgumentException(string.Format("Resource '{0}' of type '{1}' cannot be cast to '{2}'",
-                    resourceName, resource, typeof(TResource).Name));
+                    resourceName, resource, typeof (TResource).Name));
             return resultResource;
-        }
-
-        public bool TryGetResource<TResource>(string resourceName, bool shared,out TResource resource) 
-            where TResource : class, IResource
-        {
-            resource = null;
-            if (!ContainsResource(resourceName)) return false;
-
-            var resourceDescription = sharedResources[resourceName];
-            resource = resourceDescription.IsShared == shared ? (TResource)resourceDescription.Value : null;
-            return resource != null;
-        }
-
-        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
-        {
-            return (from rd in sharedResources.Values select rd.Value).OfType<TResource>();
         }
 
         public IEnumerable<IResource> Resources
         {
             get { throw new NotImplementedException(); }
-        }
-
-        Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource)
-        {
-            var resource = Brush.FromColorResource(device, colorResource);
-            AddResource(resource, colorResource.Shared);
-            return resource;
         }
 
         public Brush GetBrushResource(ColorResource colorResource, bool shared = true)
@@ -146,19 +101,12 @@ namespace Odyssey.UserInterface.Style
                 var brushes = GetResources<SolidColorBrush>();
                 result = brushes.FirstOrDefault(b => b.Color.Equals(solidColor.Color) && b.Shared == shared);
             }
-            return result ?? CreateColorResource(device, shared ? colorResource : colorResource.CopyAs('u'+colorResource.Name, false));
+            return result ?? CreateColorResource(device, shared ? colorResource : colorResource.CopyAs('u' + colorResource.Name, false));
         }
 
         public Brush GetBrushResource(string name, Theme theme, bool shared = true)
         {
             return GetBrushResource(theme.GetResource<ColorResource>(name), shared);
-        }
-
-        TextFormat CreateTextResource(TextStyle textStyle, bool shared)
-        {
-            var resource = TextFormat.New(services, textStyle);
-            AddResource(resource, shared);
-            return resource;
         }
 
         public TextFormat GetTextResource(TextStyle textStyle, bool shared = true)
@@ -173,16 +121,71 @@ namespace Odyssey.UserInterface.Style
             return result ?? CreateTextResource(textStyle, true);
         }
 
-        void Unload()
+        private void InitializeFontCollection(object sender, AssetsLoadedEventArgs e)
+        {
+            var assetListName = Path.GetFileNameWithoutExtension(e.AssetListPath);
+            if (!string.Equals(assetListName, "fonts"))
+                return;
+
+            var d2DService = services.GetService<IDirect2DService>();
+            d2DService.DeviceDisposing += (s, args) => Unload();
+
+            fontLoader = new NativeFontLoader(services);
+            fontCollection = new FontCollection(d2DService.Direct2DDevice, fontLoader, fontLoader.Key);
+            content.AssetsLoaded -= InitializeFontCollection;
+        }
+
+        public bool TryGetResource<TResource>(string resourceName, bool shared, out TResource resource)
+            where TResource : class, IResource
+        {
+            resource = null;
+            if (!ContainsResource(resourceName)) return false;
+
+            var resourceDescription = sharedResources[resourceName];
+            resource = resourceDescription.IsShared == shared ? (TResource) resourceDescription.Value : null;
+            return resource != null;
+        }
+
+        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
+        {
+            return (from rd in sharedResources.Values select rd.Value).OfType<TResource>();
+        }
+
+        private Brush CreateColorResource(Direct2DDevice device, ColorResource colorResource)
+        {
+            var resource = Brush.FromColorResource(device, colorResource);
+            AddResource(resource, colorResource.Shared);
+            return resource;
+        }
+
+        private TextFormat CreateTextResource(TextStyle textStyle, bool shared)
+        {
+            var resource = TextFormat.New(services, textStyle);
+            AddResource(resource, shared);
+            return resource;
+        }
+
+        private void Unload()
         {
             // FontCollection and FontLoader have to be unregistered and disposed before
             // the DirectWriteFactory is disposed
             var dwFactory = services.GetService<IDirect2DService>().Direct2DDevice.DirectWriteFactory;
             dwFactory.UnregisterFontCollectionLoader(fontLoader);
             dwFactory.UnregisterFontFileLoader(fontLoader);
-            SharpDX.Utilities.Dispose(ref fontCollection);
-            SharpDX.Utilities.Dispose(ref fontLoader);
+            Utilities.Dispose(ref fontCollection);
+            Utilities.Dispose(ref fontLoader);
         }
 
+        private struct ResourceDescription
+        {
+            public ResourceDescription(bool isShared, IResource value) : this()
+            {
+                IsShared = isShared;
+                Value = value;
+            }
+
+            public IResource Value { get; private set; }
+            public bool IsShared { get; private set; }
+        }
     }
 }

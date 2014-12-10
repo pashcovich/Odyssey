@@ -1,5 +1,9 @@
-﻿using Odyssey.Interaction;
+﻿#region Using Directives
+
+using Odyssey.Interaction;
 using Odyssey.UserInterface.Controls;
+
+#endregion
 
 namespace Odyssey.UserInterface
 {

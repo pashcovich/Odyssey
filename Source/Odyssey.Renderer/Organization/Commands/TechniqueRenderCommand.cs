@@ -10,7 +10,7 @@ using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Epos;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.Organization.Commands
 {

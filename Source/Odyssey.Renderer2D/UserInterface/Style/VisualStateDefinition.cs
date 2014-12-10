@@ -1,21 +1,23 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Odyssey.Animations;
 using Odyssey.Content;
-using Odyssey.Graphics;
 using Odyssey.Graphics.Drawing;
-using System.Collections.Generic;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
+
+#endregion
 
 namespace Odyssey.UserInterface.Style
 {
     internal sealed class VisualStateDefinition : ISerializableResource, IResourceProvider
     {
-        private readonly List<Shape> shapes;
         private readonly List<Animation> animations;
-
-        public string Name { get; set; }
+        private readonly List<Shape> shapes;
 
         public VisualStateDefinition()
         {
@@ -35,12 +37,12 @@ namespace Odyssey.UserInterface.Style
 
         #region ISerializableResource
 
-        public void SerializeXml(IResourceProvider resourceProvider, System.Xml.XmlWriter xmlWriter)
+        public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void DeserializeXml(IResourceProvider resourceProvider, System.Xml.XmlReader xmlReader)
+        public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
         {
             const string sShapes = "Shapes";
             const string sAnimation = "Animation";
@@ -93,15 +95,15 @@ namespace Odyssey.UserInterface.Style
             xmlReader.ReadEndElement();
 
             xmlReader.ReadEndElement();
-
         }
 
         #endregion
 
         #region IResourceProvider
+
         bool IResourceProvider.ContainsResource(string resourceName)
         {
-           return Shapes.Any(s => s.Name == resourceName) || Animations.Any(a => a.Name == resourceName);
+            return Shapes.Any(s => s.Name == resourceName) || Animations.Any(a => a.Name == resourceName);
         }
 
         TResource IResourceProvider.GetResource<TResource>(string resourceName)
@@ -123,7 +125,10 @@ namespace Odyssey.UserInterface.Style
                     yield return animation;
                 }
             }
-        } 
+        }
+
         #endregion
+
+        public string Name { get; set; }
     }
 }

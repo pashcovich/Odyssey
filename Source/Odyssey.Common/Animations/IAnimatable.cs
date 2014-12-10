@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region Using Directives
+
 using Odyssey.Content;
+
+#endregion
 
 namespace Odyssey.Animations
 {
@@ -12,5 +11,4 @@ namespace Odyssey.Animations
         void Play();
         void Play(string animationName);
     }
-
 }

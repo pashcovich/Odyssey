@@ -1,7 +1,6 @@
 ﻿using Odyssey.Daedalus.Properties;
 using Odyssey.Daedalus.Viewer;
 using Odyssey.Daedalus.View;
-using Odyssey.Logging;
 using System;
 using System.IO;
 using System.Windows.Threading;

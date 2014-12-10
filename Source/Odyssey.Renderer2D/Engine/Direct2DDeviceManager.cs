@@ -16,15 +16,12 @@
 #region Using Directives
 
 using System;
-using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Geometry;
 using Odyssey.UserInterface.Style;
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
-using SharpDX.DirectWrite;
 
 #endregion
 
@@ -37,14 +34,14 @@ namespace Odyssey.Engine
         private IDirectXDeviceService dx11Service;
         private IDirect3DProvider dxDeviceCache;
 
-        public event EventHandler<EventArgs> DeviceCreated;
-        public event EventHandler<EventArgs> DeviceDisposing;
-
         public Direct2DDeviceManager(IServiceRegistry services)
         {
             this.services = services;
             services.ServiceAdded += AttachToD3DDevice;
         }
+
+        public event EventHandler<EventArgs> DeviceCreated;
+        public event EventHandler<EventArgs> DeviceDisposing;
 
         public Direct2DDevice Direct2DDevice
         {
@@ -77,12 +74,13 @@ namespace Odyssey.Engine
 
                 var d3dDevice = dxDeviceCache.Device;
                 d2dDevice = new Direct2DDevice(services, d3dDevice,
-                        d3dDevice.CreationFlags.HasFlag(DeviceCreationFlags.Debug) ? DebugLevel.Warning : DebugLevel.None);
+                    d3dDevice.CreationFlags.HasFlag(DeviceCreationFlags.Debug) ? DebugLevel.Warning : DebugLevel.None);
 
                 var deviceSettings = services.GetService<IDirectXDeviceSettings>();
                 if (!MathHelper.ScalarNearEqual(deviceSettings.HorizontalDpi, d2dDevice.HorizontalDpi) ||
                     !MathHelper.ScalarNearEqual(deviceSettings.VerticalDpi, d2dDevice.VerticalDpi))
-                    throw new InvalidOperationException("Direct2D device DPI values do not match Direct3D device DPI values");
+                    throw new InvalidOperationException(
+                        "Direct2D device DPI values do not match Direct3D device DPI values");
 
                 LayoutManager.Scale = deviceSettings.PreferredBackBufferWidth/1920f;
 
@@ -105,8 +103,8 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Handles the <see cref="IDirectXDeviceService.DeviceCreated" /> event.
-        /// Initializes the <see cref="Engine.Direct2DDevice.Device" /> and <see cref="SharpDX.Direct2D1.DeviceContext" />.
+        ///     Handles the <see cref="IDirectXDeviceService.DeviceCreated" /> event.
+        ///     Initializes the <see cref="Engine.Direct2DDevice.Device" /> and <see cref="SharpDX.Direct2D1.DeviceContext" />.
         /// </summary>
         /// <param name="sender">Ignored.</param>
         /// <param name="e">Ignored.</param>
@@ -115,9 +113,10 @@ namespace Odyssey.Engine
         }
 
         /// <summary>
-        /// Handles the <see cref="IDirectXDeviceService.DeviceDisposing" /> event.
-        /// Disposes the <see cref="Engine.Direct2DDevice.Device" />, <see cref="SharpDX.Direct2D1.DeviceContext" /> and its render target
-        /// associated with the current <see cref="Engine.Direct2DDevice" /> instance.
+        ///     Handles the <see cref="IDirectXDeviceService.DeviceDisposing" /> event.
+        ///     Disposes the <see cref="Engine.Direct2DDevice.Device" />, <see cref="SharpDX.Direct2D1.DeviceContext" /> and its
+        ///     render target
+        ///     associated with the current <see cref="Engine.Direct2DDevice" /> instance.
         /// </summary>
         /// <param name="sender">Ignored.</param>
         /// <param name="e">Ignored.</param>

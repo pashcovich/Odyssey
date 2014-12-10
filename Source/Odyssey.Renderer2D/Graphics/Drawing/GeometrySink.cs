@@ -13,21 +13,18 @@
 
 #endregion License
 
-using Odyssey.Core;
-using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.Mathematics.Interop;
-
 #region Using Directives
 
-using SharpDX.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Odyssey.Core;
+using SharpDX;
+using SharpDX.Direct2D1;
+using SharpDX.Mathematics;
+using SharpDX.Mathematics.Interop;
 
-#endregion Using Directives
-
-#if !WP8
+#endregion
 
 namespace Odyssey.Graphics.Drawing
 {
@@ -48,14 +45,15 @@ namespace Odyssey.Graphics.Drawing
 
         public void AddLines(IEnumerable<Vector2> points)
         {
-            geometrySink.AddLines(points.Select(p=>new RawVector2(){X=p.X, Y=p.Y}).ToArray());
+            geometrySink.AddLines(points.Select(p => new RawVector2 {X = p.X, Y = p.Y}).ToArray());
         }
 
-        public void AddArc(float width, float height, float angleDegrees, bool isLargeArc, bool sweepDirection, Vector2 endPoint)
+        public void AddArc(float width, float height, float angleDegrees, bool isLargeArc, bool sweepDirection,
+            Vector2 endPoint)
         {
-            geometrySink.AddArc(new ArcSegment()
+            geometrySink.AddArc(new ArcSegment
             {
-                Size = new Size2F(width,height),
+                Size = new Size2F(width, height),
                 RotationAngle = angleDegrees,
                 ArcSize = isLargeArc ? ArcSize.Large : ArcSize.Small,
                 SweepDirection = sweepDirection ? SweepDirection.Clockwise : SweepDirection.CounterClockwise,
@@ -65,7 +63,7 @@ namespace Odyssey.Graphics.Drawing
 
         public void AddCubicBezierCurve(Vector2 p1, Vector2 p2, Vector2 p3)
         {
-            geometrySink.AddBezier(new BezierSegment()
+            geometrySink.AddBezier(new BezierSegment
             {
                 Point1 = p1,
                 Point2 = p2,
@@ -124,5 +122,3 @@ namespace Odyssey.Graphics.Drawing
         }
     }
 }
-
-#endif

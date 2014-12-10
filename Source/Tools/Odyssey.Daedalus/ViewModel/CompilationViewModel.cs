@@ -10,7 +10,6 @@ using Odyssey.Daedalus.Serialization;
 using Odyssey.Daedalus.View;
 using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Logging;
 using Odyssey.Serialization;
 using System;
 using System.Collections.Generic;
@@ -19,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Odyssey.Text.Logging;
 using Settings = Odyssey.Daedalus.Properties.Settings;
 using ShaderDescription = Odyssey.Graphics.Shaders.ShaderDescription;
 

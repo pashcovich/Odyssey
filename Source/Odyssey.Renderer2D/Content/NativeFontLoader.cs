@@ -1,4 +1,5 @@
-﻿#region Original License
+﻿#region Other Licenses
+
 // Copyright (c) 2010-2013 SharpDX - Alexandre Mutel
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,16 +19,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. 
+
 #endregion
 
-using System;
+#region Using Directives
+
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Core;
 using Odyssey.Engine;
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.DirectWrite;
+
+#endregion
 
 namespace Odyssey.Content
 {
@@ -123,7 +127,7 @@ namespace Odyssey.Content
         /// </unmanaged>
         FontFileStream FontFileLoader.CreateStreamFromKey(DataPointer fontFileReferenceKey)
         {
-            var index = SharpDX.Utilities.Read<int>(fontFileReferenceKey.Pointer);
+            var index = Utilities.Read<int>(fontFileReferenceKey.Pointer);
             return _fontStreams[index];
         }
 
@@ -134,7 +138,7 @@ namespace Odyssey.Content
             {
                 foreach (var enumerator in _enumerators)
                 {
-                    ((FontFileEnumerator)enumerator).CurrentFontFile.Dispose();
+                    ((FontFileEnumerator) enumerator).CurrentFontFile.Dispose();
                 }
             }
         }

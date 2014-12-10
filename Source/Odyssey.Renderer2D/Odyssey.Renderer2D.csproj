@@ -58,7 +58,6 @@
     <None Include="Graphics\Drawing\CutCornerRectangleOutline.cs" />
     <None Include="Graphics\Drawing\DiagonalCutCornerRectangle.cs" />
     <Compile Include="Graphics\Drawing\Ellipse.cs" />
-    <Compile Include="Graphics\Drawing\IShape.cs" />
     <Compile Include="Graphics\Drawing\Line.cs" />
     <Compile Include="Graphics\TextRenderer.cs" />
     <Compile Include="Organization\Commands\UserInterfaceRenderCommand.cs" />
@@ -122,7 +121,6 @@
     <Compile Include="UserInterface\Controls\Enums.cs" />
     <Compile Include="UserInterface\Controls\FpsCounter.cs" />
     <Compile Include="UserInterface\Controls\IContainer.cs" />
-    <Compile Include="UserInterface\Controls\IContentControl.cs" />
     <Compile Include="UserInterface\Controls\ItemsControl.cs" />
     <Compile Include="UserInterface\Controls\TextBlock.cs" />
     <Compile Include="UserInterface\Controls\TextBlockBase.cs" />
@@ -137,7 +135,6 @@
     <Compile Include="UserInterface\Data\UpdateSourceTrigger.cs" />
     <Compile Include="UserInterface\IUserInterfaceState.cs" />
     <Compile Include="UserInterface\Style\VisualStyle.cs" />
-    <Compile Include="UserInterface\Style\Depth.cs" />
     <Compile Include="UserInterface\Style\IStyleService.cs" />
     <Compile Include="UserInterface\Style\LayoutManager.cs" />
     <Compile Include="UserInterface\Style\VectorArtParser.cs" />

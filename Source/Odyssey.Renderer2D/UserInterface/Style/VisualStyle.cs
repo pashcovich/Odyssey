@@ -18,12 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Xml;
-using Odyssey.Animations;
 using Odyssey.Content;
-using Odyssey.Graphics;
-using Odyssey.Graphics.Drawing;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
 
@@ -51,6 +47,7 @@ namespace Odyssey.UserInterface.Style
         }
 
         #region ISerializableResource
+
         public void DeserializeXml(IResourceProvider theme, XmlReader xmlReader)
         {
             const string sVisualState = "VisualState";
@@ -78,10 +75,12 @@ namespace Odyssey.UserInterface.Style
         public void SerializeXml(IResourceProvider theme, XmlWriter xmlWriter)
         {
             throw new NotImplementedException();
-        } 
+        }
+
         #endregion
 
         #region IResourceProvider
+
         bool IResourceProvider.ContainsResource(string resourceName)
         {
             return ((IResourceProvider) visualStateDefinition).ContainsResource(resourceName);
@@ -95,8 +94,8 @@ namespace Odyssey.UserInterface.Style
         IEnumerable<IResource> IResourceProvider.Resources
         {
             get { return ((IResourceProvider) visualStateDefinition).Resources; }
-        } 
+        }
+
         #endregion
-        
     }
 }

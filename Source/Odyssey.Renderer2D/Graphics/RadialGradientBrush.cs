@@ -1,26 +1,38 @@
-﻿using System.Linq;
+﻿#region Using Directives
+
+using System.Linq;
 using Odyssey.Animations;
 using Odyssey.Engine;
 using Odyssey.Geometry;
-using SharpDX.Mathematics;
 using SharpDX.Direct2D1;
+using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Graphics
 {
     public sealed class RadialGradientBrush : GradientBrush
     {
-        private new readonly RadialGradient colorResource;
-        private new readonly SharpDX.Direct2D1.RadialGradientBrush resource;
+        private readonly RadialGradient colorResource;
+        private readonly SharpDX.Direct2D1.RadialGradientBrush resource;
 
-        private RadialGradientBrush(string name, Direct2DDevice device, RadialGradient radialGradient, SharpDX.Direct2D1.RadialGradientBrush brush)
+        private RadialGradientBrush(string name, Direct2DDevice device, RadialGradient radialGradient,
+            SharpDX.Direct2D1.RadialGradientBrush brush)
             : base(name, device, radialGradient, brush)
         {
             resource = brush;
             colorResource = radialGradient;
         }
 
-        public Vector2 Center { get { return colorResource.Center; } }
-        public Vector2 OriginOffset { get { return colorResource.OriginOffset; } }
+        public Vector2 Center
+        {
+            get { return colorResource.Center; }
+        }
+
+        public Vector2 OriginOffset
+        {
+            get { return colorResource.OriginOffset; }
+        }
 
         [Animatable]
         public float RadiusX
@@ -51,8 +63,8 @@ namespace Odyssey.Graphics
         public static RadialGradientBrush New(string name, Direct2DDevice device, RadialGradient radialGradient)
         {
             using (var d2dGradientStopCollection = new SharpDX.Direct2D1.GradientStopCollection(device,
-                radialGradient.GradientStops.Select(gs => (SharpDX.Direct2D1.GradientStop)gs).ToArray(),
-                (SharpDX.Direct2D1.ExtendMode)radialGradient.GradientStops.ExtendMode))
+                radialGradient.GradientStops.Select(gs => (SharpDX.Direct2D1.GradientStop) gs).ToArray(),
+                (SharpDX.Direct2D1.ExtendMode) radialGradient.GradientStops.ExtendMode))
             {
                 var rgbProperties = new RadialGradientBrushProperties
                 {
@@ -61,11 +73,10 @@ namespace Odyssey.Graphics
                     RadiusX = radialGradient.RadiusX,
                     RadiusY = radialGradient.RadiusY
                 };
-                var brushProperties = new BrushProperties() {Opacity = radialGradient.Opacity};
+                var brushProperties = new BrushProperties {Opacity = radialGradient.Opacity};
                 var brush = new SharpDX.Direct2D1.RadialGradientBrush(device, rgbProperties, brushProperties, d2dGradientStopCollection);
                 return new RadialGradientBrush(name, device, radialGradient, brush);
             }
-            
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Odyssey.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.Collections
 {

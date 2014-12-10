@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Odyssey.Interaction;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.UserInterface.Behaviors
 {

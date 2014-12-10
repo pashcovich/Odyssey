@@ -11,8 +11,8 @@ namespace Odyssey.Graphics
 {
     public sealed class SolidColorBrush : Brush
     {
-        private new readonly SolidColor colorResource;
-        private new readonly SharpDX.Direct2D1.SolidColorBrush resource;
+        private readonly SolidColor colorResource;
+        private readonly SharpDX.Direct2D1.SolidColorBrush resource;
 
         private SolidColorBrush(string name, Direct2DDevice device, SolidColor solidColor, SharpDX.Direct2D1.SolidColorBrush brush)
             : base(name, device, solidColor, brush)
@@ -36,7 +36,7 @@ namespace Odyssey.Graphics
 
         public static SolidColorBrush New(string name, Direct2DDevice device, SolidColor solidColorBrush)
         {
-            var brushProperties = new BrushProperties() { Opacity = solidColorBrush.Opacity };
+            var brushProperties = new BrushProperties { Opacity = solidColorBrush.Opacity };
             return new SolidColorBrush(name, device, solidColorBrush, new SharpDX.Direct2D1.SolidColorBrush(device, solidColorBrush.Color, brushProperties));
         }
     }

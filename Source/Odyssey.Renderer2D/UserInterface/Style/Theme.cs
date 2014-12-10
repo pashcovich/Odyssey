@@ -20,8 +20,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 using Odyssey.Content;
 using Odyssey.Graphics;
 using Odyssey.Reflection;
@@ -176,7 +174,7 @@ namespace Odyssey.UserInterface.Style
             var resourceName = reader.GetAttribute(ReflectionHelper.GetPropertyName((Theme t) => t.Name));
             try
             {
-                colorResource = (ColorResource)Activator.CreateInstance(Type.GetType(typeName));
+                colorResource = (ColorResource) Activator.CreateInstance(Type.GetType(typeName));
             }
             catch (ArgumentNullException ex)
             {

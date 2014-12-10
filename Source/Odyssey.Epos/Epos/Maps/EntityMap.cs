@@ -2,11 +2,11 @@
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Messages;
 using Odyssey.Collections;
-using Odyssey.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.Epos.Maps
 {

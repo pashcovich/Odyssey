@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Collections;
 using Odyssey.Epos.Systems;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.Epos.Maps
 {

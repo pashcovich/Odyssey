@@ -1,8 +1,9 @@
-﻿using System;
+﻿#region Using Directives
+
 using System.Globalization;
-using Odyssey.Graphics;
 using Odyssey.Serialization;
-using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Animations
 {

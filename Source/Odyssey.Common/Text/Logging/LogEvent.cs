@@ -1,13 +1,15 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Text;
 
-namespace Odyssey.Logging
-{
-    
+#endregion
 
+namespace Odyssey.Text.Logging
+{
     public class LogEvent : AbstractLogEvent
     {
         public static LogEvent Engine = new LogEvent(Global.EngineTag);
@@ -16,14 +18,15 @@ namespace Odyssey.Logging
         public static LogEvent Io = new LogEvent(Global.IoTag);
         public static LogEvent Tool = new LogEvent(Global.ToolTag);
 
-        public LogEvent(string source) 
-            : this (source, l => Debug.WriteLine(l.ToString()))
+        public LogEvent(string source)
+            : this(source, l => Debug.WriteLine(l.ToString()))
         {
         }
 
         public LogEvent(string source, DebugWriter method)
             : base(source, method)
-        { }
+        {
+        }
 
         public void TraceSource(TraceData data, Exception ex, EventCode eventCode)
         {

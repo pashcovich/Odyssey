@@ -15,7 +15,6 @@
 
 #region Using Directives
 
-using System;
 using System.Collections.Generic;
 using Odyssey.Content;
 
@@ -26,12 +25,12 @@ namespace Odyssey.Epos
     public interface IEntity : IResource
     {
         /// <summary>
-        /// Returns the sequential Id number of this instance.
+        ///     Returns the sequential Id number of this instance.
         /// </summary>
         long Id { get; }
 
         /// <summary>
-        /// Returns a value indicating the combination of components registered to this instance.
+        ///     Returns a value indicating the combination of components registered to this instance.
         /// </summary>
         long Key { get; }
 
@@ -39,11 +38,11 @@ namespace Odyssey.Epos
 
         IEnumerable<IComponent> Components { get; }
 
+        IEnumerable<string> Tags { get; }
+
         bool ContainsComponent<TComponent>()
             where TComponent : IComponent;
 
-        IEnumerable<string> Tags { get; }
         bool ContainsTag(string tag);
-
     }
 }

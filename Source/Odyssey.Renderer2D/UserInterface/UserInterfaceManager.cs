@@ -15,22 +15,21 @@
 
 #region Using Directives
 
-using Odyssey.Core;
-using Odyssey.Engine;
-using Odyssey.Interaction;
-using Odyssey.UserInterface.Controls;
-using SharpDX.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Odyssey.Core;
+using Odyssey.Engine;
+using Odyssey.Interaction;
+using Odyssey.UserInterface.Controls;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface
 {
     /// <summary>
-    /// Odyssey User Interface manager.
+    ///     Odyssey User Interface manager.
     /// </summary>
     public abstract class UserInterfaceManager : IUserInterfaceState
     {
@@ -52,9 +51,9 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Gets or sets a reference to current <see cref="Odyssey.UserInterface.Controls.Overlay"/> displayed on the screen.
+        ///     Gets or sets a reference to current <see cref="Odyssey.UserInterface.Controls.Overlay" /> displayed on the screen.
         /// </summary>
-        /// <value>The current <see cref="Odyssey.UserInterface.Controls.Overlay"/> object.</value>
+        /// <value>The current <see cref="Odyssey.UserInterface.Controls.Overlay" /> object.</value>
         public IOverlay CurrentOverlay { get; set; }
 
         internal static PointerEventArgs LastPointerEvent { get; private set; }
@@ -77,7 +76,7 @@ namespace Odyssey.UserInterface
 
         public virtual void Initialize()
         {
-            IWindowService windowService = services.GetService<IWindowService>();
+            var windowService = services.GetService<IWindowService>();
             pointerPlatform.Initialize(windowService.NativeWindow);
         }
 
@@ -130,11 +129,10 @@ namespace Odyssey.UserInterface
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("point");
+                    throw new ArgumentOutOfRangeException("pointerEvent");
             }
         }
 
-        
 
         private void AddEvent(PointerPoint point)
         {

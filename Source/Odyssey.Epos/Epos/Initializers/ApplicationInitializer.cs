@@ -1,15 +1,30 @@
-﻿using System;
+﻿#region Using Directives
+
+using System;
 using System.Collections.Generic;
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics.Shaders;
 using SharpDX.Mathematics;
-using EngineReference = Odyssey.Graphics.Effects.EngineReference;
+
+#endregion
 
 namespace Odyssey.Epos.Initializers
 {
     public class ApplicationInitializer : Initializer<IGraphicsDeviceService>
     {
+        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
+        {
+            {
+                Reference.Application.ViewportSize, (index, deviceService, parameters) =>
+                    new[]
+                    {
+                        new Float2Parameter(index, Param.Vectors.ViewportSize,
+                            () => new Vector2(deviceService.DirectXDevice.Viewport.Width, deviceService.DirectXDevice.Viewport.Height))
+                    }
+            },
+        };
+
         public ApplicationInitializer(IServiceRegistry services)
             : base(services, Reference.Group.Application)
         {
@@ -26,17 +41,9 @@ namespace Odyssey.Epos.Initializers
             var services = initializer.Services;
             var settings = services.GetService<IGraphicsDeviceService>();
 
-            InitializerParameters parameters = new InitializerParameters(-1,initializer.Technique, services, StaticSelector);
+            InitializerParameters parameters = new InitializerParameters(-1, initializer.Technique, services, StaticSelector);
             initializer.Initialize(this, settings, parameters);
         }
-
-        private static readonly Dictionary<string, ParameterMethod> ReferenceActions = new Dictionary<string, ParameterMethod>
-        {
-            {
-                Reference.Application.ViewportSize, (index, deviceService, parameters) => 
-                new [] { new Float2Parameter(index, Param.Vectors.ViewportSize, () => new Vector2(deviceService.DirectXDevice.Viewport.Width, deviceService.DirectXDevice.Viewport.Height))}
-            },
-        };
 
         protected override IEnumerable<IParameter> CreateParameter(ConstantBufferDescription cbParent, IGraphicsDeviceService source,
             int parameterIndex, string reference, InitializerParameters initializerParameters)

@@ -1,8 +1,11 @@
-﻿using System;
-using System.Xml.Linq;
+﻿#region Using Directives
+
 using Odyssey.Graphics;
 using Odyssey.Serialization;
+using Odyssey.Text;
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Animations
 {
@@ -12,11 +15,11 @@ namespace Odyssey.Animations
         {
             base.OnReadXml(e);
             string value = e.XmlReader.GetAttribute("Value");
-            string resourceName = Text.TextHelper.ParseResource(value);
+            string resourceName = TextHelper.ParseResource(value);
             if (!string.IsNullOrEmpty(resourceName))
                 Value = e.ResourceProvider.GetResource<SolidColor>(resourceName).Color;
             else
-                Value = Text.TextHelper.DecodeColor4Abgr(value);
+                Value = TextHelper.DecodeColor4Abgr(value);
 
             e.XmlReader.ReadStartElement();
         }

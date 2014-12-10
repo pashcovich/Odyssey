@@ -1,5 +1,8 @@
-﻿using System;
+﻿#region Using Directives
+
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Animations
 {

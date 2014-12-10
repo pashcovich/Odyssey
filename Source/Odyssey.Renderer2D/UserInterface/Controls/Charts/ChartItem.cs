@@ -1,26 +1,18 @@
-﻿using System;
-using Odyssey.Geometry;
-
-namespace Odyssey.UserInterface.Controls.Charts
+﻿namespace Odyssey.UserInterface.Controls.Charts
 {
     public abstract class ChartItem : VisualElement
     {
         private Chart chart;
 
-        protected Chart Chart
+        protected ChartItem(string controlStyleClass) : base(controlStyleClass)
         {
-            get
-            {
-                if (chart == null)
-                    chart = FindAncestor<Chart>();
-                return chart;
-            }
         }
 
-        protected ChartItem(string controlStyleClass) : base(controlStyleClass)
-        { }
+        protected Chart Chart
+        {
+            get { return chart ?? (chart = FindAncestor<Chart>()); }
+        }
 
         public abstract float Value { get; set; }
-
     }
 }

@@ -99,7 +99,7 @@ namespace Odyssey.Reflection
             bool result = ShouldAdvance(member);
             if (result)
             {
-                var instruction = new WalkerInstruction()
+                var instruction = new WalkerInstruction
                 {
                     Object = objectValue,
                     Property = member,
@@ -127,7 +127,7 @@ namespace Odyssey.Reflection
             bool result = ShouldAdvance(member);
             if (result)
             {
-                var instruction = new WalkerInstruction()
+                var instruction = new WalkerInstruction
                 {
                     Object = objectValue,
                     Property = null,

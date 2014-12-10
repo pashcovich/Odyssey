@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿#region Using Directives
+
 using System.Collections.Generic;
+
+#endregion
 
 namespace Odyssey.Engine
 {

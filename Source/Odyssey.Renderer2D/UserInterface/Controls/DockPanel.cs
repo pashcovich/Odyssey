@@ -1,7 +1,10 @@
-﻿using System;
+﻿#region Using Directives
+
 using System.Linq;
 using Odyssey.Core;
 using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.UserInterface.Controls
 {
@@ -16,9 +19,9 @@ namespace Odyssey.UserInterface.Controls
     public class DockPanel : Panel
     {
         /// <summary>
-        /// The key to the Dock attached dependency property. This defines the position of a child item within the panel.
+        ///     The key to the Dock attached dependency property. This defines the position of a child item within the panel.
         /// </summary>
-        public readonly static PropertyKey<Dock> DockPropertyKey = new PropertyKey<Dock>("DockKey", typeof(DockPanel), DefaultValueMetadata.Static(Dock.Left));
+        public static readonly PropertyKey<Dock> DockPropertyKey = new PropertyKey<Dock>("DockKey", typeof (DockPanel), DefaultValueMetadata.Static(Dock.Left));
 
         public DockPanel()
         {
@@ -48,7 +51,6 @@ namespace Odyssey.UserInterface.Controls
                 }
                 else
                 {
-
                     Dock dock = control.DependencyProperties.Get(DockPropertyKey);
                     control.Measure(availableSizeWithoutMargins);
 
@@ -84,10 +86,10 @@ namespace Odyssey.UserInterface.Controls
             float availableWidth = availableSizeWithoutMargins.X;
             float availableHeight = availableSizeWithoutMargins.Y;
             float availableDepth = availableSizeWithoutMargins.Z;
-            float topOffset=0;
-            float rightOffset=0;
-            float leftOffset=0;
-            float bottomOffset=0;
+            float topOffset = 0;
+            float rightOffset = 0;
+            float leftOffset = 0;
+            float bottomOffset = 0;
             float depthOffset = 0;
 
             var visualChildren = Children.Visual.ToArray();
@@ -142,6 +144,5 @@ namespace Odyssey.UserInterface.Controls
 
             return availableSizeWithoutMargins;
         }
-
     }
 }

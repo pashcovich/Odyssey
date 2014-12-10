@@ -1,11 +1,11 @@
-﻿#region Using directives
+﻿#region Using Directives
 
 using System;
 using System.Diagnostics.Contracts;
 
-#endregion Using directives
+#endregion
 
-namespace Odyssey.Logging
+namespace Odyssey.Text.Logging
 {
     public delegate void DebugWriter(LogData logEntry);
 
@@ -29,23 +29,20 @@ namespace Odyssey.Logging
         // Critical Errors
         CriticalFault = 90001,
         UnhandledException = 90002,
-        
     }
 
     public struct LogData
     {
-        public DateTime TimeStamp;
-        public EventLevel Level;
-        public EventCode Code;
-        public string Source;
-        public string Message;
         public object[] Args;
+        public EventLevel Level;
+        public string Message;
+        public string Source;
+        public DateTime TimeStamp;
 
         public LogData(DateTime timeStamp, EventLevel level, EventCode code, string source, string message, params object[] args)
         {
             TimeStamp = timeStamp;
             Level = level;
-            Code = code;
             Source = source;
             Message = message;
             Args = args;
@@ -63,7 +60,6 @@ namespace Odyssey.Logging
 
     public abstract class AbstractLogEvent
     {
-        protected DebugWriter WriterMethod { get; private set; }
         protected AbstractLogEvent(string source, DebugWriter method)
         {
             Contract.Requires(!string.IsNullOrEmpty(source));
@@ -73,13 +69,14 @@ namespace Odyssey.Logging
             WriterMethod = method;
         }
 
-        internal protected string Source { get; set; }
+        protected DebugWriter WriterMethod { get; private set; }
+
+        protected internal string Source { get; set; }
 
         /// <summary>
-        /// Writes formatted text by passing the relevant arguments.
+        ///     Writes formatted text by passing the relevant arguments.
         /// </summary>
         /// <param name="logEntry"></param>
-        /// 
         protected void Log(LogData logEntry)
         {
             WriterMethod(logEntry);

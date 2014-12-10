@@ -1,11 +1,10 @@
 ﻿#region Using Directives
 
-using Odyssey.Logging;
-using SharpDX.Mathematics;
-using SharpDX.DXGI;
 using System;
+using Odyssey.Text.Logging;
+using SharpDX.DXGI;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.Engine
 {
@@ -26,7 +25,9 @@ namespace Odyssey.Engine
             try
             {
                 var swapChainService = Services.GetService<ISwapChainPresenterService>();
-                BitmapTarget = ToDispose(BitmapTarget.New("BT_Backbuffer", Device, swapChainService.SwapChain.GetBackBuffer<Surface2>(0)));
+                BitmapTarget =
+                    ToDispose(BitmapTarget.New("BT_Backbuffer", Device,
+                        swapChainService.SwapChain.GetBackBuffer<Surface2>(0)));
                 Initialize(BitmapTarget);
             }
             catch (ArgumentException e)
@@ -35,6 +36,5 @@ namespace Odyssey.Engine
                 LogEvent.Engine.Error(e);
             }
         }
-
     }
 }

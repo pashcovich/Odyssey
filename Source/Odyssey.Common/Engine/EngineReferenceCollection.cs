@@ -1,18 +1,17 @@
-﻿using System;
+﻿#region Using Directives
+
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Odyssey.Content;
-using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Engine
 {
-    [ContentReader(typeof(ReferenceReader))]
+    [ContentReader(typeof (ReferenceReader))]
     public class EngineReferenceCollection : IReferenceService
     {
-        readonly Dictionary<string, List<EngineReference>> engineReferences;
+        private readonly Dictionary<string, List<EngineReference>> engineReferences;
 
         public EngineReferenceCollection(IEnumerable<EngineReference> references)
         {
@@ -26,6 +25,7 @@ namespace Odyssey.Engine
         {
             return engineReferences.ContainsKey(type) && engineReferences[type].Any(r => string.Equals(r.Value, value));
         }
+
         public IEnumerable<EngineReference> Select(string referenceGroup)
         {
             return engineReferences[referenceGroup];

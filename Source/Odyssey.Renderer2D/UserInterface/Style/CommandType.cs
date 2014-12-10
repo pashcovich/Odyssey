@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Odyssey.UserInterface.Style
+﻿namespace Odyssey.UserInterface.Style
 {
     public enum CommandType
     {
@@ -20,6 +14,5 @@ namespace Odyssey.UserInterface.Style
         SmoothQuadraticBezierCurve,
         EllipticalArc,
         Close
-
     }
 }

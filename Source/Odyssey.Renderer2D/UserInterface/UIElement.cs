@@ -15,6 +15,8 @@
 
 #region Using Directives
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Odyssey.Animations;
 using Odyssey.Core;
@@ -23,17 +25,14 @@ using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using SharpDX.Mathematics;
-using System;
-using System.Collections.Generic;
-using SharpDX.Mathematics.Interop;
 
-#endregion Using Directives
+#endregion
 
 namespace Odyssey.UserInterface
 {
     /// <summary>
-    /// The <b>UIElement</b> class is the root class of all controls in the library. It provides
-    /// inheritors with a comprehensive range of properties and methods common to all controls.
+    ///     The <b>UIElement</b> class is the root class of all controls in the library. It provides
+    ///     inheritors with a comprehensive range of properties and methods common to all controls.
     /// </summary>
     [DebuggerDisplay("[{GetType().Name}]: {Name}")]
     public abstract partial class UIElement : Component, IAnimator, IComparable<UIElement>, ISerializableResource
@@ -42,43 +41,43 @@ namespace Odyssey.UserInterface
 
         #region Private fields
 
-        private readonly Dictionary<string, BindingExpression> bindings;
-        private readonly BehaviorCollection behaviors;
         private readonly AnimationController animator;
+        private readonly BehaviorCollection behaviors;
+        private readonly Dictionary<string, BindingExpression> bindings;
+        private Vector3 absolutePosition;
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
+        private object dataContext;
+        private float depth;
         private bool designMode = true;
+        private float height;
+        private HorizontalAlignment horizontalAlignment;
         private bool isEnabled = true;
         private bool isFocusable = true;
         private bool isHighlighted;
         private bool isInside;
         private bool isSelected;
         private bool isVisible = true;
-        private UIElement parent;
-
-        private Matrix3x2 transform;
-        private float height;
-        private float width;
-        private float depth;
-        private float minimumWidth;
-        private float minimumHeight;
-        private float minimumDepth;
-        private float maximumWidth;
-        private float maximumHeight;
         private float maximumDepth;
-        private object dataContext;
-        private Vector3 renderSize;
+        private float maximumHeight;
+        private float maximumWidth;
+        private float minimumDepth;
+        private float minimumHeight;
+        private float minimumWidth;
+        private UIElement parent;
         private Vector3 position;
-        private Vector3 absolutePosition;
+        private Vector3 renderSize;
+        private Matrix3x2 transform;
 
         private VerticalAlignment verticalAlignment;
-        private HorizontalAlignment horizontalAlignment;
+        private float width;
+
         #endregion Private fields
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UIElement" /> class.
+        ///     Initializes a new instance of the <see cref="UIElement" /> class.
         /// </summary>
         /// <remarks>
         /// </remarks>
@@ -120,13 +119,16 @@ namespace Odyssey.UserInterface
         }
 
         /// <summary>
-        /// Computes the intersection between the cursor location and this control. It is called
-        /// each time an event is fired on every control in the <see cref="Odyssey.UserInterface.Controls.Overlay"/> to determine
-        /// if the UI needs to react.
+        ///     Computes the intersection between the cursor location and this control. It is called
+        ///     each time an event is fired on every control in the <see cref="Odyssey.UserInterface.Controls.Overlay" /> to
+        ///     determine
+        ///     if the UI needs to react.
         /// </summary>
         /// <param name="cursorLocation">The location of the mouse cursor</param>
-        /// <returns><b>True</b> if the cursor is inside the control's boundaries. <b>False</b>,
-        /// otherwise.</returns>
+        /// <returns>
+        ///     <b>True</b> if the cursor is inside the control's boundaries. <b>False</b>,
+        ///     otherwise.
+        /// </returns>
         public virtual bool Contains(Vector2 cursorLocation)
         {
             return BoundingRectangle.Contains(cursorLocation);

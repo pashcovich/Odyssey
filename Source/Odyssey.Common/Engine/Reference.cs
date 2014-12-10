@@ -1,34 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Odyssey.Engine
+﻿namespace Odyssey.Engine
 {
     internal static class Reference
     {
-        internal struct Group
-        {
-            internal const string Application = "Application";
-            internal const string Camera = "Camera";
-            internal const string Material = "Material";
-            internal const string Light = "Light";
-            internal const string Entity= "Entity";
-            internal const string Effect = "Effect";
-        }
-
         internal struct Application
         {
             internal const string ViewportSize = "ViewportSize";
-        }
-        internal struct Matrix
-        {
-            internal const string View = "MatrixView";
-            internal const string World = "MatrixWorld";
-            internal const string WorldInverse = "MatrixWorldInverse";
-            internal const string WorldInverseTranspose = "MatrixWorldInverseTranspose";
-            internal const string Projection = "MatrixProjection";
         }
 
         internal struct Color
@@ -44,6 +20,25 @@ namespace Odyssey.Engine
             internal const string GlowStrength = "GlowStrength";
             internal const string SpriteSize = "SpriteSize";
             internal const string SpritePosition = "SpritePosition";
+        }
+
+        internal struct Group
+        {
+            internal const string Application = "Application";
+            internal const string Camera = "Camera";
+            internal const string Material = "Material";
+            internal const string Light = "Light";
+            internal const string Entity = "Entity";
+            internal const string Effect = "Effect";
+        }
+
+        internal struct Matrix
+        {
+            internal const string View = "MatrixView";
+            internal const string World = "MatrixWorld";
+            internal const string WorldInverse = "MatrixWorldInverse";
+            internal const string WorldInverseTranspose = "MatrixWorldInverseTranspose";
+            internal const string Projection = "MatrixProjection";
         }
 
         internal struct Struct

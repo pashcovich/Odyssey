@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#region Using Directives
+
+using System;
 using SharpDX;
-using SharpDX.Mathematics;
+
+#endregion
 
 namespace Odyssey.Graphics
 {
     /// <summary>
-    /// The implementation of this class is filled by InteropBuilder post-building-event.
+    ///     The implementation of this class is filled by InteropBuilder post-building-event.
     /// </summary>
     internal class Interop
     {
         /// <summary>
-        /// Provides a fixed statement working with generics.
+        ///     Provides a fixed statement working with generics.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data">The data.</param>
         /// <returns>A fixed pointer to the referenced structure</returns>
         /// <remarks>
-        /// This is the only function in this class that is inlined in order to inline the fixed statement correctly.
+        ///     This is the only function in this class that is inlined in order to inline the fixed statement correctly.
         /// </remarks>
         public static unsafe void* Fixed<T>(ref T data)
         {

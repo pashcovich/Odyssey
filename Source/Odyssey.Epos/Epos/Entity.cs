@@ -24,7 +24,7 @@ using System.Text;
 using Odyssey.Content;
 using Odyssey.Epos.Components;
 using Odyssey.Reflection;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpYaml.Serialization;
 using Component = Odyssey.Epos.Components.Component;
 #endregion

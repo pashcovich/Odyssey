@@ -33,7 +33,7 @@ namespace Odyssey.Graphics
             Value = format;
         }
 
-        public int SizeInBytes { get { return (int)FormatHelper.SizeOfInBytes(this); } }
+        public int SizeInBytes { get { return FormatHelper.SizeOfInBytes(this); } }
 
         public static readonly PixelFormat Unknown = new PixelFormat(Format.Unknown);
 

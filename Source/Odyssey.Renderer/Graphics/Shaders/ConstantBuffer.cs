@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Odyssey.Core;
 using Odyssey.Engine;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 using SharpDX.Mathematics;
 using System;
 using System.Collections;

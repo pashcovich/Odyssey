@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Odyssey.UserInterface.Style
+﻿namespace Odyssey.UserInterface.Style
 {
     // Summary:
     //     Represents the style of a font face as normal, italic, or oblique.

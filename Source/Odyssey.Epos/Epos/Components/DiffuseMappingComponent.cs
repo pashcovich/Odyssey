@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
-using Odyssey.Logging;
+using Odyssey.Text.Logging;
 
 namespace Odyssey.Epos.Components
 {
