@@ -39,10 +39,10 @@ namespace Odyssey.UserInterface.Controls
             foreach (var child in Children)
             {
                 Vector3 size = availableSizeWithoutMargins;
-                if (!child.IsInternal)
+                if (!child.IsInternal && !Padding.IsEmpty)
                 {
                     child.PositionOffsets = new Vector3(Padding.Left, Padding.Top, 0);
-                    size -= new Vector3(Padding.Left, Padding.Top, 0);
+                    size -= new Vector3(Padding.Horizontal, Padding.Vertical, 0);
                 }
 
                 child.Arrange(size);

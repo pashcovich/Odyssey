@@ -42,7 +42,7 @@ namespace MiniUI
 
             var listBox = new ListBox
             {
-                Padding = new Thickness(4),
+                Padding = new Thickness(8),
                 Margin = new Thickness(8),
                 ItemsSource = new[]
                 {"This is a Listbox", "bound to a string array.", "Its itemtemplate specifies that each entry", "will be bound to a TextBlock"}
@@ -54,12 +54,14 @@ namespace MiniUI
                 Content = new TextBlock { Text = "Button", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(32)
             };
             button.Tap += (s, eventArgs) => ((TextBlock)button.Content).Text = "It works!";
 
-            stackPanel1.Add(button);
+            //stackPanel1.Add(button);
+            button.DependencyProperties.Add(DockPanel.DockPropertyKey, Dock.Bottom);
 
-            dockPanel.Add(stackPanel1);
+            dockPanel.Add(button);
             dockPanel.Add(label);
             dockPanel.Add(listBox);
             border.Content = dockPanel;

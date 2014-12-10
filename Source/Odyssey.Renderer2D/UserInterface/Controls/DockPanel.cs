@@ -107,7 +107,7 @@ namespace Odyssey.UserInterface.Controls
                     switch (dock)
                     {
                         case Dock.Bottom:
-                            control.Position = new Vector3(leftOffset, availableHeight - control.DesiredSizeWithMargins.Y - bottomOffset, depthOffset);
+                            control.SetPosition(new Vector3(leftOffset, availableHeight - control.DesiredSizeWithMargins.Y - bottomOffset, depthOffset));
                             control.Arrange(new Vector3(availableWidth, control.DesiredSizeWithMargins.Y, availableDepth));
                             bottomOffset += control.DesiredSizeWithMargins.Y;
                             availableHeight -= control.DesiredSizeWithMargins.Y;

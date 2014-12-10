@@ -51,10 +51,10 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        public static void DistributeHorizontally(Vector3 availableSize, IEnumerable<UIElement> children)
+        public static void DistributeHorizontally(Vector3 availableSize, UIElement parent)
         {
-            var previousPosition = Vector3.Zero;
-            foreach (UIElement element in children)
+            var previousPosition = parent.PositionOffsets;
+            foreach (UIElement element in parent.Children)
             {
                 element.SetPosition(previousPosition);
                 element.Arrange(new Vector3(element.DesiredSizeWithMargins.X, availableSize.Y, element.DesiredSizeWithMargins.Z));
@@ -62,14 +62,14 @@ namespace Odyssey.UserInterface.Style
             }
         }
 
-        public static void DistributeVertically(Vector3 availableSize, IEnumerable<UIElement> children)
+        public static void DistributeVertically(Vector3 availableSize, UIElement parent)
         {
-            var previousPosition = Vector3.Zero;
-            foreach (UIElement element in children)
+            var previousPosition = parent.PositionOffsets;
+            foreach (UIElement element in parent.Children)
             {
-                element.PositionOffsets += previousPosition;
+                element.SetPosition(previousPosition);
                 element.Arrange(new Vector3(availableSize.X, element.DesiredSizeWithMargins.Y, element.DesiredSizeWithMargins.Z));
-                previousPosition = element.Position + element.PositionOffsets + new Vector3(0, element.DesiredSizeWithMargins.Y, element.Position.Z);
+                previousPosition = element.Position + new Vector3(0, element.DesiredSizeWithMargins.Y, element.Position.Z);
             }
         }
         
