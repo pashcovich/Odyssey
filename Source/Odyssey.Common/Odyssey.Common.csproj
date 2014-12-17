@@ -56,6 +56,7 @@
     <Compile Include="Core\Component.cs" />
     <Compile Include="Core\ComponentBase.cs" />
     <Compile Include="Core\DefaultValueMetadata.cs" />
+    <Compile Include="Core\ObjectInvalidationMetadata.cs" />
     <Compile Include="Core\PropertyContainer.cs" />
     <Compile Include="Core\PropertyKey.cs" />
     <Compile Include="Core\PropertyKeyMetadata.cs" />

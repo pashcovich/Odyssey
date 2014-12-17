@@ -36,11 +36,11 @@ namespace Odyssey.Graphics.Drawing
 
         protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            Redraw();
+            CreatePathGeometry();
             return availableSizeWithoutMargins;
         }
 
-        protected virtual void Redraw()
+        protected void CreatePathGeometry()
         {
             if (Data == null)
                 throw new InvalidOperationException("'Data' cannot be null");
@@ -75,8 +75,8 @@ namespace Odyssey.Graphics.Drawing
             ScaleX *= e.NewSize.X/e.OldSize.X;
             ScaleY *= e.NewSize.Y/e.OldSize.Y;
 
-            if (e.NewSize.X > 0 && e.NewSize.Y > 0)
-                Redraw();
+            //if (e.NewSize.X > 0 && e.NewSize.Y > 0)
+            //    Redraw();
         }
 
         protected internal override UIElement Copy()

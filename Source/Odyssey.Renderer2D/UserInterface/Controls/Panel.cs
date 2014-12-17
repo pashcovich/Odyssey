@@ -71,12 +71,10 @@ namespace Odyssey.UserInterface.Controls
 
         public void Add(UIElement item)
         {
-            Contract.Requires<ArgumentNullException>(item != null, "control");
-            Contract.Requires<InvalidOperationException>(this != item, "cannot add self");
-            Children.Add(ToDispose(item));
-            OnLogicalChildAdded(new UIElementEventArgs(item, Children.Count-1));
+            SetParent(ToDispose(item), this);
+            OnLogicalChildAdded(new UIElementEventArgs(item, Children.Count - 1));
         }
-       
+      
         public void AddRange(IEnumerable<UIElement> controls)
         {
             foreach (UIElement ctl in controls)

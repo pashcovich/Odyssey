@@ -33,13 +33,12 @@ namespace Odyssey.UserInterface
         {
             foreach (var child in root)
             {
-                if (!filter(child))
-                    continue;
-
-                foreach (var descendant in PostOrderInteractionVisit(child))
-                    yield return descendant;
+                foreach (var descendant in PostOrderVisit(child, filter))
+                    
+                        yield return descendant;
             }
-            yield return root;
+            if (filter(root))
+                yield return root;
         }
 
         public static IEnumerable<UIElement> PreOrderVisit(UIElement root)

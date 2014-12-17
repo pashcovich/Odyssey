@@ -3,6 +3,7 @@
 using Odyssey.Reflection;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Serialization;
+using SharpDX.Mathematics;
 
 #endregion
 
@@ -26,12 +27,14 @@ namespace Odyssey.Graphics.Drawing
             TopBaseRatio =float.TryParse(e.XmlReader.GetAttribute(ReflectionHelper.GetPropertyName((RightTrapezoid t) => t.TopBaseRatio)), out r) ? r : 0.75f;
         }
 
-        protected override void Redraw()
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
             var d = new FigureDesigner();
-            d.DrawRightTrapezoid(Position, RenderSize.X*TopBaseRatio, RenderSize.X, RenderSize.Y);
+            d.DrawRightTrapezoid(Position, availableSizeWithoutMargins.X * TopBaseRatio, availableSizeWithoutMargins.X, availableSizeWithoutMargins.Y);
             Data = d.Result;
-            base.Redraw();
+            CreatePathGeometry();
+            return availableSizeWithoutMargins;
         }
+
     }
 }

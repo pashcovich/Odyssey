@@ -156,10 +156,10 @@ namespace Odyssey.Core
                     properties[propertyKey] = valueToSet;
             }
 
-            //if (propertyKey.ObjectInvalidationMetadata != null)
-            //{
-            //    propertyKey.ObjectInvalidationMetadata.Invalidate(Owner, propertyKey, oldValue);
-            //}
+            if (propertyKey.ObjectInvalidationMetadata != null)
+            {
+                propertyKey.ObjectInvalidationMetadata.Invalidate(Owner, propertyKey, oldValue);
+            }
         }
 
         public void Add<T>(PropertyKey<T> key, T value)
@@ -273,10 +273,10 @@ namespace Odyssey.Core
                     properties[propertyKey] = valueHolder;
                 }
 
-                //if (propertyKey.ObjectInvalidationMetadata != null)
-                //{
-                //    propertyKey.ObjectInvalidationMetadataT.Invalidate(Owner, propertyKey, ref oldValue);
-                //}
+                if (propertyKey.ObjectInvalidationMetadata != null)
+                {
+                    propertyKey.ObjectInvalidationMetadataT.Invalidate(Owner, propertyKey, ref oldValue);
+                }
 
                 return;
             }

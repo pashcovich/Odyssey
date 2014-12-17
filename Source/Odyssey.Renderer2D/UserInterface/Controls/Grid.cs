@@ -102,8 +102,7 @@ namespace Odyssey.UserInterface.Controls
             foreach (var control in Children.Visual)
             {
                 var gridPosition = GetElementGridPositions(control);
-                control.Position = new Vector3(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y],
-                    cachedStripPositions[2][gridPosition.Z]);
+                control.SetPosition(new Vector3(cachedStripPositions[0][gridPosition.X], cachedStripPositions[1][gridPosition.Y], cachedStripPositions[2][gridPosition.Z]));
                 control.Arrange(new Vector3(cachedStripSizes[0][gridPosition.X], cachedStripSizes[1][gridPosition.Y], cachedStripSizes[2][gridPosition.Z]));
             }
 
@@ -116,17 +115,37 @@ namespace Odyssey.UserInterface.Controls
 
         public void AddRowDefinition(StripDefinition row)
         {
-            stripDefinitions[1].Add(row);
+            AddStripDefinition(1, row);
         }
 
         public void AddColumnDefinition(StripDefinition column)
         {
-            stripDefinitions[0].Add(column);
+            AddStripDefinition(0, column);
         }
 
         public void AddLayerDefinition(StripDefinition layer)
         {
-            stripDefinitions[2].Add(layer);
+            AddStripDefinition(2, layer);
+        }
+
+        void AddStripDefinition(int dim, StripDefinition strip)
+        {
+            stripDefinitions[dim].Add(strip);
+        }
+
+        protected internal override UIElement Copy()
+        {
+            var grid = (Grid) base.Copy();
+            for (int dim = 0; dim < 3; dim++)
+            {
+                for (int i = 0; i < stripDefinitions[dim].Count; i++)
+                {
+                    var strips = stripDefinitions[dim];
+                    foreach (var strip in strips)
+                        grid.AddStripDefinition(dim, strip);
+                }
+            }
+            return grid;
         }
     }
 }

@@ -23,6 +23,7 @@ using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
+using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics;
@@ -156,12 +157,9 @@ namespace Odyssey.UserInterface.Controls
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
             var settings = Services.GetService<IDirectXDeviceSettings>();
-            Width = settings.PreferredBackBufferWidth;
-            Height = settings.PreferredBackBufferHeight;
-            Depth = 0;
-
-            Content.Measure(Size);
-            return Size;
+            var screenSize = new Vector3(settings.PreferredBackBufferWidth, settings.PreferredBackBufferHeight, 0);
+            Content.Measure(screenSize);
+            return screenSize;
         }
 
         public override void Update(ITimeService time)

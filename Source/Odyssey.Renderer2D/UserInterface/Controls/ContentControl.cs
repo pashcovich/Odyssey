@@ -22,10 +22,9 @@ namespace Odyssey.UserInterface.Controls
             {
                 if (content == value)
                     return;
-
                 Children.Remove(content);
+                SetParent(value, this);
                 content = ToDispose(value);
-                Children.Add(content);
             }
         }
 
@@ -33,6 +32,13 @@ namespace Odyssey.UserInterface.Controls
         {
             base.OnInitialized(e);
             Content.BringToFront();
+        }
+
+        protected internal override UIElement Copy()
+        {
+            var contentControl = (ContentControl) base.Copy();
+            contentControl.Content = Content;
+            return contentControl;
         }
     }
 }

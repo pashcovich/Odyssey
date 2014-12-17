@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Odyssey.Animations;
 using Odyssey.Core;
+using Odyssey.Engine;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
@@ -45,6 +46,7 @@ namespace Odyssey.UserInterface
         private readonly BehaviorCollection behaviors;
         private readonly Dictionary<string, BindingExpression> bindings;
         private Vector3 absolutePosition;
+        private Vector3 finalPosition; 
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
         private object dataContext;

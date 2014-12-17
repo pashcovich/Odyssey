@@ -111,6 +111,8 @@ namespace Odyssey.UserInterface.Style
 
         public TextFormat GetTextResource(TextStyle textStyle, bool shared = true)
         {
+            Contract.Requires<ArgumentNullException>(textStyle!=null, "textStyle");
+
             TextFormat result;
             if (TryGetResource(textStyle.Name, shared, out result))
                 return result;

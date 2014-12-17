@@ -62,13 +62,21 @@ namespace Odyssey.UserInterface.Style
 
         public static void DistributeVertically(Vector3 availableSize, UIElement parent)
         {
+            DistributeVertically(availableSize, parent, parent.Children);
+        }
+
+        public static void DistributeVertically(Vector3 availableSize, UIElement parent, IEnumerable<UIElement> children)
+        {
             var previousPosition = parent.PositionOffsets;
-            foreach (UIElement element in parent.Children)
+            foreach (UIElement element in children)
             {
                 element.SetPosition(previousPosition);
                 element.Arrange(new Vector3(availableSize.X, element.DesiredSizeWithMargins.Y, element.DesiredSizeWithMargins.Z));
                 previousPosition = element.Position + new Vector3(0, element.DesiredSizeWithMargins.Y, element.Position.Z);
             }
         }
+
+
+        
     }
 }

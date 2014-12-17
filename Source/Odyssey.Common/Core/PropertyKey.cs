@@ -39,24 +39,26 @@ namespace Odyssey.Core
             foreach (PropertyKeyMetadata item in metadata)
             {
                 if (item is DefaultValueMetadata)
-                {
                     DefaultValueMetadata = (DefaultValueMetadata) item;
-                }
                 if (item is AccessorMetadata)
-                {
                     AccessorMetadata = (AccessorMetadata)item;
-                }
                 if (item is ValidateValueMetadata)
-                {
                     ValidateValueMetadata = (ValidateValueMetadata)item;
-                }
+                if (item is ObjectInvalidationMetadata)
+                    ObjectInvalidationMetadata = (ObjectInvalidationMetadata)item;
             }
         }
 
+        /// <summary>
+        /// Gets the name of this key.
+        /// </summary>
         public string Name { get; protected set; }
         public Type Type { get; protected set; }
         public Type OwnerType { get; private set; }
 
+        /// <summary>
+        /// Gets the default value metadata.
+        /// </summary>
         public abstract bool IsValueType { get; }
 
         public DefaultValueMetadata DefaultValueMetadata
@@ -68,6 +70,12 @@ namespace Odyssey.Core
                 PropertyUpdateCallback = defaultValueMetadata.PropertyUpdateCallback;
             }
         }
+
+        /// <summary>
+        /// Gets the object invalidation metadata (may be null).
+        /// </summary>
+        /// <value>The object invalidation metadata.</value>
+        public ObjectInvalidationMetadata ObjectInvalidationMetadata { get; private set; }
 
         /// <summary>
         /// Gets the accessor metadata (may be null).
@@ -131,5 +139,11 @@ namespace Odyssey.Core
         {
             return new PropertyContainer.ValueHolder<T>((T) value);
         }
+
+        /// <summary>
+        /// Gets the object invalidation metadata (may be null).
+        /// </summary>
+        /// <value>The object invalidation metadata.</value>
+        public ObjectInvalidationMetadata<T> ObjectInvalidationMetadataT { get { return (ObjectInvalidationMetadata<T>)ObjectInvalidationMetadata; } }
     }
 }

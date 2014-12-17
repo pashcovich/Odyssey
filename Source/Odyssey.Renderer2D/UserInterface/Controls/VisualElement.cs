@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
 using Odyssey.Text.Logging;
+using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 
@@ -58,6 +59,8 @@ namespace Odyssey.UserInterface.Controls
         {
             get { return VisualState != null; }
         }
+
+        public DataTemplate Template { get; set; }
 
         /// <summary>
         ///     Gets or sets the <see cref="TextStyle" /> to use for this control.
@@ -148,6 +151,7 @@ namespace Odyssey.UserInterface.Controls
             var newElement = (VisualElement) base.Copy();
             newElement.Style = Style;
             newElement.TextStyleClass = TextStyleClass;
+            newElement.Template = Template;
             CopyEvents(typeof (VisualElement), this, newElement);
             return newElement;
         }
@@ -173,52 +177,77 @@ namespace Odyssey.UserInterface.Controls
 
         private void ApplyVisualStyle()
         {
-            if (StyleClass == VisualStyle.Empty)
+            if (string.IsNullOrEmpty(StyleClass))
+            {
+                CreateDefaultTemplate();
                 return;
+            }
 
             if (!Overlay.Theme.ContainsResource(StyleClass))
             {
                 LogEvent.UserInterface.Warning("Style '{0}' not found", StyleClass);
                 return;
             }
-            var controlStyle = Overlay.Theme.GetResource<VisualStyle>(StyleClass);
+            var visualStyle = Overlay.Theme.GetResource<VisualStyle>(StyleClass);
 
-            if (float.IsNaN(Width) && controlStyle.Width > 0)
+            if (float.IsNaN(Width) && visualStyle.Width > 0)
             {
-                Width = controlStyle.Width;
+                Width = visualStyle.Width;
             }
 
-            if (float.IsNaN(Height) && controlStyle.Height > 0)
+            if (float.IsNaN(Height) && visualStyle.Height > 0)
             {
-                Height = controlStyle.Height;
+                Height = visualStyle.Height;
             }
 
             RemoveAndDispose(ref visualState);
-            visualState = ToDispose(controlStyle.CreateVisualState(this));
+            visualState = ToDispose(visualStyle.CreateVisualState(this));
             visualState.Initialize();
 
             foreach (var s in visualState)
-                Children.Add(s);
-            Style = controlStyle;
+                SetParent(s, this);
+
+            Style = visualStyle;
         }
 
-        protected void ApplyTextStyle()
+        protected virtual void CreateDefaultTemplate()
+        { }
+
+        private void ApplyTemplate()
         {
-            if (string.Equals(TextStyleClass, TextStyle.TemplatedParent))
+            if (Template != null)
             {
-                var templatedParent = FindAncestor<ItemsControl>();
-                if (templatedParent != null)
-                    TextStyle = templatedParent.TextStyle;
-            }
-            else
-            {
-                if (!Overlay.Theme.ContainsResource(TextStyleClass))
+                var control = ToDispose(Template.VisualTree.Copy());
+                foreach (var element in TreeTraversal.PreOrderVisit(control))
                 {
-                    LogEvent.UserInterface.Warning("TextStyle '{0}' not found", TextStyleClass);
-                    return;
+                    string elementName = element.Name;
+                    foreach (var kvp in Template.Bindings)
+                    {
+                        var binding = kvp.Value;
+                        if (string.Equals(kvp.Value.TargetElement, elementName))
+                            element.SetBinding(binding, kvp.Key);
+                    }
                 }
-                TextStyle = Overlay.Theme.GetResource<TextStyle>(TextStyleClass);
+                SetParent(control, this);
             }
+        }
+
+        private void ApplyTextStyle()
+        {
+            if (string.Equals(TextStyleClass, Binding.TemplatedParent) || string.Equals(TextStyleClass, TextStyle.Default))
+            {
+                Control parent = FindAncestor<ItemsControl>() ?? (Control) FindAncestor<ContentControl>() ?? Overlay;
+                TextStyleClass = parent.TextStyleClass;
+            }
+            
+            if (!Overlay.Theme.ContainsResource(TextStyleClass))
+            {
+                LogEvent.UserInterface.Warning("TextStyle '{0}' not found", TextStyleClass);
+                return;
+            }
+
+            TextStyle = Overlay.Theme.GetResource<TextStyle>(TextStyleClass);
+
         }
 
         /// <summary>
@@ -255,6 +284,7 @@ namespace Odyssey.UserInterface.Controls
         {
             base.OnInitializing(e);
             ApplyVisualStyle();
+            ApplyTemplate();
             ApplyTextStyle();
         }
 

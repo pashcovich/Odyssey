@@ -16,6 +16,7 @@
 #region Using Directives
 
 using Odyssey.Interaction;
+using Odyssey.UserInterface.Data;
 
 #endregion
 
@@ -39,6 +40,20 @@ namespace Odyssey.UserInterface.Controls
             var animation = Animator[animationName];
             animation.Speed = -1.0f;
             Animator.Play(animationName);
+        }
+
+        protected override void CreateDefaultTemplate()
+        {
+            string typeName = GetType().Name;
+            Template = new DataTemplate
+            {
+                Key = string.Format("{0}.Template", typeName),
+                DataType = GetType(),
+                VisualTree = new Border()
+                {
+                    Content = new TextBlock() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center }
+                }
+            };
         }
     }
 }
