@@ -13,11 +13,15 @@
 
 #endregion License
 
+using System;
+
 namespace Odyssey.UserInterface.Data
 {
     public class Binding
     {
-        public Binding() : this(string.Empty, string.Empty)
+        public const string TemplatedParent = "TemplatedParent";
+
+        public Binding() : this(String.Empty, String.Empty)
         {
         }
 
@@ -29,11 +33,12 @@ namespace Odyssey.UserInterface.Data
         }
 
         public string Path { get; set; }
-
         public object Source { get; set; }
-
         public string TargetElement { get; set; }
+        public IValueConverter Converter { get; set; }
+        public object ConverterParameter { get; set; }
 
         public UpdateSourceTrigger UpdateSourceTrigger { get; set; }
+        
     }
 }

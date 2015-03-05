@@ -30,6 +30,17 @@ namespace Odyssey.UserInterface.Controls.Charts
             XAxisTitle = dockpanel.Children[IdXAxisTitle];
             XAxisTitle.DependencyProperties.Add(DockPanel.DockPropertyKey, Dock.Bottom);
             ChartArea = dockpanel.Children[IdChartArea];
+
+            int count = Items.Count();
+            var grid = (Grid)ChartArea;
+            for (int i = 0; i < count; i++)
+                grid.AddColumnDefinition(new StripDefinition(StripType.Fixed, 1));
+
+            count = 0;
+            foreach (var item in Items)
+            {
+                item.DependencyProperties.Add(GridBase.ColumnPropertyKey, count++);
+            }
             //ChartArea.StyleClass = StyleClass;
             //ChartArea.ItemsSource = ItemsSource;
         }
@@ -55,16 +66,18 @@ namespace Odyssey.UserInterface.Controls.Charts
         protected override DataTemplate CreateDefaultPanelTemplate()
         {
             string typeName = GetType().Name;
+            var grid = new Grid {Name = IdChartArea, IsItemsHost = true};
             var panelTemplate = new DataTemplate
             {
                 Key = string.Format("{0}.PanelTemplate", typeName),
                 DataType = GetType(),
                 VisualTree = new DockPanel
                 {
-                    new Label {Name = IdXAxisTitle, TextStyleClass = TextStyle.TemplatedParent},
-                    new UniformStackPanel {Name = IdChartArea, IsItemsHost = true}
+                    new Label {Name = IdXAxisTitle, TextStyleClass = Binding.TemplatedParent},
+                    grid
                 }
             };
+            grid.AddRowDefinition(new StripDefinition(StripType.Fixed, 1));
             panelTemplate.Bindings.Add((ReflectionHelper.GetPropertyName((TextBlock t) => t.Text)), new Binding(IdXAxisTitle, IdXAxisTitle));
             return panelTemplate;
         }

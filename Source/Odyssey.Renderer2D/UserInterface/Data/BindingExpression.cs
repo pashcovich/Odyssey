@@ -72,7 +72,10 @@ namespace Odyssey.UserInterface.Data
         public void Initialize()
         {
             if (!string.IsNullOrEmpty(binding.Path))
-                sourceProperty = binding.Source.GetType().GetRuntimeProperty(binding.Path);
+            {
+                var objectWalker = new ObjectWalker(binding.Source, binding.Path);
+                sourceProperty = objectWalker.LastInstruction.Value.Property;
+            }
             Value = SourceValue;
 
             var iNotifyPropertyChanged = binding.Source as INotifyPropertyChanged;
@@ -83,8 +86,17 @@ namespace Odyssey.UserInterface.Data
 
         public void UpdateTarget()
         {
-            targetProperty.SetValue(target, value.GetType() == targetProperty.PropertyType 
-                ? value : Convert.ChangeType(value, targetProperty.PropertyType));
+            object newValue;
+            if (value.GetType() == targetProperty.PropertyType)
+                newValue = value;
+            else
+            {
+                newValue = binding.Converter != null 
+                    ? binding.Converter.Convert(value, target.GetType(), binding.ConverterParameter) 
+                    : Convert.ChangeType(value, targetProperty.PropertyType);
+            }
+
+            targetProperty.SetValue(target, newValue);
         }
 
         internal void ChangeValue(object newValue, bool notify)

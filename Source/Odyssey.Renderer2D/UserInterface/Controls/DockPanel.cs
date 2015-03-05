@@ -57,19 +57,19 @@ namespace Odyssey.UserInterface.Controls
                     switch (dock)
                     {
                         case Dock.Bottom:
-                            availableHeight -= control.DesiredSize.Y;
+                            availableHeight -= control.DesiredSizeWithMargins.Y;
                             break;
 
                         case Dock.Right:
-                            availableWidth -= control.DesiredSize.X;
+                            availableWidth -= control.DesiredSizeWithMargins.X;
                             break;
 
                         case Dock.Left:
-                            availableWidth -= control.DesiredSize.X;
+                            availableWidth -= control.DesiredSizeWithMargins.X;
                             break;
 
                         case Dock.Top:
-                            availableHeight -= control.DesiredSize.Y;
+                            availableHeight -= control.DesiredSizeWithMargins.Y;
                             break;
                     }
                 }
@@ -100,7 +100,7 @@ namespace Odyssey.UserInterface.Controls
 
                 if (LastChildFill && i == visualChildren.Length - 1)
                 {
-                    control.Position = new Vector3(leftOffset, topOffset, depthOffset);
+                    control.SetPosition(new Vector3(leftOffset, topOffset, depthOffset));
                     control.Arrange(new Vector3(availableWidth, availableHeight, availableDepth));
                 }
                 else
@@ -116,21 +116,21 @@ namespace Odyssey.UserInterface.Controls
                             break;
 
                         case Dock.Right:
-                            control.Position = new Vector3(availableWidth - control.DesiredSizeWithMargins.X - rightOffset, topOffset, depthOffset);
+                            control.SetPosition(new Vector3(availableWidth - control.DesiredSizeWithMargins.X - rightOffset, topOffset, depthOffset));
                             control.Arrange(new Vector3(control.DesiredSizeWithMargins.X, availableHeight, availableDepth));
                             rightOffset += control.DesiredSizeWithMargins.X;
                             availableWidth -= control.DesiredSizeWithMargins.X;
                             break;
 
                         case Dock.Left:
-                            control.Position = new Vector3(leftOffset, topOffset, depthOffset);
+                            control.SetPosition(new Vector3(leftOffset, topOffset, depthOffset));
                             control.Arrange(new Vector3(control.DesiredSizeWithMargins.X, availableHeight, availableDepth));
                             leftOffset += control.DesiredSizeWithMargins.X;
                             availableWidth -= control.DesiredSizeWithMargins.X;
                             break;
 
                         case Dock.Top:
-                            control.Position = new Vector3(leftOffset, topOffset, depthOffset);
+                            control.SetPosition(new Vector3(leftOffset, topOffset, depthOffset));
                             control.Arrange(new Vector3(availableWidth, control.DesiredSizeWithMargins.Y, availableDepth));
                             topOffset += control.DesiredSizeWithMargins.Y;
                             availableHeight -= control.DesiredSizeWithMargins.Y;

@@ -134,7 +134,7 @@ namespace Odyssey.UserInterface.Controls
             if (container == null)
                 container = panel;
 
-            Children.Add(panel);
+            SetParent(panel, this);
         }
 
         private void PopulateItems()
@@ -152,7 +152,7 @@ namespace Odyssey.UserInterface.Controls
             int itemCount = 1;
             foreach (var item in ItemsSource)
             {
-                UIElement previousElement = this;
+                UIElement previousElement = container;
                 foreach (UIElement element in TreeTraversal.PreOrderVisit(ItemTemplate.VisualTree))
                 {
                     UIElement newItem = ToDispose(element.Copy());
@@ -160,7 +160,7 @@ namespace Odyssey.UserInterface.Controls
                     if (element.Parent is ContentControl)
                         ((ContentControl) previousElement).Content = newItem;
                     else
-                        container.Add(newItem);
+                        SetParent(newItem, container);
 
                     newItem.DataContext = item;
 
@@ -168,7 +168,6 @@ namespace Odyssey.UserInterface.Controls
                         newItem.SetBinding(kvp.Value, kvp.Key);
 
                     newItem.Name = string.Format("{0}{1:D2}", newItem.Name, itemCount++);
-
                     previousElement = newItem;
                 }
             }

@@ -142,7 +142,7 @@ namespace Odyssey.Animations
 
                     name = string.Format("{0}.Animator", ((IResource) realTarget).Name);
 
-                    ObjectWalker walker = new ObjectWalker(realTarget, curve.TargetProperty);
+                    var walker = new ObjectWalker(realTarget, curve.TargetProperty);
 
                     var requiresCaching = realTarget as IRequiresCaching;
                     string curveKey = curve.Key;

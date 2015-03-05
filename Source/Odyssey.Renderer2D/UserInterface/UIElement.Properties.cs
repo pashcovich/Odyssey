@@ -303,21 +303,7 @@ namespace Odyssey.UserInterface
 
         protected Overlay Overlay
         {
-            get
-            {
-                // Find the overlay we are in;
-                var control = this;
-                while (control != null)
-                {
-                    var controlAsOverlay = control as Overlay;
-                    if (controlAsOverlay != null)
-                    {
-                        return controlAsOverlay;
-                    }
-                    control = control.Parent;
-                }
-                return null;
-            }
+            get { return (this is Overlay) ? (Overlay)this : FindAncestor<Overlay>(); }
         }
 
         protected Direct2DDevice Device
@@ -339,11 +325,11 @@ namespace Odyssey.UserInterface
             protected set
             {
                 var oldPosition = absolutePosition;
+                if (absolutePosition == value)
+                    return; 
+
                 absolutePosition = value;
-
-                if (absolutePosition == oldPosition)
-                    return;
-
+                
                 UpdateLayoutInternal();
                 if (!DesignMode)
                     OnPositionChanged(new PositionChangedEventArgs(oldPosition, absolutePosition));
@@ -409,7 +395,7 @@ namespace Odyssey.UserInterface
         ///     will cause the UI to be recomputed if the control is not in <see cref="DesignMode" />
         /// </remarks>
         [Animatable]
-        public virtual bool IsVisible
+        public bool IsVisible
         {
             get { return isVisible; }
             set
@@ -432,15 +418,10 @@ namespace Odyssey.UserInterface
             get { return parent; }
             internal set
             {
-                if (parent != value)
-                {
-                    parent = value;
-                    OnParentChanged(EventArgs.Empty);
-                    var formerParent = parent as IContainer;
-                    if (formerParent != null)
-                        formerParent.Children.Remove(value);
-                }
+                if (parent == value) return;
+                parent = value;
                 DesignMode = parent.DesignMode;
+                OnParentChanged(EventArgs.Empty);
             }
         }
 

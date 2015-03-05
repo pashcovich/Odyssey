@@ -19,14 +19,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using Odyssey.Geometry;
-using SharpDX.Mathematics;
+using Odyssey.Text.Logging;
+using Odyssey.UserInterface.Controls;
 
-#endregion Using Directives
+#endregion
 
-namespace Odyssey.UserInterface.Controls
+namespace Odyssey.UserInterface
 {
     public class UIElementCollection : Collection<UIElement>, IEnumerable<UIElement>
     {
@@ -37,10 +36,7 @@ namespace Odyssey.UserInterface.Controls
 
         public IEnumerable<UIElement> InteractionEnabled
         {
-            get
-            {
-                return this.Where(c => c.IsVisible && c.IsEnabled && c.CanRaiseEvents);
-            }
+            get { return this.Where(c => c.IsVisible && c.IsEnabled && c.CanRaiseEvents); }
         }
 
         public IEnumerable<UIElement> Visual
@@ -65,23 +61,28 @@ namespace Odyssey.UserInterface.Controls
             get { return Items; }
         }
 
+        public UIElement this[string name]
+        {
+            get { return Items.First(c => string.Equals(c.Name, name)); }
+        }
+
         #region IEnumerable<BaseControl> Members
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return AllControls.GetEnumerator();
+            return Items.GetEnumerator();
         }
 
         IEnumerator<UIElement> IEnumerable<UIElement>.GetEnumerator()
         {
-            return AllControls.GetEnumerator();
+            return Items.GetEnumerator();
         }
 
         #endregion IEnumerable<BaseControl> Members
 
         /// <summary>
-        /// Returns the index of the first level child control (not recursive) whose Id is the one
-        /// specified.
+        ///     Returns the index of the first level child control (not recursive) whose Id is the one
+        ///     specified.
         /// </summary>
         /// <param name="id">The Id of the control to find.</param>
         /// <returns>The 0 based index if found, -1 if not.</returns>
@@ -98,29 +99,42 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Sort the control collection from the foremost to the ones in the background.
+        ///     Sort the control collection from the foremost to the ones in the background.
         /// </summary>
-        public void Sort()
+        static int CompareElements(UIElement e1, UIElement e2)
         {
-            UIElement[] controlArray = ToArray();
-            Array.Sort(controlArray);
+            float z1 = e1.Position.Z;
+            float z2 = e2.Position.Z;
 
-            Clear();
-
-            for (int i = 0; i < controlArray.Length; i++)
+            if (z1 > z2)
+                return 1;
+            else if (z1 < z2)
+                return -1;
+            else
             {
-                base.InsertItem(i, controlArray[i]);
+                if (e1.Index > e2.Index)
+                    return 1;
+                else if (e1.Index < e2.Index)
+                    return -1;
+                else return 0;
             }
         }
 
-        public void Sort<TKey>(Func<UIElement,TKey> keySelector)
+        public void Sort()
         {
-            var controlArray = Items.OrderBy(keySelector).ToArray();
+            var array = Items.ToArray();
+            Array.Sort(array, CompareElements);
             Clear();
-            for (int i = 0; i < controlArray.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                base.InsertItem(i, controlArray[i]);
+                base.InsertItem(i, array[i]);
             }
+        }
+
+        void Debug(UIElement[] array)
+        {
+            foreach (var e in array)
+                LogEvent.UserInterface.Info("{0}: {1}", e.Name, e.Index);
         }
 
         public UIElement[] ToArray()
@@ -135,20 +149,12 @@ namespace Odyssey.UserInterface.Controls
 
         protected override void InsertItem(int index, UIElement item)
         {
-            ProcessForInsertion(item);
             base.InsertItem(index, item);
-            Sort(e=> e.Position.Z);
+            Sort();
         }
 
         private void ProcessForDeletion(UIElement control)
         {
-            //Overlay Overlay = Owner as Overlay;
-
-            //Window window = control as Window;
-
-            //if (Overlay != null && window != null)
-            //    Overlay.WindowManager.Remove(window);
-
             control.CanRaiseEvents = false;
             control.IsBeingRemoved = true;
 
@@ -162,26 +168,10 @@ namespace Odyssey.UserInterface.Controls
                 }
         }
 
-        private void ProcessForInsertion(UIElement control)
-        {
-            Contract.Requires<ArgumentNullException>(control != null);
-            Contract.Requires<InvalidOperationException>(!Contains(control), "Control is already in collection.");
-
-            control.Parent = Owner;
-            control.Index = Count;
-            if (!control.IsInternal)
-                control.SetPosition(new Vector3(control.Position.XY(), control.Position.Z+1));
-        }
-
         protected override void RemoveItem(int index)
         {
             ProcessForDeletion(this[index]);
             base.RemoveItem(index);
-        }
-
-        public UIElement this[string name]
-        {
-            get { return Items.First(c => string.Equals(c.Name, name)); }
         }
     }
 }

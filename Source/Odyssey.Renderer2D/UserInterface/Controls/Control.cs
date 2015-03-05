@@ -1,5 +1,9 @@
 ﻿#region Using Directives
 
+using System;
+using System.Linq;
+using System.ServiceModel.Channels;
+using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 
@@ -40,14 +44,16 @@ namespace Odyssey.UserInterface.Controls
             {
                 Vector3 size = availableSizeWithoutMargins;
                 if (!child.IsInternal && !Padding.IsEmpty)
-                {
-                    child.PositionOffsets = new Vector3(Padding.Left, Padding.Top, 0);
                     size -= new Vector3(Padding.Horizontal, Padding.Vertical, 0);
-                }
 
                 child.Arrange(size);
             }
             return availableSizeWithoutMargins;
+        }
+
+        protected sealed override void PropagateOffsetsToChildren(Vector3 offsets, Vector3 availableSizeWithMargins)
+        {
+            base.PropagateOffsetsToChildren(offsets + new Vector3(Padding.Left, Padding.Top, 0), availableSizeWithMargins);
         }
     }
 }

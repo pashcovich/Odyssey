@@ -17,6 +17,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using Odyssey.Graphics;
 using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
@@ -86,8 +87,8 @@ namespace Odyssey.UserInterface.Controls
 
         protected override void OnInitializing(EventArgs e)
         {
-            if (TextStyle == null)
-                ApplyTextStyle();
+            Contract.Requires<ArgumentNullException>(TextStyle != null || !string.IsNullOrEmpty(TextStyleClass), "TextStyleClasss");
+            base.OnInitializing(e);
 
             if (string.IsNullOrEmpty(Text))
                 Text = Name;
@@ -114,6 +115,7 @@ namespace Odyssey.UserInterface.Controls
             
             textLayout = ToDispose(new TextLayout(Device, Text, TextFormat, availableSizeWithoutMargins.X, availableSizeWithoutMargins.Y));
             TextMetrics = textLayout.Metrics;
+
             switch (HorizontalAlignment)
             {
                 case HorizontalAlignment.Stretch:
@@ -122,7 +124,6 @@ namespace Odyssey.UserInterface.Controls
                 default:
                     return new Vector3((float) Math.Ceiling(TextMetrics.Width), (float) Math.Ceiling(TextMetrics.Height), availableSizeWithoutMargins.Z);
             }
-
         }
 
         protected override void OnSizeChanged(SizeChangedEventArgs e)

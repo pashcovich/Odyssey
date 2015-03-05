@@ -24,8 +24,10 @@ using System.Reflection;
 using System.Xml;
 using Odyssey.Content;
 using Odyssey.Engine;
+using Odyssey.Geometry;
 using Odyssey.Interaction;
 using Odyssey.Reflection;
+using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Serialization;
@@ -120,7 +122,8 @@ namespace Odyssey.UserInterface
             foreach (var kvp in bindings)
             {
                 var bindingExpression = kvp.Value;
-                bindingExpression.SourceBinding.Source = DataContext;
+                if (bindingExpression.SourceBinding.Source == null)
+                    bindingExpression.SourceBinding.Source = DataContext;
                 bindingExpression.Initialize();
             }
 
@@ -139,9 +142,23 @@ namespace Odyssey.UserInterface
         public void SetBinding(Binding binding, string targetProperty)
         {
             Contract.Requires<ArgumentNullException>(binding != null, "binding");
-
             var bindingExpression = new BindingExpression(binding, this, targetProperty);
             bindings.Add(targetProperty, bindingExpression);
+        }
+
+        protected static void SetParent(UIElement child, UIElement parent)
+        {
+            Contract.Requires<ArgumentNullException>(parent != null, "parent");
+            Contract.Requires<ArgumentNullException>(child != null, "child");
+            Contract.Requires<InvalidOperationException>(parent != child, "Cannot add self");
+            Contract.Requires<InvalidOperationException>(!parent.Children.Contains(child), "Child is already in collection.");
+
+            if (!child.IsInternal)
+                child.SetPosition(new Vector3(child.Position.XY(), child.Position.Z + 1));
+            child.Parent = parent;
+            child.Index = parent.Children.Count;
+            parent.Children.Add(child);
+
         }
 
         /// <summary>
@@ -153,8 +170,8 @@ namespace Odyssey.UserInterface
             var newElement = (UIElement) Activator.CreateInstance(GetType());
             newElement.Name = Name ?? newElement.Name;
             newElement.Margin = Margin;
-            newElement.horizontalAlignment = horizontalAlignment;
-            newElement.verticalAlignment = verticalAlignment;
+            newElement.HorizontalAlignment = horizontalAlignment;
+            newElement.VerticalAlignment = verticalAlignment;
 
             CopyEvents(typeof (UIElement), this, newElement);
             newElement.Animator.AddAnimations(Animator.Animations);
@@ -284,7 +301,6 @@ namespace Odyssey.UserInterface
             if (Parent != null)
             {
                 Parent.ForceMeasure();
-                Measure(Parent.RenderSize + Parent.MarginInternal);
             }
             InvalidateArrange();
         }
@@ -295,7 +311,6 @@ namespace Odyssey.UserInterface
             if (Parent != null)
             {
                 Parent.ForceArrange();
-                Arrange(Parent.DesiredSizeWithMargins);
             }
         }
 
@@ -303,12 +318,14 @@ namespace Odyssey.UserInterface
         {
             ForceMeasure();
             PropagateMeasureInvalidationToChildren();
+            Overlay.Layout(Overlay.RenderSize);
         }
 
         protected void InvalidateArrange()
         {
             ForceArrange();
             PropagateArrangeInvalidationToChildren();
+            Overlay.Arrange(Overlay.RenderSize);
         }
 
 
@@ -334,15 +351,12 @@ namespace Odyssey.UserInterface
         {
             if (IsArrangeValid)
                 return;
-            IsArrangeValid = true;
 
-            Vector3 oldAbsolutePosition = absolutePosition;
             var newAbsolutePosition = Position;
             if (parent != null)
                 newAbsolutePosition += (parent.AbsolutePosition + parent.PositionOffsets);
 
-            if (!newAbsolutePosition.Equals(oldAbsolutePosition))
-                AbsolutePosition = newAbsolutePosition;
+            AbsolutePosition = newAbsolutePosition;
 
             var elementSize = Size;
             var finalSizeWithoutMargins = availableSizeWithMargins - MarginInternal;
@@ -369,13 +383,25 @@ namespace Odyssey.UserInterface
             elementSize = ArrangeOverride(elementSize);
             RenderSize = elementSize;
 
-            PositionOffsets += CalculatePosition(availableSizeWithMargins, elementSize);
-            if (PositionOffsets != Vector3.Zero)
+            PositionOffsets = CalculatePosition(availableSizeWithMargins, elementSize);
+            AbsolutePosition += PositionOffsets;
+            if (AbsolutePosition != finalPosition)
             {
-                AbsolutePosition += PositionOffsets;
-                foreach (var child in Children)
-                    child.AbsolutePosition += PositionOffsets;
+                finalPosition = AbsolutePosition;
+                if (PositionOffsets != Vector3.Zero)
+                    PropagateOffsetsToChildren(PositionOffsets, availableSizeWithMargins);
             }
+            IsArrangeValid = true;
+        }
+
+        protected virtual void PropagateOffsetsToChildren(Vector3 offsets, Vector3 availableSizeWithMargins)
+        {
+            foreach (var child in Children)
+            {
+                child.PositionOffsets += offsets;
+                PropagateArrangeInvalidationToChildren();
+            }
+            Arrange(availableSizeWithMargins);
         }
 
         public void Measure(Vector3 availableSize)
@@ -462,7 +488,7 @@ namespace Odyssey.UserInterface
         {
             float zIndex = Parent.Children.Max(e => e.Position.Z);
             Position = new Vector3(position.X, position.Y, ++zIndex);
-            Parent.Children.Sort(e => e.Position.Z);
+            Parent.Children.Sort();
         }
 
         public void Layout(Vector3 availableSize)

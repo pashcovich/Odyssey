@@ -188,5 +188,6 @@ namespace Odyssey.Reflection
             handle.Free();
             return typedStruct;
         }
+
     }
 }
