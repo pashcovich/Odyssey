@@ -114,7 +114,7 @@ namespace Odyssey.Epos.Interaction
 
         protected void Rotate(Vector3 axis, float angle)
         {
-            CRotation.Orientation *= Quaternion.RotationAxis(axis, angle);
+            COrientation.Orientation *= Quaternion.RotationAxis(axis, angle);
         }
     }
 }

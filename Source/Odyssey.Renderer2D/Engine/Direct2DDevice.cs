@@ -29,6 +29,7 @@ namespace Odyssey.Engine
         private DWFactory directWriteFactory;
         private D2DFactory factory;
         private Direct2DSurface target;
+        private SharpDX.Direct3D11.Device d3dDevice;
 
         /// <summary>
         ///     Initializes a new instance of <see cref="Direct2DDevice" />.
@@ -40,6 +41,7 @@ namespace Odyssey.Engine
         {
             this.services = services;
             this.debugLevel = debugLevel;
+            this.d3dDevice = d3dDevice;
 
             using (var dxgiDevice = d3dDevice.QueryInterface<SharpDX.DXGI.Device>())
             {
@@ -226,7 +228,7 @@ namespace Odyssey.Engine
 
         public static implicit operator SharpDX.Direct3D11.Device(Direct2DDevice from)
         {
-            return from == null ? null : from.dx11Service.DirectXDevice.Device;
+            return from == null ? null : from.d3dDevice;
         }
 
         public static implicit operator Factory(Direct2DDevice from)

@@ -29,7 +29,7 @@ namespace Odyssey.Epos.Interaction
     {
         private readonly IServiceRegistry services;
         private PositionComponent cPosition;
-        private OrientationComponent cRotation;
+        private OrientationComponent cOrientation;
         private UpdateComponent cUpdate;
 
         public ControllerBase(IServiceRegistry services)
@@ -37,9 +37,9 @@ namespace Odyssey.Epos.Interaction
             this.services = services;
         }
 
-        protected OrientationComponent CRotation
+        protected OrientationComponent COrientation
         {
-            get { return cRotation; }
+            get { return cOrientation; }
         }
 
         protected UpdateComponent CUpdate
@@ -64,12 +64,13 @@ namespace Odyssey.Epos.Interaction
             if (source == null)
                 throw new ArgumentNullException("source");
             Source = source;
+            const string errorFormat = "'{0}' does not contain a {1}";
             if (!Source.TryGetComponent(out cPosition))
-                throw new InvalidOperationException(string.Format("'{0}' does not contain a {1}", source.Name, cPosition.GetType()));
-            if (!source.TryGetComponent(out cRotation))
-                throw new InvalidOperationException(string.Format("'{0}' does not contain a {1}", source.Name, cRotation.GetType()));
+                throw new InvalidOperationException(string.Format(errorFormat, source.Name, typeof(PositionComponent)));
+            if (!source.TryGetComponent(out cOrientation))
+                throw new InvalidOperationException(string.Format(errorFormat, source.Name, typeof(OrientationComponent)));
             if (!source.TryGetComponent(out cUpdate))
-                throw new InvalidOperationException(string.Format("'{0}' does not contain a {1}", source.Name, cUpdate.GetType()));
+                throw new InvalidOperationException(string.Format(errorFormat, source.Name, typeof(UpdateComponent)));
         }
 
         public abstract void Update(ITimeService time);

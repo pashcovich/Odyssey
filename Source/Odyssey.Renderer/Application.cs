@@ -435,7 +435,7 @@ namespace Odyssey
 
         protected virtual void Initialize()
         {
-            const string filePath = Global.DataPath + "System.yaml";
+            const string filePath = Global.DataPath + "system.yaml";
             const string references = "EngineReferences";
             if (!NativeFile.Exists(filePath))
                 throw new InvalidOperationException(string.Format("Odyssey System Data not found: check if {0} exists",filePath));

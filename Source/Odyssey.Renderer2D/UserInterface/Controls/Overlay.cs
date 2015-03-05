@@ -131,6 +131,8 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
+            if (Content == null)
+                return;
             foreach (var control in TreeTraversal.VisibleControls(Content))
                 control.Render();
         }
@@ -138,7 +140,7 @@ namespace Odyssey.UserInterface.Controls
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(disposeManagedResources);
-            if (disposeManagedResources)
+            if (disposeManagedResources && Content!=null)
             {
                 foreach (UIElement uiElement in TreeTraversal.PreOrderVisit(Content))
                     uiElement.Dispose();
@@ -160,12 +162,15 @@ namespace Odyssey.UserInterface.Controls
             Height = settings.PreferredBackBufferHeight;
             Depth = 0;
 
-            Content.Measure(Size);
+            if (Content!=null)
+                Content.Measure(Size);
             return Size;
         }
 
         public override void Update(ITimeService time)
         {
+            if (Content == null)
+                return;
             var controlArray = TreeTraversal.PreOrderVisit(Content).ToArray();
             for (int i = 1; i < controlArray.Length; i++)
             {

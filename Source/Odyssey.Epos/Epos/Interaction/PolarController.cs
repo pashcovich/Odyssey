@@ -1,51 +1,31 @@
-﻿#region License
-
-// Copyright © 2013-2014 Avengers UTD - Adalberto L. Simeone
-// 
-// The Odyssey Engine is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License Version 3 as published by
-// the Free Software Foundation.
-// 
-// The Odyssey Engine is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details at http://gplv3.fsf.org/
-
-#endregion
-
-#region Using Directives
-
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
 using SharpDX.Mathematics;
 
-#endregion
-
 namespace Odyssey.Epos.Interaction
 {
-    public enum RotationMode
+    public class PolarController : PointerControllerBase
     {
-        YawPitchRoll,
-        Yaw,
-        Pitch
-    }
 
-    public class ArcBallModelController : PointerControllerBase
-    {
         private float arcBallRadius;
         private bool isDragging;
         private Vector2 lastPointerPosition;
-        private Quaternion qCurrent;
-        private Quaternion qStart;
-        private Vector3 sphereStart;
-        private Vector3 prevSpherePoint;
         private RotationMode mode;
+        private float totalYaw;
+        private float totalPitch;
+        private float rotationSpeed = 1.0f;
+        private Quaternion qStart;
+        private Quaternion qCurrent;
 
-        public ArcBallModelController(IServiceRegistry services) : base(services)
+        public PolarController(IServiceRegistry services)
+            : base(services)
         {
-            arcBallRadius = 0.85f;
         }
 
         /// <summary>
@@ -63,8 +43,8 @@ namespace Odyssey.Epos.Interaction
             if (point.IsLeftButtonPressed)
             {
                 isDragging = true;
-                sphereStart = MapToArcBall(lastPointerPosition, ScreenSize, arcBallRadius);
                 qStart = COrientation.Orientation;
+
             }
         }
 
@@ -119,27 +99,46 @@ namespace Odyssey.Epos.Interaction
             if (current.Y < 0 || current.Y > ScreenSize.Y)
                 return;
 
-            Vector3 currentPoint = MapToArcBall(current, ScreenSize, arcBallRadius);
-            
-            switch (mode)
-            {
-                case RotationMode.Yaw:
-                    currentPoint = new Vector3(currentPoint.X, prevSpherePoint.Y, prevSpherePoint.Z);
-                    break;
-            }
-
-            prevSpherePoint = currentPoint;
+            Vector2 delta = current - lastPointerPosition;
+            totalYaw += delta.X;
+            totalPitch += delta.Y;
+            //switch (mode)
+            //{
+            //    case RotationMode.Yaw:
+            //        currentPoint = new Vector3(currentPoint.X, prevSpherePoint.Y, prevSpherePoint.Z);
+            //        break;
+            //}
 
             // Computes the quaternion necessary to rotate from the previous 
             // ArcBall point to the current one
-            Vector3 axis = Vector3.Cross(currentPoint, sphereStart);
-            float dot = Vector3.Dot(sphereStart, currentPoint);
-            qCurrent = new Quaternion(axis, dot);
+            //var r = Quaternion.RotationAxis(Vector3.UnitY, totalYaw/100f);
+            //var s = Quaternion.RotationAxis(Vector3.UnitX, totalPitch / 100f);
+            var r = Quaternion.RotationYawPitchRoll(totalYaw/100, totalPitch/100, 0);
             // Rotation relative to local Frame
-            Quaternion rot = Quaternion.Normalize(qCurrent*qStart);
-            COrientation.Orientation = rot;
+            //Quaternion rot = Quaternion.Normalize(qCurrent*qStart);
+            COrientation.Orientation = Quaternion.Normalize(r*Quaternion.Invert(qStart));
         }
 
+        protected override void KeyPressed(Keys key, ITimeService time)
+        {
+            switch (key)
+            {
+                case Keys.Shift:
+                case Keys.LeftShift:
+                    mode = RotationMode.Yaw;
+                    break;
+            }
+        }
 
+        protected override void KeyReleased(Keys key, ITimeService time)
+        {
+            switch (key)
+            {
+                case Keys.Shift:
+                case Keys.LeftShift:
+                    mode = RotationMode.YawPitchRoll;
+                    break;
+            }
+        }
     }
 }

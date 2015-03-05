@@ -40,7 +40,7 @@ namespace Odyssey.UserInterface
         public override void Initialize()
         {
             base.Initialize();
-            IWindowService windowService = Services.GetService<IWindowService>();
+            var windowService = Services.GetService<IWindowService>();
             KeyboardPlatform keyboardPlatform = new DesktopKeyboardPlatform(keyboardManager);
             keyboardPlatform.Initialize(windowService.NativeWindow);
             keyboardPlatform.KeyUp += (s, e) => ((IDesktopOverlay) CurrentOverlay).ProcessKeyUp(e);

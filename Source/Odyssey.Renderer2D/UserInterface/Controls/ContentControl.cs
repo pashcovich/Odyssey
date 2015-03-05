@@ -32,7 +32,8 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
-            Content.BringToFront();
+            if (Content!=null)
+                Content.BringToFront();
         }
     }
 }

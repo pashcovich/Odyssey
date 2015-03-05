@@ -1,8 +1,7 @@
 ﻿using System;
 using SharpDX.Mathematics;
-using SharpDX.Mathematics;
 
-namespace Odyssey.Geometry.Primitives
+namespace Odyssey.Primitives
 {
     public struct Segment : IEquatable<Segment>
     {

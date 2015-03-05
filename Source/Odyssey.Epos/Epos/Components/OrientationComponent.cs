@@ -4,7 +4,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.Epos.Components
 {
-    [DebuggerDisplay("{Orientation}: ({Orientation})")]
+    [DebuggerDisplay("Orientation: ({Orientation})")]
     public class OrientationComponent : Component
     {
         private Quaternion orientation;

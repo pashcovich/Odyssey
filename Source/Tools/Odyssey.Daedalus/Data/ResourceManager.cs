@@ -1,9 +1,5 @@
-﻿using System.IO;
-using System.Runtime.Serialization;
-using System.Windows.Navigation;
-using Odyssey.Daedalus.Shaders.Techniques;
+﻿using Odyssey.Daedalus.Shaders.Techniques;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Serialization;
 using ShaderDescription = Odyssey.Daedalus.Model.ShaderDescription;
 
 namespace Odyssey.Daedalus.Data
@@ -53,7 +49,6 @@ namespace Odyssey.Daedalus.Data
 
         public static void Read(string fullPath, out ShaderCollection shaderCollection)
         {
-
             shaderCollection = ShaderCollection.Load(fullPath);
         }
 

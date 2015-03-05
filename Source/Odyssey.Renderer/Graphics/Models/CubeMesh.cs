@@ -59,12 +59,12 @@ namespace Odyssey.Graphics.Models
                 // Six indices (two triangles) per face.
                 int vbase = i * 4;
                 indices[indexCount++] = (vbase + 0);
-                indices[indexCount++] = (vbase + 1);
                 indices[indexCount++] = (vbase + 2);
+                indices[indexCount++] = (vbase + 1);
 
                 indices[indexCount++] = (vbase + 0);
-                indices[indexCount++] = (vbase + 2);
                 indices[indexCount++] = (vbase + 3);
+                indices[indexCount++] = (vbase + 2);
 
                 // Four vertices per face.
                 vertices[vertexCount++] = new VertexPositionNormalTexture((normal - side1 - side2) * Radius, normal, textureCoordinates[0]);
@@ -80,7 +80,7 @@ namespace Odyssey.Graphics.Models
             PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList,
             ModelOperation modelOperations= ModelOperation.None)
         {
-            CubeMesh cube = new CubeMesh(width,height,depth, tileX, tileY);
+            var cube = new CubeMesh(width,height,depth, tileX, tileY);
             VertexPositionNormalTexture[] vertices;
             int[] indices;
             cube.GenerateMesh(out vertices, out indices);

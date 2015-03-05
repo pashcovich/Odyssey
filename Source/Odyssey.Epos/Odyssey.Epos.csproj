@@ -4,7 +4,7 @@
   <Import Project="$(SolutionDir)\Odyssey.proj" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <ProjectGuid>{7E2BC73B-CB14-4D62-89AE-A0EB5A1EAF93}</ProjectGuid>
+    <ProjectGuid>{FDCB8D73-B33E-4EEA-9238-1F2427FCA05E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Odyssey</RootNamespace>
@@ -93,6 +93,7 @@
     <Compile Include="Epos\Interaction\KeyBinding.cs" />
     <Compile Include="Epos\Interaction\OrbitController.cs" />
     <Compile Include="Epos\Interaction\PointerControllerBase.cs" />
+    <Compile Include="Epos\Interaction\PolarController.cs" />
     <Compile Include="Epos\Interaction\WasdCameraController.cs" />
     <Compile Include="Epos\Maps\MessageMap.cs" />
     <Compile Include="Epos\Maps\SystemEventArgs.cs" />

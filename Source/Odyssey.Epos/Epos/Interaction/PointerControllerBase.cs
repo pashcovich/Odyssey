@@ -15,6 +15,7 @@
 
 #region Using Directives
 
+using System.Collections.Generic;
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
@@ -27,11 +28,16 @@ namespace Odyssey.Epos.Interaction
 {
     public abstract class PointerControllerBase : ControllerBase
     {
-        protected IKeyboardService keyboardService;
+        private IKeyboardService keyboardService;
         private IPointerService pointerService;
+        private List<Keys> lPrevKeyPressed; 
         protected Vector2 ScreenSize { get; private set; }
+        protected IKeyboardService KeyboardService { get { return keyboardService; } }
 
-        protected PointerControllerBase(IServiceRegistry services) : base(services) {}
+        protected PointerControllerBase(IServiceRegistry services) : base(services)
+        {
+            lPrevKeyPressed = new List<Keys>();
+        }
 
         public override void BindToEntity(Entity source)
         {
@@ -44,8 +50,8 @@ namespace Odyssey.Epos.Interaction
 
         public override void Update(ITimeService time)
         {
-            PointerState state = pointerService.GetState();
-            foreach (var point in state.Points)
+            var pointerState = pointerService.GetState();
+            foreach (var point in pointerState.Points)
             {
                 switch (point.EventType)
                 {
@@ -62,10 +68,29 @@ namespace Odyssey.Epos.Interaction
                         break;
                 }
             }
+
+            var keyboardState = keyboardService.GetState();
+
+            var lKeys = new List<Keys>();
+            keyboardState.GetDownKeys(lKeys);
+            foreach (var keyDown in lKeys)
+            {
+                KeyPressed(keyDown, time);
+            }
+
+            foreach (var keyReleased in lPrevKeyPressed)
+            {
+                if (keyboardState.IsKeyReleased(keyReleased))
+                    KeyReleased(keyReleased, time);
+            }
+            lPrevKeyPressed = lKeys;
         }
 
         protected abstract void PointerPressed(PointerPoint point, ITimeService time);
         protected abstract void PointerMoved(PointerPoint point, ITimeService time);
         protected abstract void PointerReleased(PointerPoint point, ITimeService time);
+
+        protected virtual void KeyPressed(Keys key, ITimeService time) { }
+        protected virtual void KeyReleased(Keys key, ITimeService time) { }
     }
 }

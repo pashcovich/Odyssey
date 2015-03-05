@@ -54,7 +54,7 @@ namespace Odyssey.Epos.Interaction
             cTarget = source.GetComponent<TargetComponent>();
             
             // Initialise values based on current orientation
-            Quaternion q = CRotation.Orientation;
+            Quaternion q = COrientation.Orientation;
             currentYaw = (float) Math.Asin(2*q.X*q.Y + 2*q.Z*q.W);
             currentPitch = -(float) Math.Atan2(2*q.X*q.W - 2*q.Y*q.Z, 1 - 2*q.X*q.X - 2*q.Z*q.Z);
         }
@@ -66,7 +66,7 @@ namespace Odyssey.Epos.Interaction
             Quaternion q = Quaternion.RotationAxis(Vector3.UnitX, currentPitch)*Quaternion.RotationAxis(Vector3.UnitY, currentYaw);
             Vector3 vForward = Vector3.Transform(Vector3.UnitZ, q);
             CPosition.Position = cTarget.Location - (vForward*CameraOffset);
-            CRotation.Orientation = Quaternion.LookAtRH(CPosition.Position, cTarget.Location, Vector3.Up);
+            COrientation.Orientation = Quaternion.LookAtRH(CPosition.Position, cTarget.Location, Vector3.Up);
         }
 
         protected override void PointerPressed(PointerPoint point, ITimeService time)

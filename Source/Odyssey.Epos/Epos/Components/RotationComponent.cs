@@ -3,7 +3,7 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.Epos.Components
 {
-    [DebuggerDisplay("{Rotation}: ({Rotation})")]
+    [DebuggerDisplay("Rotation: ({AngularVelocity})")]
     public class RotationComponent : Component
     {
         private Vector3 w;
