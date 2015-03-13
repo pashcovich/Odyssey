@@ -34,6 +34,12 @@ namespace Odyssey.Epos.Interaction
         protected Vector2 ScreenSize { get; private set; }
         protected IKeyboardService KeyboardService { get { return keyboardService; } }
 
+        protected bool IsLeftButtonDragging { get; set; }
+        protected bool IsRightButtonDragging { get; set; }
+        
+        protected Vector2 CurrentPointerPosition { get; set; }
+        protected Vector2 PreviousPointerPosition { get; set; }
+
         protected PointerControllerBase(IServiceRegistry services) : base(services)
         {
             lPrevKeyPressed = new List<Keys>();
@@ -92,5 +98,54 @@ namespace Odyssey.Epos.Interaction
 
         protected virtual void KeyPressed(Keys key, ITimeService time) { }
         protected virtual void KeyReleased(Keys key, ITimeService time) { }
+
+        protected static bool CheckButton(PointerUpdateKind update, MouseButtons button, bool pressed)
+        {
+            switch (update)
+            {
+                case PointerUpdateKind.LeftButtonPressed:
+                    return (button == MouseButtons.Left) && pressed;
+
+                case PointerUpdateKind.LeftButtonReleased:
+                    return (button == MouseButtons.Left) && !pressed;
+
+                case PointerUpdateKind.MiddleButtonPressed:
+                    return (button == MouseButtons.Middle) && pressed;
+
+                case PointerUpdateKind.MiddleButtonReleased:
+                    return (button == MouseButtons.Middle) && !pressed;
+
+                case PointerUpdateKind.RightButtonPressed:
+                    return (button == MouseButtons.Right) && pressed;
+                case PointerUpdateKind.RightButtonReleased:
+                    return (button == MouseButtons.Right) && !pressed;
+
+                default:
+                    return false;
+            }
+        }
+
+        protected static MouseButtons Translate(PointerUpdateKind update)
+        {
+            switch (update)
+            {
+                case PointerUpdateKind.LeftButtonPressed:
+                case PointerUpdateKind.LeftButtonReleased:
+                    return MouseButtons.Left;
+
+                case PointerUpdateKind.MiddleButtonPressed:
+                case PointerUpdateKind.MiddleButtonReleased:
+                    return MouseButtons.Middle;
+
+
+                case PointerUpdateKind.RightButtonPressed:
+                case PointerUpdateKind.RightButtonReleased:
+                    return MouseButtons.Right;
+
+                default:
+                    return MouseButtons.None;
+            }
+
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using SharpDX;
-using System;
+﻿using System;
 using System.Diagnostics.Contracts;
 using System.Windows.Forms;
 using SharpDX.Mathematics;
@@ -116,12 +115,12 @@ namespace Odyssey.Interaction
                 IsHorizontalMouseWheel = false,
                 IsInRange = false,
                 IsInverted = false,
-                IsLeftButtonPressed = (mouseButtons & MouseButtons.Left) != 0,
-                IsMiddleButtonPressed = (mouseButtons & MouseButtons.Middle) != 0,
+                IsLeftButtonPressed = (mouseButtons & System.Windows.Forms.MouseButtons.Left) != 0,
+                IsMiddleButtonPressed = (mouseButtons & System.Windows.Forms.MouseButtons.Middle) != 0,
                 IsPrimary = true,
-                IsRightButtonPressed = (mouseButtons & MouseButtons.Right) != 0,
-                IsXButton1Pressed = (mouseButtons & MouseButtons.XButton1) != 0,
-                IsXButton2Pressed = (mouseButtons & MouseButtons.XButton2) != 0,
+                IsRightButtonPressed = (mouseButtons & System.Windows.Forms.MouseButtons.Right) != 0,
+                IsXButton1Pressed = (mouseButtons & System.Windows.Forms.MouseButtons.XButton1) != 0,
+                IsXButton2Pressed = (mouseButtons & System.Windows.Forms.MouseButtons.XButton2) != 0,
                 MouseWheelDelta = wheelDelta,
                 Orientation = 0f,
                 TouchConfidence = false, // ?
@@ -155,26 +154,26 @@ namespace Odyssey.Interaction
         /// </summary>
         /// <param name="button">The pressed mouse button.</param>
         /// <returns>The corresponding pointer update kind.</returns>
-        private static PointerUpdateKind TranslateMouseButtonDown(MouseButtons button)
+        private static PointerUpdateKind TranslateMouseButtonDown(System.Windows.Forms.MouseButtons button)
         {
             switch (button)
             {
-                case MouseButtons.Left:
+                case System.Windows.Forms.MouseButtons.Left:
                     return PointerUpdateKind.LeftButtonPressed;
 
-                case MouseButtons.None:
+                case System.Windows.Forms.MouseButtons.None:
                     return PointerUpdateKind.Other;
 
-                case MouseButtons.Right:
+                case System.Windows.Forms.MouseButtons.Right:
                     return PointerUpdateKind.RightButtonPressed;
 
-                case MouseButtons.Middle:
+                case System.Windows.Forms.MouseButtons.Middle:
                     return PointerUpdateKind.MiddleButtonPressed;
 
-                case MouseButtons.XButton1:
+                case System.Windows.Forms.MouseButtons.XButton1:
                     return PointerUpdateKind.XButton1Pressed;
 
-                case MouseButtons.XButton2:
+                case System.Windows.Forms.MouseButtons.XButton2:
                     return PointerUpdateKind.XButton2Pressed;
 
                 default:
@@ -187,26 +186,26 @@ namespace Odyssey.Interaction
         /// </summary>
         /// <param name="button">The released mouse button.</param>
         /// <returns>The corresponding pointer update kind.</returns>
-        private static PointerUpdateKind TranslateMouseButtonUp(MouseButtons button)
+        private static PointerUpdateKind TranslateMouseButtonUp(System.Windows.Forms.MouseButtons button)
         {
             switch (button)
             {
-                case MouseButtons.Left:
+                case System.Windows.Forms.MouseButtons.Left:
                     return PointerUpdateKind.LeftButtonReleased;
 
-                case MouseButtons.None:
+                case System.Windows.Forms.MouseButtons.None:
                     return PointerUpdateKind.Other;
 
-                case MouseButtons.Right:
+                case System.Windows.Forms.MouseButtons.Right:
                     return PointerUpdateKind.RightButtonReleased;
 
-                case MouseButtons.Middle:
+                case System.Windows.Forms.MouseButtons.Middle:
                     return PointerUpdateKind.MiddleButtonReleased;
 
-                case MouseButtons.XButton1:
+                case System.Windows.Forms.MouseButtons.XButton1:
                     return PointerUpdateKind.XButton1Released;
 
-                case MouseButtons.XButton2:
+                case System.Windows.Forms.MouseButtons.XButton2:
                     return PointerUpdateKind.XButton2Released;
 
                 default:

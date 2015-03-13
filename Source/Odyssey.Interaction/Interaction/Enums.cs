@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Odyssey.Interaction
+﻿namespace Odyssey.Interaction
 {
-    public enum MouseEventType
+    public enum MouseButtons
     {
-        MouseDown,
-        MouseUp,
-        MouseClick,
-        MouseMove
+        None,
+        Left,
+        Right,
+        Middle
     }
 }

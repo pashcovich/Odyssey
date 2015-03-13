@@ -163,11 +163,11 @@ namespace Odyssey.Epos
             return Systems.OfType<TSystem>().First();
         }
 
-        internal Entity FindEntityFromComponent(Components.Component component)
+        internal Entity FindEntityFromComponent(Component component)
         {
             return (from e in Entities
                 where e.ContainsComponent(component.KeyPart)
-                let c = e.GetComponent<Components.Component>(component.KeyPart)
+                let c = e.GetComponent<Component>(component.KeyPart)
                 where c.Id == component.Id
                 select e).FirstOrDefault();
         }
@@ -211,7 +211,7 @@ namespace Odyssey.Epos
 
         public Entity CreateEntity(string name)
         {
-            Entity entity = new Entity(name);
+            var entity = new Entity(name);
             AddEntity(entity);
             return entity;
         }

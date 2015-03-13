@@ -35,8 +35,8 @@ namespace Odyssey.Epos.Interaction
     public class ArcBallModelController : PointerControllerBase
     {
         private float arcBallRadius;
-        private bool isDragging;
-        private Vector2 lastPointerPosition;
+        private bool IsDragging;
+        private Vector2 LastPointerPosition;
         private Quaternion qCurrent;
         private Quaternion qStart;
         private Vector3 sphereStart;
@@ -59,31 +59,31 @@ namespace Odyssey.Epos.Interaction
 
         protected override void PointerPressed(PointerPoint point, ITimeService time)
         {
-            lastPointerPosition = point.Position;
+            LastPointerPosition = point.Position;
             if (point.IsLeftButtonPressed)
             {
-                isDragging = true;
-                sphereStart = MapToArcBall(lastPointerPosition, ScreenSize, arcBallRadius);
+                IsDragging = true;
+                sphereStart = MapToArcBall(LastPointerPosition, ScreenSize, arcBallRadius);
                 qStart = COrientation.Orientation;
             }
         }
 
         protected override void PointerMoved(PointerPoint point, ITimeService time)
         {
-            if (isDragging)
+            if (IsDragging)
             {
                 Vector2 currentPoint = point.Position;
                 UpdateEntity(currentPoint);
             }
 
-            lastPointerPosition = point.Position;
+            LastPointerPosition = point.Position;
         }
 
         protected override void PointerReleased(PointerPoint point, ITimeService time)
         {
             if (point.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
             {
-                isDragging = false;
+                IsDragging = false;
                 qStart = COrientation.Orientation;
                 qCurrent = Quaternion.Identity;
             }

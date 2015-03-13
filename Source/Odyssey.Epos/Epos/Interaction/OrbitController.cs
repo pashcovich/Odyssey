@@ -33,9 +33,6 @@ namespace Odyssey.Epos.Interaction
 
         private float currentPitch;
         private float currentYaw;
-        private bool isDragging;
-        private Vector2 pCurrent;
-        private Vector2 pPrev;
 
         public OrbitController(IServiceRegistry services)
             : base(services)
@@ -73,26 +70,26 @@ namespace Odyssey.Epos.Interaction
         {
             if (point.IsLeftButtonPressed)
             {
-                pPrev = point.Position;
-                isDragging = true;
+                PreviousPointerPosition = point.Position;
+                IsLeftButtonDragging = true;
             }
         }
 
         protected override void PointerMoved(PointerPoint point, ITimeService time)
         {
-            if (!isDragging)
+            if (!IsRightButtonDragging)
                 return;
-            pCurrent = point.Position;
-            Vector2 delta = (pCurrent - pPrev);
+            CurrentPointerPosition = point.Position;
+            Vector2 delta = (CurrentPointerPosition - PreviousPointerPosition);
             currentYaw -= MathUtil.DegreesToRadians(RotationSpeed*delta.X);
             currentPitch += MathUtil.DegreesToRadians(RotationSpeed*delta.Y);
 
-            pPrev = pCurrent;
+            PreviousPointerPosition = CurrentPointerPosition;
         }
 
         protected override void PointerReleased(PointerPoint point, ITimeService time)
         {
-            isDragging = false;
+            IsRightButtonDragging = false;
         }
     }
 }
