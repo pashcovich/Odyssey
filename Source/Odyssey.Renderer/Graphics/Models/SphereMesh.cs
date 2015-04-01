@@ -108,7 +108,7 @@ namespace Odyssey.Graphics.Models
             float tileY = 1.0f, ModelOperation modelOperations = ModelOperation.None)
         {
             Contract.Requires<ArgumentException>(tessellation >= 3, "tessellation must be >= 3");
-            SphereMesh sphere = new SphereMesh(tileX, tileY, tessellation, diameter);
+            var sphere = new SphereMesh(tileX, tileY, tessellation, diameter);
             VertexPositionNormalTexture[] vertices;
             int[] indices;
             sphere.GenerateMesh(out vertices, out indices);

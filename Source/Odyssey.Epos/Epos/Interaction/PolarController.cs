@@ -2,6 +2,7 @@
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
+using Odyssey.Text.Logging;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Epos.Interaction
@@ -12,7 +13,7 @@ namespace Odyssey.Epos.Interaction
         private RotationMode mode;
         private float rotYaw;
         private float rotPitch;
-        private  float rotationSpeed = 1.0f;
+        private const float rotationSpeed = .5f;
         private Quaternion qStart;
 
         public MouseButtons RotationButton { get; set; }
@@ -51,7 +52,7 @@ namespace Odyssey.Epos.Interaction
                 UpdateEntity(time);
             }
 
-            PreviousPointerPosition = point.Position;
+            PreviousPointerPosition = CurrentPointerPosition;
         }
 
         protected override void PointerReleased(PointerPoint point, ITimeService time)
@@ -78,6 +79,7 @@ namespace Odyssey.Epos.Interaction
         {
             if (!IsRightButtonDragging)
                 return;
+
             if (CurrentPointerPosition.X < 0 || CurrentPointerPosition.X > ScreenSize.X)
                 return;
 
@@ -92,6 +94,7 @@ namespace Odyssey.Epos.Interaction
             var s = Quaternion.RotationAxis(Vector3.UnitX, rotPitch);
 
             COrientation.Orientation = s*r* COrientation.Orientation;
+            LogEvent.Io.Info(delta.ToString());
         }
 
         protected override void KeyPressed(Keys key, ITimeService time)
