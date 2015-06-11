@@ -173,5 +173,6 @@ namespace Odyssey.UserInterface
             ProcessForDeletion(this[index]);
             base.RemoveItem(index);
         }
+
     }
 }

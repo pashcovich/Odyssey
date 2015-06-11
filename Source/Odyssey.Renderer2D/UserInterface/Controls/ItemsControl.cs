@@ -164,8 +164,13 @@ namespace Odyssey.UserInterface.Controls
 
                     newItem.DataContext = item;
 
-                    foreach (var kvp in ItemTemplate.Bindings.Where(kvp => string.Equals(newItem.Name, kvp.Value.TargetElement)))
-                        newItem.SetBinding(kvp.Value, kvp.Key);
+                    foreach (var kvp in ItemTemplate.Bindings)
+                    {
+                        if (string.Equals(newItem.Name, kvp.Value.TargetElement))
+                            newItem.SetBinding(kvp.Value, kvp.Key);
+                        //else
+                        //    LogEvent.UserInterface.Error("TargetElement {0} not found in {1}", kvp.Value.TargetElement, newItem.Name);
+                    }
 
                     newItem.Name = string.Format("{0}{1:D2}", newItem.Name, itemCount++);
                     previousElement = newItem;

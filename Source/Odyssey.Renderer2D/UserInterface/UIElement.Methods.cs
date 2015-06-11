@@ -105,6 +105,16 @@ namespace Odyssey.UserInterface
             return TreeTraversal.PreOrderVisit(this).OfType<TElement>();
         }
 
+        public UIElement FindDescendant(string elementName)
+        {
+            foreach (var childElement in TreeTraversal.PreOrderVisit(this))
+            {
+                if (string.Equals(childElement.Name, elementName))
+                    return childElement;
+            }
+            return null;
+        }
+
         public static explicit operator RectangleF(UIElement uiElement)
         {
             float x = uiElement.AbsolutePosition.X;

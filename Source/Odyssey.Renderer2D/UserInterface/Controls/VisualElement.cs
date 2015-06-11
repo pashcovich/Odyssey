@@ -177,7 +177,7 @@ namespace Odyssey.UserInterface.Controls
 
         private void ApplyVisualStyle()
         {
-            if (string.IsNullOrEmpty(StyleClass))
+            if (string.IsNullOrEmpty(StyleClass) || string.Equals(StyleClass, VisualStyle.Empty))
             {
                 CreateDefaultTemplate();
                 return;
