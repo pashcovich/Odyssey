@@ -109,7 +109,7 @@ namespace Odyssey.Core
         /// </summary>
         public event PropertyUpdatedDelegate PropertyUpdated;
 
-        private void SetObject(PropertyKey propertyKey, object tagValue, bool tryToAdd = false)
+        internal void SetObject(PropertyKey propertyKey, object tagValue, bool tryToAdd = false)
         {
             var oldValue = Get(propertyKey, true);
 
@@ -165,6 +165,19 @@ namespace Odyssey.Core
         public void Add<T>(PropertyKey<T> key, T value)
         {
             SetObject(key, value);
+        }
+
+        /// <summary>
+        /// Copies properties from this instance to a container.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        public void CopyTo(ref PropertyContainer destination)
+        {
+            foreach (var keyValuePair in this)
+            {
+                var actualValue = Get(keyValuePair.Key);
+                destination.SetObject(keyValuePair.Key, actualValue);
+            }
         }
 
         public T Get<T>(PropertyKey<T> propertyKey)
@@ -286,6 +299,11 @@ namespace Odyssey.Core
 
         private object Get(PropertyKey propertyKey, bool keep)
         {
+            if (propertyKey.AccessorMetadata != null)
+            {
+                return propertyKey.AccessorMetadata.GetValue(ref this);
+            }
+
             object value;
 
             if (properties != null && properties.TryGetValue(propertyKey, out value))
@@ -393,5 +411,6 @@ namespace Odyssey.Core
                 get { return Value; }
             }
         }
+
     }
 }

@@ -13,13 +13,13 @@ namespace Odyssey.Animations
             Function = Discrete;
         }
 
-        public static object Linear(Color4KeyFrame start, Color4KeyFrame end, float time)
+        public static object Linear(Color4KeyFrame start, Color4KeyFrame end, float time, object options = null)
         {
             float newValue = Map(start.Time, end.Time, time);
             return Color4.Lerp(start.Value, end.Value, newValue);
         }
 
-        public static object Discrete(Color4KeyFrame start, Color4KeyFrame end, float time)
+        public new static object Discrete(Color4KeyFrame start, Color4KeyFrame end, float time,  object options = null)
         {
             return end.Value;
         }

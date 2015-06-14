@@ -16,7 +16,7 @@ namespace Odyssey.UserInterface.Controls
             {
                 Key = string.Format("{0}.Template", typeName),
                 DataType = GetType(),
-                VisualTree = new Rectangle()
+                VisualTree = new Rectangle() 
             };
         }
     }

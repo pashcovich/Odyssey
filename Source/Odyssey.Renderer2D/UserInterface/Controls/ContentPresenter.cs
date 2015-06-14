@@ -30,13 +30,15 @@ namespace Odyssey.UserInterface.Controls
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            Content.Measure(availableSizeWithoutMargins);
+            if (Content != null)
+                Content.Measure(availableSizeWithoutMargins);
             return availableSizeWithoutMargins;
         }
 
         protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            Content.Arrange(availableSizeWithoutMargins);
+            if (Content != null)
+                Content.Arrange(availableSizeWithoutMargins);
             return availableSizeWithoutMargins;
         }
 

@@ -45,8 +45,8 @@ namespace Odyssey.UserInterface
         private readonly AnimationController animator;
         private readonly BehaviorCollection behaviors;
         private readonly Dictionary<string, BindingExpression> bindings;
+        private readonly TriggerCollection triggers;
         private Vector3 absolutePosition;
-        private Vector3 finalPosition; 
         private RectangleF boundingRectangle;
         private bool canRaiseEvents = true;
         private object dataContext;
@@ -97,6 +97,7 @@ namespace Odyssey.UserInterface
             Children = new UIElementCollection(this);
             bindings = new Dictionary<string, BindingExpression>();
             behaviors = new BehaviorCollection();
+            triggers = new TriggerCollection();
             animator = new AnimationController(this);
             DependencyProperties = new PropertyContainer(this);
 

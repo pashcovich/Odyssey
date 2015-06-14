@@ -2,6 +2,7 @@
 
 using System;
 using Odyssey.Interaction;
+using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
 using SharpDX.Mathematics;
 
@@ -32,22 +33,24 @@ namespace Odyssey.UserInterface.Controls
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            if (Content == null)
+            if (Content == null && Template == null)
             {
-                Content = new TextBlock {Text = Name, TextStyleClass = TextStyleClass};
+                Content = new TextBlock { Text = Name, TextStyleClass = TextStyleClass };
                 Content.Initialize();
             }
         }
 
         protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
         {
-            Content.Measure(availableSizeWithoutMargins);
+            if (Content != null)
+                Content.Measure(availableSizeWithoutMargins);
             return base.MeasureOverride(availableSizeWithoutMargins);
         }
 
         protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
         {
-            Content.Arrange(availableSizeWithoutMargins);
+            if (Content != null)
+                Content.Arrange(availableSizeWithoutMargins);
             return base.ArrangeOverride(availableSizeWithoutMargins);
         }
 

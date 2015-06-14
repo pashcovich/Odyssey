@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
+using Odyssey.Reflection;
 using Odyssey.Text.Logging;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
@@ -128,9 +129,6 @@ namespace Odyssey.UserInterface.Controls
 
         public override void Render()
         {
-            if (!IsVisual)
-                return;
-
             foreach (var child in Children)
                 if (child.IsVisible)
                     child.Render();
@@ -149,6 +147,8 @@ namespace Odyssey.UserInterface.Controls
         protected internal override UIElement Copy()
         {
             var newElement = (VisualElement) base.Copy();
+            newElement.Width = Width;
+            newElement.Height = Height;
             newElement.Style = Style;
             newElement.TextStyleClass = TextStyleClass;
             newElement.Template = Template;
@@ -177,12 +177,6 @@ namespace Odyssey.UserInterface.Controls
 
         private void ApplyVisualStyle()
         {
-            if (string.IsNullOrEmpty(StyleClass) || string.Equals(StyleClass, VisualStyle.Empty))
-            {
-                CreateDefaultTemplate();
-                return;
-            }
-
             if (!Overlay.Theme.ContainsResource(StyleClass))
             {
                 LogEvent.UserInterface.Warning("Style '{0}' not found", StyleClass);
@@ -208,6 +202,24 @@ namespace Odyssey.UserInterface.Controls
                 SetParent(s, this);
 
             Style = visualStyle;
+
+            if (Animator.HasAnimations)
+                Animator.Initialize();
+
+            InitializeTriggers();
+
+        }
+
+        private void InitializeTriggers()
+        {
+            if (!Triggers.HasTriggers)
+                return;
+
+            foreach (var trigger in Triggers)
+            {
+                trigger.Initialize(this);
+            }
+
         }
 
         protected virtual void CreateDefaultTemplate()
@@ -228,7 +240,12 @@ namespace Odyssey.UserInterface.Controls
                             element.SetBinding(binding, kvp.Key);
                     }
                 }
-                SetParent(control, this);
+
+                var cContent = this as ContentControl;
+                if (cContent != null && control is VisualElement)
+                    cContent.Content=control;
+                else
+                   SetParent(control, this);
             }
         }
 
@@ -277,13 +294,14 @@ namespace Odyssey.UserInterface.Controls
         {
             base.OnInitialized(e);
             if (string.Equals(StyleClass, "Empty")) return;
+            ApplyVisualStyle();
             ActiveStatus = IsEnabled ? ControlStatus.Enabled : ControlStatus.Disabled;
         }
 
         protected override void OnInitializing(EventArgs e)
         {
             base.OnInitializing(e);
-            ApplyVisualStyle();
+            CreateDefaultTemplate();
             ApplyTemplate();
             ApplyTextStyle();
         }

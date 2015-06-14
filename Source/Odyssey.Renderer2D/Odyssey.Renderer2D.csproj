@@ -60,6 +60,9 @@
     <Compile Include="Graphics\Drawing\Ellipse.cs" />
     <Compile Include="Graphics\Drawing\Line.cs" />
     <Compile Include="Graphics\TextRenderer.cs" />
+    <Compile Include="Organization\Commands\ChangeFillBrushCommand.cs" />
+    <Compile Include="Organization\Commands\ChangeStrokeBrushCommand.cs" />
+    <Compile Include="Organization\Commands\BrushCommand.cs" />
     <Compile Include="Organization\Commands\UserInterfaceRenderCommand.cs" />
     <Compile Include="UserInterface\Alignment.cs" />
     <Compile Include="UserInterface\Behaviors\AnchorBehaviour.cs" />
@@ -83,8 +86,16 @@
     <Compile Include="UserInterface\Controls\RichTextBox.cs" />
     <Compile Include="UserInterface\Controls\TextEventArgs.cs" />
     <Compile Include="UserInterface\Data\BindingCollection.cs" />
+    <Compile Include="UserInterface\Data\DataTrigger.cs" />
+    <Compile Include="UserInterface\Data\EventTrigger.cs" />
     <Compile Include="UserInterface\Data\FigureKeyToDataConverter.cs" />
     <Compile Include="UserInterface\Data\IValueConverter.cs" />
+    <Compile Include="UserInterface\Data\Setter.cs" />
+    <Compile Include="UserInterface\Data\SetterBase.cs" />
+    <Compile Include="UserInterface\Data\TriggerAction.cs" />
+    <Compile Include="UserInterface\Data\TriggerActionCollection.cs" />
+    <Compile Include="UserInterface\Data\TriggerBase.cs" />
+    <Compile Include="UserInterface\Data\TriggerCollection.cs" />
     <Compile Include="UserInterface\Data\TypeConverters.cs" />
     <Compile Include="UserInterface\Events\PositionChangedEventArgs.cs" />
     <Compile Include="UserInterface\Events\UIElementEventArgs.cs" />

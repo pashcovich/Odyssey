@@ -37,10 +37,11 @@ namespace Odyssey.UserInterface.Controls
             int sumIndex = Orientation == Orientation.Horizontal ? 0 : 1;
             int maximizeIndex = Orientation == Orientation.Horizontal ? 1 : 0;
             var desiredSize = Vector3.Zero;
+            foreach (var child in Children.Visual)
+                child.Measure(availableSizeWithoutMargins);
 
             foreach (var control in Children.Visual)
             {
-                control.Measure(availableSizeWithoutMargins);
                 desiredSize[sumIndex] += control.DesiredSizeWithMargins[sumIndex];
                 desiredSize[maximizeIndex] = Math.Max(desiredSize[maximizeIndex], control.DesiredSizeWithMargins[maximizeIndex]);
             }

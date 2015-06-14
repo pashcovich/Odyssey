@@ -66,6 +66,7 @@ namespace Odyssey.Organization.Commands
 
         public override void Initialize()
         {
+            IsInited = true;
         }
 
         public override void Execute()

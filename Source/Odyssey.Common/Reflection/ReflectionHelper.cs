@@ -50,6 +50,12 @@ namespace Odyssey.Reflection
             return type.GetRuntimeEvents();
         }
 
+        public static EventInfo GetEvent(Type type, string eventName)
+        {
+            Contract.Requires<ArgumentNullException>(type != null, "type");
+            return GetEvents(type).FirstOrDefault(e => string.Equals(e.Name, eventName));
+        }
+
         public static MethodInfo GetMethod(Type type, string methodName, Type[] parameters)
         {
             Contract.Requires<ArgumentNullException>(type != null, "type");
@@ -60,7 +66,8 @@ namespace Odyssey.Reflection
         public static IEnumerable<MethodInfo> GetMethods(Type type)
         {
             Contract.Requires<ArgumentNullException>(type != null, "type");
-            return type.GetRuntimeMethods();
+            var methods = type.GetRuntimeMethods();
+            return methods;
         }
 
         public static MethodInfo GetMethod(Type type, string methodName)

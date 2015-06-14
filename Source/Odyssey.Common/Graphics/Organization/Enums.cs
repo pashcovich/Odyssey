@@ -14,6 +14,7 @@ namespace Odyssey.Graphics.Organization
         PlayAnimation,
         Render2D,
         Engine,
+        ChangeBrush,
     }
 
     public enum PreferredRasterizerState

@@ -24,6 +24,7 @@ using Odyssey.Reflection;
 using Odyssey.Text.Logging;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
+using SharpDX.Mathematics;
 
 #endregion
 
@@ -149,33 +150,48 @@ namespace Odyssey.UserInterface.Controls
                 return;
             }
 
-            int itemCount = 1;
             foreach (var item in ItemsSource)
             {
                 UIElement previousElement = container;
-                foreach (UIElement element in TreeTraversal.PreOrderVisit(ItemTemplate.VisualTree))
-                {
-                    UIElement newItem = ToDispose(element.Copy());
-
-                    if (element.Parent is ContentControl)
-                        ((ContentControl) previousElement).Content = newItem;
-                    else
-                        SetParent(newItem, container);
-
-                    newItem.DataContext = item;
-
-                    foreach (var kvp in ItemTemplate.Bindings)
-                    {
-                        if (string.Equals(newItem.Name, kvp.Value.TargetElement))
-                            newItem.SetBinding(kvp.Value, kvp.Key);
-                        //else
-                        //    LogEvent.UserInterface.Error("TargetElement {0} not found in {1}", kvp.Value.TargetElement, newItem.Name);
-                    }
-
-                    newItem.Name = string.Format("{0}{1:D2}", newItem.Name, itemCount++);
-                    previousElement = newItem;
-                }
+                TemplateItem(previousElement, item, ItemTemplate.VisualTree);
             }
+        }
+
+        void TemplateItem(UIElement container, object dataContext, UIElement templateRoot)
+        {
+            foreach (UIElement element in TreeTraversal.PreOrderVisit(templateRoot))
+            {
+                UIElement instanceElement = ToDispose(element.Copy());
+                var control = container as ContentControl;
+                if (control != null)
+                    control.Content = instanceElement;
+                else
+                    SetParent(instanceElement, container);
+
+                instanceElement.DataContext = dataContext;
+
+                foreach (var kvp in ItemTemplate.Bindings)
+                {
+                    if (string.Equals(instanceElement.Name, kvp.Value.TargetElement))
+                        instanceElement.SetBinding(kvp.Value, kvp.Key);
+                    //else
+                    //    LogEvent.UserInterface.Error("TargetElement {0} not found in {1}", kvp.Value.TargetElement, newItem.Name);
+                }
+                instanceElement.Name = string.Format("{0}{1:D2}", instanceElement.Name, container.Children.Count()+1);
+                container = instanceElement;
+            }
+        }
+
+        protected override Vector3 MeasureOverride(Vector3 availableSizeWithoutMargins)
+        {
+            Container.Measure(availableSizeWithoutMargins + MarginInternal);
+            return Container.DesiredSize;
+        }
+
+        protected override Vector3 ArrangeOverride(Vector3 availableSizeWithoutMargins)
+        {
+            Container.Arrange(availableSizeWithoutMargins + MarginInternal);
+            return availableSizeWithoutMargins;
         }
     }
 }

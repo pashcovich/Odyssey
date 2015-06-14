@@ -104,7 +104,7 @@ namespace Odyssey.UserInterface.Style
             return result ?? CreateColorResource(device, shared ? colorResource : colorResource.CopyAs('u' + colorResource.Name, false));
         }
 
-        public Brush GetBrushResource(string name, Theme theme, bool shared = true)
+        public Brush GetBrushResource(string name, IResourceProvider theme, bool shared = true)
         {
             return GetBrushResource(theme.GetResource<ColorResource>(name), shared);
         }

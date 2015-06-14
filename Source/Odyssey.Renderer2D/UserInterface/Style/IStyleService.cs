@@ -14,7 +14,7 @@ namespace Odyssey.UserInterface.Style
         Theme GetTheme(string themeName);
         void AddResource(IResource resource, bool shared = true);
         Brush GetBrushResource(ColorResource colorResource, bool shared = true);
-        Brush GetBrushResource(string name, Theme theme, bool shared = true);
+        Brush GetBrushResource(string name, IResourceProvider theme, bool shared = true);
         TextFormat GetTextResource(TextStyle textStyle, bool shared = true);
     }
 }

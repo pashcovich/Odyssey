@@ -16,7 +16,6 @@
 #region Using Directives
 
 using System;
-using System.Collections.Generic;
 using Odyssey.Animations;
 using Odyssey.Core;
 using Odyssey.Engine;
@@ -244,14 +243,14 @@ namespace Odyssey.UserInterface
             set { maximumDepth = value; }
         }
 
-        internal IEnumerable<BindingExpression> Bindings
-        {
-            get { return bindings.Values; }
-        }
-
         public BehaviorCollection Behaviors
         {
             get { return behaviors; }
+        }
+
+        public TriggerCollection Triggers
+        {
+            get { return triggers; }
         }
 
         internal bool IsBeingRemoved { get; set; }
@@ -266,7 +265,7 @@ namespace Odyssey.UserInterface
         ///     <c>true</c> if the mouse pointer is currently inside; otherwise,
         ///     <c>false</c>.
         /// </value>
-        protected internal bool IsInside
+        protected bool IsInside
         {
             get { return isInside && canRaiseEvents; }
             set { isInside = value; }
@@ -301,7 +300,7 @@ namespace Odyssey.UserInterface
             }
         }
 
-        protected Overlay Overlay
+        protected internal Overlay Overlay
         {
             get { return (this is Overlay) ? (Overlay)this : FindAncestor<Overlay>(); }
         }
@@ -463,5 +462,6 @@ namespace Odyssey.UserInterface
         {
             get { return animator; }
         }
+
     }
 }

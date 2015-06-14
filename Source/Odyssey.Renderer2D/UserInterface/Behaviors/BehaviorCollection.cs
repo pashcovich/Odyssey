@@ -7,7 +7,6 @@ namespace Odyssey.UserInterface.Behaviors
     public class BehaviorCollection
     {
         private readonly List<Behavior> behaviors;
-        private UIElement associatedElement;
 
         public BehaviorCollection()
         {
@@ -23,7 +22,6 @@ namespace Odyssey.UserInterface.Behaviors
         public void Attach(UIElement element)
         {
             Contract.Requires<ArgumentNullException>(element != null, "element");
-            associatedElement = element;
             foreach (var behavior in behaviors)
                 behavior.Attach(element);
         }

@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Odyssey.Content;
+using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using Odyssey.Interaction;
@@ -128,20 +129,17 @@ namespace Odyssey.UserInterface
         public void Initialize()
         {
             var args = new EventArgs();
+            OnInitializing(args);
 
             foreach (var kvp in bindings)
             {
                 var bindingExpression = kvp.Value;
                 if (bindingExpression.SourceBinding.Source == null)
-                    bindingExpression.SourceBinding.Source = DataContext;
+                    bindingExpression.SourceBinding.Source = FindAncestor<UIElement>(e => e.DataContext!=null).DataContext;
                 bindingExpression.Initialize();
             }
-
-            OnInitializing(args);
+            
             behaviors.Attach(this);
-
-            if (Animator.HasAnimations)
-                Animator.Initialize();
 
             foreach (UIElement element in Children)
                 element.Initialize();
@@ -184,6 +182,7 @@ namespace Odyssey.UserInterface
             newElement.VerticalAlignment = verticalAlignment;
 
             CopyEvents(typeof (UIElement), this, newElement);
+            CopyDependencyProperties(this, newElement);
             newElement.Animator.AddAnimations(Animator.Animations);
             return newElement;
         }
@@ -201,6 +200,11 @@ namespace Odyssey.UserInterface
                     continue;
                 eventField.SetValue(target, eventHandler);
             }
+        }
+
+        protected static void CopyDependencyProperties(UIElement source, UIElement target)
+        {
+            source.DependencyProperties.CopyTo(ref target.DependencyProperties);
         }
 
         internal virtual bool ProcessKeyDown(KeyEventArgs e)
@@ -364,7 +368,7 @@ namespace Odyssey.UserInterface
 
             var newAbsolutePosition = Position;
             if (parent != null)
-                newAbsolutePosition += (parent.AbsolutePosition + parent.PositionOffsets);
+                newAbsolutePosition += parent.AbsolutePosition;
 
             AbsolutePosition = newAbsolutePosition;
 
@@ -394,14 +398,26 @@ namespace Odyssey.UserInterface
             RenderSize = elementSize;
 
             PositionOffsets = CalculatePosition(availableSizeWithMargins, elementSize);
-            AbsolutePosition += PositionOffsets;
-            if (AbsolutePosition != finalPosition)
-            {
-                finalPosition = AbsolutePosition;
-                if (PositionOffsets != Vector3.Zero)
-                    PropagateOffsetsToChildren(PositionOffsets, availableSizeWithMargins);
-            }
+            AbsolutePosition += PositionOffsets + CalculateAncestorOffsets();
+            //if (AbsolutePosition != finalPosition)
+            //{
+            //    finalPosition = AbsolutePosition;
+            //    if (PositionOffsets != Vector3.Zero)
+            //        PropagateOffsetsToChildren(PositionOffsets, availableSizeWithMargins);
+            //}
             IsArrangeValid = true;
+        }
+
+        Vector3 CalculateAncestorOffsets()
+        {
+            var index = Parent;
+            Vector3 offsets = Vector3.Zero;
+            while (index != null)
+            {
+                offsets += index.PositionOffsets + new Vector3(index.Margin.Left, index.Margin.Top, 0);
+                index = index.Parent;
+            }
+            return offsets;
         }
 
         protected virtual void PropagateOffsetsToChildren(Vector3 offsets, Vector3 availableSizeWithMargins)

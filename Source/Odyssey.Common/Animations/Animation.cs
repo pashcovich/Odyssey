@@ -105,7 +105,7 @@ namespace Odyssey.Animations
 
             foreach (var curve in Curves)
             {
-                var elapsedTime = Speed >= 0 ? this.time : currentDuration- this.time;
+                var elapsedTime = Speed >= 0 ? this.time : currentDuration - this.time;
                 var value = curve.Evaluate(elapsedTime);
                 updateCallback(curve, value);
             }

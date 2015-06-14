@@ -1,4 +1,5 @@
 ﻿using System;
+using Odyssey.Geometry;
 using Odyssey.Serialization;
 using SharpDX.Mathematics;
 

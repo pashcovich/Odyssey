@@ -51,6 +51,7 @@ namespace Odyssey.UserInterface.Style
                 ToDispose(shape);
                 shape.Initialize();
             }
+
         }
         
         internal static VisualState GenerateVisualStateForControl(VisualElement control,
@@ -71,6 +72,7 @@ namespace Odyssey.UserInterface.Style
                 shapeList.Add(newShape);
             }
 
+            control.Triggers.AddRange(visualStateDefinition.Triggers);
             control.Animator.AddAnimations(visualStateDefinition.Animations);
             return new VisualState(control, shapeList);
         }

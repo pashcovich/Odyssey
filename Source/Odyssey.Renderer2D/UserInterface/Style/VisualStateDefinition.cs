@@ -9,6 +9,7 @@ using Odyssey.Content;
 using Odyssey.Graphics.Drawing;
 using Odyssey.Serialization;
 using Odyssey.UserInterface.Controls;
+using Odyssey.UserInterface.Data;
 
 #endregion
 
@@ -16,13 +17,19 @@ namespace Odyssey.UserInterface.Style
 {
     internal sealed class VisualStateDefinition : ISerializableResource, IResourceProvider
     {
+        const string sShapes = "Shapes";
+        const string sAnimations = "Animations";
+        private const string sTriggers = "Triggers";
+
         private readonly List<Animation> animations;
         private readonly List<Shape> shapes;
+        private readonly List<TriggerBase> triggers;
 
         public VisualStateDefinition()
         {
             shapes = new List<Shape>();
             animations = new List<Animation>();
+            triggers = new List<TriggerBase>();
         }
 
         public IEnumerable<Shape> Shapes
@@ -35,6 +42,11 @@ namespace Odyssey.UserInterface.Style
             get { return animations; }
         }
 
+        public IEnumerable<TriggerBase> Triggers
+        {
+            get { return triggers; }
+        }
+
         #region ISerializableResource
 
         public void SerializeXml(IResourceProvider resourceProvider, XmlWriter xmlWriter)
@@ -44,24 +56,45 @@ namespace Odyssey.UserInterface.Style
 
         public void DeserializeXml(IResourceProvider resourceProvider, XmlReader xmlReader)
         {
-            const string sShapes = "Shapes";
-            const string sAnimation = "Animation";
-            const string sAnimations = "Animations";
 
             Name = xmlReader.GetAttribute("Name");
 
             if (!xmlReader.ReadToDescendant(sShapes))
                 throw new InvalidOperationException(String.Format("{0}' element not found", sShapes));
 
+            while (xmlReader.IsStartElement())
+            {
+                string elementName = xmlReader.Name;
+                switch (elementName)
+                {
+                    case sAnimations:
+                        DeserializeAnimations(resourceProvider, xmlReader);
+                        break;
+
+                    case sShapes:
+                        DeserializeShapes(resourceProvider, xmlReader);
+                        break;
+
+                    case sTriggers:
+                        DeserializeTriggers(resourceProvider, xmlReader);
+                        break;
+                }
+            }
+
+            xmlReader.ReadEndElement();
+        }
+
+        void DeserializeShapes(IResourceProvider resourceProvider, XmlReader xmlReader)
+        {
             // Deserialize shapes
-            xmlReader.ReadStartElement();
+            xmlReader.ReadStartElement(sShapes);
 
             while (xmlReader.IsStartElement())
             {
                 string typeName = string.Format("Odyssey.Graphics.Drawing.{0}", xmlReader.Name);
                 try
                 {
-                    var shape = (Shape) Activator.CreateInstance(Type.GetType(typeName));
+                    var shape = (Shape)Activator.CreateInstance(Type.GetType(typeName));
                     shape.DeserializeXml(resourceProvider, xmlReader);
                     shapes.Add(shape);
                 }
@@ -72,14 +105,13 @@ namespace Odyssey.UserInterface.Style
                 xmlReader.Read();
             }
             xmlReader.ReadEndElement();
+        }
 
-            if (!xmlReader.IsStartElement(sAnimations))
-            {
-                xmlReader.ReadEndElement();
-                return;
-            }
-
+        void DeserializeAnimations(IResourceProvider resourceProvider, XmlReader xmlReader)
+        {
             // Deserialize animations
+            const string sAnimation = "Animation";
+        
             xmlReader.ReadStartElement(sAnimations);
             while (xmlReader.IsStartElement(sAnimation))
             {
@@ -93,7 +125,28 @@ namespace Odyssey.UserInterface.Style
                 animations.Add(animation);
             }
             xmlReader.ReadEndElement();
+        }
 
+        void DeserializeTriggers(IResourceProvider resourceProvider, XmlReader xmlReader)
+        {
+            // Deserialize triggers
+            xmlReader.ReadStartElement(sTriggers);
+
+            while (xmlReader.IsStartElement())
+            {
+                string typeName = string.Format("Odyssey.UserInterface.Data.{0}", xmlReader.Name);
+                try
+                {
+                    var trigger = (TriggerBase)Activator.CreateInstance(Type.GetType(typeName));
+                    trigger.DeserializeXml(resourceProvider, xmlReader);
+                    triggers.Add(trigger);
+                }
+                catch (ArgumentException ex)
+                {
+                    throw new InvalidOperationException(String.Format("Type '{0}' is not a valid Trigger", typeName));
+                }
+                xmlReader.Read();
+            }
             xmlReader.ReadEndElement();
         }
 

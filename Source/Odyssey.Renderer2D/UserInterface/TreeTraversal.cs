@@ -33,8 +33,9 @@ namespace Odyssey.UserInterface
         {
             foreach (var child in root)
             {
+                if (!filter(child))
+                    continue;
                 foreach (var descendant in PostOrderVisit(child, filter))
-                    
                         yield return descendant;
             }
             if (filter(root))

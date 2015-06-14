@@ -134,8 +134,7 @@ namespace Odyssey.UserInterface.Controls
         {
             if (Content == null)
                 return;
-            foreach (var control in TreeTraversal.VisibleControls(Content))
-                control.Render();
+            Content.Render();
         }
 
         protected override void Dispose(bool disposeManagedResources)
