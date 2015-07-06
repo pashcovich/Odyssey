@@ -51,9 +51,6 @@ namespace Odyssey.UserInterface.Controls
             return availableSizeWithoutMargins;
         }
 
-        protected sealed override void PropagateOffsetsToChildren(Vector3 offsets, Vector3 availableSizeWithMargins)
-        {
-            base.PropagateOffsetsToChildren(offsets + new Vector3(Padding.Left, Padding.Top, 0), availableSizeWithMargins);
-        }
+
     }
 }

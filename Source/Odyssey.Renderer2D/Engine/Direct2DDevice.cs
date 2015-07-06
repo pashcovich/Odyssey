@@ -3,6 +3,7 @@
 using System;
 using Odyssey.Core;
 using Odyssey.Geometry;
+using Odyssey.Geometry.Extensions;
 using Odyssey.Graphics.Drawing;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Style;

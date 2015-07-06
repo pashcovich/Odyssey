@@ -144,7 +144,7 @@ namespace Odyssey.UserInterface
             return string.Format("{0}: '{1}' [{2}]", GetType().Name, Name, AbsolutePosition);
         }
 
-        private void UpdateLayoutInternal()
+        internal void UpdateLayoutInternal()
         {
             boundingRectangle = new RectangleF(AbsolutePosition.X, AbsolutePosition.Y, RenderSize.X, RenderSize.Y);
             transform = Matrix3x2.Translation(AbsolutePosition.X, AbsolutePosition.Y);

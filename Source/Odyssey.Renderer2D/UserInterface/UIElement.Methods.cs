@@ -26,6 +26,7 @@ using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Geometry;
+using Odyssey.Geometry.Extensions;
 using Odyssey.Interaction;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Controls;
@@ -80,6 +81,18 @@ namespace Odyssey.UserInterface
                 ancestor = (TElement) ancestor.Parent;
             }
             return null;
+        }
+
+        public UIElement Find(string name)
+        {
+            return TreeTraversal.PreOrderVisit(this).FirstOrDefault(e => string.Equals(e.Name, name));
+        }
+
+        public UIElement Find(Vector2 cursorLocation)
+        {
+            return TreeTraversal.PostOrderInteractionVisit(this)
+                .Reverse()
+                .FirstOrDefault(control => control.Contains(cursorLocation));
         }
 
         internal IEnumerable<TElement> FindDescendants<TElement>(Func<TElement, bool> f)
@@ -399,12 +412,6 @@ namespace Odyssey.UserInterface
 
             PositionOffsets = CalculatePosition(availableSizeWithMargins, elementSize);
             AbsolutePosition += PositionOffsets + CalculateAncestorOffsets();
-            //if (AbsolutePosition != finalPosition)
-            //{
-            //    finalPosition = AbsolutePosition;
-            //    if (PositionOffsets != Vector3.Zero)
-            //        PropagateOffsetsToChildren(PositionOffsets, availableSizeWithMargins);
-            //}
             IsArrangeValid = true;
         }
 
@@ -418,16 +425,6 @@ namespace Odyssey.UserInterface
                 index = index.Parent;
             }
             return offsets;
-        }
-
-        protected virtual void PropagateOffsetsToChildren(Vector3 offsets, Vector3 availableSizeWithMargins)
-        {
-            foreach (var child in Children)
-            {
-                child.PositionOffsets += offsets;
-                PropagateArrangeInvalidationToChildren();
-            }
-            Arrange(availableSizeWithMargins);
         }
 
         public void Measure(Vector3 availableSize)

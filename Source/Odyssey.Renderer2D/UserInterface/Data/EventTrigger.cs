@@ -12,6 +12,7 @@ namespace Odyssey.UserInterface.Data
 {
     public class EventTrigger : TriggerBase
     {
+        private const string type = "Type";
         private readonly TriggerActionCollection triggerActions;
         public string EventName { get; private set; }
         public string SourceName { get; private set; }
@@ -77,6 +78,13 @@ namespace Odyssey.UserInterface.Data
                 {
                     var tempTarget = target.FindDescendant(targetName);
                     realTarget = tempTarget as Shape ?? tempTarget.FindDescendants<Shape>().First();
+                    if (action.HasKey(type))
+                    {
+                        var expectedType = Type.GetType(string.Format("Odyssey.Graphics.Drawing.{0}", action[type]));
+                        if (realTarget.GetType() != expectedType)
+                            throw new InvalidOperationException(string.Format("Element '{0}' is of type: {1}. Expected type:{2}.", realTarget.Name,
+                                realTarget.GetType(), expectedType));
+                    }
                 }
                 switch (action.CommandName)
                 {

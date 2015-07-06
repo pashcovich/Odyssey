@@ -83,7 +83,7 @@ namespace Odyssey.UserInterface.Controls
         }
 
         /// <summary>
-        /// Determines whether the <b>ContainerControl</b> contains the specified Key.
+        /// Determines whether the <b>ContainerControl</b> contains the specified control.
         /// </summary>
         /// <param name="control">The control to locate in the control collection.</param>
         /// <returns><b>True</b> if it the collection contains that element ,<b>false</b>
@@ -95,7 +95,7 @@ namespace Odyssey.UserInterface.Controls
         /// </remarks>
         public bool ContainsControl(UIElement control)
         {
-            Contract.Requires<ArgumentNullException>(control != null, "control is null");
+            Contract.Requires<ArgumentNullException>(control != null, "control");
 
             return Children.Contains(control);
         }
@@ -105,25 +105,9 @@ namespace Odyssey.UserInterface.Controls
             return Children.Any(c => string.Equals(c.Name, name));
         }
 
-        public UIElement Find(string id)
-        {
-            foreach (UIElement ctl in TreeTraversal.PreOrderVisit(this).Skip(1))
-            {
-                if (ctl.Name == id)
-                    return ctl;
-            }
-            return null;
-        }
-
-        public UIElement Find(Vector2 cursorLocation)
-        {
-            return TreeTraversal.PostOrderInteractionVisit(this)
-                .Reverse()
-                .FirstOrDefault(control => control.Contains(cursorLocation));
-        }
-
         public void Remove(UIElement item)
         {
+            Contract.Requires<ArgumentNullException>(item != null, "item");
             Children.Remove(item);
         }
 

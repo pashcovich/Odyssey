@@ -39,5 +39,6 @@ using System.Runtime.CompilerServices;
 //      Revision
 //
 [assembly: AssemblyVersion("0.3.*")]
+[assembly: InternalsVisibleTo("Odyssey.Epos")]
 [assembly: InternalsVisibleTo("Odyssey.Windows")]
 [assembly: InternalsVisibleTo("Odyssey.Interaction.Windows")]

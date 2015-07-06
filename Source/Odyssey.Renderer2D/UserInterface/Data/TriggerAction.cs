@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Odyssey.Content;
-using Odyssey.Core;
 using Odyssey.Organization.Commands;
 using Odyssey.Reflection;
 using Odyssey.Serialization;
@@ -43,6 +38,11 @@ namespace Odyssey.UserInterface.Data
                 attributes.Add(xmlReader.Name, xmlReader.Value);
 
             xmlReader.ReadStartElement();            
+        }
+
+        public bool HasKey(string key)
+        {
+            return attributes.ContainsKey(key);
         }
 
         public string this[String key] { get { return attributes[key]; }  }
