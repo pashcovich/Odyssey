@@ -76,7 +76,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer()
                 {
                     Name = Param.ConstantBuffer.Static,
-                    UpdateType = UpdateType.InstanceStatic,
+                    CbUpdateType = CBUpdateType.InstanceStatic,
                 };
 
                 cbStatic.Add(Matrix.EntityWorld);
@@ -92,7 +92,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
-                    UpdateType = UpdateType.SceneFrame
+                    CbUpdateType = CBUpdateType.SceneFrame
                 };
                 cbFrame.Add(Matrix.CameraView);
                 cbFrame.Add(Matrix.CameraProjection);

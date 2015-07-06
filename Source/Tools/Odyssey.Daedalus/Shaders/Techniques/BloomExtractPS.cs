@@ -76,7 +76,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 var cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
-                    UpdateType = UpdateType.InstanceFrame,
+                    CbUpdateType = CBUpdateType.InstanceFrame,
                 };
                 cbFrame.Add(Float.BloomThreshold);
                 return cbFrame;

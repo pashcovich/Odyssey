@@ -67,7 +67,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
-                    UpdateType = UpdateType.SceneStatic,
+                    CbUpdateType = CBUpdateType.SceneStatic,
                 };
 
                 cbStatic.Add(Vector.ViewportSize);

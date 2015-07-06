@@ -167,7 +167,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
-                    UpdateType = UpdateType.SceneFrame,
+                    CbUpdateType = CBUpdateType.SceneFrame,
                 };
                 cbFrame.Add(Vector.CameraPosition);
                 return cbFrame;
@@ -181,7 +181,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
-                    UpdateType = UpdateType.SceneFrame,
+                    CbUpdateType = CBUpdateType.SceneFrame,
                 };
 
                 cbStatic.Add(Struct.PointLight);

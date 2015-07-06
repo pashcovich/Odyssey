@@ -14,12 +14,12 @@ namespace Odyssey.Daedalus.Shaders.Structs
     public partial class ConstantBuffer : Struct
     {
         private Dictionary<string, EngineReference> references;
-        private UpdateType updateType;
+        private CBUpdateType cbUpdateType;
 
-        public UpdateType UpdateType
+        public CBUpdateType CbUpdateType
         {
-            get { return updateType; }
-            set { updateType = value; }
+            get { return cbUpdateType; }
+            set { cbUpdateType = value; }
         }
 
         public ConstantBuffer()
@@ -66,7 +66,7 @@ namespace Odyssey.Daedalus.Shaders.Structs
         public override void Serialize(BinarySerializer serializer)
         {
             base.Serialize(serializer);
-            serializer.SerializeEnum(ref updateType);
+            serializer.SerializeEnum(ref cbUpdateType);
             serializer.Serialize(ref references, serializer.Serialize, (ref EngineReference er) => serializer.Serialize(ref er));
         }
     }

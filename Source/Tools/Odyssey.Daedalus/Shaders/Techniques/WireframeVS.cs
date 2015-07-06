@@ -90,7 +90,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
-                    UpdateType = UpdateType.SceneFrame
+                    CbUpdateType = CBUpdateType.SceneFrame
                 };
                 cbFrame.Add(Matrix.CameraView);
                 cbFrame.Add(Matrix.CameraProjection);

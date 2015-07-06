@@ -387,7 +387,7 @@ namespace Odyssey.Daedalus.Shaders
             foreach (var instanceBuffer in instanceReferences)
             {
                 cbReferences.Add(cbCount++,
-                    new ConstantBufferDescription("InstanceCB", instanceBuffer.Slot, UpdateType.InstanceFrame, ShaderType.Vertex,
+                    new ConstantBufferDescription("InstanceCB", instanceBuffer.Slot, CBUpdateType.InstanceFrame, ShaderType.Vertex,
                         instanceBuffer.References, Enumerable.Empty<KeyValuePair<string, string>>()));
             }
 
@@ -408,7 +408,7 @@ namespace Odyssey.Daedalus.Shaders
                         LogEvent.Tool.Error("Conflicting metadata: [{0}] and [{1}]", kvp.Value, metaData[kvp.Key]);
                 }
 
-                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Name, cb.Index.Value, cb.UpdateType, Type,
+                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Name, cb.Index.Value, cb.CbUpdateType, Type,
                     cb.References, metaData);
                 cbReferences.Add(cbCount++, cbReference);
                 metaData.Clear();
@@ -421,17 +421,17 @@ namespace Odyssey.Daedalus.Shaders
                 string key = texture.ContainsMarkup(Texture.Key)
                     ? texture.GetMarkupValue(Texture.Key)
                     : string.Format("{0}.{1}", Name, reference);
-                UpdateType updateType = UpdateType.None;
+                CBUpdateType cbUpdateType = CBUpdateType.None;
                 int samplerIndex = 0;
                 if (texture.HasMarkup)
                 {
                     // Write metadata indicating preferred metadata
                     samplerIndex = int.Parse(texture.GetMarkupValue(Texture.SamplerIndex));
-                    updateType = texture.ContainsMarkup(Texture.UpdateType)
-                        ? ReflectionHelper.ParseEnum<UpdateType>(texture.GetMarkupValue(Texture.UpdateType))
-                        : UpdateType.SceneStatic;
+                    cbUpdateType = texture.ContainsMarkup(Texture.UpdateType)
+                        ? ReflectionHelper.ParseEnum<CBUpdateType>(texture.GetMarkupValue(Texture.UpdateType))
+                        : CBUpdateType.SceneStatic;
                 }
-                TextureDescription tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, updateType,
+                TextureDescription tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, cbUpdateType,
                     Type);
                 textureReferences.Add(tDescription.Index, tDescription);
             }
