@@ -107,6 +107,8 @@
     <Compile Include="Core\PropertyKey.cs" />
     <Compile Include="Core\PropertyKeyMetadata.cs" />
     <Compile Include="Core\ValidateValueMetadata.cs" />
+    <Compile Include="Engine\ICameraService.cs" />
+    <Compile Include="Epos\INotifiable.cs" />
     <Compile Include="Geometry\IFunction.cs" />
     <Compile Include="Core\IServiceRegistry.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />

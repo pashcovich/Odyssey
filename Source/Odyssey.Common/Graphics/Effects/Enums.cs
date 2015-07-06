@@ -65,7 +65,7 @@ namespace Odyssey.Graphics.Effects
         SM_5_0,
     }
 
-    public enum UpdateType
+    public enum CBUpdateType
     {
         None,
         SceneStatic,

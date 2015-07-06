@@ -8,6 +8,7 @@ namespace Odyssey.Engine
         Matrix View {get;}
         Matrix Projection { get; }
         ViewportF Viewport { get; }
+        bool Changed { get;}
     }
 
     public interface IStereoCamera : ICamera

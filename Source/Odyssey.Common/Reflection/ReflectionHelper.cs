@@ -161,6 +161,15 @@ namespace Odyssey.Reflection
             return typeInfo.GetCustomAttributes<TAttribute>();
         }
 
+        public static IEnumerable<TAttribute> GetPropertyAttributes<TAttribute>(Type sourceType, string propertyName)
+            where TAttribute : Attribute
+        {
+            var attributeList = new List<TAttribute>();
+            var attributes = sourceType.GetRuntimeProperty(propertyName).GetCustomAttributes<TAttribute>();
+            attributeList.AddRange(attributes);
+            return attributeList;
+        }
+
         public static IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type type)
         {
             TypeInfo baseTypeInfo = type.GetTypeInfo();

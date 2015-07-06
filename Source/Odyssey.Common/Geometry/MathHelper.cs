@@ -1,6 +1,8 @@
 ﻿#region Using Directives
 
 using System;
+using System.Collections.Generic;
+using SharpDX.Mathematics;
 
 #endregion
 
@@ -116,6 +118,74 @@ namespace Odyssey.Geometry
         public static bool ScalarNearEqual(float s1, float s2, float tolerance = Epsilon)
         {
             return Math.Abs(s1 - s2) < tolerance;
+        }
+
+        public static Vector3 MinCoordinates(IEnumerable<Vector3> points)
+        {
+            float minX, minY, minZ;
+            minX = minY = minZ = float.MaxValue;
+
+            foreach (var p in points)
+            {
+                if (p.X < minX)
+                    minX = p.X;
+                if (p.Y < minY)
+                    minY = p.Y;
+                if (p.Z < minZ)
+                    minZ = p.Z;
+            }
+
+            return new Vector3(minX, minY, minZ);
+        }
+
+        public static Vector2 MinCoordinates(IEnumerable<Vector2> points)
+        {
+            float minX, minY;
+            minX = minY = float.MaxValue;
+
+            foreach (var p in points)
+            {
+                if (p.X < minX)
+                    minX = p.X;
+                if (p.Y < minY)
+                    minY = p.Y;
+            }
+
+            return new Vector2(minX, minY);
+        }
+
+        public static Vector3 MaxCoordinates(IEnumerable<Vector3> points)
+        {
+            float maxX, maxY, maxZ;
+            maxX = maxY = maxZ = float.MinValue;
+
+            foreach (var p in points)
+            {
+                if (p.X > maxX)
+                    maxX = p.X;
+                if (p.Y > maxY)
+                    maxY = p.Y;
+                if (p.Z > maxZ)
+                    maxZ = p.Z;
+            }
+
+            return new Vector3(maxX, maxY, maxZ);
+        }
+
+        public static Vector2 MaxCoordinates(IEnumerable<Vector2> points)
+        {
+            float maxX, maxY;
+            maxX = maxY = float.MinValue;
+
+            foreach (var p in points)
+            {
+                if (p.X > maxX)
+                    maxX = p.X;
+                if (p.Y > maxY)
+                    maxY = p.Y;
+            }
+
+            return new Vector2(maxX, maxY);
         }
     }
 }

@@ -52,37 +52,45 @@ namespace Odyssey.Collections
             return IsAssociated(typeof(TDerivedItem));
         }
 
-        bool IsMapEmpty(Type messageType)
+        internal bool HasItems(Type messageType)
         {
-            return !queueMap.ContainsKey(messageType) || queueMap[messageType].Count == 0;
+            return queueMap.ContainsKey(messageType) && queueMap[messageType].Count > 0;
         }
 
         public bool HasItems<TDerivedItem>()
             where TDerivedItem : TItem
         {
-            return !IsMapEmpty(typeof(TDerivedItem));
+            return HasItems(typeof(TDerivedItem));
         }
 
-
-        public virtual void Enqueue<TDerivedItem>(TItem item)
+        void Enqueue<TDerivedItem>(Type indexType, TDerivedItem item )
             where TDerivedItem : TItem
         {
-            Contract.Requires<ArgumentNullException>(item!=null, "item");
-            Type indexType = item.GetType();
-
             if (!IsAssociated(indexType))
                 Associate(indexType);
 
             queueMap[indexType].Enqueue(item);
         }
 
-        public virtual TDerivedItem Dequeue<TDerivedItem>()
+        public void Enqueue<TDerivedItem>(TDerivedItem item)
+            where TDerivedItem : TItem
+        {
+            Contract.Requires<ArgumentNullException>(item!=null, "item");
+            Type indexType = item.GetType();
+            Enqueue(indexType, item);
+        }
+
+        TItem Dequeue(Type indexType)
+        {
+            return queueMap[indexType].Dequeue();
+        }
+
+        public TDerivedItem Dequeue<TDerivedItem>()
              where TDerivedItem : TItem
         {
-            Type messageType = typeof (TDerivedItem);
-            TDerivedItem item = (TDerivedItem)queueMap[messageType].Dequeue();
+            Type indexType = typeof(TDerivedItem);
 
-            return item;
+            return (TDerivedItem)Dequeue(indexType);
         }
 
     }
