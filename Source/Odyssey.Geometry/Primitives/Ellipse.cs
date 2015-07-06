@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using SharpDX.Mathematics;
 using Real = System.Single;
 using Point = SharpDX.Mathematics.Vector2;
@@ -82,7 +83,7 @@ namespace Odyssey.Geometry.Primitives
 
         public static IEnumerable<Point> CalculateVertices(Point center, Real radiusX, Real radiusY, int slices)
         {
-            Point[] vertices = new Point[slices];
+            var vertices = new Point[slices];
             const float radTo = MathHelper.TwoPi;
             float delta = radTo / slices;
             for (int i = 0; i < slices; i++)
@@ -93,7 +94,26 @@ namespace Odyssey.Geometry.Primitives
             return vertices;
         }
 
-        #region IFigure
+        public static IEnumerable<Point> CalculateArcVertices(Point center, Real radiusX, Real radiusY, float radFrom, float radTo, int slices)
+        {
+            Contract.Requires<ArgumentException>(radTo > radFrom, "'radTo' must be grether than 'radFrom'");
+            var vertices = new Point[slices+1];
+            float delta = (radTo-radFrom) / slices;
+
+            for (int i = 0; i <= slices; i++)
+            {
+                Real theta = radFrom + i * delta;
+                vertices[i] = CreateEllipseVertex(center, radiusX, radiusY, theta);
+            }
+            return vertices;
+        }
+
+        public static IEnumerable<Point> CalculateCircleVertices(Point center, Real radius, int slices)
+        {
+            return CalculateVertices(center, radius, radius, slices);
+        }
+
+            #region IFigure
 
         Point IFigure.TopLeft
         {

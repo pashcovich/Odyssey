@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 using SharpDX.Mathematics;
 using Real = System.Single;
 using Point = SharpDX.Mathematics.Vector2;
@@ -28,7 +25,7 @@ namespace Odyssey.Geometry.Primitives
         {
             return from == default(Rectangle)
                 ? default(RectangleF)
-                : new RectangleF((float) from.TopLeft.X, (float) from.TopLeft.Y, (float) from.Width, (float) from.Height);
+                : new RectangleF(@from.TopLeft.X, @from.TopLeft.Y, @from.Width, @from.Height);
         }
 
         #region IEquatable<Rectangle>

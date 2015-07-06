@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Odyssey.Geometry.Primitives;
-using SharpDX.Mathematics;
 using Real = System.Single;
 using Point = SharpDX.Mathematics.Vector2;
 
@@ -168,6 +168,11 @@ namespace Odyssey.Geometry
         public static explicit operator Polygon(Vertices vertices)
         {
             return new Polygon(vertices);
+        }
+
+        public static implicit operator Point[](Vertices vertices)
+        {
+            return vertices.ToArray();
         }
     }
 }

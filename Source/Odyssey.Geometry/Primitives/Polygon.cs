@@ -17,12 +17,12 @@ namespace Odyssey.Geometry.Primitives
 
         public Point Centroid
         {
-            get { return ComputeCentroid(this); }
+            get { return ComputeCentroid(Vertices); }
         }
 
         public Real Area
         {
-            get { return Math.Abs(ComputeSignedArea(this)); }
+            get { return Math.Abs(ComputeSignedArea(Vertices)); }
         }
 
         public int Count
@@ -43,7 +43,7 @@ namespace Odyssey.Geometry.Primitives
                 if (Vertices.Count < 3)
                     return true;
 
-                return (ComputeSignedArea(this) > 0.0);
+                return (ComputeSignedArea(Vertices) > 0.0);
             }
         }
 
@@ -106,20 +106,20 @@ namespace Odyssey.Geometry.Primitives
 
         #region SceneStatic methods
 
-        public static Point ComputeCentroid(Polygon polygon)
+        public static Point ComputeCentroid(Vertices polygonVertices)
         {
-            Point centroid = new Point(0, 0);
+            var centroid = new Point(0, 0);
             Real signedArea = 0.0f;
             Real x0; // Current vertex X
             Real y0; // Current vertex Y
             Real x1; // Next vertex X
             Real y1; // Next vertex Y
             Real a; // Partial signed area
-            Point[] vertices = polygon.Vertices.ToArray();
+            Point[] vertices = polygonVertices.ToArray();
 
             // For all vertices except last
             int i;
-            for (i = 0; i < polygon.Vertices.Count - 1; ++i)
+            for (i = 0; i < polygonVertices.Count - 1; ++i)
             {
                 x0 = vertices[i].X;
                 y0 = vertices[i].Y;
@@ -263,12 +263,12 @@ namespace Odyssey.Geometry.Primitives
             return inside;
         }
 
-        public static Real ComputeSignedArea(Polygon polygon)
+        public static Real ComputeSignedArea(Vertices polygonVertices)
         {
             int i;
             Real area = 0;
 
-            Vertices vertices = polygon.Vertices;
+            Vertices vertices = polygonVertices;
 
             for (i = 0; i < vertices.Count; i++)
             {

@@ -2,7 +2,7 @@
 using SharpDX.Mathematics;
 using System.Linq;
 
-namespace Odyssey.Geometry
+namespace Odyssey.Geometry.Extensions
 {
     public static class Extensions
     {
@@ -21,7 +21,12 @@ namespace Odyssey.Geometry
 
         #endregion
 
-        #region Plane extensions
+        #region Plane
+        #endregion
+
+        #region RectangleF
+
+
         #endregion
 
 

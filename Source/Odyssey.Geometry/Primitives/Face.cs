@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX.Mathematics;
 
 namespace Odyssey.Geometry.Primitives
 {
@@ -38,7 +35,7 @@ namespace Odyssey.Geometry.Primitives
         public static Face[] Convert(int[] indices)
         {
             Contract.Requires<ArgumentNullException>(indices != null, "indices");
-            Face[] faces = new Face[indices.Length/3];
+            var faces = new Face[indices.Length/3];
             int faceIndex = 0;
             for (int i = 0; i < indices.Length; i+=3)
             {
