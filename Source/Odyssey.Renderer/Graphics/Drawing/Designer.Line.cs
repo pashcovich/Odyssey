@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Geometry;
+using SharpDX.Direct2D1.Effects;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Drawing
@@ -52,6 +53,14 @@ namespace Odyssey.Graphics.Drawing
         {
             RenderRectangle callback = FillRectangle;
             CreatePolyLine(points, lineWidth, callback);
+        }
+
+        public void FillClosedPolyline(IEnumerable<Vector2> points, float lineWidth)
+        {
+            RenderRectangle callback = FillRectangle;
+            var pointList = new List<Vector2>(points);
+            pointList.Add(pointList[0]);
+            CreatePolyLine(pointList, lineWidth, callback);
         }
     }
 }

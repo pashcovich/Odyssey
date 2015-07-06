@@ -10,7 +10,6 @@
         {
             this.strokeThickness = strokeThickness;
         }
-
         public abstract void Execute(Designer designer);
     }
 }
