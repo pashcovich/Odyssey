@@ -1,5 +1,6 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Graphics.Meshes;
+using SharpDX.Direct3D11;
 using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 
@@ -194,7 +195,9 @@ namespace Odyssey.Graphics.Models
 
         }
 
-        public static Model New(DirectXDevice device, float tileX = 1.0f, float tileY = 1.0f, float tileZ = 1.0f, PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList,
+        public static Model New(DirectXDevice device, float tileX = 1.0f, float tileY = 1.0f, float tileZ = 1.0f, 
+            PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList,
+            ResourceUsage usage = ResourceUsage.Default,
             ModelOperation modelOperations = ModelOperation.None)
         {
             VertexPositionNormalTextureCube[] vertices;
@@ -203,7 +206,7 @@ namespace Odyssey.Graphics.Models
             skybox.GenerateMesh(out vertices, out indices);
 
             return GeometricPrimitive<VertexPositionNormalTextureCube>.New(device, "SkyBoxMesh",
-                    vertices, indices, primitiveTopology, modelOperations);
+                    vertices, indices, primitiveTopology, usage, modelOperations);
         }
 
 

@@ -38,7 +38,7 @@ namespace Odyssey.Organization.Commands
         {
             DirectXDevice device = DeviceService.DirectXDevice;
             if (Technique[ShaderType.Pixel].HasTextures())
-                foreach (TextureMapping tm in Technique[ShaderType.Pixel].SelectTextures(UpdateType.SceneStatic))
+                foreach (TextureMapping tm in Technique[ShaderType.Pixel].SelectTextures(CBUpdateType.SceneStatic))
                 {
                     device.SetPixelShaderShaderResourceView(tm.Description.Index, null);
                     device.SetPixelShaderSampler(tm.Description.SamplerIndex, null);
@@ -52,7 +52,7 @@ namespace Odyssey.Organization.Commands
 
             device.InputAssembler.InputLayout = Technique.InputLayout;
 
-            foreach (TextureMapping tm in Technique[ShaderType.Pixel].SelectTextures(UpdateType.SceneStatic))
+            foreach (TextureMapping tm in Technique[ShaderType.Pixel].SelectTextures(CBUpdateType.SceneStatic))
             {
                 // TODO Update SamplerState assignment
                 device.SetPixelShaderSampler(tm.Description.SamplerIndex, device.SamplerStates.Default);
@@ -60,7 +60,7 @@ namespace Odyssey.Organization.Commands
             }
 
             foreach (Shader shader in Technique)
-                shader.Apply(Technique.Name, UpdateType.SceneStatic);
+                shader.Apply(Technique.Name, CBUpdateType.SceneStatic);
         }
 
         public override void Render()
@@ -68,7 +68,7 @@ namespace Odyssey.Organization.Commands
             DirectXDevice device = DeviceService.DirectXDevice;
             
             foreach (Shader shader in Technique)
-                shader.Apply(Technique.Name, UpdateType.SceneFrame);
+                shader.Apply(Technique.Name, CBUpdateType.SceneFrame);
 
             foreach (IEntity entity in Entities)
             {
@@ -77,8 +77,8 @@ namespace Odyssey.Organization.Commands
 
                 foreach (Shader shader in Technique)
                 {
-                    shader.Apply(Technique.Name, entity.Id, UpdateType.InstanceStatic);
-                    shader.Apply(Technique.Name, entity.Id, UpdateType.InstanceFrame);
+                    shader.Apply(Technique.Name, entity.Id, CBUpdateType.InstanceStatic);
+                    shader.Apply(Technique.Name, entity.Id, CBUpdateType.InstanceFrame);
                 }
 
                 foreach (ModelMesh mesh in Model.Meshes)

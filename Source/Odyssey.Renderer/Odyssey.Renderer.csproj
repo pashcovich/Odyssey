@@ -77,10 +77,15 @@
     <Compile Include="Graphics\DepthStencilStateCollection.cs" />
     <Compile Include="Graphics\DepthStencilViewSelector.cs" />
     <Compile Include="Graphics\Drawing\Designer.BSpline.cs" />
+    <Compile Include="Graphics\Drawing\Designer.Triangle.cs" />
     <Compile Include="Graphics\Drawing\DrawInstruction.cs" />
+    <Compile Include="Graphics\Drawing\FillEllipseArcInstruction.cs" />
     <Compile Include="Graphics\Drawing\FillPolylineInstruction.cs" />
     <Compile Include="Graphics\Drawing\DrawPolylineInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawTriangleInstruction.cs" />
+    <Compile Include="Graphics\Drawing\FillTriangleInstruction.cs" />
     <Compile Include="Graphics\Drawing\IDesignerInstruction.cs" />
+    <Compile Include="Graphics\Drawing\InstructionCollection.cs" />
     <Compile Include="Graphics\Drawing\SetColorInstruction.cs" />
     <Compile Include="Graphics\Drawing\DrawEllipseInstruction.cs" />
     <Compile Include="Graphics\Drawing\DrawRectangleInstruction.cs" />
@@ -88,6 +93,7 @@
     <Compile Include="Graphics\Drawing\FillRectangleInstruction.cs" />
     <Compile Include="Graphics\Drawing\SetModelOperationsInstruction.cs" />
     <Compile Include="Graphics\Drawing\SetTransformInstruction.cs" />
+    <Compile Include="Graphics\Drawing\VertexBufferOverride.cs" />
     <Compile Include="Graphics\Models\BufferCollection.cs" />
     <Compile Include="Graphics\Models\ConeMesh.cs" />
     <Compile Include="Graphics\Models\CylinderMesh.cs" />
@@ -96,7 +102,6 @@
     <Compile Include="Graphics\Models\IModelMesh.cs" />
     <Compile Include="Graphics\Models\IPrimitiveGenerator.cs" />
     <Compile Include="Graphics\Models\MeshBuilder.cs" />
-    <Compile Include="Graphics\Models\MeshHelper.cs" />
     <Compile Include="Graphics\Models\Model.cs" />
     <Compile Include="Graphics\Models\ModelAnalyzer.cs" />
     <Compile Include="Graphics\Models\ModelBufferRange.cs" />
@@ -112,6 +117,7 @@
     <Compile Include="Graphics\Models\ModelMeshPartCollection.cs" />
     <Compile Include="Graphics\Models\ModelOperations.cs" />
     <Compile Include="Graphics\Models\PointCloud.cs" />
+    <Compile Include="Graphics\Models\GridMesh.cs" />
     <Compile Include="Graphics\Models\TeapotMesh.cs" />
     <Compile Include="Graphics\Models\VertexBufferBinding.cs" />
     <Compile Include="Graphics\Models\VertexBufferBindingCollection.cs" />

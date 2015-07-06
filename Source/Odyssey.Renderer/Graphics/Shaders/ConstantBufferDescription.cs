@@ -29,24 +29,24 @@ namespace Odyssey.Graphics.Shaders
         private Dictionary<string, List<EngineReference>> parsedReferences;
 
         [DataMember]
-        private UpdateType updateFrequency;
+        private CBUpdateType cbUpdateFrequency;
 
         public ConstantBufferDescription()
         {
             name = "Unknown";
             index = 0;
-            updateFrequency = UpdateType.None;
+            cbUpdateFrequency = CBUpdateType.None;
             shaderType = ShaderType.None;
             references = new Dictionary<int, EngineReference>();
             metadata = new Dictionary<string, string>();
         }
 
-        public ConstantBufferDescription(string name, int index, UpdateType updateFrequency, ShaderType shaderType,
+        public ConstantBufferDescription(string name, int index, CBUpdateType cbUpdateFrequency, ShaderType shaderType,
             IEnumerable<EngineReference> engineReferences, IEnumerable<KeyValuePair<string, string>> metadata)
         {
             this.name = name;
             this.index = index;
-            this.updateFrequency = updateFrequency;
+            this.cbUpdateFrequency = cbUpdateFrequency;
             this.shaderType = shaderType;
             references = new Dictionary<int, EngineReference>();
 
@@ -64,7 +64,7 @@ namespace Odyssey.Graphics.Shaders
 
         public ShaderType ShaderType { get { return shaderType; } }
 
-        public UpdateType UpdateFrequency { get { return updateFrequency; } }
+        public CBUpdateType CbUpdateFrequency { get { return cbUpdateFrequency; } }
 
         public bool ContainsMetadata(string key)
         {
@@ -81,7 +81,7 @@ namespace Odyssey.Graphics.Shaders
             serializer.Serialize(ref name);
             serializer.Serialize(ref index);
             serializer.SerializeEnum(ref shaderType);
-            serializer.SerializeEnum(ref updateFrequency);
+            serializer.SerializeEnum(ref cbUpdateFrequency);
             serializer.Serialize(ref references, serializer.Serialize, (ref EngineReference r) => serializer.Serialize(ref r));
             serializer.Serialize(ref metadata, serializer.Serialize, serializer.Serialize);
         }
@@ -109,7 +109,7 @@ namespace Odyssey.Graphics.Shaders
                     : references.Values.Except(kvp.Value);
                 foreach (EngineReference reference in missingReferences)
                 {
-                    LogEvent.Engine.Error("[{0}:{1}] missing from [{2}]: {3}, {4}", kvp.Key, reference, Name, Index, UpdateFrequency);
+                    LogEvent.Engine.Error("[{0}:{1}] missing from [{2}]: {3}, {4}", kvp.Key, reference, Name, Index, CbUpdateFrequency);
                     test = false;
                 }
             }

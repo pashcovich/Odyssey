@@ -58,7 +58,7 @@ namespace Odyssey.Graphics.Shaders
         public void AddParameterRange(int baseIndex, IEnumerable<IParameter> parameterCollection)
         {
             Contract.Requires<ArgumentNullException>(parameterCollection != null, "parameterCollection");
-            foreach (IParameter parameter in parameterCollection)
+            foreach (var parameter in parameterCollection)
             {
                 parameters.Add(parameter);
             }
@@ -71,7 +71,7 @@ namespace Odyssey.Graphics.Shaders
 
             var pack = new List<IParameter>();
 
-            int bytes=0;
+            var bytes=0;
             foreach (var parameter in tempParameters)
             {
                 if (parameter.Size == 16)
@@ -145,10 +145,10 @@ namespace Odyssey.Graphics.Shaders
             // case 1: 4x FloatParameters
             if (paramArray.All(p => p.Size == 4))
             {
-                FloatParameter p0 = (FloatParameter)paramArray[0];
-                FloatParameter p1 = (FloatParameter)paramArray[1];
-                FloatParameter p2 = (FloatParameter)paramArray[2];
-                FloatParameter p3 = (FloatParameter)paramArray[3];
+                var p0 = (FloatParameter)paramArray[0];
+                var p1 = (FloatParameter)paramArray[1];
+                var p2 = (FloatParameter)paramArray[2];
+                var p3 = (FloatParameter)paramArray[3];
 
                 LogEvent.Engine.Info("Packed [{0} {1} {2} {3}] into a Float4Parameter", p0.ParamHandle, p1.ParamHandle, p2.ParamHandle, p3.ParamHandle);
 

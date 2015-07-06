@@ -127,10 +127,10 @@ namespace Odyssey.Graphics.Shaders
                 cb.Assemble();
         }
 
-        public void UpdateBuffers(UpdateType updateType)
+        public void UpdateBuffers(CBUpdateType cbUpdateType)
         {
             foreach (ConstantBuffer cb in
-                    shaders.Values.SelectMany(shader => shader.Buffers.Where(cb => cb.Description.UpdateFrequency == updateType)))
+                    shaders.Values.SelectMany(shader => shader.Buffers.Where(cb => cb.Description.CbUpdateFrequency == cbUpdateType)))
                 cb.Update();
         }
 

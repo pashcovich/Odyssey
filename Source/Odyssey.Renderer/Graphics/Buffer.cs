@@ -233,7 +233,7 @@ namespace Odyssey.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
         public TData[] GetData<TData>() where TData : struct
         {
-            var toData = new TData[Description.SizeInBytes / SharpDX.Utilities.SizeOf<TData>()];
+            var toData = new TData[Description.SizeInBytes / Utilities.SizeOf<TData>()];
             GetData(toData);
             return toData;
         }
@@ -309,7 +309,7 @@ namespace Odyssey.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
         public unsafe void GetData<TData>(Buffer stagingTexture, ref TData toData) where TData : struct
         {
-            GetData(stagingTexture, new DataPointer(Interop.Fixed(ref toData), SharpDX.Utilities.SizeOf<TData>()));
+            GetData(stagingTexture, new DataPointer(Interop.Fixed(ref toData), Utilities.SizeOf<TData>()));
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Odyssey.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>	
         public unsafe void GetData<TData>(Buffer stagingTexture, TData[] toData) where TData : struct
         {
-            GetData(stagingTexture, new DataPointer(Interop.Fixed(toData), toData.Length * SharpDX.Utilities.SizeOf<TData>()));
+            GetData(stagingTexture, new DataPointer(Interop.Fixed(toData), toData.Length * Utilities.SizeOf<TData>()));
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace Odyssey.Graphics
 
             // Map the staging resource to a CPU accessible memory
             var box = deviceContext.MapSubresource(stagingTexture, 0, MapMode.Read, MapFlags.None);
-            SharpDX.Utilities.CopyMemory(toData.Pointer, box.DataPointer, toData.Size);
+            Utilities.CopyMemory(toData.Pointer, box.DataPointer, toData.Size);
             // Make sure that we unmap the resource in case of an exception
             deviceContext.UnmapSubresource(stagingTexture, 0);
         }
@@ -436,7 +436,7 @@ namespace Odyssey.Graphics
         /// <unmanaged-short>ID3D11DeviceContext::Map</unmanaged-short>
         public unsafe void SetData<TData>(DirectXDevice device, ref TData fromData, int offsetInBytes = 0, SetDataOptions options = SetDataOptions.Discard) where TData : struct
         {
-            SetData(device, new DataPointer(Interop.Fixed(ref fromData), SharpDX.Utilities.SizeOf<TData>()), offsetInBytes, options);
+            SetData(device, new DataPointer(Interop.Fixed(ref fromData), Utilities.SizeOf<TData>()), offsetInBytes, options);
         }
 
         /// <summary>
@@ -505,7 +505,7 @@ namespace Odyssey.Graphics
                 try
                 {
                     var box = deviceContext.MapSubresource(this, 0, SetDataOptionsHelper.ConvertToMapMode(options), MapFlags.None);
-                    SharpDX.Utilities.CopyMemory((IntPtr)((byte*)box.DataPointer + offsetInBytes), fromData.Pointer, fromData.Size);
+                    Utilities.CopyMemory((IntPtr)((byte*)box.DataPointer + offsetInBytes), fromData.Pointer, fromData.Size);
                 }
                 finally
                 {
@@ -603,8 +603,8 @@ namespace Odyssey.Graphics
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
         public static Buffer<T> New<T>(DirectXDevice device, int elementCount, BufferFlags bufferFlags, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
-            int bufferSize = SharpDX.Utilities.SizeOf<T>() * elementCount;
-            int elementSize = SharpDX.Utilities.SizeOf<T>();
+            int bufferSize = Utilities.SizeOf<T>() * elementCount;
+            int elementSize = Utilities.SizeOf<T>();
 
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);
             return new Buffer<T>(device, description, bufferFlags, PixelFormat.Unknown, IntPtr.Zero);
@@ -696,8 +696,8 @@ namespace Odyssey.Graphics
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
         public static unsafe Buffer<T> New<T>(DirectXDevice device, ref T value, BufferFlags bufferFlags, Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
-            int bufferSize = SharpDX.Utilities.SizeOf<T>();
-            int elementSize = ((bufferFlags & BufferFlags.StructuredBuffer) != 0) ? SharpDX.Utilities.SizeOf<T>() : 0;
+            int bufferSize = Utilities.SizeOf<T>();
+            int elementSize = ((bufferFlags & BufferFlags.StructuredBuffer) != 0) ? Utilities.SizeOf<T>() : 0;
 
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
 
@@ -737,8 +737,8 @@ namespace Odyssey.Graphics
         /// <unmanaged-short>ID3D11Device::CreateBuffer</unmanaged-short>
         public static unsafe Buffer<T> New<T>(DirectXDevice device, T[] initialValue, BufferFlags bufferFlags, Format viewFormat, ResourceUsage usage = ResourceUsage.Default) where T : struct
         {
-            int bufferSize = SharpDX.Utilities.SizeOf<T>() * initialValue.Length;
-            int elementSize = SharpDX.Utilities.SizeOf<T>();
+            int bufferSize = Utilities.SizeOf<T>() * initialValue.Length;
+            int elementSize = Utilities.SizeOf<T>();
             viewFormat = CheckPixelFormat(bufferFlags, elementSize, viewFormat);
 
             var description = NewDescription(bufferSize, elementSize, bufferFlags, usage);

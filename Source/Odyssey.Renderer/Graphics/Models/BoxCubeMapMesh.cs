@@ -1,5 +1,6 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Graphics.Meshes;
+using SharpDX.Direct3D11;
 using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 
@@ -56,15 +57,17 @@ namespace Odyssey.Graphics.Models
  
         }
 
-        public static Model New(DirectXDevice device, float width = 1.0f, float height = 1.0f, float depth = 1.0f, float tileX = 1.0f, float tileY = 1.0f, float tileZ = 1.0f, PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList,
+        public static Model New(DirectXDevice device, float width = 1.0f, float height = 1.0f, float depth = 1.0f, float tileX = 1.0f, float tileY = 1.0f, float tileZ = 1.0f, 
+            PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList,
+            ResourceUsage usage = ResourceUsage.Default,
             ModelOperation modelOperations= ModelOperation.None)
         {
-            BoxCubeMapMesh cube = new BoxCubeMapMesh(width, height, depth, tileX, tileY, tileZ);
+            var cube = new BoxCubeMapMesh(width, height, depth, tileX, tileY, tileZ);
             VertexPositionNormalTextureCube[] vertices;
             int[] indices;
             cube.GenerateMesh(out vertices, out indices);
 
-            return GeometricPrimitive<VertexPositionNormalTextureCube>.New(device, "CubeUVW", vertices, indices, primitiveTopology, modelOperations);
+            return GeometricPrimitive<VertexPositionNormalTextureCube>.New(device, "CubeUVW", vertices, indices, primitiveTopology, usage, modelOperations);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Odyssey.Geometry;
+﻿using Odyssey.Geometry.Extensions;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Graphics.Shaders

@@ -44,9 +44,9 @@ namespace Odyssey.Graphics.Shaders
             buffers.Clear();
         }
 
-        public abstract void Apply(string technique, UpdateType updateType);
+        public abstract void Apply(string technique, CBUpdateType cbUpdateType);
 
-        public abstract void Apply(string technique, long id, UpdateType updateType);
+        public abstract void Apply(string technique, long id, CBUpdateType cbUpdateType);
 
         public ConstantBuffer GetConstantBuffer(int index, string technique, long id = 0)
         {
@@ -69,18 +69,18 @@ namespace Odyssey.Graphics.Shaders
             return textures.Any();
         }
 
-        public IEnumerable<ConstantBuffer> SelectBuffers(string technique, UpdateType type)
+        public IEnumerable<ConstantBuffer> SelectBuffers(string technique, CBUpdateType type)
         {
             return from cb in buffers
-                   where (cb.Description.UpdateFrequency == type && cb.Technique == technique)
+                   where (cb.Description.CbUpdateFrequency == type && cb.Technique == technique)
                    select cb;
         }
 
-        public IEnumerable<ConstantBuffer> SelectBuffers(string technique, long entityId, UpdateType type)
+        public IEnumerable<ConstantBuffer> SelectBuffers(string technique, long entityId, CBUpdateType type)
         {
             return buffers.HasItem(entityId)
                 ? from cb in buffers[entityId]
-                  where (cb.Description.UpdateFrequency == type && cb.Technique == technique)
+                  where (cb.Description.CbUpdateFrequency == type && cb.Technique == technique)
                   select cb
                 : Enumerable.Empty<ConstantBuffer>();
         }
@@ -90,16 +90,16 @@ namespace Odyssey.Graphics.Shaders
             return textures;
         }
 
-        public IEnumerable<TextureMapping> SelectTextures(UpdateType type)
+        public IEnumerable<TextureMapping> SelectTextures(CBUpdateType type)
         {
             return from tm in textures
-                   where (tm.Description.UpdateFrequency == type)
+                   where (tm.Description.CbUpdateFrequency == type)
                    select tm;
         }
 
-        public void UpdateBuffers(UpdateType updateType)
+        public void UpdateBuffers(CBUpdateType cbUpdateType)
         {
-            var tempBuffers = buffers.Where(cb => cb.Description.UpdateFrequency == updateType);
+            var tempBuffers = buffers.Where(cb => cb.Description.CbUpdateFrequency == cbUpdateType);
             foreach (ConstantBuffer cb in tempBuffers)
                 cb.Update();
         }

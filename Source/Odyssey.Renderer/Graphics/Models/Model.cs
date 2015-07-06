@@ -44,6 +44,5 @@ namespace Odyssey.Graphics.Models
             foreach (var modelMesh in Meshes)
                 ToDispose(modelMesh);
         }
-
     }
 }

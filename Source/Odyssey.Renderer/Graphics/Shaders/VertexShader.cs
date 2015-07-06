@@ -22,15 +22,15 @@ namespace Odyssey.Graphics.Shaders
             return from.Resource;
         }
 
-        public override void Apply(string technique, UpdateType updateType)
+        public override void Apply(string technique, CBUpdateType cbUpdateType)
         {
-            foreach (ConstantBuffer cb in SelectBuffers(technique, updateType))
+            foreach (ConstantBuffer cb in SelectBuffers(technique, cbUpdateType))
                 Device.SetVertexShaderConstantBuffer(cb.Index, cb.Buffer);
         }
 
-        public override void Apply(string technique, long id, UpdateType updateType)
+        public override void Apply(string technique, long id, CBUpdateType cbUpdateType)
         {
-            foreach (ConstantBuffer cb in SelectBuffers(technique, id, updateType))
+            foreach (ConstantBuffer cb in SelectBuffers(technique, id, cbUpdateType))
                 Device.SetVertexShaderConstantBuffer(cb.Index, cb.Buffer);
         }
 

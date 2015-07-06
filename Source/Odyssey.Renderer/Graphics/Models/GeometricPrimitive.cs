@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Core;
 using Odyssey.Engine;
+using SharpDX.Direct3D11;
 using SharpDX.Mathematics;
 using SharpDX.Direct3D;
 
@@ -13,6 +14,7 @@ namespace Odyssey.Graphics.Models
     {
         private readonly PrimitiveType primitiveType;
         private readonly static VertexInputLayout InputLayout = VertexInputLayout.New<TVertex>(0);
+        private readonly ResourceUsage resourceUsage;
 
         public PrimitiveType PrimitiveType { get { return primitiveType; } }
         public int VertexCount { get { return Vertices.Length; } }
@@ -34,13 +36,15 @@ namespace Odyssey.Graphics.Models
         /// <param name="vertices">The vertices described in right handed form.</param>
         /// <param name="indices">The indices described in right handed form.</param>
         /// <param name="primitiveType"></param>
+        /// <param name="usage">The <see cref="ResourceUsage"/> value to use./param>
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
-        public GeometricPrimitive(string name, TVertex[] vertices, int[] indices, PrimitiveType primitiveType, bool toLeftHanded = false) : this(name, primitiveType)
+        public GeometricPrimitive(string name, TVertex[] vertices, int[] indices, PrimitiveType primitiveType, ResourceUsage usage = ResourceUsage.Default, bool toLeftHanded = false) : this(name, primitiveType)
         {
             Contract.Requires<ArgumentNullException>(vertices != null, "vertices");
             Vertices = vertices;
             Indices = indices;
+            resourceUsage = usage;
             if (toLeftHanded)
                 ReverseWinding(vertices, indices);
         }
@@ -60,12 +64,12 @@ namespace Odyssey.Graphics.Models
         }
   
         public static Model New<TVertex>(DirectXDevice device, string name, TVertex[] vertices, int[] indices,
-            PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList, ModelOperation modelOperations= ModelOperation.None)
+            PrimitiveTopology primitiveTopology = PrimitiveTopology.TriangleList, ResourceUsage usage = ResourceUsage.Default, ModelOperation modelOperations= ModelOperation.None)
             where TVertex : struct
         {
             bool toLeftHanded = modelOperations.HasFlag(ModelOperation.ReverseIndices);
            
-            return new GeometricPrimitive<TVertex>(name, vertices, indices, primitiveTopology, toLeftHanded).ToModel(device);
+            return new GeometricPrimitive<TVertex>(name, vertices, indices, primitiveTopology, usage: usage, toLeftHanded: toLeftHanded).ToModel(device);
         }
 
         public Model ToModel(DirectXDevice device)
@@ -80,7 +84,7 @@ namespace Odyssey.Graphics.Models
                     {
                         indicesShort[i] = (ushort) Indices[i];
                     }
-                    indexBuffer = Buffer.Index.New(device, indicesShort);
+                    indexBuffer = Buffer.Index.New(device, indicesShort, resourceUsage);
                 }
                 else
                 {
@@ -94,7 +98,7 @@ namespace Odyssey.Graphics.Models
                 }
                 indexBuffer.DebugName = "IB_" + Name;
             }
-            Buffer vertexBuffer = Buffer.Vertex.New(device, Vertices);
+            Buffer vertexBuffer = Buffer.Vertex.New(device, Vertices, resourceUsage);
             vertexBuffer.DebugName = "VB_" + Name;
             
             return new Model(Name, PrimitiveType, vertexBuffer, InputLayout, indexBuffer);
@@ -112,7 +116,7 @@ namespace Odyssey.Graphics.Models
         /// <param name="toLeftHanded">if set to <c>true</c> vertices and indices will be transformed to left handed. Default is true.</param>
         /// <exception cref="System.InvalidOperationException">Cannot generate more than 65535 indices on feature level HW &lt;= 9.3</exception>
         private GeometricPrimitive(string name, VertexPositionNormalTexture[] vertices, int[] indices, PrimitiveType primitiveType, bool toLeftHanded = false)
-            : base(name, vertices, indices, primitiveType, toLeftHanded)
+            : base(name, vertices, indices, primitiveType, toLeftHanded: toLeftHanded)
         {
         }
 
@@ -135,20 +139,20 @@ namespace Odyssey.Graphics.Models
             if (modelOperations.HasFlag(ModelOperation.CalculateTangents))
             {
                 var tangentVertices = ModelEditor.CalculateTangentArray(vertices, indices);
-                return new GeometricPrimitive<VertexPositionNormalTextureTangent>(name, tangentVertices, indices, primitiveTopology, toLeftHanded).ToModel(device);
+                return new GeometricPrimitive<VertexPositionNormalTextureTangent>(name, tangentVertices, indices, primitiveTopology, toLeftHanded: toLeftHanded).ToModel(device);
             }
-            else if (modelOperations.HasFlag(ModelOperation.CalculateBarycentricCoordinates))
+            if (modelOperations.HasFlag(ModelOperation.CalculateBarycentricCoordinates))
             {
                 var barycentricVertices = ModelEditor.ConvertToBarycentricEdgeVertices(vertices, indices);
-                return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, null, primitiveTopology, false).ToModel(device);
+                return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, null, primitiveTopology, toLeftHanded: false).ToModel(device);
             }
-            else if (modelOperations.HasFlag(ModelOperation.CalculateBarycentricCoordinatesAndExcludeEdges))
+            if (modelOperations.HasFlag(ModelOperation.CalculateBarycentricCoordinatesAndExcludeEdges))
             {
                 var barycentricVertices = ModelEditor.ConvertToBarycentricEdgeNormalVertices(vertices, indices);
                 int[] newIndices = Enumerable.Range(0, barycentricVertices.Length).ToArray();
-                return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, newIndices, primitiveTopology, false).ToModel(device);
+                return new GeometricPrimitive<VertexPositionNormalTextureBarycentric>(name, barycentricVertices, newIndices, primitiveTopology, toLeftHanded: false).ToModel(device);
             }
-            else return new GeometricPrimitive(name, vertices, indices, primitiveTopology, toLeftHanded).ToModel(device);
+            return new GeometricPrimitive(name, vertices, indices, primitiveTopology, toLeftHanded).ToModel(device);
         }
 
     }

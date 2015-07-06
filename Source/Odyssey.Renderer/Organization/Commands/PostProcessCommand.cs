@@ -50,8 +50,8 @@ namespace Odyssey.Organization.Commands
 
             foreach (Shader shader in Technique)
             {
-                shader.UpdateBuffers(UpdateType.SceneStatic);
-                shader.Apply(Technique.Name, UpdateType.SceneStatic);
+                shader.UpdateBuffers(CBUpdateType.SceneStatic);
+                shader.Apply(Technique.Name, CBUpdateType.SceneStatic);
             }
         }
 
@@ -59,12 +59,12 @@ namespace Odyssey.Organization.Commands
         {
             DirectXDevice device = DeviceService.DirectXDevice;
             foreach (Shader shader in Technique)
-                shader.Apply(Technique.Name, UpdateType.SceneFrame);
+                shader.Apply(Technique.Name, CBUpdateType.SceneFrame);
 
             foreach (Shader shader in Technique)
             {
-                shader.Apply(Technique.Name, entity.Id, UpdateType.InstanceStatic);
-                shader.Apply(Technique.Name, entity.Id, UpdateType.InstanceFrame);
+                shader.Apply(Technique.Name, entity.Id, CBUpdateType.InstanceStatic);
+                shader.Apply(Technique.Name, entity.Id, CBUpdateType.InstanceFrame);
             }
 
             quad.Draw(device);

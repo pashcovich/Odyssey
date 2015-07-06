@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
@@ -34,15 +35,16 @@ namespace Odyssey.Graphics.Models
 
         internal ModelMesh(string name, PrimitiveType primitiveType, Buffer vertexBuffer, VertexInputLayout layout, Buffer indexBuffer) : this(name)
         {
-            VertexBufferBinding vertexBufferBinding = new VertexBufferBinding {Buffer = vertexBuffer, Layout = layout};
+            var vertexBufferBinding = new VertexBufferBinding {Buffer = vertexBuffer, Layout = layout};
             VertexBuffers.Add(vertexBufferBinding);
 
-            ModelMeshPart meshPart = new ModelMeshPart()
+            var meshPart = new ModelMeshPart()
                 {
                     Name = Name,
                     VertexBuffer = new ModelBufferRange<VertexBufferBinding> { 
-                        Count = vertexBuffer.ElementCount, Resource = vertexBufferBinding,
-                    Start = 0},
+                        Count = vertexBuffer.ElementCount, 
+                        Resource = vertexBufferBinding,
+                        Start = 0},
                     ParentMesh = this,
                     PrimitiveType = primitiveType,
                 };
@@ -104,6 +106,30 @@ namespace Odyssey.Graphics.Models
             {
                 part.DrawIndexedInstanced(device, instanceCount);
             }
+        }
+
+        public void UpdateVertexBuffer<TVertex>(int index, TVertex[] data)
+            where TVertex : struct 
+        {
+            VertexBuffers[index].Buffer.SetData(data);
+        }
+
+        public void UpdateIndexBuffer(int index, int[] indices)
+        {
+            if (indices.Length < 0xFFFF)
+            {
+                ushort[] shortIndices = indices.Select(i => (ushort)i).ToArray();
+                IndexBuffers[index].SetData(shortIndices);
+                MeshParts[index].IsIndex32Bit = false;
+            }
+            else
+            {
+                IndexBuffers[index].SetData(indices);
+                MeshParts[index].IsIndex32Bit = true;
+            }
+
+            MeshParts[index].IndexBuffer.Resource = IndexBuffers[index];
+            MeshParts[index].IndexBuffer.Count = indices.Length;
         }
 
         protected void Dispose(bool isDisposing)

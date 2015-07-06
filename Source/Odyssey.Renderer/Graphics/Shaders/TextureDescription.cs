@@ -9,16 +9,16 @@ namespace Odyssey.Graphics.Shaders
         public int SamplerIndex;
         public string Key;
         public string Texture;
-        public UpdateType UpdateFrequency;
+        public CBUpdateType CbUpdateFrequency;
         public ShaderType ShaderType;
 
-        public TextureDescription(int index, string resourceKey, string texture, int samplerIndex, UpdateType frequency = UpdateType.SceneStatic, ShaderType shaderType = ShaderType.Pixel)
+        public TextureDescription(int index, string resourceKey, string texture, int samplerIndex, CBUpdateType frequency = CBUpdateType.SceneStatic, ShaderType shaderType = ShaderType.Pixel)
         {
             Index = index;
             Key = resourceKey;
             Texture = texture;
             SamplerIndex = samplerIndex;
-            UpdateFrequency = frequency;
+            CbUpdateFrequency = frequency;
             ShaderType = shaderType;
         }
 
@@ -28,7 +28,7 @@ namespace Odyssey.Graphics.Shaders
             serializer.Serialize(ref SamplerIndex);
             serializer.Serialize(ref Key);
             serializer.Serialize(ref Texture);
-            serializer.SerializeEnum(ref UpdateFrequency);
+            serializer.SerializeEnum(ref CbUpdateFrequency);
             serializer.SerializeEnum(ref ShaderType);
         }
     }

@@ -60,6 +60,29 @@ namespace Odyssey.Graphics.Models
             return new Vector3(dx, 0, dz);
         }
 
+        public void BuildSquareGrid(Vector3 topLeft, float cellWidth, int rows, int columns)
+        {
+            int vertexCount=0;
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    var v = new Vector3(i, 0, j)*cellWidth + topLeft;
+                    vertices.Add(v);
+                    normals.Add(Vector3.UnitY);
+                    textureUVs.Add(new Vector2(i/(float) rows, j/(float) columns)*TileFactor);
+
+                    if (i < rows-1 && j < columns-1)
+                    {
+                        AddTriangle(vertexCount + columns, vertexCount, vertexCount+1);
+                        AddTriangle(vertexCount + 1, vertexCount + columns+1, vertexCount + columns);
+                    }
+                    vertexCount++;
+
+                }
+            }
+        }
+
         public void BuildRing(int tessellation, Vector3 centre, float radius, float v, bool buildTriangles)
         {
             for (int i = 0; i <= tessellation; i++)

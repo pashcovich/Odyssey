@@ -26,8 +26,8 @@ namespace Odyssey.Organization.Commands
         {
             DirectXDevice device = DeviceService.DirectXDevice;
             elementSize =
-                Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, Entities.First().Id, UpdateType.InstanceFrame).First().ElementSize;
-            Technique.UpdateBuffers(UpdateType.InstanceFrame);
+                Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, Entities.First().Id, CBUpdateType.InstanceFrame).First().ElementSize;
+            Technique.UpdateBuffers(CBUpdateType.InstanceFrame);
             var data = AggregateIntanceData();
 
             instanceBuffer = ToDispose(Buffer.Vertex.New(device,  data, ResourceUsage.Default));
@@ -37,7 +37,7 @@ namespace Odyssey.Organization.Commands
         Vector4[] AggregateIntanceData()
         {
             return (from e in Entities
-                    from cb in Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, e.Id, UpdateType.InstanceFrame)
+                    from cb in Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, e.Id, CBUpdateType.InstanceFrame)
                     select cb).SelectMany(cb => cb.Data).ToArray();
         }
 
@@ -46,14 +46,14 @@ namespace Odyssey.Organization.Commands
             DirectXDevice device = DeviceService.DirectXDevice;
 
             foreach (Shader shader in Technique)
-                shader.Apply(Technique.Name, UpdateType.SceneFrame);
+                shader.Apply(Technique.Name, CBUpdateType.SceneFrame);
 
             var updatedData = AggregateIntanceData();
             instanceBuffer.SetData(device, updatedData);
 
             foreach (ModelMesh modelMesh in Model.Meshes)
             {
-                foreach (ConstantBuffer cb in Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, UpdateType.InstanceFrame))
+                foreach (ConstantBuffer cb in Technique[ShaderType.Vertex].SelectBuffers(Technique.Name, CBUpdateType.InstanceFrame))
                     device.SetVertexBuffer(cb.Index, instanceBuffer, elementSize);
                 modelMesh.DrawIndexedInstanced(device, EntityCount);
             }
