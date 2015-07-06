@@ -5,6 +5,7 @@ using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Geometry;
+using Odyssey.Geometry.Extensions;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
 using SharpDX.Mathematics;

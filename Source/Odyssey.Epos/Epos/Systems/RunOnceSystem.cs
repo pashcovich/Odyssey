@@ -9,26 +9,21 @@ namespace Odyssey.Epos.Systems
 
         public override void Start()
         {
-            Messenger.Register<EntityChangeMessage>(this);
+            Subscribe<EntityChangeMessage>(EntityChangeMessage);
         }
 
         public override void Stop()
         {
-            Messenger.Unregister<EntityChangeMessage>(this);
+            Unsubscribe<EntityChangeMessage>();
         }
 
-        public override bool BeforeUpdate()
+        void EntityChangeMessage()
         {
-            while (MessageQueue.HasItems<EntityChangeMessage>())
+            var mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
+            if (mEntity.Action == UpdateType.Add)
             {
-                var mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
-                if (mEntity.Action == UpdateType.Add)
-                {
-                    RegisterEntity(mEntity.Source);
-                }
+                RegisterEntity(mEntity.Source);
             }
-
-            return base.BeforeUpdate();
         }
 
         public override void AfterUpdate()
@@ -37,7 +32,7 @@ namespace Odyssey.Epos.Systems
 
             foreach (Entity entity in entitiesCopy)
             {
-                Scene.SystemMap.UnregisterEntityFromSystem(entity, this);
+                UnregisterEntity(entity);
             }
 
             IsEnabled = false;

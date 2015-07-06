@@ -6,7 +6,6 @@ using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using System;
 using System.Linq;
-using UpdateType = Odyssey.Graphics.Effects.UpdateType;
 
 namespace Odyssey.Epos.Systems
 {
@@ -38,9 +37,9 @@ namespace Odyssey.Epos.Systems
             // Update each per frame constant buffer
             foreach (Technique technique in data)
             {
-                technique.UpdateBuffers(UpdateType.InstanceStatic);
-                technique.UpdateBuffers(UpdateType.SceneFrame);
-                technique.UpdateBuffers(UpdateType.InstanceFrame);
+                technique.UpdateBuffers(CBUpdateType.InstanceStatic);
+                technique.UpdateBuffers(CBUpdateType.SceneFrame);
+                technique.UpdateBuffers(CBUpdateType.InstanceFrame);
             }
         }
 

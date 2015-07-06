@@ -7,6 +7,8 @@ namespace Odyssey.Epos.Components
     public abstract class ContentComponent : Component, IContentComponent, IInitializable
     {
         string assetName;
+        
+        [PropertyUpdate(UpdateAction.Register)]
         public string AssetName
         {
             get { return assetName; }
@@ -20,7 +22,9 @@ namespace Odyssey.Epos.Components
             }
         }
 
+        
         protected IAssetProvider Content { get { return Services.GetService<IAssetProvider>(); } }
+
         protected IGraphicsDeviceService DeviceService { get { return Services.GetService<IGraphicsDeviceService>(); } }
 
         protected ContentComponent(ComponentType componentType) : base(componentType)

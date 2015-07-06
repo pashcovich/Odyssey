@@ -34,17 +34,13 @@ namespace Odyssey.Epos.Systems
 
         public override void Process(ITimeService time)
         {
-            foreach (var entity in Entities.Where(e => e.IsEnabled))
+            foreach (var entity in Entities)
             {
                 var cModel = entity.GetComponent<ModelComponent>(tModel.KeyPart);
                 var cShader = entity.GetComponent<ShaderComponent>(tShader.KeyPart);
                 
                 renderMapper.AddEntity(cShader.Technique, cModel.Model, entity);
             }
-        }
-
-        public override void AfterUpdate()
-        {
             renderMapper.Group();
             CreateCommands();
         }

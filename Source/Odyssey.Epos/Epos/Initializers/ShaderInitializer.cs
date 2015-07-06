@@ -49,7 +49,7 @@ namespace Odyssey.Epos.Initializers
             var initializers = InitializerMap[technique.Name].Keys.ToList();
             foreach (Type type in initializers)
             {
-                IInitializer initializer = (IInitializer)Activator.CreateInstance(type, new object[]{services});
+                var initializer = (IInitializer)Activator.CreateInstance(type, new object[]{services});
                 initializer.SetupInitialization(this);
             }
         }

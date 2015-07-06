@@ -1,9 +1,6 @@
 ﻿using System.Linq;
-using Odyssey.Engine;
 using Odyssey.Epos.Messages;
 using Odyssey.Epos.Nodes;
-using Odyssey.Epos.Components;
-using System.Collections.Generic;
 
 namespace Odyssey.Epos.Systems
 {

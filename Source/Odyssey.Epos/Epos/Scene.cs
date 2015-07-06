@@ -40,6 +40,7 @@ namespace Odyssey.Epos
         private readonly List<IRenderableSystem> renderableSystems;
         private readonly List<IUpdateableSystem> currentlyUpdatingSystems;
         private readonly List<IUpdateableSystem> updateableSystems;
+        private readonly List<IUpdateableSystem> updatedSystems;
         private readonly EntityMap entityMap;
         private readonly Messenger messenger;
         private readonly SystemMap systemMap;
@@ -56,6 +57,7 @@ namespace Odyssey.Epos
             updateableSystems = new List<IUpdateableSystem>();
             renderableSystems = new List<IRenderableSystem>();
             currentlyUpdatingSystems = new List<IUpdateableSystem>();
+            updatedSystems = new List<IUpdateableSystem>();
             currentlyRenderingSystems = new List<IRenderableSystem>();
             Services = services;
             Services.AddService(typeof (IEntityProvider), this);
@@ -142,11 +144,8 @@ namespace Odyssey.Epos
 
             foreach (IRenderableSystem system in currentlyRenderingSystems)
             {
-
                 if (system.BeginRender())
-                {
                     system.Render();
-                }
             }
 
             currentlyRenderingSystems.Clear();
@@ -188,14 +187,20 @@ namespace Odyssey.Epos
 
             foreach (IUpdateableSystem system in currentlyUpdatingSystems)
             {
-                if (!system.BeforeUpdate())
-                    continue;
+                if (system.BeforeUpdate())
+                {
+                    system.Process(time);
+                    updatedSystems.Add(system);
+                }
+            }
 
-                system.Process(time);
+            foreach (IUpdateableSystem system in updatedSystems)
+            {
                 system.AfterUpdate();
             }
 
             currentlyUpdatingSystems.Clear();
+            updatedSystems.Clear();
         }
 
         public void AddEntity(Entity entity)

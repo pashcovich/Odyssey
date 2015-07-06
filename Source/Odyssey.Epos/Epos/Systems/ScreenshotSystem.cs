@@ -3,10 +3,8 @@ using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Messages;
 using Odyssey.Graphics;
-using Odyssey.Organization.Commands;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using Texture2D = Odyssey.Graphics.Texture2D;
 
 namespace Odyssey.Epos.Systems
 {

@@ -136,6 +136,9 @@ namespace Odyssey.Epos.Systems
                 var ppAction = actions[i];
                 postProcessCommands[i].SetInputs(ppAction.InputIndices.Select(idx => postProcessCommands[idx].Output));
             }
+
+            entity.IsEnabled = true;
+
         }
 
         public override void Process(ITimeService time)
@@ -148,6 +151,7 @@ namespace Odyssey.Epos.Systems
         {
             base.AfterUpdate();
             IsEnabled = false;
+            
         }
     }
 }

@@ -1,5 +1,13 @@
-﻿namespace Odyssey.Epos.Messages
+﻿namespace Odyssey.Epos
 {
+
+    public enum UpdateAction
+    {
+        None,
+        Register,
+        Initialize,
+    }
+
     public enum UpdateType
     {
         Undefined,

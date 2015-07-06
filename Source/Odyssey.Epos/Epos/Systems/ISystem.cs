@@ -17,10 +17,6 @@ namespace Odyssey.Epos.Systems
         Scene Scene { get; }
 
         void AssignToScene(Scene scene);
-
-        void EnqueueMessage<TMessage>(TMessage message)
-            where TMessage : Message;
-
         void Initialize();
         void Start();
 

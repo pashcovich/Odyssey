@@ -73,6 +73,7 @@ namespace Odyssey.Epos.Systems
                 }
                 else
                     cTransform.World = cTransform.Local;
+
             }
         }
 

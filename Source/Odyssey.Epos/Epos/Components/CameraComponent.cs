@@ -18,12 +18,11 @@ namespace Odyssey.Epos.Components
         public float FarClip { get; set; }
         public float FieldOfView { get; set; }
         public CameraType Type { get; set; }
-
         public Vector3 Up { get; set; }
-
         public Matrix View { get; internal set; }
         public Matrix Projection { get; internal set; }
         public ViewportF Viewport { get; set; }
+        public bool Changed { get; internal set; }
 
         public Vector3 Direction
         {

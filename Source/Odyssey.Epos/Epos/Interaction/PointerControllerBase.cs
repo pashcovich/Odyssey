@@ -137,7 +137,6 @@ namespace Odyssey.Epos.Interaction
                 case PointerUpdateKind.MiddleButtonReleased:
                     return MouseButtons.Middle;
 
-
                 case PointerUpdateKind.RightButtonPressed:
                 case PointerUpdateKind.RightButtonReleased:
                     return MouseButtons.Right;

@@ -30,7 +30,7 @@ namespace Odyssey.Epos.Interaction
         private readonly IServiceRegistry services;
         private PositionComponent cPosition;
         private OrientationComponent cOrientation;
-        private UpdateComponent cUpdate;
+        public bool IsEnabled { get; set; }
 
         public ControllerBase(IServiceRegistry services)
         {
@@ -40,11 +40,6 @@ namespace Odyssey.Epos.Interaction
         protected OrientationComponent COrientation
         {
             get { return cOrientation; }
-        }
-
-        protected UpdateComponent CUpdate
-        {
-            get { return cUpdate; }
         }
 
         protected PositionComponent CPosition
@@ -69,8 +64,6 @@ namespace Odyssey.Epos.Interaction
                 throw new InvalidOperationException(string.Format(errorFormat, source.Name, typeof(PositionComponent)));
             if (!source.TryGetComponent(out cOrientation))
                 throw new InvalidOperationException(string.Format(errorFormat, source.Name, typeof(OrientationComponent)));
-            if (!source.TryGetComponent(out cUpdate))
-                throw new InvalidOperationException(string.Format(errorFormat, source.Name, typeof(UpdateComponent)));
         }
 
         public abstract void Update(ITimeService time);

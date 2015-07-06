@@ -9,7 +9,23 @@ namespace Odyssey.Epos.Components
     [RequiredComponent(typeof(TransformComponent))]
     public sealed class ModelComponent : ContentComponent
     {
-        public Model Model { get; private set; }
+        private Model model;
+        [PropertyUpdate(UpdateAction.Register)]
+        public Model Model {
+            get
+            {
+                return model;
+            }
+            private set
+            {
+                if (model != value)
+                {
+                    model = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
         public override bool IsInited { get { return Model != null; } }
 
         

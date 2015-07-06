@@ -63,6 +63,8 @@
     <Compile Include="Epos\Components\AnimationComponent.cs" />
     <Compile Include="Epos\Components\BloomComponent.cs" />
     <Compile Include="Epos\Components\BlurComponent.cs" />
+    <Compile Include="Epos\Components\BoundingBox2DComponent.cs" />
+    <Compile Include="Epos\Components\BoundingBoxComponent.cs" />
     <Compile Include="Epos\Components\ControllerComponent.cs" />
     <Compile Include="Epos\Components\DesignerComponent.cs" />
     <Compile Include="Epos\Components\GlowComponent.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Epos\Components\DiffuseMappingComponent.cs" />
     <Compile Include="Epos\Components\IContentComponent.cs" />
     <Compile Include="Epos\Components\ITextureResource.cs" />
+    <Compile Include="Epos\Components\PropertyUpdateAttribute.cs" />
     <Compile Include="Epos\Components\OptionalComponentAttribute.cs" />
     <Compile Include="Epos\Components\RotationComponent.cs" />
     <Compile Include="Epos\Components\PathComponent.cs" />
@@ -81,6 +84,7 @@
     <Compile Include="Epos\Components\ScreenshotComponent.cs" />
     <Compile Include="Epos\Components\SpriteComponent.cs" />
     <Compile Include="Epos\Components\TargetComponent.cs" />
+    <Compile Include="Epos\Components\UIElementComponent.cs" />
     <Compile Include="Epos\Components\UserInterfaceComponent.cs" />
     <Compile Include="Epos\IEntityController.cs" />
     <Compile Include="Epos\IEntityProvider.cs" />
@@ -92,6 +96,7 @@
     <Compile Include="Epos\Interaction\CameraAction.cs" />
     <Compile Include="Epos\Interaction\ControllerBase.cs" />
     <Compile Include="Epos\Interaction\KeyBinding.cs" />
+    <Compile Include="Epos\Interaction\MouseLookController.cs" />
     <Compile Include="Epos\Interaction\OrbitController.cs" />
     <Compile Include="Epos\Interaction\PointerControllerBase.cs" />
     <Compile Include="Epos\Interaction\PolarController.cs" />
@@ -104,11 +109,16 @@
     <Compile Include="Epos\Messages\ResizeOutputMessage.cs" />
     <Compile Include="Epos\Messages\LightMessage.cs" />
     <Compile Include="Epos\Messages\ScreenshotMessage.cs" />
+    <Compile Include="Epos\Messages\SelectionRequestMessage.cs" />
+    <Compile Include="Epos\Messages\PointerMovedMessage.cs" />
+    <Compile Include="Epos\Messages\SelectionResultMessage.cs" />
     <Compile Include="Epos\Nodes\LightCollection.cs" />
     <Compile Include="Epos\Nodes\ICollectionService.cs" />
     <Compile Include="Epos\Serialization\SceneProxy.cs" />
     <Compile Include="Epos\Serialization\YamlSerializer.cs" />
     <Compile Include="Epos\Systems\AnimationSystem.cs" />
+    <Compile Include="Epos\Systems\BoundingBox2DSystem.cs" />
+    <Compile Include="Epos\Systems\BoundingBoxSystem.cs" />
     <Compile Include="Epos\Systems\ControllerSystem.cs" />
     <Compile Include="Epos\Systems\InitializationSystem.cs" />
     <Compile Include="Epos\Systems\IRenderableSystem.cs" />
@@ -141,7 +151,7 @@
     <Compile Include="Epos\Maps\EntityComponentChangedEventArgs.cs" />
     <Compile Include="Epos\Messages\EntityChangeMessage.cs" />
     <Compile Include="Epos\Messages\EntityMessage.cs" />
-    <Compile Include="Epos\Messages\Enums.cs" />
+    <Compile Include="Epos\Enums.cs" />
     <Compile Include="Epos\Messages\Message.cs" />
     <Compile Include="Epos\Messages\MessageEventArgs.cs" />
     <Compile Include="Epos\Messages\MessageQueue.cs" />

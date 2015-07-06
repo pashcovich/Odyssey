@@ -1,6 +1,6 @@
 ﻿using Odyssey.Epos.Components;
 using Odyssey.Geometry;
-using System;
+using Odyssey.Geometry.Extensions;
 using SharpDX.Mathematics;
 
 namespace Odyssey.Epos.Nodes
@@ -17,7 +17,6 @@ namespace Odyssey.Epos.Nodes
             WorldPosition = Vector3.Transform(PositionComponent.Position, TransformComponent.World).ToVector3();
             //WorldPosition = PositionComponent.Position;
         }
-
 
     }
 }

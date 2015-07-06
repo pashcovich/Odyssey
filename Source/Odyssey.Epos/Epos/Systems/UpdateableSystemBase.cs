@@ -22,23 +22,8 @@ namespace Odyssey.Epos.Systems
 
         public virtual void AfterUpdate()
         {
-            foreach (Entity entity in Scene.SystemMap.SelectAllEntities(this))
-            {
-                if (!entity.IsEnabled)
-                    continue;
 
-                UpdateComponent cUpdate;
-
-                if (!entity.TryGetComponent(out cUpdate))
-                    continue;
-
-                if (cUpdate.UpdateFrequency == UpdateFrequency.Static)
-                    cUpdate.RequiresUpdate = false;
-                else if (cUpdate.UpdateFrequency == UpdateFrequency.RealTime)
-                    cUpdate.RequiresUpdate = true;
-            }
         }
-
 
         public override void Start()
         {

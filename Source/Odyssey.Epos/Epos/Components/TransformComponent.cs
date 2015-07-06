@@ -1,9 +1,7 @@
 ﻿using SharpDX.Mathematics;
-using SharpYaml.Serialization;
 
 namespace Odyssey.Epos.Components
 {
-    [YamlTag("Transform")]
     public class TransformComponent : Component
     {
         public Matrix Local { get; set; }

@@ -24,7 +24,7 @@ namespace Odyssey.Epos.Systems
             // Entity change
             while (MessageQueue.HasItems<EntityChangeMessage>())
             {
-                EntityChangeMessage mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
+                var mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
                 var entity = mEntity.Source;
                 var cAnimation = entity.GetComponent<AnimationComponent>();
                 cAnimation.Initialize();

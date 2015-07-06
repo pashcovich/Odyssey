@@ -15,35 +15,47 @@ namespace Odyssey.Epos.Systems
 
         public override void Start()
         {
-            base.Start();
-            Messenger.Register<PropertyChangeMessage>(this);
+            Subscribe<PropertyChangeMessage>(PropertyChangeMessage);
         }
 
         public override void Stop()
         {
-            base.Stop();
-            Messenger.Unregister<PropertyChangeMessage>(this);
+            Unsubscribe<PropertyChangeMessage>();
         }
 
-        public override bool BeforeUpdate()
+        void PropertyChangeMessage()
         {
-            while (MessageQueue.HasItems<PropertyChangeMessage>())
-            {
-                var cPropertyChange = MessageQueue.Dequeue<PropertyChangeMessage>();
-                if (string.Equals(cPropertyChange.Property, ReflectionHelper.GetPropertyName((ContentComponent c)=> c.AssetName)))
-                    RegisterEntity(cPropertyChange.Component.Owner);
-            }
-            return base.BeforeUpdate();
+            var cPropertyChange = MessageQueue.Dequeue<PropertyChangeMessage>();
+            var attributes = ReflectionHelper.GetPropertyAttributes<PropertyUpdateAttribute>(cPropertyChange.Component.GetType(), cPropertyChange.Property);
+
+            RegisterEntity(cPropertyChange.Component.Owner);
+
+            //foreach (var attribute in attributes)
+            //{
+            //    switch (attribute.UpdateAction)
+            //    {
+            //        case UpdateAction.Register:
+            //            RegisterEntity(cPropertyChange.Component.Owner);
+            //            break;
+
+            //        case UpdateAction.Initialize:
+            //            ((IInitializable)cPropertyChange.Component).Initialize();
+            //            break;
+            //    }
+            //}
+            IsEnabled = true;
         }
 
         static void SetupEntity(IEntity entity)
         {
-            var components = entity.Components.OfType<ContentComponent>();
-
+            var components = entity.Components.OfType<ContentComponent>().ToArray();
+            bool ready = true;
             foreach (var component in components.Where(component => !component.IsInited))
             {
                 component.Initialize();
+                ready &= component.IsInited;
             }
+            //entity.IsEnabled = ready;
         }
 
         public override void Process(ITimeService time)

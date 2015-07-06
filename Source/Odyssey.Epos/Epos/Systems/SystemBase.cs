@@ -18,8 +18,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Reflection;
 using Odyssey.Core;
 using Odyssey.Epos.Messages;
+using Odyssey.Reflection;
 using SharpDX.Mathematics;
 
 #endregion
@@ -28,6 +30,8 @@ namespace Odyssey.Epos.Systems
 {
     public abstract class SystemBase : ISystem
     {
+        protected delegate void MessageHandler();
+        private readonly Dictionary<Type, MessageHandler> messageHandlers;
         private static int index;
         private readonly long id;
         private readonly MessageQueue messageQueue;
@@ -35,6 +39,7 @@ namespace Odyssey.Epos.Systems
 
         protected SystemBase(Selector selector)
         {
+            messageHandlers = new Dictionary<Type, MessageHandler>();
             Selector = selector;
             name = GetType().Name;
             id = 1 << index;
@@ -93,8 +98,25 @@ namespace Odyssey.Epos.Systems
         public void EnqueueMessage<TMessage>(TMessage message)
             where TMessage : Message
         {
-            messageQueue.Enqueue<TMessage>(message);
+            messageQueue.Enqueue(message);
         }
+
+        protected void Subscribe<TMessage>(MessageHandler handler)
+            where TMessage : Message
+        {
+            Messenger.Register<TMessage>(this);
+            var type = typeof (TMessage);
+            messageHandlers.Add(type, handler);
+        }
+
+        protected void Unsubscribe<TMessage>()
+             where TMessage : Message
+        {
+            Messenger.Unregister<TMessage>(this);
+            messageHandlers.Remove(typeof (TMessage));
+        }
+
+        private void Message(EntityChangeMessage t ){}
 
         public abstract void Start();
 
@@ -148,6 +170,11 @@ namespace Odyssey.Epos.Systems
 
         protected virtual void HandleMessages()
         {
+            foreach (var kvp in messageHandlers)
+            {
+                if (MessageQueue.HasItems(kvp.Key))
+                    kvp.Value();
+            }
         }
     }
 }

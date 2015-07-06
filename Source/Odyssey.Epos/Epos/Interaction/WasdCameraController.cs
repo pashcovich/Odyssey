@@ -52,9 +52,6 @@ namespace Odyssey.Epos.Interaction
 
         public override void Update(ITimeService time)
         {
-            if (!CUpdate.RequiresUpdate)
-                return;
-
             KeyboardState keyboard = keyboardService.GetState();
 
             foreach (var keyBinding in CameraBindings)
@@ -67,7 +64,7 @@ namespace Odyssey.Epos.Interaction
 
         protected virtual void KeyDown(KeyBinding binding, ITimeService time)
         {
-            float elapsedTime = (float)time.ElapsedApplicationTime.TotalSeconds;
+            var elapsedTime = (float)time.ElapsedApplicationTime.TotalSeconds;
             switch (binding.ActionType)
             {
                 case CameraAction.MoveForward:
@@ -103,18 +100,20 @@ namespace Odyssey.Epos.Interaction
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("binding.ActionType");
+                    throw new ArgumentOutOfRangeException("binding");
             }
         }
 
         protected void Move(Vector3 direction, float distance)
         {
             CPosition.Position += direction * MovementSpeed * distance;
+            camera.Changed = true;
         }
 
         protected void Rotate(Vector3 axis, float angle)
         {
             COrientation.Orientation *= Quaternion.RotationAxis(axis, angle);
+            camera.Changed = true;
         }
     }
 }

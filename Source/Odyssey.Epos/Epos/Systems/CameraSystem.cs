@@ -15,6 +15,9 @@
 
 #region Using Directives
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Messages;
@@ -24,55 +27,74 @@ using SharpDX.Mathematics;
 
 namespace Odyssey.Epos.Systems
 {
-    public class PerspectiveCameraSystem : UpdateableSystemBase
+    public class PerspectiveCameraSystem : UpdateableSystemBase, ICameraService
     {
+        private readonly List<ICamera> cameras;
+
         public PerspectiveCameraSystem()
-            : base(Selector.All(typeof (PositionComponent), typeof (OrientationComponent), typeof (CameraComponent), typeof (UpdateComponent)))
+            : base(Selector.All(typeof (PositionComponent), typeof (OrientationComponent), typeof (CameraComponent)))
         {
+            cameras = new List<ICamera>();
         }
 
         public override void Start()
         {
-            Messenger.Register<EntityChangeMessage>(this);
+            Subscribe<EntityChangeMessage>(ReceiveEntityChangeMessage);
+            Services.AddService(typeof(ICameraService), this);
+
+            var cameraEntity = Entities.FirstOrDefault();
+            if (cameraEntity != null)
+                MainCamera = cameraEntity.GetComponent<CameraComponent>();
         }
 
         public override void Stop()
         {
-            Messenger.Unregister<EntityChangeMessage>(this);
+            Unsubscribe<EntityChangeMessage>();
         }
         
-        public override bool BeforeUpdate()
+        void ReceiveEntityChangeMessage()
         {
-            // Entity change
-            while (MessageQueue.HasItems<EntityChangeMessage>())
-            {
-                EntityChangeMessage mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
-                var entity = mEntity.Source;
-                var camera = entity.GetComponent<CameraComponent>();
-                
-                if (mEntity.Action == UpdateType.Add)
-                {
-                    ResetCamera(entity);
-                    Messenger.Send(new CameraMessage(entity, camera, UpdateType.Add));
-                }
-                else if (mEntity.Action == UpdateType.Remove)
-                    Messenger.Send(new CameraMessage(entity, camera, UpdateType.Remove));
-            }
-            return base.BeforeUpdate();
-        }
+            var mEntity = MessageQueue.Dequeue<EntityChangeMessage>();
+            var entity = mEntity.Source;
+            var camera = entity.GetComponent<CameraComponent>();
 
+            if (mEntity.Action == UpdateType.Add)
+            {
+                ResetCamera(entity);
+                cameras.Add(camera);
+                if (MainCamera == null)
+                    MainCamera = camera;
+
+            }
+            else if (mEntity.Action == UpdateType.Remove)
+            {
+                cameras.Remove(camera);
+                if (MainCamera == camera)
+                    MainCamera = null;
+            }
+        }
 
         public override void Process(ITimeService time)
         {
             foreach (Entity entity in Entities)
             {
-                var cUpdate = entity.GetComponent<UpdateComponent>();
-                if (!cUpdate.RequiresUpdate)
-                    continue;
-                var cPosition = entity.GetComponent<PositionComponent>();
-                var cRotation = entity.GetComponent<OrientationComponent>();
                 var cCamera = entity.GetComponent<CameraComponent>();
-                cCamera.View = Matrix.Translation(-cPosition.Position)* Matrix.RotationQuaternion(cRotation.Orientation);
+                if (cCamera.Changed)
+                {
+                    var cPosition = entity.GetComponent<PositionComponent>();
+                    var cRotation = entity.GetComponent<OrientationComponent>();
+                    cCamera.View = Matrix.Translation(-cPosition.Position) * Matrix.RotationQuaternion(cRotation.Orientation);
+                }
+            }
+        }
+
+        public override void AfterUpdate()
+        {
+            base.AfterUpdate();
+            foreach (Entity entity in Entities)
+            {
+                var cCamera = entity.GetComponent<CameraComponent>();
+                cCamera.Changed = false;
             }
         }
 
@@ -93,10 +115,8 @@ namespace Odyssey.Epos.Systems
             Vector3 pFocus = cTarget != null ? cTarget.Location : Vector3.Zero;
             cRotation.Orientation = Quaternion.LookAtRH(cPosition.Position, pFocus, cCamera.Up);
             cCamera.View = Matrix.LookAtRH(cPosition.Position, pFocus, cCamera.Up);
-
-            var cUpdate = entity.GetComponent<UpdateComponent>();
-            if (cUpdate.UpdateFrequency == UpdateFrequency.Static)
-                cUpdate.RequiresUpdate = false;
         }
+
+        public ICamera MainCamera { get; private set; }
     }
 }

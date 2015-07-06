@@ -5,7 +5,6 @@ using Odyssey.Graphics.Shaders;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Text.Logging;
-using SharpDX.Mathematics;
 using EngineReference = Odyssey.Engine.EngineReference;
 
 namespace Odyssey.Epos.Initializers
@@ -15,8 +14,8 @@ namespace Odyssey.Epos.Initializers
         protected delegate IEnumerable<IParameter> ParameterMethod(int index, TSource source, InitializerParameters parameters);
 
         protected static readonly SelectorDelegate DefaultSelector = cb => true;
-        protected static readonly SelectorDelegate InstanceSelector = cb => cb.UpdateFrequency == UpdateType.InstanceFrame || cb.UpdateFrequency == UpdateType.InstanceStatic;
-        protected static readonly SelectorDelegate StaticSelector = cb => cb.UpdateFrequency == UpdateType.SceneStatic || cb.UpdateFrequency == UpdateType.SceneFrame;
+        protected static readonly SelectorDelegate InstanceSelector = cb => cb.CbUpdateFrequency == CBUpdateType.InstanceFrame || cb.CbUpdateFrequency == CBUpdateType.InstanceStatic;
+        protected static readonly SelectorDelegate StaticSelector = cb => cb.CbUpdateFrequency == CBUpdateType.SceneStatic || cb.CbUpdateFrequency == CBUpdateType.SceneFrame;
         private DirectXDevice device;
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace Odyssey.Epos.Initializers
                 foreach (var kvp in validReferences)
                 {
                     var reference = kvp.Value;
-                    if (cbDesc.UpdateFrequency != UpdateType.InstanceFrame && cbDesc.IsParsed(effectName, reference))
+                    if (cbDesc.CbUpdateFrequency != CBUpdateType.InstanceFrame && cbDesc.IsParsed(effectName, reference))
                         continue;
 
                     var effectParameters = CreateParameter(cbDesc, source, kvp.Key, reference.Value, parameters);
