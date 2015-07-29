@@ -79,6 +79,7 @@
     <Compile Include="Graphics\Drawing\Designer.BSpline.cs" />
     <Compile Include="Graphics\Drawing\Designer.Triangle.cs" />
     <Compile Include="Graphics\Drawing\DrawInstruction.cs" />
+    <Compile Include="Graphics\Drawing\DrawEllipseArcInstruction.cs" />
     <Compile Include="Graphics\Drawing\FillEllipseArcInstruction.cs" />
     <Compile Include="Graphics\Drawing\FillPolylineInstruction.cs" />
     <Compile Include="Graphics\Drawing\DrawPolylineInstruction.cs" />

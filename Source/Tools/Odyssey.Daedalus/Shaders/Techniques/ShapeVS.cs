@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Daedalus.Shaders.Nodes;
-using Odyssey.Daedalus.Shaders.Nodes.Functions;
+﻿using Odyssey.Daedalus.Shaders.Nodes;
 using Odyssey.Daedalus.Shaders.Nodes.Math;
 using Odyssey.Daedalus.Shaders.Nodes.Operators;
 using Odyssey.Daedalus.Shaders.Structs;
@@ -27,8 +21,8 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             InputStruct = Struct.VertexPositionColor;
             OutputStruct = VSOut;
 
-            ConstantBuffer cbScene = CBPerFrame;
-            ConstantBuffer cbInstance = CBPerInstance;
+            var cbScene = CBPerFrame;
+            var cbInstance = CBPerInstance;
             Add(cbScene);
             Add(cbInstance);
 
@@ -39,7 +33,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 Input2 = MatrixMultiplyNode.WorldViewProjection,
             };
 
-            CustomOutputNode outputNode = new CustomOutputNode() { Output = OutputStruct };
+            var outputNode = new CustomOutputNode() { Output = OutputStruct };
             outputNode.RegisterField(Vector.ClipPosition, mulPosWVP, Shaders.Type.Float4);
             outputNode.RegisterField(Vector.Color, new ReferenceNode { Value = InputStruct[Param.SemanticVariables.Color] }, Shaders.Type.Float4);
 
@@ -50,7 +44,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
         {
             get
             {
-                Struct vpt = new Struct
+                var vpt = new Struct
                 {
                     CustomType = CustomType.VSOut,
                     Name = "output",
@@ -65,7 +59,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
         {
             get
             {
-                ConstantBuffer cbFrame = new ConstantBuffer
+                var cbFrame = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     CbUpdateType = CBUpdateType.SceneFrame
@@ -81,7 +75,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
         {
             get
             {
-                ConstantBuffer cbFrame = new ConstantBuffer
+                var cbFrame = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerInstance,
                     CbUpdateType = CBUpdateType.InstanceFrame
