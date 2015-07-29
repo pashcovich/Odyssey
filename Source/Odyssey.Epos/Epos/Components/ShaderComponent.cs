@@ -45,7 +45,7 @@ namespace Odyssey.Epos.Components
         public override void Initialize()
         {
             Contract.Requires<InvalidOperationException>(AssetName != null);
-            ShaderCollection shaderCollection = Content.Load<ShaderCollection>(AssetName);
+            var shaderCollection = Content.Load<ShaderCollection>(AssetName);
 
             var techniquePool = DeviceService.DirectXDevice.TechniquePool;
             var mapping = shaderCollection.Get(Key);

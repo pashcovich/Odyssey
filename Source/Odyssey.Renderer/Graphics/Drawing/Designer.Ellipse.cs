@@ -28,6 +28,16 @@ namespace Odyssey.Graphics.Drawing
             shapes.Add(new ShapeMeshDescription() { Vertices = vertexArray, Indices = indices });
         }
 
+        public void DrawEllipseArc(Ellipse ellipse, float radFrom, float radTo, int slices, float lineWidth, float strokeWidth)
+        {
+            float[] offsets;
+            EllipseColorShader shader = ChooseEllipseShader(Color, out offsets);
+            int[] indices;
+            Vector3[] vertices = CreateArcMesh(ellipse, offsets, radFrom, radTo, slices, Transform, out indices);
+
+            DrawPolyline(vertices.Select(v=> v.XZ()), lineWidth, strokeWidth);
+        }
+
         public void FillEllipse(Ellipse ellipse, int slices = EllipseTessellation)
         {
             float[] offsets;

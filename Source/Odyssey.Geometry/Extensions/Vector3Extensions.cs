@@ -11,6 +11,11 @@ namespace Odyssey.Geometry.Extensions
             return new Vector2(point.X, point.Y);
         }
 
+        public static Vector2 XZ(this Vector3 point)
+        {
+            return new Vector2(point.X, point.Z);
+        }
+
         public static Vector4 ToVector4(this Vector3 vector3, float w = 1.0f)
         {
             return new Vector4(vector3, w);
