@@ -43,6 +43,7 @@ namespace Odyssey.Daedalus
             }
             var vmLocator = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator"));
             vmLocator.Compilation.Shaders = shaderList;
+            ReferenceSerializer.Serialize(@"odyssey.refs");
         }
 
         private void tbName_PreviewKeyUp(object sender, KeyEventArgs e)

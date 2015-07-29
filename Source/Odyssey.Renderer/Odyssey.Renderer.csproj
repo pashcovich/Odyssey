@@ -77,6 +77,7 @@
     <Compile Include="Graphics\DepthStencilStateCollection.cs" />
     <Compile Include="Graphics\DepthStencilViewSelector.cs" />
     <Compile Include="Graphics\Drawing\Designer.BSpline.cs" />
+    <Compile Include="Graphics\Drawing\Designer.Enums.cs" />
     <Compile Include="Graphics\Drawing\Designer.Triangle.cs" />
     <Compile Include="Graphics\Drawing\DrawInstruction.cs" />
     <Compile Include="Graphics\Drawing\FillEllipseArcInstruction.cs" />

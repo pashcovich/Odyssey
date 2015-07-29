@@ -55,7 +55,8 @@ namespace Odyssey.Graphics.Drawing
                     new[]
                     {
                         new GradientStop(SharpDX.Mathematics.Color.Transparent, 0),
-                        new GradientStop(solidColor.Color, innerRadiusRatio), new GradientStop(solidColor.Color, 1)
+                        new GradientStop(solidColor.Color, innerRadiusRatio),
+                        new GradientStop(solidColor.Color, 1)
                     });
             }
 
