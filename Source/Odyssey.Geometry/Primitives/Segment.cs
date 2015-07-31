@@ -1,25 +1,58 @@
 ﻿using System;
 using SharpDX.Mathematics;
+using Real = System.Single;
+using Point = SharpDX.Mathematics.Vector2;
 
 namespace Odyssey.Geometry.Primitives
 {
     public struct Segment : IEquatable<Segment>
     {
-        private static readonly Vector3 tolerance = new Vector3(MathUtil.ZeroTolerance);
-        public Vector3 A;
-        public Vector3 B;
+        private static readonly Point tolerance = new Point(MathUtil.ZeroTolerance);
+        public Point A;
+        public Point B;
 
-        public Segment(Vector3 a, Vector3 b)
+        public Segment(Point a, Point b)
         {
             A = a;
             B = b;
         }
 
+        //http://math.stackexchange.com/questions/322831/determing-the-distance-from-a-line-segment-to-a-point-in-3-space
+
+        public Real Length
+        {
+            get { return (B - A).Length(); }
+        }
+
+        public Vector2 Direction
+        {
+            get { return B - A; }
+        }
+
+        public Real LengthSquared
+        {
+            get { return (B - A).LengthSquared(); }
+        }
+
+        public static Real Distance(Segment s, Point p)
+        {
+            var l2 = s.LengthSquared;
+            if (MathHelper.IsCloseToZero(l2))
+                return Point.Distance(s.A, p);
+            var t = Vector2.Dot(p - s.A, s.Direction)/s.LengthSquared;
+            if (t < 0) return Point.Distance(p, s.A);
+            if (t > 1) return Point.Distance(p, s.B);
+            var projection = s.A + t*s.Direction;
+            return Point.Distance(p, projection);
+        }
+
+
+
         #region IEquatable
 
         public bool Equals(Segment other)
         {
-            return Vector3.NearEqual(A, other.A, tolerance) && Vector3.NearEqual(B, other.B, tolerance);
+            return (A == other.A) && (B == other.B);
         }
 
         public override bool Equals(object obj)

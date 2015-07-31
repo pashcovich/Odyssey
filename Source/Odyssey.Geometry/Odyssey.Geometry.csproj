@@ -38,6 +38,8 @@
     <Compile Include="Primitives\Face.cs" />
     <Compile Include="Primitives\FigureType.cs" />
     <Compile Include="Primitives\IFigure.cs" />
+    <Compile Include="Primitives\Line3.cs" />
+    <Compile Include="Primitives\Segment3.cs" />
     <Compile Include="Primitives\Triangle.cs" />
     <Compile Include="Primitives\Line.cs" />
     <Compile Include="Primitives\LinearPath.cs" />
