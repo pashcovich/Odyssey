@@ -1,5 +1,4 @@
-﻿using System;
-using Odyssey.Core;
+﻿using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
 using Odyssey.Text.Logging;
@@ -87,13 +86,18 @@ namespace Odyssey.Epos.Interaction
                 return;
 
             Vector2 delta = CurrentPointerPosition - PreviousPointerPosition;
-            rotYaw = delta.X * rotationSpeed * time.FrameTime;
-            rotPitch = delta.Y * rotationSpeed*time.FrameTime;
+            rotYaw = delta.X*rotationSpeed*time.FrameTime;
+            rotPitch = delta.Y*rotationSpeed*time.FrameTime;
            
+            
             var r = Quaternion.RotationAxis(Vector3.UnitY, rotYaw);
             var s = Quaternion.RotationAxis(Vector3.UnitX, rotPitch);
 
+            var q1 = Quaternion.RotationYawPitchRoll(rotYaw, rotPitch, 0);
+
             COrientation.Orientation = s*r* COrientation.Orientation;
+            //COrientation.Orientation = q1 * COrientation.Orientation * Quaternion.Invert(q1);
+            
             LogEvent.Io.Info(delta.ToString());
         }
 

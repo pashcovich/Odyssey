@@ -15,8 +15,8 @@ namespace Odyssey.Epos.Interaction
 
         public WasdCameraController(IServiceRegistry services) :base(services)
         {
-            MovementSpeed = 3.0f;
-            StrafeSpeed = 3f;
+            MovementSpeed = 9.0f;
+            StrafeSpeed = 6f;
             YawSpeed = MathHelper.Pi / 4;
         }
 

@@ -5,7 +5,7 @@
   <PropertyGroup>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ProjectGuid>{FDCB8D73-B33E-4EEA-9238-1F2427FCA05E}</ProjectGuid>
-    <ProjectGuid>{EA37BFCC-7ED7-46E4-9025-A86A7DF93BEB}</ProjectGuid>
+    <ProjectGuid>{FDCB8D73-B33E-4EEA-9238-1F2427FCA05E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Odyssey</RootNamespace>
