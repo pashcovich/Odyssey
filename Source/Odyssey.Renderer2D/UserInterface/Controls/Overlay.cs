@@ -242,6 +242,9 @@ namespace Odyssey.UserInterface.Controls
             if (FocusedElement != null)
                 e.Handled = FocusedElement.ProcessKeyUp(e);
 
+            if (e.Handled)
+                return;
+
             e.Handled = ProcessKeyUp(e);
         }
 

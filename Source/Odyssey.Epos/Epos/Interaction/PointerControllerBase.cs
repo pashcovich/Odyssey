@@ -125,7 +125,7 @@ namespace Odyssey.Epos.Interaction
             }
         }
 
-        protected static MouseButtons Translate(PointerUpdateKind update)
+        public static MouseButtons Translate(PointerUpdateKind update)
         {
             switch (update)
             {

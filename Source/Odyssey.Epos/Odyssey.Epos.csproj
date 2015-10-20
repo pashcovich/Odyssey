@@ -75,6 +75,7 @@
     <Compile Include="Epos\Components\ITextureResource.cs" />
     <Compile Include="Epos\Components\PropertyUpdateAttribute.cs" />
     <Compile Include="Epos\Components\OptionalComponentAttribute.cs" />
+    <Compile Include="Epos\Components\RelationComponent.cs" />
     <Compile Include="Epos\Components\RotationComponent.cs" />
     <Compile Include="Epos\Components\PathComponent.cs" />
     <Compile Include="Epos\Components\PostProcessComponent.Bloom.cs" />
@@ -106,6 +107,9 @@
     <Compile Include="Epos\Maps\TagManager.cs" />
     <Compile Include="Epos\Messages\CameraMessage.cs" />
     <Compile Include="Epos\Messages\ContentMessage.cs" />
+    <Compile Include="Epos\Messages\KeyReleasedMessage.cs" />
+    <Compile Include="Epos\Messages\PointerReleasedMessage.cs" />
+    <Compile Include="Epos\Messages\PointerPressedMessage.cs" />
     <Compile Include="Epos\Messages\ResizeOutputMessage.cs" />
     <Compile Include="Epos\Messages\LightMessage.cs" />
     <Compile Include="Epos\Messages\ScreenshotMessage.cs" />

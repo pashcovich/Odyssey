@@ -34,7 +34,6 @@ namespace Odyssey.UserInterface
     public abstract class UserInterfaceManager : IUserInterfaceState
     {
         private const int maxEvents = 32;
-        private readonly PointerManager pointerManager;
         private readonly PointerState pointerState;
         private readonly Queue<PointerEventArgs> recentEvents;
         private readonly IServiceRegistry services;
@@ -45,7 +44,7 @@ namespace Odyssey.UserInterface
         {
             Contract.Requires<ArgumentNullException>(services != null, "services");
             this.services = services;
-            pointerManager = new PointerManager(services);
+            PointerManager = new PointerManager(services);
             recentEvents = new Queue<PointerEventArgs>();
             pointerState = new PointerState();
         }
@@ -69,10 +68,7 @@ namespace Odyssey.UserInterface
             get { return services; }
         }
 
-        public PointerManager PointerManager
-        {
-            get { return pointerManager; }
-        }
+        public PointerManager PointerManager { get; }
 
         public virtual void Initialize()
         {
@@ -87,8 +83,8 @@ namespace Odyssey.UserInterface
 
         public virtual void Update()
         {
-            pointerManager.Update();
-            pointerManager.GetState(pointerState);
+            PointerManager.Update();
+            PointerManager.GetState(pointerState);
 
             foreach (var point in pointerState.Points)
                 AddEvent(point);
@@ -129,7 +125,7 @@ namespace Odyssey.UserInterface
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException("pointerEvent");
+                    throw new ArgumentOutOfRangeException(nameof(pointerEvent));
             }
         }
 
