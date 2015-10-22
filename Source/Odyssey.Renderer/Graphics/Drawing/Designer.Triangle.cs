@@ -30,7 +30,7 @@ namespace Odyssey.Graphics.Drawing
         public void DrawTriangle(Triangle triangle,float strokeThickness)
         {
             Vector2[] vertices = triangle.Vertices;
-            FillClosedPolyline(vertices, strokeThickness);
+            DrawClosedPolyline(vertices, strokeThickness);
         }
 
         private static Vector3[] CreateIsoscelesTriangleMesh(Triangle triangle, Matrix transform, out int[] indices)

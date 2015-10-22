@@ -69,7 +69,7 @@ namespace Odyssey.Epos.Systems
                 if (entity.TryGetComponent(out cParent) && cParent.Parent != null && cParent.Parent.ContainsComponent<TransformComponent>())
                 {
                     var cParentTransform = cParent.Parent.GetComponent<TransformComponent>();
-                    cTransform.World = cTransform.Local*cParentTransform.World;
+                    cTransform.World = mLocalWorld * cParentTransform.World;
                 }
                 else
                     cTransform.World = cTransform.Local;

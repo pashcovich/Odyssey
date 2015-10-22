@@ -1,5 +1,4 @@
-﻿
-namespace Odyssey.Epos.Messages
+﻿namespace Odyssey.Epos.Messages
 {
     public abstract class EntityMessage : Message
     {

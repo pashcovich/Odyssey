@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Graphics.Models;
-
-namespace Odyssey.Epos.Messages
+﻿namespace Odyssey.Epos.Messages
 {
     public class ContentMessage<TContent> : EntityMessage
     {

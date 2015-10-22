@@ -7,22 +7,25 @@ namespace Odyssey.Graphics.Drawing
     public class DrawPolylineInstruction : DrawInstruction
     {
         private readonly IEnumerable<Vector2> points;
-        private readonly float lineWidth;
-        private readonly PolygonDirection direction;
+        private readonly FaceDirection direction;
+        private readonly bool closed;
 
-        public DrawPolylineInstruction(IEnumerable<Vector2> points, float lineWidth, float strokeThickness,
-            PolygonDirection direction = PolygonDirection.PositiveY) : base(strokeThickness)
+        public DrawPolylineInstruction(IEnumerable<Vector2> points, float strokeThickness, FaceDirection direction = FaceDirection.PositiveY, bool closed = false) : base(strokeThickness)
         {
             this.points = points;
-            this.lineWidth = lineWidth;
             this.direction = direction;
+            this.closed = closed;
         }
 
         public Vector2[] Points { get { return points.ToArray(); } }
 
         public override void Execute(Designer designer)
         {
-            designer.DrawPolyline(points, lineWidth, StrokeThickness, direction);
+            if (closed)
+                designer.DrawClosedPolyline(points, StrokeThickness, direction);
+            else
+                designer.DrawPolyline(points, StrokeThickness, direction);
+            
         }
     }
 }

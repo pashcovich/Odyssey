@@ -11,7 +11,7 @@ namespace Odyssey.Graphics.Drawing
     {
         private delegate void RenderRectangle(RectangleF rectangle);
 
-        void CreatePolyLine(IEnumerable<Vector2> points, float lineWidth, RenderRectangle callback, PolygonDirection direction)
+        void CreatePolyLine(IEnumerable<Vector2> points, float strokeThickness, RenderRectangle callback, FaceDirection direction)
         {
             Contract.Requires<ArgumentNullException>(points!=null, "points");
             Vector2[] pointArray = points as Vector2[] ?? points.ToArray();
@@ -31,21 +31,21 @@ namespace Odyssey.Graphics.Drawing
                 float angle;
 
                 if (MathHelper.IsCloseToZero(xDiff))
-                    angle = 0;
+                    angle = yDiff>=0 ? 0 : MathHelper.Pi;
                 else
                     angle = (float) Math.Atan2(yDiff, xDiff) - MathHelper.PiOverTwo;
 
                 Matrix previousTransform = Transform;
                 switch (direction)
                 {
-                    case PolygonDirection.PositiveY:
+                    case FaceDirection.PositiveY:
                         Transform = Matrix.RotationYawPitchRoll(0, 0, angle)*Matrix.Translation(p0)*Transform;
                         break;
-                    case PolygonDirection.NegativeZ:
+                    case FaceDirection.NegativeZ:
                         Transform = Matrix.RotationYawPitchRoll(MathHelper.PiOverTwo, -angle, 0)*Matrix.Translation(p0)*Transform;
                         break;
 
-                    case PolygonDirection.PositiveZ:
+                    case FaceDirection.PositiveZ:
                         Transform = Matrix.RotationYawPitchRoll(MathHelper.PiOverTwo, MathHelper.Pi-angle, MathHelper.Pi) * Matrix.Translation(p0) * Transform;
                         break;
 
@@ -53,24 +53,24 @@ namespace Odyssey.Graphics.Drawing
                         throw new NotImplementedException("direction");
                 }
 
-                callback(new RectangleF(-lineWidth / 2, 0, lineWidth, d));
+                callback(new RectangleF(-strokeThickness / 2, 0, strokeThickness, d));
                 Transform = previousTransform;
             }
         }
 
-        public void DrawPolyline(IEnumerable<Vector2> points, float lineWidth, float strokeThickness, PolygonDirection direction = PolygonDirection.PositiveY)
+        public void DrawPolyline(IEnumerable<Vector2> points, float strokeThickness, FaceDirection direction = FaceDirection.PositiveY)
+        {
+            RenderRectangle callback = FillRectangle;
+            CreatePolyLine(points, strokeThickness, callback, direction);
+        }
+
+        public void FillPolyline(IEnumerable<Vector2> points, float lineWidth, FaceDirection direction = FaceDirection.PositiveY)
         {
             RenderRectangle callback = FillRectangle;
             CreatePolyLine(points, lineWidth, callback, direction);
         }
 
-        public void FillPolyline(IEnumerable<Vector2> points, float lineWidth, PolygonDirection direction = PolygonDirection.PositiveY)
-        {
-            RenderRectangle callback = FillRectangle;
-            CreatePolyLine(points, lineWidth, callback, direction);
-        }
-
-        public void FillClosedPolyline(IEnumerable<Vector2> points, float lineWidth, PolygonDirection direction = PolygonDirection.PositiveY)
+        public void DrawClosedPolyline(IEnumerable<Vector2> points, float lineWidth, FaceDirection direction = FaceDirection.PositiveY)
         {
             RenderRectangle callback = FillRectangle;
             var pointList = new List<Vector2>(points);

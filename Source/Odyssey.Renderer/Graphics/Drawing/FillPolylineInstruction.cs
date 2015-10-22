@@ -7,9 +7,9 @@ namespace Odyssey.Graphics.Drawing
     {
         private readonly IEnumerable<Vector2> points;
         private readonly float lineWidth;
-        private readonly PolygonDirection direction;
+        private readonly FaceDirection direction;
 
-        public FillPolylineInstruction(IEnumerable<Vector2> points, float lineWidth, PolygonDirection direction=PolygonDirection.PositiveY)
+        public FillPolylineInstruction(IEnumerable<Vector2> points, float lineWidth, FaceDirection direction=FaceDirection.PositiveY)
         {
             this.points = points;
             this.lineWidth = lineWidth;

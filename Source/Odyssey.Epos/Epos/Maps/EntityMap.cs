@@ -92,6 +92,11 @@ namespace Odyssey.Epos.Maps
             return entities[id];
         }
 
+        public Entity SelectEntity(string name)
+        {
+            return entities.Values.FirstOrDefault(e => string.Equals(e.Name, name));
+        }
+
         public int Count
         {
             get { return entities.Count; }

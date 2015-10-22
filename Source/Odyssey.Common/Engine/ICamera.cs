@@ -5,6 +5,7 @@ namespace Odyssey.Engine
     public interface ICamera
     {
         int Index { get; }
+        Vector3 Position { get; }
         Matrix View {get;}
         Matrix Projection { get; }
         ViewportF Viewport { get; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Geometry;
 using Odyssey.Geometry.Extensions;
@@ -33,9 +34,9 @@ namespace Odyssey.Graphics.Drawing
             float[] offsets;
             EllipseColorShader shader = ChooseEllipseShader(Color, out offsets);
             int[] indices;
-            Vector3[] vertices = CreateArcMesh(ellipse, offsets, radFrom, radTo, slices, Transform, out indices);
-
-            DrawPolyline(vertices.Select(v=> v.XZ()), lineWidth, strokeWidth);
+            var vertexList = CreateArcMesh(ellipse, offsets, radFrom, radTo, slices, Matrix.Identity, out indices);
+           
+            DrawClosedPolyline(vertexList.Select(v => v.XY()), strokeWidth);
         }
 
         public void FillEllipse(Ellipse ellipse, int slices = EllipseTessellation)

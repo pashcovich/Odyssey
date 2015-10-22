@@ -15,13 +15,11 @@ namespace Odyssey.Graphics.Drawing
             get { return tessellation; }
         }
 
-
-        public DrawEllipseArcInstruction(Ellipse ellipse, float radFrom, float radTo, int tessellation, float lineWidth, float strokeWidth)
+        public DrawEllipseArcInstruction(Ellipse ellipse, float radFrom, float radTo, int tessellation, float strokeWidth)
             : base(ellipse, strokeWidth)
         {
             this.radFrom = radFrom;
             this.radTo = radTo;
-            this.lineWidth = lineWidth;
             this.tessellation = tessellation;
         }
 

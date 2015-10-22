@@ -1,9 +1,10 @@
 ﻿namespace Odyssey.Graphics.Drawing
 {
-    public enum PolygonDirection
+    public enum FaceDirection
     {
         PositiveY,
         NegativeZ,
         PositiveZ,
     }
+
 }

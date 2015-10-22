@@ -11,6 +11,7 @@ namespace Odyssey.Epos.Components
         Stereo
     }
 
+    [RequiredComponent(typeof(PositionComponent))]
     public class CameraComponent : Component, ICamera
     {
         public int Index { get; set; }
@@ -54,6 +55,9 @@ namespace Odyssey.Epos.Components
             Type = CameraType.Perspective;
         }
 
-
+        Vector3 ICamera.Position
+        {
+            get { return Owner.GetComponent<PositionComponent>().Position; }
+        }
     }
 }
