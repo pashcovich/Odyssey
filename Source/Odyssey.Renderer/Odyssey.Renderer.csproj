@@ -72,6 +72,7 @@
     <Compile Include="Engine\PresentationInterval.cs" />
     <Compile Include="Engine\PresentationParameters.cs" />
     <Compile Include="Engine\RenderTargetGraphicsPresenter.cs" />
+    <Compile Include="Engine\StereoSwapChainGraphicsPresenter.cs" />
     <Compile Include="Graphics\BlendStateCollection.cs" />
     <Compile Include="Graphics\Buffer.Constant.cs" />
     <Compile Include="Graphics\DepthStencilStateCollection.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Graphics\TextureDimension.cs" />
     <Compile Include="Graphics\TextureFlags.cs" />
     <Compile Include="Graphics\TextureView.cs" />
+    <Compile Include="Graphics\TextureViewDescription.cs" />
     <Compile Include="Graphics\UnorderedAccessViewSelector.cs" />
     <Compile Include="Graphics\VertexBufferLayout.cs" />
     <Compile Include="Graphics\VertexElement.cs" />

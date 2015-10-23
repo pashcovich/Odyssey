@@ -876,8 +876,9 @@ namespace Odyssey.Engine
 
         private void CreateDevice(DeviceInformation newInfo)
         {
-            SharpDX.Utilities.Dispose(ref directXDevice);
+            Utilities.Dispose(ref directXDevice);
 
+            newInfo.PresentationParameters.IsStereo = isStereo;
             newInfo.PresentationParameters.IsFullScreen = isFullScreen;
             newInfo.PresentationParameters.PresentationInterval = SynchronizeWithVerticalRetrace
                 ? PresentInterval.One
@@ -904,8 +905,7 @@ namespace Odyssey.Engine
         private void RaiseEvent<T>(EventHandler<T> handler, object sender, T args)
             where T : EventArgs
         {
-            if (handler != null)
-                handler(sender, args);
+            handler?.Invoke(sender, args);
         }
 
         private void Window_ClientSizeChanged(object sender, EventArgs e)

@@ -84,6 +84,7 @@
     <Compile Include="Epos\Components\RequiredComponentAttribute.cs" />
     <Compile Include="Epos\Components\ScreenshotComponent.cs" />
     <Compile Include="Epos\Components\SpriteComponent.cs" />
+    <Compile Include="Epos\Components\StereoCameraComponent.cs" />
     <Compile Include="Epos\Components\TargetComponent.cs" />
     <Compile Include="Epos\Components\UIElementComponent.cs" />
     <Compile Include="Epos\Components\UserInterfaceComponent.cs" />
@@ -105,7 +106,6 @@
     <Compile Include="Epos\Maps\MessageMap.cs" />
     <Compile Include="Epos\Maps\SystemEventArgs.cs" />
     <Compile Include="Epos\Maps\TagManager.cs" />
-    <Compile Include="Epos\Messages\CameraMessage.cs" />
     <Compile Include="Epos\Messages\ContentMessage.cs" />
     <Compile Include="Epos\Messages\KeyReleasedMessage.cs" />
     <Compile Include="Epos\Messages\PointerReleasedMessage.cs" />

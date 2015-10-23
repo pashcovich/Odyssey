@@ -139,10 +139,7 @@ namespace Odyssey.Engine
         /// Gets the depth stencil buffer sets by the current <see cref="Presenter" /> setup on this device.
         /// </summary>
         /// <value>The depth stencil buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device or no depth buffer was allocated.</value>
-        public DepthStencilBuffer DepthStencilBuffer
-        {
-            get { return Presenter != null ? Presenter.DepthStencilBuffer : null; }
-        }
+        public DepthStencilBuffer DepthStencilBuffer => Presenter != null ? Presenter.DepthStencilBuffer : null;
 
         /// <summary>
         /// Gets the status of this device.
@@ -190,20 +187,11 @@ namespace Odyssey.Engine
             }
         }
 
-        public DeviceFeatures Features
-        {
-            get { return features; }
-        }
+        public DeviceFeatures Features => features;
 
-        public bool IsDebugMode
-        {
-            get { return isDebugMode; }
-        }
+        public bool IsDebugMode => isDebugMode;
 
-        public Device1 NativeDevice
-        {
-            get { return device; }
-        }
+        public Device1 NativeDevice => device;
 
         public GraphicsPresenter Presenter { get; set; }
 
@@ -211,15 +199,9 @@ namespace Odyssey.Engine
         /// Gets the back buffer sets by the current <see cref="Presenter" /> setup on this device.
         /// </summary>
         /// <value>The back buffer. The returned value may be null if no <see cref="GraphicsPresenter"/> are setup on this device.</value>
-        public RenderTarget2D BackBuffer
-        {
-            get { return Presenter != null ? Presenter.BackBuffer : null; }
-        }
+        public RenderTarget2D BackBuffer => Presenter?.BackBuffer;
 
-        public TechniquePool TechniquePool
-        {
-            get { return techniquePool; }
-        }
+        public TechniquePool TechniquePool => techniquePool;
 
         /// <summary>
         /// Gets the main viewport.
@@ -238,10 +220,7 @@ namespace Odyssey.Engine
 
         internal BlendStateCollection BlendStates { get; private set; }
 
-        internal Technique CurrentTechnique
-        {
-            get { return currentTechnique; }
-        }
+        internal Technique CurrentTechnique => currentTechnique;
 
         internal DepthStencilStateCollection DepthStencilStates { get; private set; }
 
@@ -258,12 +237,12 @@ namespace Odyssey.Engine
 
         public static implicit operator Device(DirectXDevice from)
         {
-            return @from == null ? null : @from.device;
+            return @from?.device;
         }
 
         public static implicit operator DeviceContext(DirectXDevice from)
         {
-            return @from == null ? null : @from.context;
+            return @from?.context;
         }
 
         /// <summary>
@@ -1014,15 +993,9 @@ namespace Odyssey.Engine
         }
         #region IDirect3DProvider
 
-        DeviceContext1 IDirect3DProvider.Context
-        {
-            get { return context; }
-        }
+        DeviceContext1 IDirect3DProvider.Context => context;
 
-        Device1 IDirect3DProvider.Device
-        {
-            get { return device; }
-        }
+        Device1 IDirect3DProvider.Device => device;
 
         #endregion IDirect3DProvider
         protected override void Dispose(bool disposeManagedResources)
@@ -1126,14 +1099,8 @@ namespace Odyssey.Engine
             InputAssembler.InputLayout = inputLayout;
         }
 
-        RenderTargetView ITarget.RenderTarget
-        {
-            get { return currentRenderTargetView; }
-        }
+        RenderTargetView ITarget.RenderTarget => currentRenderTargetView;
 
-        DepthStencilView ITarget.DepthStencilBuffer
-        {
-            get { return currentDepthStencilView; }
-        }
+        DepthStencilView ITarget.DepthStencilBuffer => currentDepthStencilView;
     }
 }

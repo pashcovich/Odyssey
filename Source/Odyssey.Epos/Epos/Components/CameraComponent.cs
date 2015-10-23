@@ -43,15 +43,19 @@ namespace Odyssey.Epos.Components
         public Vector3 AxisZ
         {
             get { return new Vector3(View.M13, View.M23, View.M33); }
-        } 
+        }
 
-        public CameraComponent() : base(ComponentTypeManager.GetType<CameraComponent>())
+        protected CameraComponent(ComponentType type) : base(type)
         {
             Index = 0;
             NearClip = 1.0f;
             FarClip = 1000.0f;
-            FieldOfView = (float) (Math.PI/4);
+            FieldOfView = (float)(Math.PI / 4);
             Up = Vector3.UnitY;
+        }
+
+        public CameraComponent() :this(ComponentTypeManager.GetType<CameraComponent>())
+        {
             Type = CameraType.Perspective;
         }
 

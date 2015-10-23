@@ -1,5 +1,4 @@
 ﻿#region Using Directives
-
 using Odyssey.Graphics;
 using Odyssey.Text.Logging;
 using SharpDX;
@@ -9,12 +8,11 @@ using System.Windows.Forms;
 using SharpDX.Mathematics.Interop;
 using Device = SharpDX.Direct3D11.Device;
 using Texture2D = SharpDX.Direct3D11.Texture2D;
-
 #endregion Using Directives
 
 namespace Odyssey.Engine
 {
-    public class DesktopPresenter : SwapChainGraphicsPresenter
+    public class DesktopPresenter : StereoSwapChainGraphicsPresenter
     {
         public DesktopPresenter(DirectXDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
@@ -70,7 +68,7 @@ namespace Odyssey.Engine
                     RemoveAndDispose(ref swapChain);
 
                     swapChain = CreateSwapChain();
-                    BackBuffer = ToDispose(RenderTarget2D.New(DirectXDevice, swapChain.GetBackBuffer<Texture2D>(0)));
+                    SetBackbuffer(ToDispose(RenderTarget2D.New(DirectXDevice, swapChain.GetBackBuffer<Texture2D>(0))));
                 }
                 else
                 {
@@ -101,14 +99,13 @@ namespace Odyssey.Engine
             if (!handle.HasValue)
             {
                 throw new NotSupportedException(
-                    string.Format("DeviceWindowHandle of type [{0}] is not supported. Only System.Windows.Control or IntPtr are supported",
-                        Description.DeviceWindowHandle != null ? Description.DeviceWindowHandle.GetType().Name : "null"));
+                    $"DeviceWindowHandle of type [{Description.DeviceWindowHandle?.GetType().Name ?? "null"}] is not supported. Only System.Windows.Control or IntPtr are supported");
             }
 
             int requestedMultiSampleCount = (int)Description.MultiSampleCount;
             int multiSampleCount = Math.Min((int)DirectXDevice.Features[Description.BackBufferFormat].MSAALevelMax, requestedMultiSampleCount);
             if (multiSampleCount < (int)Description.MultiSampleCount)
-                LogEvent.Engine.Warning(string.Format("Requested MultiSampleCount of {0} not supported, using {1} instead", requestedMultiSampleCount, multiSampleCount));
+                LogEvent.Engine.Warning($"Requested MultiSampleCount of {requestedMultiSampleCount} not supported, using {multiSampleCount} instead");
 
             BufferCount = 1;
             var description = new SwapChainDescription

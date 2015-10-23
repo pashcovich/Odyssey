@@ -21,9 +21,14 @@ namespace Odyssey.Engine
         /// <summary>
         /// Gets the default back buffer for this presenter.
         /// </summary>
-        public override RenderTarget2D BackBuffer { get { return backBuffer; } protected set { backBuffer = value; } }
+        public override RenderTarget2D BackBuffer => backBuffer;
 
-        protected SwapChain SwapChain { get { return swapChain; } }
+        protected SwapChain SwapChain { get; set; }
+
+        protected void SetBackbuffer(RenderTarget2D backBuffer)
+        {
+            this.backBuffer = backBuffer;
+        }
 
         protected SwapChainGraphicsPresenter(DirectXDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
@@ -32,16 +37,13 @@ namespace Odyssey.Engine
 
             // Initialize the swap chain
             swapChain = ToDispose(CreateSwapChain());
-            backBuffer = ToDispose(RenderTarget2D.New(device, swapChain.GetBackBuffer<Texture2D>(0)));
-            backBuffer.DebugName = string.Format("RT2D_Backbuffer");
+            var rawBackbuffer = swapChain.GetBackBuffer<Texture2D>(0);
+            backBuffer = ToDispose(RenderTarget2D.New(device, rawBackbuffer));
         }
 
         protected int BufferCount { get; set; }
 
-        public override object NativePresenter
-        {
-            get { return swapChain; }
-        }
+        public override object NativePresenter => swapChain;
 
         public override void Present()
         {
@@ -96,15 +98,9 @@ namespace Odyssey.Engine
 
         #region ISwapChainPresenterService
 
-        SharpDX.Direct3D11.RenderTargetView ISwapChainPresenterService.BackBuffer
-        {
-            get { return backBuffer; }
-        }
+        SharpDX.Direct3D11.RenderTargetView ISwapChainPresenterService.BackBuffer => backBuffer;
 
-        SwapChain ISwapChainPresenterService.SwapChain
-        {
-            get { return swapChain; }
-        }
+        SwapChain ISwapChainPresenterService.SwapChain => swapChain;
 
         #endregion ISwapChainPresenterService
     }

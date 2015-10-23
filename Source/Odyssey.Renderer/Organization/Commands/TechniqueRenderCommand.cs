@@ -23,7 +23,7 @@ namespace Odyssey.Organization.Commands
             Contract.Requires<ArgumentNullException>(model != null, "model");
 
             Model = model;
-            Name = string.Format("{0}[{1}]", Type, Technique.Name);
+            Name = $"{Type}[{Technique.Name}]";
         }
 
         public override void Initialize()

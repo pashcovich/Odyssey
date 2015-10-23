@@ -5,7 +5,7 @@ namespace Odyssey.Engine
 {
     public struct StereoParameters : IEquatable<StereoParameters>
     {
-        const float defaultInterocularDistance = 1.25f;
+        const float DefaultInterocularDistance = 1.25f;
 
         public float ViewerDistanceInches;
         public float DisplaySizeInches;
@@ -16,7 +16,7 @@ namespace Odyssey.Engine
         public float InterocularDistanceInches;
 
         public StereoParameters(float screenWidth, float screenHeight,
-            float viewerDistanceInches = 24.0f, float displaySizeInches = 22.0f, float interocularDistanceInches = defaultInterocularDistance,
+            float viewerDistanceInches = 24.0f, float displaySizeInches = 22.0f, float interocularDistanceInches = DefaultInterocularDistance,
             float stereoSeparationFactor = 1.0f, float stereoExaggerationFactor = 1.0f)
             : this()
         {

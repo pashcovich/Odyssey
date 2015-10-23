@@ -27,7 +27,6 @@ namespace Odyssey.Epos.Components
         }
 
         public override bool IsInited { get { return Model != null; } }
-
         
         public ModelComponent()
             : base(ComponentTypeManager.GetType<ModelComponent>())
@@ -47,7 +46,7 @@ namespace Odyssey.Epos.Components
 
             var mContent = e.Message as ContentMessage<Model>;
             if (mContent == null)
-                throw new InvalidOperationException(string.Format("Message of type '{0}' is not supported", e.Message.GetType()));
+                throw new InvalidOperationException($"Message of type '{e.Message.GetType()}' is not supported");
             Model = mContent.Content;
         }
     }

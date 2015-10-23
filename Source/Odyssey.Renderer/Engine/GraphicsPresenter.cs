@@ -41,7 +41,7 @@ namespace Odyssey.Engine
         /// <summary>
         /// Gets the default back buffer for this presenter.
         /// </summary>
-        public abstract RenderTarget2D BackBuffer { get; protected set; }
+        public abstract RenderTarget2D BackBuffer { get;}
 
         /// <summary>
         /// Default viewport that covers the whole presenter surface.

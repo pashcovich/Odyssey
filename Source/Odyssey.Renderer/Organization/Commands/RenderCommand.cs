@@ -17,7 +17,6 @@ namespace Odyssey.Organization.Commands
         
         public Model Model { get; protected set; }
         protected int EntityCount { get { return entities.Count(); }}
-        
 
         public IEnumerable<IEntity> Entities { get { return entities; } }
 

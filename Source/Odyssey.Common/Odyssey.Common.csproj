@@ -111,6 +111,7 @@
     <Compile Include="Epos\INotifiable.cs" />
     <Compile Include="Geometry\IFunction.cs" />
     <Compile Include="Core\IServiceRegistry.cs" />
+    <Compile Include="Graphics\StereoHelper.cs" />
     <Compile Include="Organization\Commands\PlayAnimationCommand.cs" />
     <Compile Include="Animations\QuaternionCurve.cs" />
     <Compile Include="Animations\FloatCurve.cs" />

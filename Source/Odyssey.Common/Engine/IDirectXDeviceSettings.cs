@@ -26,5 +26,6 @@ namespace Odyssey.Engine
         FeatureLevel[] PreferredGraphicsProfile { get; set; }
 
         int PreferredMultiSampleCount { get; set; }
+
     }
 }
