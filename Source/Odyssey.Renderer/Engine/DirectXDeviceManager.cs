@@ -105,10 +105,9 @@ namespace Odyssey.Engine
     // By default on WP8, only run in 9.3 to make sure
     // that we are not going to use 11.1 features when
     // running from the debugger.
-                    FeatureLevel.Level_9_3,
-#elif DIRECTX11_1
-                FeatureLevel.Level_11_1,
+                FeatureLevel.Level_9_3,
 #endif
+                FeatureLevel.Level_11_1,
                 FeatureLevel.Level_11_0,
                 FeatureLevel.Level_10_1,
                 FeatureLevel.Level_10_0,

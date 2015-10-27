@@ -12,7 +12,7 @@ using Texture2D = SharpDX.Direct3D11.Texture2D;
 
 namespace Odyssey.Engine
 {
-    public class DesktopPresenter : StereoSwapChainGraphicsPresenter
+    public class DesktopPresenter : SwapChainGraphicsPresenter
     {
         public DesktopPresenter(DirectXDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
@@ -106,36 +106,77 @@ namespace Odyssey.Engine
             int multiSampleCount = Math.Min((int)DirectXDevice.Features[Description.BackBufferFormat].MSAALevelMax, requestedMultiSampleCount);
             if (multiSampleCount < (int)Description.MultiSampleCount)
                 LogEvent.Engine.Warning($"Requested MultiSampleCount of {requestedMultiSampleCount} not supported, using {multiSampleCount} instead");
+            bool isStereo = Description.IsStereo;
+            bool windows8 = Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor==3;
 
-            BufferCount = 1;
-            var description = new SwapChainDescription
+            BufferCount = isStereo ? 2 : 1;
+            if (isStereo)
             {
-                ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate,
+                var description = new SwapChainDescription1()
+                {
+                    // Automatic sizing
+                    Width = Description.BackBufferWidth,
+                    Height = Description.BackBufferHeight,
+                    Format = Description.BackBufferFormat,
+                    Stereo = true,
+                    SampleDescription = new SharpDX.DXGI.SampleDescription(1, 0),
+                    Usage = Description.RenderTargetUsage,
+
+                    // Use two buffers to enable flip effect.
+                    BufferCount = 2,
+                    Scaling = windows8 ? SharpDX.DXGI.Scaling.None : Scaling.Stretch,
+                    SwapEffect = SharpDX.DXGI.SwapEffect.FlipSequential,
+                };
+
+                var scFullScreenDesc = new SwapChainFullScreenDescription()
+                {
+                    Windowed = !Description.IsFullScreen,
+                    RefreshRate = new Rational(120,1)
+                };
+                using (var dxgiDevice2 = DirectXDevice.NativeDevice.QueryInterface<SharpDX.DXGI.Device2>())
+                using (var dxgiAdapter = dxgiDevice2.Adapter)
+                using (var dxgiFactory2 = dxgiAdapter.GetParent<Factory2>())
+                {
+                    var swapChain = new SwapChain1(dxgiFactory2, DirectXDevice.NativeDevice, handle.Value, ref description, scFullScreenDesc);
+                    swapChain.ResizeBuffers(2, description.Width, description.Height, Description.BackBufferFormat, description.Flags);
+
+                    // Ensure that DXGI does not queue more than one frame at a time. This both
+                    // reduces latency and ensures that the application will only render after each
+                    // VSync, minimizing power consumption.
+                    dxgiDevice2.MaximumFrameLatency = 1;
+                    return swapChain;
+                }
+            }
+            else
+            {
+                var description = new SwapChainDescription
+                {
+                    ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate,
                         Description.BackBufferFormat),
-                BufferCount = BufferCount, // TODO: Do we really need this to be configurable by the user?
-                OutputHandle = handle.Value,
-                SampleDescription = new SampleDescription(multiSampleCount, 0),
-                SwapEffect = SwapEffect.Discard,
-                Usage = Description.RenderTargetUsage,
-                IsWindowed = true,
-                Flags = Description.Flags,
-            };
+                    BufferCount = BufferCount, // TODO: Do we really need this to be configurable by the user?
+                    OutputHandle = handle.Value,
+                    SampleDescription = new SampleDescription(multiSampleCount, 0),
+                    SwapEffect = SwapEffect.Discard,
+                    Usage = Description.RenderTargetUsage,
+                    IsWindowed = true,
+                    Flags = Description.Flags,
+                };
+                var swapChain = new SwapChain(GraphicsAdapter.Factory, (Device)DirectXDevice, description);
 
-            var newSwapChain = new SwapChain(GraphicsAdapter.Factory, (Device)DirectXDevice, description);
-            if (Description.IsFullScreen)
-            {
+                if (!Description.IsFullScreen) return swapChain;
+
                 // Before fullscreen switch
-                newSwapChain.ResizeTarget(ref description.ModeDescription);
+                swapChain.ResizeTarget(ref description.ModeDescription);
 
                 // Switch to full screen
-                newSwapChain.IsFullScreen = true;
+                swapChain.IsFullScreen = true;
 
                 // This is really important to call ResizeBuffers AFTER switching to IsFullScreen
-                newSwapChain.ResizeBuffers(BufferCount, Description.BackBufferWidth, Description.BackBufferHeight,
+                swapChain.ResizeBuffers(BufferCount, Description.BackBufferWidth, Description.BackBufferHeight,
                     Description.BackBufferFormat, SwapChainFlags.AllowModeSwitch);
+                return swapChain;
             }
 
-            return newSwapChain;
         }
     }
 }

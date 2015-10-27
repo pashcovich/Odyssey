@@ -37,17 +37,16 @@ namespace Odyssey.Engine
         internal RasterizerStage RasterizerStage;
         internal VertexShaderStage VertexShader;
         private const int SimultaneousRenderTargetCount = OutputMergerStage.SimultaneousRenderTargetCount;
-        private readonly DeviceContext1 context;
         private readonly RenderTargetView[] currentRenderTargetViews;
-        private readonly Device1 device;
         private readonly DeviceFeatures features;
         private readonly bool isDebugMode;
         private readonly TechniquePool techniquePool;
-#if DIRECTX11_1
-#else
-        SharpDX.Direct3D11.DeviceContext context;
-        SharpDX.Direct3D11.Device device;
-#endif
+        private readonly Device1 device;
+        private readonly DeviceContext1 context;
+        public Device1 NativeDevice => device;
+        DeviceContext1 IDirect3DProvider.Context => context;
+        Device1 IDirect3DProvider.Device => device;
+
         private readonly ViewportF[] viewports;
 
         private int actualRenderTargetViewCount;
@@ -78,17 +77,11 @@ namespace Odyssey.Engine
 
         protected DirectXDevice(Device existingDevice, GraphicsAdapter adapter = null)
         {
-#if DIRECTX11_1
             ToDispose(existingDevice);
             device = ToDispose(existingDevice.QueryInterface<Device1>());
 
             // Get Direct3D 11.1 context
             context = ToDispose(device.ImmediateContext.QueryInterface<DeviceContext1>());
-
-#else
-            device = new Device(adapter, creationFlags, featureLevels);
-            context = device.ImmediateContext;
-#endif
 
             // If the adapter is null, then try to locate back the adapter
             if (adapter == null)
@@ -191,7 +184,7 @@ namespace Odyssey.Engine
 
         public bool IsDebugMode => isDebugMode;
 
-        public Device1 NativeDevice => device;
+
 
         public GraphicsPresenter Presenter { get; set; }
 
@@ -993,9 +986,6 @@ namespace Odyssey.Engine
         }
         #region IDirect3DProvider
 
-        DeviceContext1 IDirect3DProvider.Context => context;
-
-        Device1 IDirect3DProvider.Device => device;
 
         #endregion IDirect3DProvider
         protected override void Dispose(bool disposeManagedResources)
