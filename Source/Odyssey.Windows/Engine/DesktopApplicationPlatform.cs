@@ -41,7 +41,7 @@ namespace Odyssey.Engine
         {
             base.CreatePresenter(device, parameters, newControl);
             // Give a chance to applicationWindow to create desired graphics presenter, otherwise - create our own.
-            var swapchainPresenter = new DesktopPresenter(device, parameters);
+            var swapchainPresenter = new StereoDesktopPresenter(device, parameters);
             device.Presenter = swapchainPresenter;
             Application.Services.AddService(typeof (ISwapChainPresenterService), swapchainPresenter);
         }

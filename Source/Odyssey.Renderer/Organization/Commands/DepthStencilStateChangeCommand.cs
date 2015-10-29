@@ -14,7 +14,7 @@ namespace Odyssey.Organization.Commands
         }
 
         public DepthStencilStateChangeCommand(IServiceRegistry services, DepthStencilState depthStencilState)
-            : base(services, CommandType.DepthStencilStateChange)
+            : base(services, CommandType.ChangeDepthStencilState)
         {
             this.depthStencilState = ToDispose(depthStencilState);
         }

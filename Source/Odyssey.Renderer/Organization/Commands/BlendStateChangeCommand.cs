@@ -8,13 +8,10 @@ namespace Odyssey.Organization.Commands
     {
         private readonly BlendState blendState;
 
-        public BlendState BlendState
-        {
-            get { return blendState; }
-        }
+        public BlendState BlendState => blendState;
 
         public BlendStateChangeCommand(IServiceRegistry services, BlendState blendState)
-            : base(services, CommandType.BlendStateChange)
+            : base(services, CommandType.ChangeBlendState)
         {
             this.blendState = ToDispose(blendState);
         }

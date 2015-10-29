@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Core;
@@ -14,14 +15,13 @@ namespace Odyssey.Graphics
     {
         private readonly IServiceRegistry services;
         private readonly DirectXDevice device;
-        PreferredRasterizerState rasterizerState;
-        PreferredBlendState blendState;
-        PreferredDepthStencilState depthStencilState;
         private readonly LinkedList<Command> sourceCommands;
         private readonly LinkedList<Command> resultCommands;
+        private PreferredRasterizerState rasterizerState;
+        private PreferredBlendState blendState;
+        private PreferredDepthStencilState depthStencilState;
         private LinkedListNode<Command> cursor;
         private LinkedListNode<Command> resultCursor;
-
 
         public StateViewer(IServiceRegistry services, IEnumerable<Command> list)
         {
@@ -95,20 +95,28 @@ namespace Odyssey.Graphics
 
             cursor = sourceCommands.First;
 
-
             while (cursor != null)
             {
                 CheckState(cursor.Value);
                 cursor = cursor.Next;
             }
-            
+
+            if (services.GetService<IDirectXDeviceSettings>().IsStereo)
+            {
+                resultCommands.AddFirst(new AlternateStereoRenderingCommand(services));
+                resultCommands.AddLast(new AlternateStereoRenderingCommand(services));
+                var leftEyeCommands = new LinkedList<Command>(from c in resultCommands select c);
+
+                SaveState(((ITechniqueRenderCommand)sourceCommands.FirstOrDefault(c => c is ITechniqueRenderCommand)).Technique);
+                foreach (var command in leftEyeCommands)
+                    resultCommands.AddLast(command);
+                resultCommands.AddLast(new AlternateStereoRenderingCommand(services));
+            }
             // Go back to first ITechniqueRenderCommand
             var firstRenderCommand = (ITechniqueRenderCommand)sourceCommands.FirstOrDefault(c=> c is ITechniqueRenderCommand);
             if (firstRenderCommand!=null)
                 SaveState(firstRenderCommand.Technique);
             return resultCommands;
         }
-
-
     }
 }

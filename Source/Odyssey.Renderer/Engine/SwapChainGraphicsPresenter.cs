@@ -21,27 +21,24 @@ namespace Odyssey.Engine
         /// <summary>
         /// Gets the default back buffer for this presenter.
         /// </summary>
-        public override RenderTarget2D BackBuffer => backBuffer;
-
-        protected SwapChain SwapChain { get; set; }
-
-        protected void SetBackbuffer(RenderTarget2D backBuffer)
+        public override RenderTarget2D BackBuffer
         {
-            this.backBuffer = backBuffer;
+            get { return backBuffer; }
+            protected set { backBuffer = value; }
         }
 
         protected SwapChainGraphicsPresenter(DirectXDevice device, PresentationParameters presentationParameters)
             : base(device, presentationParameters)
         {
             PresentInterval = presentationParameters.PresentationInterval;
-
             // Initialize the swap chain
             swapChain = ToDispose(CreateSwapChain());
-            var rawBackbuffer = swapChain.GetBackBuffer<Texture2D>(0);
+            var rawBackbuffer = SwapChain.GetBackBuffer<Texture2D>(0);
             backBuffer = ToDispose(RenderTarget2D.New(device, rawBackbuffer));
         }
 
         protected int BufferCount { get; set; }
+        protected SwapChain SwapChain { get { return swapChain; } }
 
         public override object NativePresenter => swapChain;
 
@@ -63,24 +60,6 @@ namespace Odyssey.Engine
                     swapChain.DebugName = Name;
                 }
             }
-        }
-
-        public override bool Resize(int width, int height, Format format, Rational? refreshRate = null)
-        {
-            if (!base.Resize(width, height, format, refreshRate)) return false;
-
-            string backBufferName = backBuffer.DebugName;
-            RemoveAndDispose(ref backBuffer);
-
-            swapChain.ResizeBuffers(BufferCount, width, height, format, Description.Flags);
-
-            // Recreate the back buffer
-            backBuffer = ToDispose(RenderTarget2D.New(DirectXDevice, swapChain.GetBackBuffer<Texture2D>(0)));
-            backBuffer.DebugName = backBufferName;
-            // Reinit the Viewport
-            DefaultViewport = new ViewportF(0, 0, backBuffer.Width, backBuffer.Height);
-
-            return true;
         }
 
         protected SwapChain CreateSwapChain()

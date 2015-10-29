@@ -68,11 +68,12 @@
     <Compile Include="Engine\DeviceInformation.cs" />
     <Compile Include="Engine\DeviceStatus.cs" />
     <Compile Include="Engine\InitializeDeviceEventArgs.cs" />
+    <Compile Include="Engine\MonoSwapChainPresenter.cs" />
     <Compile Include="Engine\MSAALevel.cs" />
     <Compile Include="Engine\PresentationInterval.cs" />
     <Compile Include="Engine\PresentationParameters.cs" />
     <Compile Include="Engine\RenderTargetGraphicsPresenter.cs" />
-    <Compile Include="Engine\StereoSwapChainGraphicsPresenter.cs" />
+    <Compile Include="Engine\StereoSwapChainPresenter.cs" />
     <Compile Include="Graphics\BlendStateCollection.cs" />
     <Compile Include="Graphics\Buffer.Constant.cs" />
     <Compile Include="Graphics\DepthStencilStateCollection.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Engine\IGraphicsDeviceService.cs" />
     <Compile Include="Engine\SwapChainGraphicsPresenter.cs" />
     <Compile Include="Organization\Commands\BlendStateChangeCommand.cs" />
+    <Compile Include="Organization\Commands\AlternateStereoRenderingCommand.cs" />
     <Compile Include="Organization\Commands\DepthStencilStateChangeCommand.cs" />
     <Compile Include="Organization\Commands\EngineCommand.cs" />
     <Compile Include="Organization\Commands\InstancingRenderCommand.cs" />

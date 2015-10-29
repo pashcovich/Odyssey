@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Messages;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Effects;
-using Odyssey.Graphics.Models;
-using Odyssey.Graphics.Shaders;
 using Odyssey.Organization;
 using Odyssey.Organization.Commands;
 using Odyssey.Text.Logging;
@@ -64,7 +61,6 @@ namespace Odyssey.Epos.Systems
                 commands.AddLast(renderCommand);
             }
 
-
             var sv = new StateViewer(Services, commands);
             var resultCommands = sv.Analyze();
 
@@ -75,7 +71,6 @@ namespace Odyssey.Epos.Systems
                 Messenger.Send(new CommandUpdateMessage(resultCommands));
             }
             IsEnabled = false;
-
         }
     }
 }

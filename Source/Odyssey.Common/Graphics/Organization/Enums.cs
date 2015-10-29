@@ -7,14 +7,15 @@ namespace Odyssey.Graphics.Organization
     {
         Undefined,
         Render,
-        RasterizerStateChange,
-        BlendStateChange,
-        DepthStencilStateChange,
+        ChangeRasterizerState,
+        ChangeBlendState,
+        ChangeDepthStencilState,
         PostProcessing,
         PlayAnimation,
         Render2D,
         Engine,
         ChangeBrush,
+        AlternateStereoRendering
     }
 
     public enum PreferredRasterizerState

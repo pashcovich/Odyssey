@@ -41,7 +41,7 @@ namespace Odyssey.Engine
         /// <summary>
         /// Gets the default back buffer for this presenter.
         /// </summary>
-        public abstract RenderTarget2D BackBuffer { get;}
+        public abstract RenderTarget2D BackBuffer { get; protected set; }
 
         /// <summary>
         /// Default viewport that covers the whole presenter surface.
@@ -161,7 +161,7 @@ namespace Odyssey.Engine
                     Description.BackBufferHeight,
                     Description.MultiSampleCount,
                     Description.DepthStencilFormat,
-                    Description.DepthBufferShaderResource));
+                    Description.DepthBufferShaderResource, 1));
         }
 
         //protected virtual void CreateDepthStencilBuffer()

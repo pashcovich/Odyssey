@@ -10,7 +10,7 @@ namespace Odyssey.Organization.Commands
         public RasterizerState RasterizerState { get { return rasterizerState; } }
 
         public RasterizerStateChangeCommand(IServiceRegistry services, RasterizerState rasterizerState)
-            : base(services, CommandType.RasterizerStateChange)
+            : base(services, CommandType.ChangeRasterizerState)
         {
             this.rasterizerState = ToDispose(rasterizerState);
             

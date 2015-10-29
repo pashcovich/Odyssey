@@ -1,4 +1,5 @@
-﻿using SharpDX.Mathematics;
+﻿using Odyssey.Graphics;
+using SharpDX.Mathematics;
 
 namespace Odyssey.Engine
 {
@@ -9,12 +10,17 @@ namespace Odyssey.Engine
         Matrix View {get;}
         Matrix Projection { get; }
         ViewportF Viewport { get; }
+        float NearClip { get; }
+        float FarClip { get; }
+        float FieldOfView { get; }
         bool Changed { get;}
     }
 
     public interface IStereoCamera : ICamera
     {
-        Matrix LeftProjection { get; }
-        Matrix RightProjection { get; }
+        Matrix ProjectionLeft { get; }
+        Matrix ProjectionRight { get; }
+        StereoChannel CurrentChannel { get; }
+        void AlternateChannel();
     }
 }

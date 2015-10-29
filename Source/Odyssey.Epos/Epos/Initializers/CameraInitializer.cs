@@ -43,7 +43,7 @@ namespace Odyssey.Epos.Initializers
             InitializerParameters parameters = new InitializerParameters(-1, technique, services, StaticSelector);
             var data = from metaData in technique.MetaData
                 where metaData.Key == Param.Properties.CameraId
-                select Int32.Parse(metaData.Value);
+                select int.Parse(metaData.Value);
 
             var cameras = (from e in scene.Entities
                 where e.ContainsComponent<CameraComponent>()

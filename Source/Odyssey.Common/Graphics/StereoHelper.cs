@@ -76,8 +76,14 @@ namespace Odyssey.Graphics
             return comfortableResult;
         }
 
-        public static Matrix StereoProjectionFovRH(StereoParameters stereoParameters, float fovAngleY, 
-            float aspectHbyW, 
+        public static Matrix StereoProjectionFovRH(StereoParameters stereoParameters, float aspectHbyW, StereoChannel channel, ICamera camera)
+        {
+            return StereoProjectionFovRH(stereoParameters, aspectHbyW, camera.FieldOfView, camera.NearClip, camera.FarClip, channel);
+        }
+
+        public static Matrix StereoProjectionFovRH(StereoParameters stereoParameters,
+            float aspectHbyW,
+            float fovAngleY, 
             float nearZ, float farZ,
             StereoChannel channel, StereoMode stereoMode = StereoMode.Normal)
         {

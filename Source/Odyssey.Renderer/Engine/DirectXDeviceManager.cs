@@ -438,7 +438,7 @@ namespace Odyssey.Engine
                     // By default, we setup the render target to the back buffer, and the viewport as well.
                     if (DirectXDevice.BackBuffer != null)
                     {
-                        DirectXDevice.SetRenderTargets(DirectXDevice.DepthStencilBuffer, DirectXDevice.BackBuffer);
+                       // DirectXDevice.SetRenderTargets(DirectXDevice.DepthStencilBuffer, DirectXDevice.BackBuffer);
                         DirectXDevice.SetViewport(0, 0, DirectXDevice.Presenter.BackBuffer.Description.Width,
                             DirectXDevice.Presenter.BackBuffer.Description.Height);
                     }

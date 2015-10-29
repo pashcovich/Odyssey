@@ -47,6 +47,7 @@
     <Compile Include="Engine\DesktopApplicationPlatform.cs" />
     <Compile Include="Engine\DesktopPresenter.cs" />
     <Compile Include="Engine\DesktopApplicationWindow.cs" />
+    <Compile Include="Engine\StereoDesktopPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

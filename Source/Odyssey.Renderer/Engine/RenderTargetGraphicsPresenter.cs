@@ -51,12 +51,10 @@ namespace Odyssey.Engine
         public override RenderTarget2D BackBuffer
         {
             get { return backBuffer; }
+            protected set { backBuffer = value; }
         }
 
-        public override object NativePresenter
-        {
-            get { return backBuffer; }
-        }
+        public override object NativePresenter => backBuffer;
 
         public override bool IsFullScreen
         {

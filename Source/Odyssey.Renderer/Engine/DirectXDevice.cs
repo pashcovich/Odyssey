@@ -50,9 +50,7 @@ namespace Odyssey.Engine
         private readonly ViewportF[] viewports;
 
         private int actualRenderTargetViewCount;
-
         private DepthStencilView currentDepthStencilView;
-
         private RenderTargetView currentRenderTargetView;
 
         private Technique currentTechnique;

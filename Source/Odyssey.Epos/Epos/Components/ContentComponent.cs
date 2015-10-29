@@ -22,7 +22,6 @@ namespace Odyssey.Epos.Components
             }
         }
 
-        
         protected IAssetProvider Content { get { return Services.GetService<IAssetProvider>(); } }
 
         protected IGraphicsDeviceService DeviceService { get { return Services.GetService<IGraphicsDeviceService>(); } }

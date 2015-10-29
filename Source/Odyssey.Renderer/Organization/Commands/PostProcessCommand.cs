@@ -20,7 +20,7 @@ namespace Odyssey.Organization.Commands
         private readonly Technique technique;
         private readonly IEntity entity;
         private readonly ModelMesh quad;
-        public Technique Technique { get { return technique; } }
+        public Technique Technique => technique;
 
         public PostProcessCommand(IServiceRegistry services, Technique technique, ModelMesh quad, IEntity entity, Texture2DDescription textureDescription = default (Texture2DDescription), OutputRule outputRule = OutputRule.NewRenderTarget) 
             : base(services, textureDescription, outputRule)

@@ -15,12 +15,12 @@
 
 #region Using Directives
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Messages;
+using Odyssey.Graphics;
 using SharpDX.Mathematics;
 
 #endregion
@@ -110,9 +110,17 @@ namespace Odyssey.Epos.Systems
             cCamera.Viewport = new ViewportF(0, 0, deviceSettings.PreferredBackBufferWidth,
                 deviceSettings.PreferredBackBufferHeight);
             cCamera.Projection = Matrix.PerspectiveFovRH(cCamera.FieldOfView, aspectRatio, cCamera.NearClip, cCamera.FarClip);
+
+            if (deviceSettings.IsStereo)
+            {
+                var stereoCamera = (StereoCameraComponent) cCamera;
+                var stereoParameters = new StereoParameters(deviceSettings.PreferredBackBufferWidth, deviceSettings.PreferredBackBufferHeight);
+                stereoCamera.ProjectionLeft = StereoHelper.StereoProjectionFovRH(stereoParameters, aspectRatio, StereoChannel.Left, stereoCamera);
+                stereoCamera.ProjectionRight = StereoHelper.StereoProjectionFovRH(stereoParameters, aspectRatio, StereoChannel.Right, stereoCamera);
+            }
             entity.TryGetComponent(out cTarget);
 
-            Vector3 pFocus = cTarget != null ? cTarget.Location : Vector3.Zero;
+            Vector3 pFocus = cTarget?.Location ?? Vector3.Zero;
             cRotation.Orientation = Quaternion.LookAtRH(cPosition.Position, pFocus, cCamera.Up);
             cCamera.View = Matrix.LookAtRH(cPosition.Position, pFocus, cCamera.Up);
         }

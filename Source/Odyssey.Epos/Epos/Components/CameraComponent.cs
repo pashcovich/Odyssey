@@ -6,9 +6,9 @@ namespace Odyssey.Epos.Components
 {
     public enum CameraType
     {
-        Perspective,
+        PerspectiveMono,
         Orthographic,
-        Stereo
+        PerspectiveStereo
     }
 
     [RequiredComponent(typeof(PositionComponent))]
@@ -18,32 +18,20 @@ namespace Odyssey.Epos.Components
         public float NearClip { get; set; }
         public float FarClip { get; set; }
         public float FieldOfView { get; set; }
-        public CameraType Type { get; set; }
+        public CameraType Type { get; protected set; }
         public Vector3 Up { get; set; }
         public Matrix View { get; internal set; }
         public Matrix Projection { get; internal set; }
         public ViewportF Viewport { get; set; }
         public bool Changed { get; internal set; }
 
-        public Vector3 Direction
-        {
-            get { return new Vector3(-View.M13, -View.M23, -View.M33); }
-        }
+        public Vector3 Direction => new Vector3(-View.M13, -View.M23, -View.M33);
 
-        public Vector3 AxisX
-        {
-            get { return new Vector3(View.M11, View.M21, View.M31); }
-        }
+        public Vector3 AxisX => new Vector3(View.M11, View.M21, View.M31);
 
-        public Vector3 AxisY
-        {
-            get { return new Vector3(View.M12, View.M22, View.M32); }
-        }
+        public Vector3 AxisY => new Vector3(View.M12, View.M22, View.M32);
 
-        public Vector3 AxisZ
-        {
-            get { return new Vector3(View.M13, View.M23, View.M33); }
-        }
+        public Vector3 AxisZ => new Vector3(View.M13, View.M23, View.M33);
 
         protected CameraComponent(ComponentType type) : base(type)
         {
@@ -56,12 +44,9 @@ namespace Odyssey.Epos.Components
 
         public CameraComponent() :this(ComponentTypeManager.GetType<CameraComponent>())
         {
-            Type = CameraType.Perspective;
+            Type = CameraType.PerspectiveMono;
         }
 
-        Vector3 ICamera.Position
-        {
-            get { return Owner.GetComponent<PositionComponent>().Position; }
-        }
+        Vector3 ICamera.Position => Owner.GetComponent<PositionComponent>().Position;
     }
 }
