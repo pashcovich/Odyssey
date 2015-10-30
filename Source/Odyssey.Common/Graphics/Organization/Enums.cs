@@ -15,7 +15,8 @@ namespace Odyssey.Graphics.Organization
         Render2D,
         Engine,
         ChangeBrush,
-        AlternateStereoRendering
+        AlternateStereoRendering,
+        DeviceClear
     }
 
     public enum PreferredRasterizerState

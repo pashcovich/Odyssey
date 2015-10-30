@@ -38,8 +38,6 @@ namespace Odyssey.Epos.Systems
             foreach (Technique technique in data)
             {
                 technique.UpdateBuffers(CBUpdateType.InstanceStatic);
-                technique.UpdateBuffers(CBUpdateType.SceneFrame);
-                technique.UpdateBuffers(CBUpdateType.InstanceFrame);
             }
         }
 

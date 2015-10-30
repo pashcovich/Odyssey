@@ -17,30 +17,29 @@ namespace Odyssey.Graphics.Shaders
         private readonly DirectXDevice device;
         private readonly List<IParameter> parameters;
         private Buffer buffer;
-        private readonly string technique;
         private readonly ConstantBufferDescription description;
 
         public bool IsInited { get; private set; }
 
-        public int Index { get { return description.Index; } }
-        public string Technique { get { return technique; } }
+        public int Index => description.Index;
+        public string Technique { get; }
 
-        public ConstantBufferDescription Description { get { return description; } }
+        public ConstantBufferDescription Description => description;
 
         public int ElementSize { get; private set; }
 
-        public Buffer Buffer { get { return buffer; } }
+        public Buffer Buffer => buffer;
 
         private Vector4[] data;
 
-        internal Vector4[] Data { get { return data; } }
+        internal Vector4[] Data => data;
 
         public ConstantBuffer(DirectXDevice device, ConstantBufferDescription description, string technique)
         {
             Name = description.Name;
             this.description = description;
             this.device = device;
-            this.technique = technique;
+            this.Technique = technique;
             parameters = new List<IParameter>();
         }
 

@@ -31,8 +31,6 @@ namespace Odyssey.Epos.Systems
 
         public void Render()
         {
-            var deviceService = Scene.Services.GetService<IGraphicsDeviceService>();
-            deviceService.DirectXDevice.Clear(Color.Black);
             foreach (Command command in commandManager)
                 command.Execute();
         }

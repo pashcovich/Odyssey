@@ -94,6 +94,7 @@ namespace Odyssey.Graphics
                 return null;
 
             cursor = sourceCommands.First;
+            resultCommands.AddFirst(new DeviceClearCommand(services));
 
             while (cursor != null)
             {
@@ -102,21 +103,24 @@ namespace Odyssey.Graphics
             }
 
             if (services.GetService<IDirectXDeviceSettings>().IsStereo)
-            {
-                resultCommands.AddFirst(new AlternateStereoRenderingCommand(services));
-                resultCommands.AddLast(new AlternateStereoRenderingCommand(services));
-                var leftEyeCommands = new LinkedList<Command>(from c in resultCommands select c);
+                StereoizeCommands();
 
-                SaveState(((ITechniqueRenderCommand)sourceCommands.FirstOrDefault(c => c is ITechniqueRenderCommand)).Technique);
-                foreach (var command in leftEyeCommands)
-                    resultCommands.AddLast(command);
-                resultCommands.AddLast(new AlternateStereoRenderingCommand(services));
-            }
             // Go back to first ITechniqueRenderCommand
             var firstRenderCommand = (ITechniqueRenderCommand)sourceCommands.FirstOrDefault(c=> c is ITechniqueRenderCommand);
             if (firstRenderCommand!=null)
                 SaveState(firstRenderCommand.Technique);
             return resultCommands;
+        }
+
+        void StereoizeCommands()
+        {
+            var leftEyeCommands = new LinkedList<Command>(from c in resultCommands select c);
+
+            resultCommands.AddFirst(new AlternateStereoRenderingCommand(services));
+            resultCommands.AddLast(new AlternateStereoRenderingCommand(services));
+            resultCommands.AddLast(new DeviceClearCommand(services));
+            foreach (var command in leftEyeCommands)
+                resultCommands.AddLast(command);
         }
     }
 }

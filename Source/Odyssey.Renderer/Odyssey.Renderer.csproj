@@ -233,6 +233,7 @@
     <Compile Include="Engine\SwapChainGraphicsPresenter.cs" />
     <Compile Include="Organization\Commands\BlendStateChangeCommand.cs" />
     <Compile Include="Organization\Commands\AlternateStereoRenderingCommand.cs" />
+    <Compile Include="Organization\Commands\DeviceClearCommand.cs" />
     <Compile Include="Organization\Commands\DepthStencilStateChangeCommand.cs" />
     <Compile Include="Organization\Commands\EngineCommand.cs" />
     <Compile Include="Organization\Commands\InstancingRenderCommand.cs" />

@@ -66,10 +66,12 @@ namespace Odyssey.Organization.Commands
         public override void Render()
         {
             DirectXDevice device = DeviceService.DirectXDevice;
+            Technique.UpdateBuffers(CBUpdateType.SceneFrame);
             
             foreach (Shader shader in Technique)
                 shader.Apply(Technique.Name, CBUpdateType.SceneFrame);
 
+            Technique.UpdateBuffers(CBUpdateType.InstanceFrame);
             foreach (IEntity entity in Entities)
             {
                 if (!entity.IsEnabled)
@@ -98,7 +100,7 @@ namespace Odyssey.Organization.Commands
                 result = false;
             }
             if (!result)
-                throw new InvalidOperationException(string.Format("[{0}]: preconditions failed.", Name));
+                throw new InvalidOperationException($"[{Name}]: preconditions failed.");
         }
 
     }
