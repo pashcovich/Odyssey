@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Odyssey.Engine;
 using Odyssey.Geometry.Primitives;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models

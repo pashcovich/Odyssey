@@ -23,7 +23,7 @@ using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
-using SharpDX.Mathematics;
+using SharpDX;
 using Brush = Odyssey.Graphics.Brush;
 using TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode;
 using TextFormat = Odyssey.UserInterface.Style.TextFormat;

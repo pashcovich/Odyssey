@@ -2,7 +2,7 @@
 using Odyssey.Engine;
 using Odyssey.Interaction;
 using Odyssey.Text.Logging;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Epos.Interaction
 {

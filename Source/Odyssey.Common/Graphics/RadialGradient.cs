@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Odyssey.Serialization;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics
 {

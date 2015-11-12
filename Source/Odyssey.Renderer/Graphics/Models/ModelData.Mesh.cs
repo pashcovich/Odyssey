@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Odyssey.Content;
-using SharpDX.Mathematics;
+using SharpDX;
 using Odyssey.Serialization;
 
 namespace Odyssey.Graphics.Models

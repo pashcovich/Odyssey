@@ -3,7 +3,7 @@
 using Odyssey.Reflection;
 using Odyssey.UserInterface;
 using Odyssey.UserInterface.Serialization;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

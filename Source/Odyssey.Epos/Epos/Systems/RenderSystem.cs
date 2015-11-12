@@ -1,7 +1,7 @@
 ﻿using Odyssey.Engine;
 using Odyssey.Epos.Messages;
 using Odyssey.Organization.Commands;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Epos.Systems
 {

@@ -17,7 +17,7 @@
 
 using System;
 using Odyssey.UserInterface.Controls;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion Using Directives
 

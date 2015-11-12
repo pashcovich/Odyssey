@@ -1,6 +1,6 @@
 ﻿#region Using Directives
 
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

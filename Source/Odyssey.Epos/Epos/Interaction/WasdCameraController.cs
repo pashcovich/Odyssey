@@ -3,7 +3,7 @@ using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Geometry;
 using Odyssey.Interaction;
-using SharpDX.Mathematics;
+using SharpDX;
 using System;
 
 namespace Odyssey.Epos.Interaction

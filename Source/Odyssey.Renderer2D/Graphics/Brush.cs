@@ -19,7 +19,7 @@ using System;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using SharpDX;
-using SharpDX.Mathematics;
+using SharpDX;
 using Odyssey.Animations;
 
 #endregion Using Directives

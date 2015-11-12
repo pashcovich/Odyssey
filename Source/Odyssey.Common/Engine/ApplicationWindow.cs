@@ -12,7 +12,7 @@
 
 using Odyssey.Core;
 using Odyssey.Graphics;
-using SharpDX.Mathematics;
+using SharpDX;
 using System;
 using System.Diagnostics.Contracts;
 

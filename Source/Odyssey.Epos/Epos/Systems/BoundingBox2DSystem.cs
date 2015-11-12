@@ -3,7 +3,7 @@ using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Geometry;
 using Odyssey.Geometry.Extensions;
-using SharpDX.Mathematics;
+using SharpDX;
 using Rectangle = Odyssey.Geometry.Extensions.Rectangle;
 
 namespace Odyssey.Epos.Systems

@@ -2,7 +2,7 @@
 using Odyssey.Geometry;
 using Odyssey.Epos;
 using Odyssey.UserInterface.Events;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.UserInterface.Behaviors
 {

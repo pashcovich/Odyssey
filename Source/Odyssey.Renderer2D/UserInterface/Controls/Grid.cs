@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

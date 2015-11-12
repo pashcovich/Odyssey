@@ -5,7 +5,7 @@ using Odyssey.Animations;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using SharpDX.Direct2D1;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

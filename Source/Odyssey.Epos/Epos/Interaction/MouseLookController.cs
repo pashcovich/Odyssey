@@ -3,7 +3,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Epos.Interaction
 {

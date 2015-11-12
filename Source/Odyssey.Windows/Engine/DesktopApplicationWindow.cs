@@ -89,9 +89,9 @@ namespace Odyssey.Engine
         }
 
         /// <inheritdoc />
-        public override SharpDX.Mathematics.Rectangle ClientBounds
+        public override SharpDX.Rectangle ClientBounds
         {
-            get { return new SharpDX.Mathematics.Rectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height); }
+            get { return new SharpDX.Rectangle(0, 0, Control.ClientSize.Width, Control.ClientSize.Height); }
         }
 
         /// <inheritdoc />

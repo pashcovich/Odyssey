@@ -24,6 +24,7 @@ using Odyssey.Graphics.Models;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Reflection;
 using System;
+using System.Threading.Tasks;
 using SharpDX.IO;
 using Texture2D = Odyssey.Graphics.Texture2D;
 
@@ -252,7 +253,7 @@ namespace Odyssey
             // If this instance is not active, sleep for an inactive sleep time
             if (!IsActive)
             {
-                SharpDX.Utilities.Sleep(InactiveSleepTime);
+                Task.Delay(TimeSpan.FromMilliseconds(20));
             }
 
             // Update the timer
@@ -296,7 +297,7 @@ namespace Odyssey
                     // check if we can sleep the thread to free CPU resources
                     var sleepTime = TargetElapsedTime - accumulatedElapsedGameTime;
                     if (sleepTime > TimeSpan.Zero)
-                        SharpDX.Utilities.Sleep(sleepTime);
+                        Task.Delay(TimeSpan.FromMilliseconds(20));
                     return;
                 }
 

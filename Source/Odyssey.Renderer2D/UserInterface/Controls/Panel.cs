@@ -21,7 +21,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

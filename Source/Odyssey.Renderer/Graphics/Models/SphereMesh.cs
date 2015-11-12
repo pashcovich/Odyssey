@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using Odyssey.Engine;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models

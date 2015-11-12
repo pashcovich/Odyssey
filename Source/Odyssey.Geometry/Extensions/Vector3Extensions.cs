@@ -1,6 +1,6 @@
 ﻿using System;
 using Odyssey.Engine;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Geometry.Extensions
 {

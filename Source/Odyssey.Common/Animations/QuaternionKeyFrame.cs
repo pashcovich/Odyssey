@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Odyssey.Geometry;
 using Odyssey.Serialization;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

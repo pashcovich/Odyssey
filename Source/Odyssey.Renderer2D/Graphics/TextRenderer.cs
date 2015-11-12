@@ -3,7 +3,7 @@
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

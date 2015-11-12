@@ -16,7 +16,7 @@
 #region Using Directives
 
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion Using Directives
 

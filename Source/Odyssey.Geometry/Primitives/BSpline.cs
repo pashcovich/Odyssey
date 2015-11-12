@@ -1,4 +1,4 @@
-﻿using Point = SharpDX.Mathematics.Vector2;
+﻿using Point = SharpDX.Vector2;
 using Real = System.Single;
 
 namespace Odyssey.Geometry.Primitives

@@ -24,7 +24,7 @@ using Odyssey.Epos.Components;
 using Odyssey.Graphics;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Text.Logging;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

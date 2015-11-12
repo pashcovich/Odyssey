@@ -4,7 +4,7 @@ using System.Linq;
 using Odyssey.Core;
 using Odyssey.Engine;
 using SharpDX.Direct3D11;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.Direct3D;
 
 namespace Odyssey.Graphics.Models

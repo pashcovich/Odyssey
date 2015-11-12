@@ -1,7 +1,7 @@
 ﻿#region Using Directives
 
 using Odyssey.Graphics;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.DXGI;
 using System;
 using Texture2D = SharpDX.Direct3D11.Texture2D;

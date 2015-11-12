@@ -1,7 +1,7 @@
 ﻿#region Using Directives
 
 using Odyssey.Core;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

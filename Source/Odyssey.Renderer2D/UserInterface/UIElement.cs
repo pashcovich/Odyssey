@@ -25,7 +25,7 @@ using Odyssey.Serialization;
 using Odyssey.UserInterface.Behaviors;
 using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

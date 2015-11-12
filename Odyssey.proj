@@ -6,12 +6,12 @@
 		<PropertyGroup>
 		<RootNamespace>Odyssey</RootNamespace>
 		<SharpDXSdkBinDir>C:\Program Files\Dev\SharpDX\Bin</SharpDXSdkBinDir>
-		<SharpDXDirectXVersion>DirectX11_2</SharpDXDirectXVersion>
+		<SharpDXDirectXVersion>Desktop</SharpDXDirectXVersion>
 		<OdysseyEngine>1</OdysseyEngine>
 		</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
 		<Platform>AnyCpu</Platform>
-		<SharpDXPlatform>net40</SharpDXPlatform>
+		<SharpDXPlatform>net45</SharpDXPlatform>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
 		<Optimize>false</Optimize>
@@ -20,7 +20,7 @@
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'net45'">
 		<Platform>AnyCpu</Platform>
-		<SharpDXPlatform>net40</SharpDXPlatform>
+		<SharpDXPlatform>net45</SharpDXPlatform>
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
 		<Optimize>false</Optimize>

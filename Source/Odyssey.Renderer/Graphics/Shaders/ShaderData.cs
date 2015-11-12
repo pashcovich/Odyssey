@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics.Shaders
 {

@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

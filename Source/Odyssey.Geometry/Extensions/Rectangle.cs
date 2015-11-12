@@ -1,6 +1,6 @@
 ﻿using System;
-using SharpDX.Mathematics;
-using Point = SharpDX.Mathematics.Vector2;
+using SharpDX;
+using Point = SharpDX.Vector2;
 using Real = System.Single;
 
 namespace Odyssey.Geometry.Extensions

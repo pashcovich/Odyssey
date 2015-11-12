@@ -7,7 +7,7 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Serialization;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
 {

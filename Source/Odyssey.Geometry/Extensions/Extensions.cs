@@ -1,5 +1,5 @@
 ﻿using System;
-using SharpDX.Mathematics;
+using SharpDX;
 using System.Linq;
 
 namespace Odyssey.Geometry.Extensions

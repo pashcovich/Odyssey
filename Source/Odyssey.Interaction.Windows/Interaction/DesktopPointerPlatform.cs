@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Windows.Forms;
+using SharpDX;
 using SharpDX.Mathematics;
 using FKeys = System.Windows.Forms.Keys;
 

@@ -2,7 +2,7 @@
 
 using Odyssey.Animations;
 using Odyssey.Engine;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.Direct2D1;
 
 #endregion Using Directives

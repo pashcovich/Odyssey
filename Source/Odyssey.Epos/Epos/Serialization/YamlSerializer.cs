@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Odyssey.Epos.Components;
 using Odyssey.Epos.Systems;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpYaml;
 using SharpYaml.Serialization;
 

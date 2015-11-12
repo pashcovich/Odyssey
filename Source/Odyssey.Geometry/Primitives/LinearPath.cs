@@ -1,8 +1,8 @@
-﻿using Point3D = SharpDX.Mathematics.Vector3;
+﻿using Point3D = SharpDX.Vector3;
 
 namespace Odyssey.Geometry.Primitives
 {
-    public class LinearPath : BSpline3D
+    public class LinearPath : BSpline3
     {
         public LinearPath() : base(1) {}
 

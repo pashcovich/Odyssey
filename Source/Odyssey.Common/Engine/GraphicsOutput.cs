@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Odyssey.Core;
 using SharpDX;
-using SharpDX.Mathematics;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Odyssey.Serialization;
 using Odyssey.Text;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

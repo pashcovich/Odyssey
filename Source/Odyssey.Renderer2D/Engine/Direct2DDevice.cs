@@ -8,7 +8,7 @@ using Odyssey.Graphics.Drawing;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Style;
 using SharpDX.Direct2D1;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.Mathematics.Interop;
 using Brush = Odyssey.Graphics.Brush;
 using D2DFactory = SharpDX.Direct2D1.Factory1;

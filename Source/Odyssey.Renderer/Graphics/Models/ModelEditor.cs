@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using Odyssey.Geometry.Primitives;
 using Odyssey.Extensions;
-using SharpDX.Mathematics;
+using SharpDX;
 using System.Linq;
 
 namespace Odyssey.Graphics.Models
@@ -41,7 +41,7 @@ namespace Odyssey.Graphics.Models
             var barycentricVertices = ConvertToBarycentricVertices(vertices, indices);
             var faceCount = indices.Length / 3;
             var faces = new Face[faceCount];
-            var triangles = new Triangle3D[faceCount];
+            var triangles = new Triangle3[faceCount];
             for (var f = 0; f < faceCount; f++)
             {
                 var i = f * 3;
@@ -53,7 +53,7 @@ namespace Odyssey.Graphics.Models
                 var v1 = barycentricVertices[i1];
                 var v2 = barycentricVertices[i2];
                 faces[f] = new Face(i0, i1, i2);
-                triangles[f] = new Triangle3D(v0.Position,v1.Position,v2.Position);
+                triangles[f] = new Triangle3(v0.Position,v1.Position,v2.Position);
             }
             var tolerance = new Vector3(MathUtil.ZeroTolerance);
             for (var i = 0; i < faces.Length; i++)
@@ -74,7 +74,7 @@ namespace Odyssey.Graphics.Models
 
                     UndirectedEdge edge1, edge2;
 
-                    if (!Triangle3D.FindOverlappingEdges(t1, t2, f1, f2, out edge1, out edge2))
+                    if (!Triangle3.FindOverlappingEdges(t1, t2, f1, f2, out edge1, out edge2))
                         continue;
 
                     var iE1 = f1.RemainingIndex(edge1);
@@ -115,12 +115,12 @@ namespace Odyssey.Graphics.Models
 
                 var f1 = new Face(i, i1, i2);
                 var f2 = new Face(i3, i4, i5);
-                var t1 = new Triangle3D(v0.Position, v1.Position, v2.Position);
-                var t2 = new Triangle3D(v3.Position, v4.Position, v5.Position);
+                var t1 = new Triangle3(v0.Position, v1.Position, v2.Position);
+                var t2 = new Triangle3(v3.Position, v4.Position, v5.Position);
 
                 UndirectedEdge edge1, edge2;
 
-                if (!Triangle3D.FindOverlappingEdges(t1, t2, f1, f2, out edge1, out edge2))
+                if (!Triangle3.FindOverlappingEdges(t1, t2, f1, f2, out edge1, out edge2))
                     continue;
 
                 var iE1 = f1.RemainingIndex(edge1);

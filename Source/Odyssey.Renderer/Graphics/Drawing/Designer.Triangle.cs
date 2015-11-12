@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Geometry.Extensions;
 using Odyssey.Geometry.Primitives;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
 {

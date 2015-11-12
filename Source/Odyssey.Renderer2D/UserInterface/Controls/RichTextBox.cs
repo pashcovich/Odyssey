@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using Odyssey.Reflection;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

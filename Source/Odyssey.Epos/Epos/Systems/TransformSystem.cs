@@ -2,7 +2,7 @@
 
 using Odyssey.Engine;
 using Odyssey.Epos.Components;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpYaml.Serialization;
 
 #endregion

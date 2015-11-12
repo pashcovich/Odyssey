@@ -1,6 +1,6 @@
 ﻿using Odyssey.Geometry;
 using Odyssey.Geometry.Primitives;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Epos.Components
 {

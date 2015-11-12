@@ -6,7 +6,7 @@ using Odyssey.Engine;
 using Odyssey.Epos.Components;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Epos.Initializers
 {

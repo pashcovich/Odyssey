@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using SharpDX.Mathematics;
+using SharpDX;
 using Real = System.Single;
-using Point3 = SharpDX.Mathematics.Vector3;
+using Point3 = SharpDX.Vector3;
 
 namespace Odyssey.Geometry.Primitives
 {
-    public struct Triangle3D
+    public struct Triangle3
     {
         public Point3 Vertex1;
         public Point3 Vertex2;
         public Point3 Vertex3;
 
-        public Triangle3D(Point3 v1, Point3 v2, Point3 v3)
+        public Triangle3(Point3 v1, Point3 v2, Point3 v3)
         {
             Vertex1 = v1;
             Vertex2 = v2;
@@ -42,7 +42,7 @@ namespace Odyssey.Geometry.Primitives
             return Point3.Normalize(Point3.Cross(p1, p2));
         }
 
-        public static bool FindOverlappingEdges(Triangle3D t1, Triangle3D t2, Face face1, Face face2, out UndirectedEdge edge1,
+        public static bool FindOverlappingEdges(Triangle3 t1, Triangle3 t2, Face face1, Face face2, out UndirectedEdge edge1,
             out UndirectedEdge edge2)
         {
             Contract.Requires<ArgumentNullException>(face1.Edges != null, "face1");

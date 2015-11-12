@@ -2,7 +2,7 @@
 
 using System.Linq;
 using Odyssey.Core;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

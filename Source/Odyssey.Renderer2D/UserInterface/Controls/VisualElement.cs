@@ -23,7 +23,7 @@ using Odyssey.Reflection;
 using Odyssey.Text.Logging;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

@@ -33,7 +33,7 @@ using Odyssey.UserInterface.Controls;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Serialization;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

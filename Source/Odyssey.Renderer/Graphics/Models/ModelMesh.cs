@@ -3,7 +3,7 @@ using System.Linq;
 using Odyssey.Content;
 using Odyssey.Core;
 using Odyssey.Engine;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics.Models
 {

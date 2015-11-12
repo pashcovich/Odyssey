@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using Odyssey.Engine;
 using Odyssey.Geometry;
 using Odyssey.Text.Logging;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics
 {

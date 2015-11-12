@@ -21,7 +21,7 @@ using Odyssey.Interaction;
 using Odyssey.Text;
 using Odyssey.UserInterface.Events;
 using Odyssey.UserInterface.Serialization;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

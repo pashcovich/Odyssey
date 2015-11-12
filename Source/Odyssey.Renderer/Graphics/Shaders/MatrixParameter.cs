@@ -1,5 +1,5 @@
 ﻿using Odyssey.Geometry.Extensions;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics.Shaders
 {

@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Odyssey.Core;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.DXGI;
 using Odyssey.Serialization;
 using SharpDX.Mathematics.Interop;

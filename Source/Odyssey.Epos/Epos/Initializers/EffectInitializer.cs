@@ -8,7 +8,7 @@ using Odyssey.Geometry;
 using Odyssey.Geometry.Extensions;
 using Odyssey.Graphics.PostProcessing;
 using Odyssey.Graphics.Shaders;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Epos.Initializers
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using Odyssey.Geometry;
 using Odyssey.Geometry.Extensions;
 using Odyssey.Geometry.Primitives;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
 {
@@ -65,7 +65,7 @@ namespace Odyssey.Graphics.Drawing
                 Color = RadialGradient.New(Color.Name,
                     new[]
                     {
-                        new GradientStop(SharpDX.Mathematics.Color.Transparent, 0),
+                        new GradientStop(SharpDX.Color.Transparent, 0),
                         new GradientStop(solidColor.Color, innerRadiusRatio),
                         new GradientStop(solidColor.Color, 1)
                     });

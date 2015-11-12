@@ -21,7 +21,7 @@ using System.Linq;
 using Odyssey.Core;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.Mathematics.Interop;
 
 #endregion

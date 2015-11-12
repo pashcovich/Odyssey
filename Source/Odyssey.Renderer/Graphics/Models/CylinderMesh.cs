@@ -17,7 +17,7 @@
 #region Using Directives
 
 using Odyssey.Engine;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.Direct3D;
 
 #endregion

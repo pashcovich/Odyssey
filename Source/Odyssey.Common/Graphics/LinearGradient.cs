@@ -6,7 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Odyssey.Serialization;
 using Odyssey.Text;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

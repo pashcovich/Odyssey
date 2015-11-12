@@ -1,5 +1,5 @@
 ﻿using Odyssey.Serialization;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Animations
 {

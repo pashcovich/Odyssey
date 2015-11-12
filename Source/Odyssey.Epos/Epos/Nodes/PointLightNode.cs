@@ -1,7 +1,7 @@
 ﻿using Odyssey.Epos.Components;
 using Odyssey.Geometry;
 using Odyssey.Geometry.Extensions;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Epos.Nodes
 {

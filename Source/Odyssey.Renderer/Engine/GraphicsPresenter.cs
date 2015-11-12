@@ -2,7 +2,7 @@
 
 using Odyssey.Core;
 using Odyssey.Graphics;
-using SharpDX.Mathematics;
+using SharpDX;
 using SharpDX.DXGI;
 
 #endregion Using Directives

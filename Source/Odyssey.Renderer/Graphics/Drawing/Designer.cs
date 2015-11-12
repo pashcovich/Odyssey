@@ -5,7 +5,7 @@ using Odyssey.Engine;
 using Odyssey.Geometry.Extensions;
 using Odyssey.Graphics.Models;
 using SharpDX.Direct3D11;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Graphics.Drawing
 {

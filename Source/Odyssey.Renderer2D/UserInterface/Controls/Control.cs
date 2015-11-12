@@ -5,7 +5,7 @@ using System.Linq;
 using System.ServiceModel.Channels;
 using Odyssey.UserInterface.Data;
 using Odyssey.UserInterface.Style;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

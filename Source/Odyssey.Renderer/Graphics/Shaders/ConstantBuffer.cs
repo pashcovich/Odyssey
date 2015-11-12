@@ -2,7 +2,7 @@
 using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Text.Logging;
-using SharpDX.Mathematics;
+using SharpDX;
 using System;
 using System.Collections;
 using System.Collections.Generic;

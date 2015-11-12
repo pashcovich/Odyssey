@@ -24,6 +24,7 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ResultCode = SharpDX.DXGI.ResultCode;
 
 #endregion Using Directives
@@ -446,7 +447,7 @@ namespace Odyssey.Engine
                     break;
 
                 default:
-                    SharpDX.Utilities.Sleep(TimeSpan.FromMilliseconds(20));
+                    Task.Delay(TimeSpan.FromMilliseconds(20));
                     try
                     {
                         OnDeviceLost(this, EventArgs.Empty);

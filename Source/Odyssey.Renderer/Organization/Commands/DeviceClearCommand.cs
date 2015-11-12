@@ -1,7 +1,7 @@
 ﻿using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Graphics.Organization;
-using SharpDX.Mathematics;
+using SharpDX;
 
 namespace Odyssey.Organization.Commands
 {

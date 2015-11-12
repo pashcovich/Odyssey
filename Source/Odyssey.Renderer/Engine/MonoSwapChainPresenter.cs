@@ -1,6 +1,6 @@
 ﻿using Odyssey.Graphics;
 using SharpDX.DXGI;
-using SharpDX.Mathematics;
+using SharpDX;
 using Texture2D = SharpDX.Direct3D11.Texture2D;
 
 namespace Odyssey.Engine

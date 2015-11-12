@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using SharpDX.Mathematics;
+using SharpDX;
 using Real = System.Single;
-using Point = SharpDX.Mathematics.Vector2;
+using Point = SharpDX.Vector2;
 
 namespace Odyssey.Geometry.Primitives
 {

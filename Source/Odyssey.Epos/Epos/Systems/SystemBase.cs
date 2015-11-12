@@ -22,7 +22,7 @@ using System.Reflection;
 using Odyssey.Core;
 using Odyssey.Epos.Messages;
 using Odyssey.Reflection;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Odyssey.Geometry.Extensions;
 using Real = System.Single;
-using Point = SharpDX.Mathematics.Vector2;
+using Point = SharpDX.Vector2;
 
 namespace Odyssey.Geometry.Primitives
 {

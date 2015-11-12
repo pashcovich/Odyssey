@@ -20,7 +20,7 @@ using Odyssey.Core;
 using Odyssey.Engine;
 using Odyssey.Interaction;
 using Odyssey.Epos;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 

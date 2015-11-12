@@ -2,7 +2,7 @@
 
 using System;
 using Odyssey.Animations;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion
 
