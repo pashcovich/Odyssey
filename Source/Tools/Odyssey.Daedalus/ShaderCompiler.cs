@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using SharpDX.IO;
 using ShaderDescription = Odyssey.Graphics.Shaders.ShaderDescription;
 
 namespace Odyssey.Daedalus
@@ -102,7 +103,9 @@ namespace Odyssey.Daedalus
                 errors = errorList.Select(e => new ErrorViewModel { ErrorModel = e });
             else
             {
-                compilationResult.Bytecode.Save(Path.Combine(Settings.Default.OutputPath, string.Format("{0}.fxo", vmShader.Name)));
+                string path = Path.Combine(Settings.Default.OutputPath, $"{vmShader.Name}.fxo");
+                var stream = new NativeFileStream(path, NativeFileMode.Create, NativeFileAccess.Write);
+                compilationResult.Bytecode.Save(stream);
                 errors = null;
             }
 

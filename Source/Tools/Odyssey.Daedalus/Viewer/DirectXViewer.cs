@@ -27,7 +27,7 @@ using Odyssey.Graphics.Shaders;
 using SharpDX.Diagnostics;
 using SharpDX.Direct3D11;
 using System;
-using SharpDX.Mathematics;
+using SharpDX;
 
 #endregion Using Directives
 
