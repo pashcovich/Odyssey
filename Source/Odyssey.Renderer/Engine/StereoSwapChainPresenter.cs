@@ -7,8 +7,8 @@ namespace Odyssey.Engine
     public abstract class StereoSwapChainPresenter : SwapChainGraphicsPresenter
     {
         private StereoChannel currentChannel;
-        private RenderTargetView targetRight;
-        private RenderTargetView targetLeft;
+        private readonly RenderTargetView targetRight;
+        private readonly RenderTargetView targetLeft;
 
         public RenderTargetView TargetRight => targetRight;
         public RenderTargetView TargetLeft => targetLeft;

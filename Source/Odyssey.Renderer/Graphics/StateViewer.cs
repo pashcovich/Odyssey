@@ -92,9 +92,12 @@ namespace Odyssey.Graphics
         {
             if (!sourceCommands.Any())
                 return null;
-
+            bool isStereo = services.GetService<IDirectXDeviceSettings>().IsStereo;
             cursor = sourceCommands.First;
             resultCommands.AddFirst(new DeviceClearCommand(services));
+
+            if (!isStereo)
+                resultCommands.AddLast(new ChangeTargetsCommand(services));
 
             while (cursor != null)
             {
@@ -102,8 +105,9 @@ namespace Odyssey.Graphics
                 cursor = cursor.Next;
             }
 
-            if (services.GetService<IDirectXDeviceSettings>().IsStereo)
+            if (isStereo)
                 StereoizeCommands();
+
 
             // Go back to first ITechniqueRenderCommand
             var firstRenderCommand = (ITechniqueRenderCommand)sourceCommands.FirstOrDefault(c=> c is ITechniqueRenderCommand);

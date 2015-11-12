@@ -105,7 +105,7 @@ namespace Odyssey.Engine
             {
                 ModeDescription = new ModeDescription(Description.BackBufferWidth, Description.BackBufferHeight, Description.RefreshRate,
                     Description.BackBufferFormat),
-                BufferCount = BufferCount, // TODO: Do we really need this to be configurable by the user?
+                BufferCount = BufferCount,
                 OutputHandle = handle.Value,
                 SampleDescription = new SampleDescription(multiSampleCount, 0),
                 SwapEffect = SwapEffect.Discard,
@@ -127,8 +127,6 @@ namespace Odyssey.Engine
             swapChain.ResizeBuffers(BufferCount, Description.BackBufferWidth, Description.BackBufferHeight,
                 Description.BackBufferFormat, SwapChainFlags.AllowModeSwitch);
             return swapChain;
-
-
         }
 
         internal static IntPtr? FindHandle(object deviceWindowHandle)

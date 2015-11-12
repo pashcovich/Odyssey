@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 
 #endregion Using Directives
@@ -41,9 +42,12 @@ namespace Odyssey.Engine
         {
             base.CreatePresenter(device, parameters, newControl);
             // Give a chance to applicationWindow to create desired graphics presenter, otherwise - create our own.
-            var swapchainPresenter = new StereoDesktopPresenter(device, parameters);
-            device.Presenter = swapchainPresenter;
-            Application.Services.AddService(typeof (ISwapChainPresenterService), swapchainPresenter);
+
+            if (parameters.IsStereo)
+                device.Presenter = new StereoDesktopPresenter(device, parameters);
+            else
+                device.Presenter = new DesktopPresenter(device, parameters);
+            Application.Services.AddService(typeof (ISwapChainPresenterService), device.Presenter);
         }
     }
 }

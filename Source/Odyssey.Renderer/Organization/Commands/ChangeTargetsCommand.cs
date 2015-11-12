@@ -14,8 +14,8 @@ namespace Odyssey.Organization.Commands
         public override void Initialize()
         {
             var device = DeviceService.DirectXDevice;
-            DepthStencilBuffer = Target.DepthStencilBuffer ?? device.DepthStencilBuffer;
-            RenderTarget = Target.RenderTarget ?? device.BackBuffer;
+            DepthStencilBuffer = Target == null ? device.DepthStencilBuffer : Target.DepthStencilBuffer;
+            RenderTarget = Target == null ? device.BackBuffer : Target.RenderTarget;
         }
 
         public override void Execute()
