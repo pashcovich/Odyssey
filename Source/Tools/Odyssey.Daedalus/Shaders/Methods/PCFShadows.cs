@@ -12,7 +12,8 @@ namespace Odyssey.Daedalus.Shaders.Methods
             Name = Methods.PCFShadows;
 
             // Shadows
-            RegisterSignature(new MethodSignature(this, new TechniqueKey(ps: PixelShaderFlags.Diffuse | PixelShaderFlags.Specular | PixelShaderFlags.Shadows | PixelShaderFlags.ShadowMap, sm: ShaderModel.SM_5_0),
+            RegisterSignature(new MethodSignature(this, 
+                new TechniqueKey(ps: PixelShaderFlags.Diffuse | PixelShaderFlags.Specular | PixelShaderFlags.Shadows | PixelShaderFlags.ShadowMap, sm: ShaderModel.SM_5_0),
                 new[] { HLSLTypes.Float4, Type.Texture2D.ToString(), Type.SamplerComparisonState.ToString() },
                 new[] { Vectors.ShadowProjection, Textures.ShadowMap, Samplers.ShadowMap }, Type.Float));
 

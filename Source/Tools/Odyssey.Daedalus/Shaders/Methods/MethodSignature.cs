@@ -55,10 +55,10 @@ namespace Odyssey.Daedalus.Shaders.Methods
         {
             Contract.Requires<ArgumentNullException>(arguments != null);
             Contract.Requires<ArgumentException>(arguments.Length == SignatureTypes.Length);
-            StringBuilder sb = new StringBuilder();
-            sb.Append(string.Format("{0}(", Method.Name));
-            foreach (string argument in arguments)
-                sb.Append(string.Format("{0}, ", argument));
+            var sb = new StringBuilder();
+            sb.Append($"{Method.Name}(");
+            foreach (var argument in arguments)
+                sb.Append($"{argument}, ");
             sb.Remove(sb.Length - 2, 2);
             sb.Append(")");
             return sb.ToString(); ;
@@ -78,13 +78,11 @@ namespace Odyssey.Daedalus.Shaders.Methods
 
         public string Signature()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(string.Format("{0} {1}(", Mapper.Map(returnType), Method.Name));
+            var sb = new StringBuilder();
+            sb.Append($"{Mapper.Map(returnType)} {Method.Name}(");
             for (int i = 0; i < SignatureTypes.Length; i++)
             {
-                string type = SignatureTypes[i];
-                string parameter = Parameters[i];
-                sb.Append(string.Format("{0} {1}, ", type, parameter));
+                sb.Append($"{SignatureTypes[i]} {Parameters[i]}, ");
             }
             sb.Remove(sb.Length - 2, 2);
             sb.Append(")");

@@ -17,7 +17,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
                 arguments[i] = "args" + ++i;
             }
 
-            return new MethodSignature(function, new TechniqueKey(), argumentTypes, arguments, argumentType);
+            return new MethodSignature(function, TechniqueKey.Default, argumentTypes, arguments, argumentType);
         }
 
         public static IMethod Normalize

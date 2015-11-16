@@ -19,10 +19,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             this.arguments = arguments;
         }
         
-        public override string Body
-        {
-            get { return string.Format("Intrinsic Functions do not have a body"); }
-        }
+        public override string Body => "Intrinsic Functions do not have a body";
 
         public override void Serialize(BinarySerializer serializer)
         {

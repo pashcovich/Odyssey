@@ -14,9 +14,10 @@ namespace Odyssey.Daedalus.Shaders.Methods
             V = new Vector { Name = "v", Type = Type.Float };
 
             // Shadows
-            RegisterSignature(new MethodSignature(this, new TechniqueKey(vs: VertexShaderFlags.All, ps: PixelShaderFlags.All, sm: ShaderModel.Any),
-                new[] { Type.Float.ToString(), Type.Float.ToString() },
-                new[] { Floats.tU, Floats.tV }, Type.Float2));
+            RegisterSignature(new MethodSignature(this, 
+                new TechniqueKey(vs: VertexShaderFlags.All, ps: PixelShaderFlags.All, sm: ShaderModel.Any),
+                new[] {Type.Float.ToString(), Type.Float.ToString()},
+                new[] {Floats.tU, Floats.tV}, Type.Float2));
         }
 
         public override string Body

@@ -33,7 +33,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
                     const Type type = Type.Float4;
                     Output = new Vector
                     {
-                        Name = string.Format("c{0}", name1),
+                        Name = $"c{name1}",
                         Type = type
                     };
                 }
@@ -50,7 +50,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 
         public override string Access()
         {
-            return string.Format("{0}.Sample({1}, {2})", Texture.Name, Sampler.Name, Coordinates.Reference);
+            return $"{Texture.Name}.Sample({Sampler.Name}, {Coordinates.Reference})";
         }
 
         protected override void RegisterNodes()

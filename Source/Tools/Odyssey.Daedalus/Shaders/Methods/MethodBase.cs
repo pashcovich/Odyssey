@@ -24,7 +24,6 @@ namespace Odyssey.Daedalus.Shaders.Methods
 {
     public abstract partial class MethodBase : IMethod, IDataSerializable
     {
-
         private bool isIntrinsic;
         private Dictionary<string, MethodReference> methodReferences;
         private Dictionary<TechniqueKey, MethodSignature> methodSignatures;
@@ -41,22 +40,14 @@ namespace Odyssey.Daedalus.Shaders.Methods
             methodSignatures = new Dictionary<TechniqueKey, MethodSignature>();
             methodReferences = new Dictionary<string, MethodReference>();
         }
+
         public abstract string Body { get; }
 
-        public string Definition
-        {
-            get { return string.Format("{0}\n{1}", Signature, Body); }
-        }
+        public string Definition => $"{Signature}\n{Body}";
 
-        public bool IsIntrinsic
-        {
-            get { return isIntrinsic; }
-        }
+        public bool IsIntrinsic => isIntrinsic;
 
-        public IEnumerable<MethodReference> MethodReferences
-        {
-            get { return methodReferences.Values; }
-        }
+        public IEnumerable<MethodReference> MethodReferences => methodReferences.Values;
 
         public string Name
         {
@@ -76,16 +67,16 @@ namespace Odyssey.Daedalus.Shaders.Methods
             try
             {
                 var signatures = from kvp in methodSignatures
-                                 where key.Supports(kvp.Key)
-                                 let rank = key.Rank(kvp.Key)
-                                 orderby rank descending
-                                 select new { Rank = rank, Signature = kvp.Value };
+                    where kvp.Key.Supports(key)
+                    let rank = key.Rank(kvp.Key)
+                    orderby rank descending
+                    select new {Rank = rank, Signature = kvp.Value};
 
                 ActiveSignature = signatures.First().Signature;
             }
             catch (InvalidOperationException e)
             {
-                LogEvent.Tool.Error("Shader does not support Technique [{0}]", key);
+                LogEvent.Tool.Error("Shader does not support Technique:\n{0}", key);
             }
 
             foreach (var kvp in methodReferences)
@@ -153,12 +144,12 @@ namespace Odyssey.Daedalus.Shaders.Methods
         }
         public void SetFlag(string name, bool value)
         {
-            System.Type methodType = GetType();
+            var methodType = GetType();
             methodType.GetProperty(name, BindingFlags.Public | BindingFlags.Instance).SetValue(this, value);
         }
         public void SetMethod(string methodName, MethodReference reference)
         {
-            System.Type methodType = GetType();
+            var methodType = GetType();
             methodType.GetProperty(methodName, BindingFlags.Public | BindingFlags.Instance).SetValue(this, reference);
         }
 
@@ -169,7 +160,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
 
         internal static MethodBase ReadMethod(BinarySerializer serializer)
         {
-            ShaderGraphSerializer sg = (ShaderGraphSerializer) serializer;
+            var sg = (ShaderGraphSerializer) serializer;
             string outputType = null;
             serializer.Serialize(ref outputType);
             var method = (MethodBase) Activator.CreateInstance(System.Type.GetType(outputType));

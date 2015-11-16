@@ -28,10 +28,12 @@ namespace Odyssey.Daedalus.Shaders.Structs
 
         public void SetReference(EngineReference reference)
         {
-            string refId = reference.ToString();
+            var refId = reference.ToString();
             if (!references.ContainsKey(refId))
+            {
                 references.Add(refId, reference);
-            reference.Index = references.Count - 1;
+                reference.Index = references.Count - 1;
+            }
         }
 
         public override void Add(IVariable variable)

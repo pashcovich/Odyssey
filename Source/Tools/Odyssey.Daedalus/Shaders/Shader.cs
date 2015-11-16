@@ -204,7 +204,7 @@ namespace Odyssey.Daedalus.Shaders
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.AppendLine(string.Format("// {0}", Name));
                 sb.AppendLine(string.Format("// {0} Shader ({1})", Type, FeatureLevel.ToString().ToLowerInvariant()));
                 sb.AppendLine("//");
@@ -244,7 +244,7 @@ namespace Odyssey.Daedalus.Shaders
         {
             Contract.Requires<ArgumentException>(variable != null);
 
-            IStruct varStruct = variable as IStruct;
+            var varStruct = variable as IStruct;
             switch (variable.Type)
             {
                 case Shaders.Type.ConstantBuffer:
@@ -287,7 +287,7 @@ namespace Odyssey.Daedalus.Shaders
                 where vS.CustomType != CustomType.None
                 select vS;
 
-            foreach (IStruct childStruct in childStructs)
+            foreach (var childStruct in childStructs)
             {
                 customTypeCount++;
                 Add(childStruct);
@@ -311,8 +311,8 @@ namespace Odyssey.Daedalus.Shaders
 
             variables.Serialize(serializer);
 
-            Struct sInput = (Struct) inputStruct;
-            Struct sOutput = (Struct) outputStruct;
+            var sInput = (Struct) inputStruct;
+            var sOutput = (Struct) outputStruct;
             serializer.BeginChunk("STRT");
             serializer.Serialize(ref sInput);
             serializer.Serialize(ref sOutput);
@@ -337,7 +337,7 @@ namespace Odyssey.Daedalus.Shaders
 
         public void Add(IEnumerable<IVariable> newVariables)
         {
-            foreach (IVariable variable in newVariables)
+            foreach (var variable in newVariables)
                 Add(variable);
         }
 
@@ -391,7 +391,7 @@ namespace Odyssey.Daedalus.Shaders
             }
 
             // Collect ConstantBuffer references
-            foreach (Structs.ConstantBuffer cb in ConstantBuffers)
+            foreach (var cb in ConstantBuffers)
             {
                 var markupData = from v in cb.Variables
                     from markup in v.Markup
@@ -407,7 +407,7 @@ namespace Odyssey.Daedalus.Shaders
                         LogEvent.Tool.Error("Conflicting metadata: [{0}] and [{1}]", kvp.Value, metaData[kvp.Key]);
                 }
 
-                ConstantBufferDescription cbReference = new ConstantBufferDescription(cb.Name, cb.Index.Value, cb.CbUpdateType, Type,
+                var cbReference = new ConstantBufferDescription(cb.Name, cb.Index.Value, cb.CbUpdateType, Type,
                     cb.References, metaData);
                 cbReferences.Add(cbCount++, cbReference);
                 metaData.Clear();
@@ -416,12 +416,12 @@ namespace Odyssey.Daedalus.Shaders
             // Collect Texture references
             foreach (var texture in Textures.Where(t => t.EngineReference != null))
             {
-                string reference = texture.EngineReference.Value;
-                string key = texture.ContainsMarkup(Texture.Key)
+                var reference = texture.EngineReference.Value;
+                var key = texture.ContainsMarkup(Texture.Key)
                     ? texture.GetMarkupValue(Texture.Key)
                     : string.Format("{0}.{1}", Name, reference);
-                CBUpdateType cbUpdateType = CBUpdateType.None;
-                int samplerIndex = 0;
+                var cbUpdateType = CBUpdateType.None;
+                var samplerIndex = 0;
                 if (texture.HasMarkup)
                 {
                     // Write metadata indicating preferred metadata
@@ -430,7 +430,7 @@ namespace Odyssey.Daedalus.Shaders
                         ? ReflectionHelper.ParseEnum<CBUpdateType>(texture.GetMarkupValue(Texture.UpdateType))
                         : CBUpdateType.SceneStatic;
                 }
-                TextureDescription tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, cbUpdateType,
+                var tDescription = new TextureDescription(texture.Index.Value, key, reference, samplerIndex, cbUpdateType,
                     Type);
                 textureReferences.Add(tDescription.Index, tDescription);
             }
@@ -438,11 +438,11 @@ namespace Odyssey.Daedalus.Shaders
             // Collect sampler references
             foreach (var sampler in Samplers)
             {
-                string name = sampler.GetMarkupValue(Sampler.SamplerName);
-                Filter filter = ReflectionHelper.ParseEnum<Filter>(sampler.GetMarkupValue(Sampler.Filter));
-                TextureAddressMode tAddressMode =
+                var name = sampler.Name;
+                var filter = ReflectionHelper.ParseEnum<Filter>(sampler.GetMarkupValue(Sampler.Filter));
+                var tAddressMode =
                     ReflectionHelper.ParseEnum<TextureAddressMode>(sampler.GetMarkupValue(Sampler.TextureAddressMode));
-                Comparison comparison = ReflectionHelper.ParseEnum<Comparison>(sampler.GetMarkupValue(Sampler.Comparison));
+                var comparison = ReflectionHelper.ParseEnum<Comparison>(sampler.GetMarkupValue(Sampler.Comparison));
                 var samplerDesc = new SamplerStateDescription
                 {
                     Index = sampler.Index.Value,
@@ -457,7 +457,7 @@ namespace Odyssey.Daedalus.Shaders
 
         public void Build()
         {
-            ShaderBuilder sb = new ShaderBuilder(KeyPart);
+            var sb = new ShaderBuilder(KeyPart);
             IEnumerable<IMethod> requiredMethods;
             sb.BuildMethod(Signature, Result, out requiredMethods);
             CollectReferences();
@@ -503,11 +503,11 @@ namespace Odyssey.Daedalus.Shaders
             if (EnableSeparators && methods.Length > 0)
                 sb.AddSeparator("Required methods");
 
-            foreach (IMethod method in methods)
+            foreach (var method in methods)
                 sb.Add(method.Definition);
 
             if (EnableSeparators)
-                sb.AddSeparator(string.Format("{0} Shader", Type));
+                sb.AddSeparator($"{Type} Shader");
 
             sb.Add(sb.EntryPoint);
 
@@ -540,27 +540,32 @@ namespace Odyssey.Daedalus.Shaders
 
         internal static ShaderModel FromFeatureLevel(FeatureLevel featureLevel)
         {
-            string featureLevelValue = featureLevel.ToString();
+            var featureLevelValue = featureLevel.ToString();
 
-            string shaderModelValue = "SM" + featureLevelValue.Substring(2, featureLevelValue.Length - 2);
+            var shaderModelValue = "SM" + featureLevelValue.Substring(2, featureLevelValue.Length - 2);
             return (ShaderModel) Enum.Parse(typeof (ShaderModel), shaderModelValue);
         }
 
         internal static FeatureLevel FromShaderModel(ShaderModel model, ShaderType type)
         {
-            string shaderCode = string.Empty;
+            var shaderCode = string.Empty;
             switch (type)
             {
                 case ShaderType.Pixel:
                     shaderCode = "PS";
+                    if (model == ShaderModel.Any)
+                        return FeatureLevel.PS_2_0;
                     break;
 
                 case ShaderType.Vertex:
                     shaderCode = "VS";
+                    if (model == ShaderModel.Any)
+                        return FeatureLevel.VS_2_0;
                     break;
             }
-            string shaderModelValue = model.ToString();
-            string featureLevelValue = shaderCode + shaderModelValue.Substring(2, shaderModelValue.Length - 2);
+            
+            var shaderModelValue = model.ToString();
+            var featureLevelValue = shaderCode + shaderModelValue.Substring(2, shaderModelValue.Length - 2);
             if (type == ShaderType.Vertex && model == ShaderModel.SM_2_B)
                 featureLevelValue = featureLevelValue.Replace('B', 'A');
             return (FeatureLevel) Enum.Parse(typeof (FeatureLevel), featureLevelValue);
@@ -571,9 +576,9 @@ namespace Odyssey.Daedalus.Shaders
             var vsAttributes = shader.GetType().GetCustomAttributes<VertexShaderAttribute>();
             var psAttributes = shader.GetType().GetCustomAttributes<PixelShaderAttribute>();
 
-            VertexShaderFlags vsFlags = VertexShaderFlags.None;
-            PixelShaderFlags psFlags = PixelShaderFlags.None;
-            ShaderModel model = FromFeatureLevel(shader.FeatureLevel);
+            var vsFlags = VertexShaderFlags.None;
+            var psFlags = PixelShaderFlags.None;
+            var model = FromFeatureLevel(shader.FeatureLevel);
 
             foreach (var vsAttribute in vsAttributes)
                 vsFlags |= vsAttribute.Features;
@@ -587,9 +592,9 @@ namespace Odyssey.Daedalus.Shaders
 
         public static TechniqueKey GenerateKeyPart(Shader shader)
         {
-            VertexShaderFlags vsFlags = VertexShaderFlags.None;
-            PixelShaderFlags psFlags = PixelShaderFlags.None;
-            ShaderModel model = FromFeatureLevel(shader.FeatureLevel);
+            var vsFlags = VertexShaderFlags.None;
+            var psFlags = PixelShaderFlags.None;
+            var model = FromFeatureLevel(shader.FeatureLevel);
 
             foreach (var property in shader.Result.DescendantNodes
                 .Select(node => node.GetType()

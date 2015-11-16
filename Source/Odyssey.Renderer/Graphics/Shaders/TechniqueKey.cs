@@ -4,6 +4,7 @@ using Odyssey.Extensions;
 using Odyssey.Serialization;
 using System;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace Odyssey.Graphics.Shaders
 {
@@ -107,6 +108,19 @@ namespace Odyssey.Graphics.Shaders
             return rank;
         }
 
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Key Declaration:");
+            sb.AppendLine($"\t{ShaderModel}");
+            sb.AppendLine($"\tVertexShader: {VertexShader}");
+            sb.AppendLine($"\tPixel Shader: {PixelShader}");
+            sb.AppendLine($"\t{RasterizerState}");
+            sb.AppendLine($"\t{BlendState}");
+            sb.AppendLine($"\t{DepthStencilState}");
+            return sb.ToString();
+        }
+
         #region Equality
 
         public static bool operator !=(TechniqueKey a, TechniqueKey b)
@@ -152,5 +166,7 @@ namespace Odyssey.Graphics.Shaders
             serializer.SerializeEnum(ref blendState);
             serializer.SerializeEnum(ref depthStencilState);
         }
+
+        public static TechniqueKey Default => new TechniqueKey(VertexShaderFlags.All, PixelShaderFlags.All, sm: ShaderModel.Any);
     }
 }
