@@ -1,6 +1,5 @@
 ﻿using Odyssey.Graphics.Shaders;
 using Odyssey.Serialization;
-using System.Collections.Generic;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {

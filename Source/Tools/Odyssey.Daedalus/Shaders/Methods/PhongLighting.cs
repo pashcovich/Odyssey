@@ -1,9 +1,6 @@
-﻿using System.Windows.Media;
-using Odyssey.Engine;
+﻿using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Daedalus.Shaders.Nodes;
-using Odyssey.Daedalus.Shaders.Structs;
 using System.Text;
 
 namespace Odyssey.Daedalus.Shaders.Methods

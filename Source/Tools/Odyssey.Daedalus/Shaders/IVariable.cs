@@ -1,6 +1,4 @@
 ﻿using Odyssey.Daedalus.Shaders.Structs;
-using Odyssey.Graphics;
-using Odyssey.Graphics.Effects;
 using System.Collections.Generic;
 using EngineReference = Odyssey.Engine.EngineReference;
 

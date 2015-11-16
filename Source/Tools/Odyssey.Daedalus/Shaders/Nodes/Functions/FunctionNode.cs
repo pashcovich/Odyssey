@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Odyssey.Daedalus.Shaders.Methods;
 using Odyssey.Daedalus.Shaders.Nodes.Operators;
 using Odyssey.Graphics.Shaders;

@@ -1,6 +1,5 @@
 ﻿using Odyssey.Serialization;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 
@@ -84,7 +83,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
                     switch (output)
                     {
                         case Type.Float3x3:
-                            return string.Format("(float3x3){0}", Input.Reference);
+                            return $"(float3x3){Input.Reference}";
                     }
                     break;
 
@@ -94,12 +93,12 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
                         case Type.Float2:
                             if (nSwizzle.Swizzle.Length != 2)
                                 throw new InvalidOperationException("Input node is not a Swizzle node.");
-                            return string.Format("{0}", Input.Reference);
+                            return $"{Input.Reference}";
 
                         case Type.Float4:
                             return nSwizzle != null
-                                ? string.Format("float4({0}.{1})", Input.Output.FullName, MaskVector(nSwizzle.Swizzle, Mask))
-                                : string.Format("float4({0}, {1})", Input.Reference, Mask[0]);
+                                ? $"float4({Input.Output.FullName}.{MaskVector(nSwizzle.Swizzle, Mask)})"
+                                : $"float4({Input.Reference}, {Mask[0]})";
                     }
                     break;
 
@@ -110,7 +109,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
                         case Type.Float3:
                             if (nSwizzle.Swizzle.Length != 3)
                                 throw new InvalidOperationException("Input node is not a Swizzle node.");
-                            return string.Format("{0}", Input.Reference);
+                            return $"{Input.Reference}";
                     }
                     break;
             }

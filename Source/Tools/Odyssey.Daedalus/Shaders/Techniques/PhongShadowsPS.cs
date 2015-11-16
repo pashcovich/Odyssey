@@ -24,8 +24,8 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             inputStruct.Name = "input";
             InputStruct = inputStruct;
 
-            Structs.ConstantBuffer cbStatic = CBStatic;
-            Structs.ConstantBuffer cbFrame = CBFrame;
+            ConstantBuffer cbStatic = CBStatic;
+            ConstantBuffer cbFrame = CBFrame;
             Texture tShadow = Texture.ShadowMap;
             Sampler sShadowSampler = Sampler.MinMagMiLinearMirrorLessEqual;
             sShadowSampler.Name = "sShadowMap";
@@ -47,11 +47,11 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             
         }
 
-        public static Structs.ConstantBuffer CBStatic
+        public static ConstantBuffer CBStatic
         {
             get
             {
-                Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer
+                ConstantBuffer cbStatic = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
                     CbUpdateType = CBUpdateType.SceneStatic,
@@ -64,11 +64,11 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             }
         }
 
-        public static new Structs.ConstantBuffer CBFrame
+        public static new ConstantBuffer CBFrame
         {
             get
             {
-                Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
+                ConstantBuffer cbFrame = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     CbUpdateType = CBUpdateType.SceneFrame,

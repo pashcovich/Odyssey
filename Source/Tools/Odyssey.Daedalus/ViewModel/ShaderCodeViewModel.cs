@@ -5,7 +5,6 @@ using Odyssey.Daedalus.View;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using System.Collections.ObjectModel;
-using Shader = Odyssey.Daedalus.Shaders.Shader;
 
 namespace Odyssey.Daedalus.ViewModel
 {

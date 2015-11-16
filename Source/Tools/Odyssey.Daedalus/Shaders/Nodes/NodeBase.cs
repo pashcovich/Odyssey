@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.Contracts;
-using System.Diagnostics.Eventing.Reader;
 using Odyssey.Daedalus.Serialization;
 using Odyssey.Daedalus.Shaders.Methods;
 using Odyssey.Graphics.Shaders;

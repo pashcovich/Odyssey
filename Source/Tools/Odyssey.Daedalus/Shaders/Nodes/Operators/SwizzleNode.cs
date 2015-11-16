@@ -1,14 +1,7 @@
-﻿using Odyssey.Graphics.Shaders;
-using Odyssey.Daedalus.Shaders.Nodes.Math;
-using Odyssey.Daedalus.Shaders.Structs;
-using Odyssey.Collections;
-using Odyssey.Serialization;
+﻿using Odyssey.Serialization;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 {
@@ -33,7 +26,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
                 {
                     if (IsVerbose)
                     {
-                        string name = Char.IsUpper(Input.Output.Name[0]) ? string.Format("{0}{1}", Variable.GetPrefix(Input.Output.Type), Input.Output.Name) : Input.Output.Name;
+                        string name = char.IsUpper(Input.Output.Name[0]) ? $"{Variable.GetPrefix(Input.Output.Type)}{Input.Output.Name}" : Input.Output.Name;
                         Output = Variable.InitVariable(name, type);
                     }
                     else Output = new Vector() { Type = type, Name = Input.Reference };
@@ -75,7 +68,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 
         public override string Access()
         {
-            return string.Format("{0}.{1}", Input.Reference, PrintSwizzle());
+            return $"{Input.Reference}.{PrintSwizzle()}";
         }
 
         protected override void RegisterNodes()

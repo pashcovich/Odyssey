@@ -1,7 +1,4 @@
 ﻿using Odyssey.Daedalus.Shaders.Nodes.Operators;
-using Odyssey.Graphics.Shaders;
-using System;
-using System.Diagnostics.Contracts;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {

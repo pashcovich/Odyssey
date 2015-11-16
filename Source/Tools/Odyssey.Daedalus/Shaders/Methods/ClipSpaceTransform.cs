@@ -1,7 +1,5 @@
 ﻿using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using System;
-using System.Diagnostics.Contracts;
 using System.Text;
 
 namespace Odyssey.Daedalus.Shaders.Methods

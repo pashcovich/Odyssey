@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Documents;
 using GalaSoft.MvvmLight;
 using System.Windows;
 using System.Windows.Input;

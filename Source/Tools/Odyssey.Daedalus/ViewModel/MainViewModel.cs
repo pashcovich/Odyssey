@@ -1,8 +1,6 @@
 #region Using Directives
 
-using System;
 using System.Linq;
-using System.Net.Sockets;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Odyssey.Daedalus.View;

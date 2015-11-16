@@ -19,7 +19,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Odyssey.Text.Logging;
-using Settings = Odyssey.Daedalus.Properties.Settings;
 using ShaderDescription = Odyssey.Graphics.Shaders.ShaderDescription;
 
 #endregion Using Directives

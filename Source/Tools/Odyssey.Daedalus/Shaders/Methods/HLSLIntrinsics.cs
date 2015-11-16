@@ -6,10 +6,11 @@ namespace Odyssey.Daedalus.Shaders.Methods
     {
         internal static string[] Intrinsics = { "normalize", "dot", "ddx", "ddy", "fwdith", "lerp", "max", "min", "step", "exp2" };
 
-        static MethodSignature CreateSignature(IntrinsicFunction function, int numParameters, Type argumentType)
+        static MethodSignature CreateSignature(IntrinsicFunction function, Type argumentType)
         {
-            string[] argumentTypes = new string[numParameters];
-            string[] arguments = new string[numParameters];
+            int numArguments = function.Arguments;
+            string[] argumentTypes = new string[numArguments];
+            string[] arguments = new string[numArguments];
             for (int i = 0; i < argumentTypes.Length; i++)
             {
                 argumentTypes[i] = argumentType.ToString();
@@ -25,7 +26,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             {
                 var normalize = new IntrinsicFunction("normalize", 1);
 
-                normalize.RegisterSignature(CreateSignature(normalize, 2, Type.Vector));
+                normalize.RegisterSignature(CreateSignature(normalize, Type.Vector));
                 
                 return normalize;
             }
@@ -36,7 +37,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var dot = new IntrinsicFunction("dot", 2);
-                dot.RegisterSignature(CreateSignature(dot, 2, Type.Vector));
+                dot.RegisterSignature(CreateSignature(dot, Type.Vector));
 
                 return dot;
             }
@@ -47,7 +48,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var ddx = new IntrinsicFunction("ddx", 1);
-                ddx.RegisterSignature(CreateSignature(ddx, 1, Type.Vector));
+                ddx.RegisterSignature(CreateSignature(ddx, Type.Vector));
 
                 return ddx;
             }
@@ -58,7 +59,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var ddy = new IntrinsicFunction("ddy", 1);
-                ddy.RegisterSignature(CreateSignature(ddy, 1, Type.Vector));
+                ddy.RegisterSignature(CreateSignature(ddy, Type.Vector));
 
                 return ddy;
             }
@@ -69,7 +70,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var lerp = new IntrinsicFunction("lerp", 3);
-                lerp.RegisterSignature(CreateSignature(lerp, 3, Type.Vector));
+                lerp.RegisterSignature(CreateSignature(lerp, Type.Vector));
                 return lerp;
             }
         }
@@ -79,7 +80,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var max = new IntrinsicFunction("max", 2);
-                max.RegisterSignature(CreateSignature(max, 2, Type.Vector));
+                max.RegisterSignature(CreateSignature(max, Type.Vector));
                 
                 return max;
             }
@@ -90,7 +91,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var min = new IntrinsicFunction("min", 2); 
-                min.RegisterSignature(CreateSignature(min, 2, Type.Vector));
+                min.RegisterSignature(CreateSignature(min, Type.Vector));
                 return min;
             }
         }
@@ -100,7 +101,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var step = new IntrinsicFunction("saturate", 1);
-                step.RegisterSignature(CreateSignature(step, 1, Type.Vector));
+                step.RegisterSignature(CreateSignature(step, Type.Vector));
                 return step;
             }
         }
@@ -110,7 +111,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var step = new IntrinsicFunction("step", 2);
-                step.RegisterSignature(CreateSignature(step, 2, Type.Vector));
+                step.RegisterSignature(CreateSignature(step, Type.Vector));
                 return step;
             }
         }
@@ -120,7 +121,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var fwidth = new IntrinsicFunction("fwidth", 1);
-                fwidth.RegisterSignature(CreateSignature(fwidth, 1, Type.Vector));
+                fwidth.RegisterSignature(CreateSignature(fwidth, Type.Vector));
                 return fwidth;
             }
         }
@@ -130,7 +131,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var smoothstep = new IntrinsicFunction("smoothstep", 3);
-                smoothstep.RegisterSignature(CreateSignature(smoothstep, 3, Type.Vector));
+                smoothstep.RegisterSignature(CreateSignature(smoothstep, Type.Vector));
                 return smoothstep;
             }
         }
@@ -140,7 +141,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
             get
             {
                 var smoothstep = new IntrinsicFunction("exp2", 1);
-                smoothstep.RegisterSignature(CreateSignature(smoothstep, 1, Type.Vector));
+                smoothstep.RegisterSignature(CreateSignature(smoothstep, Type.Vector));
                 return smoothstep;
             }
         }

@@ -1,10 +1,7 @@
-﻿using System.Diagnostics.Eventing.Reader;
-using System.Text;
+﻿using System.Text;
 using Odyssey.Daedalus.Shaders.Nodes;
 using System;
 using System.Linq;
-using Odyssey.Daedalus.Shaders.Nodes.Math;
-using SharpDX;
 using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders

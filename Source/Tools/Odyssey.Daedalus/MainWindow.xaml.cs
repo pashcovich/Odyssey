@@ -8,7 +8,6 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
-using Path = System.Windows.Shapes.Path;
 
 #endregion Using Directives
 

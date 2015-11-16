@@ -12,7 +12,6 @@ using Odyssey.Daedalus.ViewModel.Messages;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Daedalus.Utilities;
-using Shader = Odyssey.Daedalus.Shaders.Shader;
 
 #endregion
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Daedalus.Shaders.Methods;
+﻿using Odyssey.Daedalus.Shaders.Methods;
 using Odyssey.Daedalus.Shaders.Nodes;
 using Odyssey.Daedalus.Shaders.Nodes.Functions;
 using Odyssey.Daedalus.Shaders.Nodes.Operators;

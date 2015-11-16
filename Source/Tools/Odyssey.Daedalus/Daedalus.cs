@@ -1,9 +1,6 @@
-﻿using Odyssey.Daedalus.Properties;
-using Odyssey.Daedalus.Viewer;
-using Odyssey.Daedalus.View;
+﻿using Odyssey.Daedalus.Viewer;
 using System;
 using System.IO;
-using System.Windows.Threading;
 using Settings = Odyssey.Daedalus.Properties.Settings;
 
 namespace Odyssey.Daedalus

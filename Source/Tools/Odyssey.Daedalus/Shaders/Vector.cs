@@ -1,11 +1,7 @@
 ﻿using Odyssey.Daedalus.Shaders.Nodes;
-using Odyssey.Daedalus.Shaders.Nodes.Math;
 using Odyssey.Serialization;
 using System;
-using System.Diagnostics.Contracts;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace Odyssey.Daedalus.Shaders

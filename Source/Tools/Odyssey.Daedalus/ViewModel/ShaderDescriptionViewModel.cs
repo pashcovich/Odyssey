@@ -8,7 +8,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Shader = Odyssey.Daedalus.Shaders.Shader;
 
 namespace Odyssey.Daedalus.ViewModel
 {

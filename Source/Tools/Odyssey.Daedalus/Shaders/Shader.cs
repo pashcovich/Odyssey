@@ -33,7 +33,6 @@ using Odyssey.Text.Logging;
 using Odyssey.Utilities;
 using SharpDX.Direct3D11;
 using Odyssey.Serialization;
-using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer;
 using SamplerStateDescription = Odyssey.Graphics.Shaders.SamplerStateDescription;
 
 #endregion

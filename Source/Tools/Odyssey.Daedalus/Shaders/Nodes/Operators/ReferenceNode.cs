@@ -2,7 +2,6 @@
 using Odyssey.Graphics.Shaders;
 using Odyssey.Serialization;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Operators
@@ -35,8 +34,8 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
                 {
                     if (IsVerbose)
                     {
-                        string name = Char.IsUpper(Value.Name[0]) ? string.Format("{0}{1}", Variable.GetPrefix(Value.Type), Value.Name) : Value.Name;
-                        Output = Variable.InitVariable(name, Value.Type, customType: Value is Struct ? ((Struct)Value).CustomType : Shaders.CustomType.None);
+                        string name = Char.IsUpper(Value.Name[0]) ? $"{Variable.GetPrefix(Value.Type)}{Value.Name}" : Value.Name;
+                        Output = Variable.InitVariable(name, Value.Type, customType: Value is Struct ? ((Struct)Value).CustomType : CustomType.None);
                     }
                     else Output = Value;
                 }

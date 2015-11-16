@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
 using Odyssey.Serialization;
-using Shader = Odyssey.Daedalus.Shaders.Shader;
 
 namespace Odyssey.Daedalus.Serialization
 {

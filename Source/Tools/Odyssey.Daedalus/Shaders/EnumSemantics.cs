@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Odyssey.Daedalus.Shaders
+﻿namespace Odyssey.Daedalus.Shaders
 {
     public static class Semantics
     {

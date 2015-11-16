@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Odyssey.Graphics.Shaders;
-using Odyssey.Daedalus.Shaders.Nodes;
-using Odyssey.Serialization;
+﻿using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Methods
 {
     public class IntrinsicFunction : MethodBase
     {
         private int arguments;
-        public int Arguments { get { return arguments; } }
+        public int Arguments => arguments;
 
         public IntrinsicFunction() : base()
         {

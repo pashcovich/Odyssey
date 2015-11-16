@@ -4,9 +4,6 @@ using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Odyssey.Daedalus.Shaders.Nodes.Math;
-using System.Runtime.Serialization;
-using ConstantBuffer = Odyssey.Daedalus.Shaders.Structs.ConstantBuffer; 
 
 namespace Odyssey.Daedalus.Shaders.Techniques
 {

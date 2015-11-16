@@ -1,12 +1,4 @@
 ﻿using Odyssey.Daedalus.Shaders.Nodes.Operators;
-using Odyssey.Graphics.Shaders;
-using Odyssey.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {

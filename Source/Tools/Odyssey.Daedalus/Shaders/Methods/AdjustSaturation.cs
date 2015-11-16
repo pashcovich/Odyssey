@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using SharpDX;
 
 namespace Odyssey.Daedalus.Shaders.Methods
 {

@@ -80,9 +80,9 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             InputStruct = input;
             OutputStruct = Struct.PixelShaderOutput;
 
-            Structs.ConstantBuffer cbStatic = CBLight;
-            Structs.ConstantBuffer cbFrame = CBFrame;
-            Structs.ConstantBuffer cbInstance = ConstantBuffer.CBMaterial;
+            ConstantBuffer cbStatic = CBLight;
+            ConstantBuffer cbFrame = CBFrame;
+            ConstantBuffer cbInstance = ConstantBuffer.CBMaterial;
 
             Struct pointLight = (Struct)cbStatic[Param.Struct.PointLight];
             Struct material = (Struct)cbInstance[Param.Struct.Material];
@@ -91,12 +91,18 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             Add(cbFrame);
             Add(cbInstance);
 
-            CastNode vWorldPos = new CastNode
+            //CastNode vWorldPos = new CastNode
+            //{
+            //    Input = new SwizzleNode { Input = new ReferenceNode{Value = InputStruct[Param.SemanticVariables.WorldPosition] }
+            //        , Swizzle = new[] { Swizzle.X, Swizzle.Y, Swizzle.Z } },
+            //    Output = new Vector { Type = Shaders.Type.Float3, Name = "vWorldPos", },
+            //    IsVerbose = true
+            //};
+
+            var vWorldPos = new SwizzleNode()
             {
-                Input = new SwizzleNode { Input = new ReferenceNode{Value = InputStruct[Param.SemanticVariables.WorldPosition] }
-                    , Swizzle = new[] { Swizzle.X, Swizzle.Y, Swizzle.Z } },
-                Output = new Vector { Type = Shaders.Type.Float3, Name = "vWorldPos", },
-                IsVerbose = true
+                Input = new ReferenceNode {Value = InputStruct[Param.SemanticVariables.WorldPosition]},
+                Swizzle = new[] {Swizzle.X, Swizzle.Y, Swizzle.Z}
             };
 
             SubtractionNode vLightDirection = new SubtractionNode
@@ -160,11 +166,11 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             };
         }
 
-        public static Structs.ConstantBuffer CBFrame
+        public static ConstantBuffer CBFrame
         {
             get
             {
-                Structs.ConstantBuffer cbFrame = new Structs.ConstantBuffer
+                ConstantBuffer cbFrame = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     CbUpdateType = CBUpdateType.SceneFrame,
@@ -174,11 +180,11 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             }
         }
 
-        public static Structs.ConstantBuffer CBLight
+        public static ConstantBuffer CBLight
         {
             get
             {
-                Structs.ConstantBuffer cbStatic = new Structs.ConstantBuffer
+                ConstantBuffer cbStatic = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
                     CbUpdateType = CBUpdateType.SceneFrame,

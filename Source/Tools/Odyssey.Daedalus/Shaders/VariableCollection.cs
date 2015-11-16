@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Odyssey.Engine;
-using Odyssey.Daedalus.Serialization;
-using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders

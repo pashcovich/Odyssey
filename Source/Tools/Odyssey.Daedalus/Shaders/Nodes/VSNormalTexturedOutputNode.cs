@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Odyssey.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Nodes
 {

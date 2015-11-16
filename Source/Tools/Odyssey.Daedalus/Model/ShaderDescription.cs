@@ -1,6 +1,5 @@
 ﻿using Odyssey.Graphics.Effects;
 using Odyssey.Graphics.Shaders;
-using Shader = Odyssey.Daedalus.Shaders.Shader;
 
 namespace Odyssey.Daedalus.Model
 {

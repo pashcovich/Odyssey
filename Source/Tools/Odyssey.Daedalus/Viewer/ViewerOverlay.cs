@@ -1,12 +1,5 @@
 ﻿using Odyssey.Core;
 using Odyssey.UserInterface.Controls;
-using Odyssey.UserInterface.Style;
-using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Daedalus.Viewer
 {
