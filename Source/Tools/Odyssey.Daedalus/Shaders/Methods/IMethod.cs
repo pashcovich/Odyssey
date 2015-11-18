@@ -19,6 +19,8 @@ namespace Odyssey.Daedalus.Shaders.Methods
 
         void AddReference(MethodReference reference);
 
+        void ClearReferences();
+
         void SetFlag(string flagName, bool value);
         
         string Call(params string[] args);

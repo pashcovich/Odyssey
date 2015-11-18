@@ -54,17 +54,17 @@ namespace Odyssey.Graphics.Shaders
             this.metadata = metadata.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
-        public int Index { get { return index; } }
+        public int Index => index;
 
-        public IEnumerable<KeyValuePair<string, string>> Metadata { get { return metadata; } }
+        public IEnumerable<KeyValuePair<string, string>> Metadata => metadata;
 
-        public string Name { get { return name; } }
+        public string Name => name;
 
-        public IEnumerable<KeyValuePair<int, EngineReference>> References { get { return references; } }
+        public IEnumerable<KeyValuePair<int, EngineReference>> References => references;
 
-        public ShaderType ShaderType { get { return shaderType; } }
+        public ShaderType ShaderType => shaderType;
 
-        public CBUpdateType CbUpdateFrequency { get { return cbUpdateFrequency; } }
+        public CBUpdateType CbUpdateFrequency => cbUpdateFrequency;
 
         public bool ContainsMetadata(string key)
         {

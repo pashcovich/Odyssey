@@ -23,13 +23,11 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         public override string Operation(ref int indentation)
         {
-            Struct psOutput = (Struct)Output;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format("\t{0} {1};", psOutput.CustomType, psOutput.Name));
-            sb.AppendLine(string.Format("\t{0} = {1};", psOutput[Param.SemanticVariables.Color].FullName,
-                //"cNormalMap"));
-                FinalColor.Reference));
-            sb.AppendLine(string.Format("\treturn {0};", psOutput.Name));
+            var psOutput = (Struct)Output;
+            var sb = new StringBuilder();
+            sb.AppendLine($"\t{psOutput.CustomType} {psOutput.Name};");
+            sb.AppendLine($"\t{psOutput[Param.SemanticVariables.Color].FullName} = {FinalColor.Reference};");
+            sb.AppendLine($"\treturn {psOutput.Name};");
 
             return sb.ToString();
         }
@@ -41,7 +39,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         protected override void RegisterNodes()
         {
-            AddNode("FinalColor", FinalColor);
+            AddNode(nameof(FinalColor), FinalColor);
         }
     }
 }

@@ -80,27 +80,15 @@ namespace Odyssey.Daedalus.Shaders
             }
         }
 
-        public IEnumerable<Structs.ConstantBuffer> ConstantBuffers
-        {
-            get
-            {
-                return (from kvp in variables
-                    where kvp.Value.Type == Shaders.Type.ConstantBuffer
-                    select kvp.Value).Cast<Structs.ConstantBuffer>();
-            }
-        }
+        public IEnumerable<Structs.ConstantBuffer> ConstantBuffers => (from kvp in variables
+            where kvp.Value.Type == Shaders.Type.ConstantBuffer
+            select kvp.Value).Cast<Structs.ConstantBuffer>();
 
-        public IEnumerable<Struct> CustomTypes
-        {
-            get
-            {
-                return (from kvp in variables
-                    where kvp.Value.Type == Shaders.Type.Struct
-                    let varStruct = (Struct) kvp.Value
-                    where varStruct.CustomType != CustomType.None
-                    select varStruct);
-            }
-        }
+        public IEnumerable<Struct> CustomTypes => (from kvp in variables
+            where kvp.Value.Type == Shaders.Type.Struct
+            let varStruct = (Struct) kvp.Value
+            where varStruct.CustomType != CustomType.None
+            select varStruct);
 
         public IEnumerable<Variable> MiscVariables
         {
@@ -118,10 +106,7 @@ namespace Odyssey.Daedalus.Shaders
             }
         }
 
-        public IEnumerable<IVariable> Variables
-        {
-            get { return variables.Values; }
-        }
+        public IEnumerable<IVariable> Variables => variables.Values;
 
         [DataMember]
         public bool EnableSeparators
@@ -179,24 +164,17 @@ namespace Odyssey.Daedalus.Shaders
             set { keyPart = value; }
         }
 
-        public IEnumerable<Sampler> Samplers
-        {
-            get { return variables.Values.OfType<Sampler>(); }
-        }
+        public IEnumerable<Sampler> Samplers => variables.Values.OfType<Sampler>();
 
-        public IEnumerable<ConstantBufferDescription> References
-        {
-            get { return cbReferences.Values; }
-        }
+        public IEnumerable<ConstantBufferDescription> References => cbReferences.Values;
 
         public string Signature
         {
             get
             {
                 Contract.Requires<InvalidOperationException>(InputStruct.CustomType != CustomType.None);
-                return string.Format("{0} {1}({2} {3}) {4}", OutputStruct.CustomType, Name, InputStruct.CustomType,
-                    InputStruct.Name,
-                    Type == ShaderType.Pixel ? ": " + Param.SemanticVariables.SVTarget : string.Empty);
+                return
+                    $"{OutputStruct.CustomType} {Name}({InputStruct.CustomType} {InputStruct.Name}) {(Type == ShaderType.Pixel ? ": " + Param.SemanticVariables.SVTarget : string.Empty)}";
             }
         }
 
@@ -205,38 +183,25 @@ namespace Odyssey.Daedalus.Shaders
             get
             {
                 var sb = new StringBuilder();
-                sb.AppendLine(string.Format("// {0}", Name));
-                sb.AppendLine(string.Format("// {0} Shader ({1})", Type, FeatureLevel.ToString().ToLowerInvariant()));
+                sb.AppendLine($"// {Name}");
+                sb.AppendLine($"// {Type} Shader ({FeatureLevel.ToString().ToLowerInvariant()})");
                 sb.AppendLine("//");
-                sb.AppendLine(string.Format("// Built with Odyssey Shader Generator v{0}",
-                    Assembly.GetExecutingAssembly().GetName().Version));
-                sb.AppendLine(string.Format("// {0:dd/MM/yyyy H:mm:ss }", DateTime.Now));
+                sb.AppendLine($"// Built with Odyssey Shader Generator v{Assembly.GetExecutingAssembly().GetName().Version}");
+                sb.AppendLine($"// {DateTime.Now:dd/MM/yyyy H:mm:ss}");
 
                 return sb.ToString();
             }
         }
 
-        public IEnumerable<Variable> Textures
-        {
-            get
-            {
-                return (from kvp in variables
-                    where kvp.Value.Type == Shaders.Type.Texture2D ||
-                          kvp.Value.Type == Shaders.Type.Texture3D ||
-                          kvp.Value.Type == Shaders.Type.TextureCube
-                    select kvp.Value).Cast<Variable>();
-            }
-        }
+        public IEnumerable<Variable> Textures => (from kvp in variables
+            where kvp.Value.Type == Shaders.Type.Texture2D ||
+                  kvp.Value.Type == Shaders.Type.Texture3D ||
+                  kvp.Value.Type == Shaders.Type.TextureCube
+            select kvp.Value).Cast<Variable>();
 
-        public IEnumerable<TextureDescription> TextureReferences
-        {
-            get { return textureReferences.Values; }
-        }
+        public IEnumerable<TextureDescription> TextureReferences => textureReferences.Values;
 
-        public IEnumerable<SamplerStateDescription> SamplerReferences
-        {
-            get { return samplerReferences.Values; }
-        }
+        public IEnumerable<SamplerStateDescription> SamplerReferences => samplerReferences.Values;
 
         #endregion
 
@@ -419,7 +384,7 @@ namespace Odyssey.Daedalus.Shaders
                 var reference = texture.EngineReference.Value;
                 var key = texture.ContainsMarkup(Texture.Key)
                     ? texture.GetMarkupValue(Texture.Key)
-                    : string.Format("{0}.{1}", Name, reference);
+                    : $"{Name}.{reference}";
                 var cbUpdateType = CBUpdateType.None;
                 var samplerIndex = 0;
                 if (texture.HasMarkup)
@@ -585,10 +550,8 @@ namespace Odyssey.Daedalus.Shaders
             foreach (var psAttribute in psAttributes)
                 psFlags |= psAttribute.Features;
 
-
             return new TechniqueKey(vsFlags, psFlags, sm: model);
         }
-
 
         public static TechniqueKey GenerateKeyPart(Shader shader)
         {

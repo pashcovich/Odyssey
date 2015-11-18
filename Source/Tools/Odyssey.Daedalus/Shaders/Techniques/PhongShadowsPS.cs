@@ -19,15 +19,15 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             FeatureLevel = FeatureLevel.PS_5_0;
             KeyPart = new TechniqueKey(ps: PixelShaderFlags.Diffuse | PixelShaderFlags.Specular | PixelShaderFlags.Shadows | PixelShaderFlags.ShadowMap, sm: FromFeatureLevel(FeatureLevel));
             Clear();
-            PhongLightingNode nPhongLighting = (PhongLightingNode)((PSOutputNode)Result).FinalColor;
+            var nPhongLighting = (PhongLightingNode)((PSOutputNode)Result).FinalColor;
             var inputStruct = PhongShadowsVS.VSOut;
             inputStruct.Name = "input";
             InputStruct = inputStruct;
 
-            ConstantBuffer cbStatic = CBStatic;
-            ConstantBuffer cbFrame = CBFrame;
-            Texture tShadow = Texture.ShadowMap;
-            Sampler sShadowSampler = Sampler.MinMagMiLinearMirrorLessEqual;
+            var cbStatic = CBStatic;
+            var cbFrame = CBFrame;
+            var tShadow = Texture.ShadowMap;
+            var sShadowSampler = Sampler.MinMagMiLinearMirrorLessEqual;
             sShadowSampler.Name = "sShadowMap";
 
             Add(tShadow);
@@ -35,7 +35,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             Add(cbStatic);
             Add(cbFrame);
 
-            TextureSampleNode nShadowMapSampler = new TextureSampleNode
+            var nShadowMapSampler = new TextureSampleNode
             {
                 Coordinates = new ReferenceNode { Value = inputStruct[Param.SemanticVariables.ShadowProjection] },
                 Texture = tShadow,
@@ -51,7 +51,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
         {
             get
             {
-                ConstantBuffer cbStatic = new ConstantBuffer
+                var cbStatic = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.Static,
                     CbUpdateType = CBUpdateType.SceneStatic,
@@ -68,7 +68,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
         {
             get
             {
-                ConstantBuffer cbFrame = new ConstantBuffer
+                var cbFrame = new ConstantBuffer
                 {
                     Name = Param.ConstantBuffer.PerFrame,
                     CbUpdateType = CBUpdateType.SceneFrame,

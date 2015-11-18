@@ -1,4 +1,5 @@
-﻿using Odyssey.Daedalus.Shaders.Structs;
+﻿using System.Collections.Generic;
+using Odyssey.Daedalus.Shaders.Structs;
 using Odyssey.Engine;
 using System.Runtime.Serialization;
 using System.Text;
@@ -16,19 +17,20 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         public override string Operation(ref int indentation)
         {
-            Struct vsOutput = (Struct)Output;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format("\t{0} {1};", vsOutput.CustomType, vsOutput.Name));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Position].FullName, Position.Reference));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Texture].FullName, Texture.Reference));
-            sb.AppendLine(string.Format("\treturn {0};", vsOutput.Name));
+            var vsOutput = (Struct)Output;
+            var sb = new StringBuilder();
+            sb.AppendLine($"\t{vsOutput.CustomType} {vsOutput.Name};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Position].FullName} = {Position.Reference};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Texture].FullName} = {Texture.Reference};");
+            sb.AppendLine($"\treturn {vsOutput.Name};");
 
             return sb.ToString();
         }
 
         protected override void RegisterNodes()
         {
-            AddNode("Texture", Texture);
+            base.RegisterNodes();
+            AddNode(nameof(Texture), Texture);
         }
     }
 }

@@ -23,46 +23,6 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Functions
         [DataMember]
         public bool CubeMap { get; set; }
 
-        //public override IEnumerable<INode> DescendantNodes
-        //{
-        //    get
-        //    {
-        //        yield return Light;
-        //        foreach (var node in Light.DescendantNodes)
-        //            yield return node;
-
-        //        yield return Material;
-        //        foreach (var node in Material.DescendantNodes)
-        //            yield return node;
-
-        //        yield return ViewDirection;
-        //        foreach (var node in ViewDirection.DescendantNodes)
-        //            yield return node;
-
-        //        yield return LightDirection;
-        //        foreach (var node in LightDirection.DescendantNodes)
-        //            yield return node;
-
-        //        yield return Normal;
-        //        foreach (var node in Normal.DescendantNodes)
-        //            yield return node;
-
-        //        if (DiffuseMap)
-        //        {
-        //            yield return DiffuseMapSamplerNode;
-        //            foreach (var node in DiffuseMapSamplerNode.DescendantNodes)
-        //                yield return node;
-        //        }
-
-        //        if (Shadows)
-        //        {
-        //            yield return ShadowMapSamplerNode;
-        //            foreach (var node in ShadowMapSamplerNode.DescendantNodes)
-        //                yield return node;
-        //        }
-        //    }
-        //}
-
         [DataMember]
         public bool DiffuseMap { get; set; }
 
@@ -159,6 +119,8 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Functions
             base.Validate(key);
             if (LightingMethod == null)
                 LightingMethod = new PhongLighting();
+            else
+                LightingMethod.ClearReferences();
 
             LightingMethod.ActivateSignature(key);
 
@@ -179,14 +141,15 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Functions
 
         protected override void RegisterNodes()
         {
-            AddNode("Light", Light);
-            AddNode("LightDirection", LightDirection);
-            AddNode("Material", Material);
-            AddNode("Normal", Normal);
+            AddNode(nameof(Light), Light);
+            AddNode(nameof(LightDirection), LightDirection);
+            AddNode(nameof(Material), Material);
+            AddNode(nameof(Normal), Normal);
+            AddNode(nameof(ViewDirection), ViewDirection);
             if (DiffuseMap)
-                AddNode("DiffuseMapSample", DiffuseMapSample);
+                AddNode(nameof(DiffuseMapSample), DiffuseMapSample);
             if (Shadows)
-                AddNode("ShadowMapSample", ShadowMapSample);
+                AddNode(nameof(ShadowMapSample), ShadowMapSample);
         }
     }
 }

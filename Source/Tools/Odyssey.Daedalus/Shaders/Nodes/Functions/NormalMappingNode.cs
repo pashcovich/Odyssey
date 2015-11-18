@@ -17,19 +17,6 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Functions
         [PixelShader(PixelShaderFlags.NormalMap)]
         public TextureSampleNode NormalMapSamplerNode { get; set; }
 
-        public override IEnumerable<INode> DescendantNodes
-        {
-            get
-            {
-                foreach (INode node in base.DescendantNodes)
-                    yield return node;
-
-                yield return NormalMapSamplerNode;
-                foreach (var node in NormalMapSamplerNode.DescendantNodes)
-                    yield return node; 
-            }
-        }
-
         public override string Access()
         {
             return LightingMethod.Call((Struct) Light.Output, (Struct) Material.Output, (Vector) LightDirection.Output,

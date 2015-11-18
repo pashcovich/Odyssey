@@ -88,6 +88,11 @@ namespace Odyssey.Daedalus.Shaders.Methods
             methodReferences.Add(reference.Method.Name, reference);
         }
 
+        public void ClearReferences()
+        {
+            methodReferences.Clear();
+        }
+
         public string Call(params string[] args)
         {
             return ActiveSignature.Call(args);

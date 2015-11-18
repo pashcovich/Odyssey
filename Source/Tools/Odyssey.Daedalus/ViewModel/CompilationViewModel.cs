@@ -298,7 +298,7 @@ namespace Odyssey.Daedalus.ViewModel
 
         public void Save()
         {
-            SaveFileDialog saveDialog = new SaveFileDialog { Filter = "Odyssey Shader Graph|*.osg" };
+            var saveDialog = new SaveFileDialog { Filter = "Odyssey Shader Graph|*.osg" };
             bool? result = saveDialog.ShowDialog();
             if (result == false)
                 return;
@@ -315,9 +315,9 @@ namespace Odyssey.Daedalus.ViewModel
                 foreach (var shader in techniqueGraph.SelectMany(t => t.Shaders))
                     shader.Build();
 
-                using (FileStream fs = new FileStream(saveDialog.FileName, FileMode.Create))
+                using (var fs = new FileStream(saveDialog.FileName, FileMode.Create))
                 {
-                    ShaderGraphSerializer sgSerializer = new ShaderGraphSerializer(fs, SerializerMode.Write);
+                    var sgSerializer = new ShaderGraphSerializer(fs, SerializerMode.Write);
                     sgSerializer.Save(techniqueGraph);
                 }
             }
@@ -342,16 +342,21 @@ namespace Odyssey.Daedalus.ViewModel
 
         public void CreateTechnique()
         {
-            CreateTechniqueView view = new CreateTechniqueView();
+            var view = new CreateTechniqueView();
             view.ShowDialog();
             if (!view.DialogResult.HasValue || !view.DialogResult.Value)
                 return;
 
             var vmCT = (CreateTechniqueViewModel)view.DataContext;
-            string techniqueName = string.IsNullOrEmpty(vmCT.Name)
-                ? string.Format("{0}{1}", NewTechnique, techniques.Count(t => t.Name.StartsWith(NewTechnique)) + 1)
-                : vmCT.Name;
-            TechniqueMappingViewModel vmTM = new TechniqueMappingViewModel
+            var name = vmCT.Name;
+            string techniqueName;
+            if (string.IsNullOrEmpty(name))
+                techniqueName = $"{NewTechnique}{techniques.Count(t => t.Name.StartsWith(NewTechnique)) + 1}";
+            else if (techniques.Count(t => string.Equals(name, t.Name)) == 1)
+                techniqueName = $"{name}{techniques.Count(t => t.Name.StartsWith(name)) + 1}";
+            else techniqueName = name;
+
+            var vmTM = new TechniqueMappingViewModel
             {
                 TechniqueMapping = new TechniqueMapping(techniqueName) { Key = vmCT.Key },
                 Name = techniqueName,

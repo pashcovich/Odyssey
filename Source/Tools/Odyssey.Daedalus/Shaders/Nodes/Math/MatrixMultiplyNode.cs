@@ -1,4 +1,5 @@
 ﻿using Odyssey.Daedalus.Shaders.Nodes.Operators;
+using Odyssey.Graphics.Shaders;
 
 namespace Odyssey.Daedalus.Shaders.Nodes.Math
 {
@@ -6,7 +7,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
     {
         public override string Access()
         {
-            return string.Format("mul({0},{1})", Input1.Reference, Input2.Reference);
+            return $"mul({Input1.Reference},{Input2.Reference})";
         }
 
         /// <summary>
@@ -18,13 +19,13 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
         /// <returns>The resulting <see cref="MatrixMultiplyNode"/>.</returns>
         public static MatrixMultiplyNode Multiply(Matrix m1, Matrix m2, Matrix m3)
         {
-            MatrixMultiplyNode m1m2 = new MatrixMultiplyNode
+            var m1m2 = new MatrixMultiplyNode
             {
                 Input1 = new ReferenceNode { Value = m1 },
                 Input2 = new ReferenceNode { Value = m2 },
             };
 
-            MatrixMultiplyNode mulResult = new MatrixMultiplyNode
+            var mulResult = new MatrixMultiplyNode
             {
                 Input1 = m1m2,
                 Input2 = new ReferenceNode { Value = m3 },
@@ -34,25 +35,19 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
             return mulResult;
         }
 
-        public static MatrixMultiplyNode WorldViewProjection
-        {
-            get
-            {
-                return Multiply(Matrix.EntityWorld, Matrix.CameraView, Matrix.CameraProjection);
-            }
-        }
+        public static MatrixMultiplyNode WorldViewProjection => Multiply(Matrix.EntityWorld, Matrix.CameraView, Matrix.CameraProjection);
 
         public static MatrixMultiplyNode LightWorldViewProjection
         {
             get
             {
-                MatrixMultiplyNode mulVP = new MatrixMultiplyNode
+                var mulVP = new MatrixMultiplyNode
                 {
                     Input1 = new ReferenceNode { Value = Matrix.LightView },
                     Input2 = new ReferenceNode { Value = Matrix.LightProjection },
                 };
 
-                MatrixMultiplyNode mulLightWVP = new MatrixMultiplyNode
+                var mulLightWVP = new MatrixMultiplyNode
                 {
                     Input1 = new ReferenceNode { Value = Matrix.EntityWorld },
                     Input2 = mulVP,
@@ -61,6 +56,11 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
 
                 return mulLightWVP;
             }
+        }
+
+        public override void Validate(TechniqueKey key)
+        {
+            base.Validate(key);
         }
     }
 }

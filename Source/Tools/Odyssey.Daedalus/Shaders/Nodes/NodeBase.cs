@@ -24,15 +24,12 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         internal static readonly Dictionary<string, int> NodeCounter = new Dictionary<string, int>();
 
+        private readonly Dictionary<string, INode> nodes;
         private bool declare;
-
-        private string id;
-
         private bool isVerbose;
-
-        private Dictionary<string, INode> nodes;
         private bool closesBlock;
         private bool opensBlock;
+        private string id;
 
         protected NodeBase()
         {
@@ -42,7 +39,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
             if (!NodeCounter.ContainsKey(type))
                 NodeCounter.Add(type, 1);
 
-            id = string.Format("{0}{1}", type, NodeCounter[type]++);
+            id = $"{type}{NodeCounter[type]++}";
             nodes = new Dictionary<string, INode>();
         }
 
@@ -54,15 +51,9 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         public bool Declare { get { return declare; } set { declare = value; } }
 
-        public virtual IEnumerable<INode> DescendantNodes
-        {
-            get { return nodes.Values; }
-        }
+        public virtual IEnumerable<INode> DescendantNodes => nodes.Values;
 
-        public string Id
-        {
-            get { return id; }
-        }
+        public string Id => id;
 
         public bool IsVerbose { get { return isVerbose; } set { isVerbose = value; } }
 
@@ -85,8 +76,8 @@ namespace Odyssey.Daedalus.Shaders.Nodes
                     return Output.FullName;
                 else
                 {
-                    ISwizzle swizzleVar = Output as ISwizzle;
-                    return swizzleVar != null && swizzleVar.HasSwizzle ? string.Format("{0}.{1}", Access(), swizzleVar.PrintSwizzle()) : Access();
+                    var swizzleVar = Output as ISwizzle;
+                    return swizzleVar != null && swizzleVar.HasSwizzle ? $"{Access()}.{swizzleVar.PrintSwizzle()}" : Access();
                 }
             }
         }
@@ -112,8 +103,8 @@ namespace Odyssey.Daedalus.Shaders.Nodes
             }
 
             string assignment = declare
-                ? string.Format("\t{0} {1}\n", Mapper.Map(Output.Type), Assignment())
-                : string.Format("\t{0}\n", Assignment());
+                ? $"\t{Mapper.Map(Output.Type)} {Assignment()}\n"
+                : $"\t{Assignment()}\n";
             if (indentation > 1)
             {
                 string indent = "\t";
@@ -166,7 +157,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
         {
             ValidateBindings(key);
             if (PreCondition != null)
-                AddNode("PreCondition", PreCondition);
+                AddNode(nameof(PreCondition), PreCondition);
             RegisterNodes();
         }
 
@@ -199,7 +190,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
                 serializer.Serialize(ref nodeId);
                 if (sg.IsNodeParsed(nodeId))
                     return sg.GetNode(nodeId);
-                else throw new InvalidOperationException(string.Format("Node '{0}' not found", nodeId));
+                else throw new InvalidOperationException($"Node '{nodeId}' not found");
             }
         }
 
@@ -225,7 +216,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         protected virtual string Assignment()
         {
-            return string.Format("{0} = {1};", Output.FullName, Access());
+            return $"{Output.FullName} = {Access()};";
         }
 
         protected virtual void AssignNodes(string key, NodeBase node, PropertyInfo nodeProperty)
@@ -248,13 +239,13 @@ namespace Odyssey.Daedalus.Shaders.Nodes
                 if (serializer.Mode == SerializerMode.Write)
                 {
                     var kvp = nodeList[i];
-                    string nodeKey = kvp.Key;
+                    var nodeKey = kvp.Key;
                     serializer.Serialize(ref nodeKey);
                     WriteNode(serializer, kvp.Value);
                 }
                 else
                 {
-                    string nodeKey = string.Empty;
+                    var nodeKey = string.Empty;
                     serializer.Serialize(ref nodeKey);
                     NodeBase node = ReadNode(serializer);
                     PropertyInfo nodeProperty;
@@ -312,9 +303,9 @@ namespace Odyssey.Daedalus.Shaders.Nodes
             var node = data as INode;
 
             if (!dataNull)
-                expectedType = node != null ? node.Output.Type : ((IVariable)data).Type;
+                expectedType = node?.Output.Type ?? ((IVariable)data).Type;
 
-            foreach (SupportedTypeAttribute attribute in property.GetCustomAttributes(true).OfType<SupportedTypeAttribute>())
+            foreach (var attribute in property.GetCustomAttributes(true).OfType<SupportedTypeAttribute>())
             {
                 if (!CheckFlags(key, property))
                 {
@@ -322,9 +313,9 @@ namespace Odyssey.Daedalus.Shaders.Nodes
                     Log.Daedalus.Warning("Property [{0}] is marked as not being required. Skipping validation.", property.Name);
                     continue;
                 }
-                SupportedTypeAttribute supportedTypeAttribute = attribute;
+                var supportedTypeAttribute = attribute;
                 if (data == null)
-                    throw new InvalidOperationException(string.Format("Property [{0}] cannot be null.", property.Name));
+                    throw new InvalidOperationException($"Property [{property.Name}] cannot be null.");
                 else if (SupportsType(supportedTypeAttribute.SupportedType, expectedType))
                 {
                     test = true;
@@ -332,7 +323,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
                 }
             }
             if (!test)
-                throw new InvalidOperationException(string.Format("Node [{0}] cannot be of type [{1}].", property.Name, expectedType));
+                throw new InvalidOperationException($"Node [{property.Name}] cannot be of type [{expectedType}].");
         }
 
         private void ValidateBindings(TechniqueKey key)
@@ -346,7 +337,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
                 var ignoreAttribute = property.GetCustomAttribute<IgnoreValidationAttribute>();
                 if (ignoreAttribute != null && ignoreAttribute.Value)
                 {
-                    Log.Daedalus.Warning(string.Format("{0} is marked to ignore validation.", property.Name));
+                    Log.Daedalus.Warning($"{property.Name} is marked to ignore validation.");
                     continue;
                 }
 

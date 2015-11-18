@@ -24,7 +24,7 @@ namespace Odyssey.Daedalus.Shaders.Structs
             references = new Dictionary<string, EngineReference>();
         }
 
-        public IEnumerable<EngineReference> References { get { return references.Values; } }
+        public IEnumerable<EngineReference> References => references.Values;
 
         public void SetReference(EngineReference reference)
         {

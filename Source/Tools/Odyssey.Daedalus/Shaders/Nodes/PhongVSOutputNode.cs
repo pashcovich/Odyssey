@@ -13,9 +13,9 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         public override string Operation(ref int indentation)
         {
-            Struct vsOutput = (Struct)Output;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format("\t{0} {1};", vsOutput.CustomType, vsOutput.Name));
+            var vsOutput = (Struct)Output;
+            var sb = new StringBuilder();
+            sb.AppendLine($"\t{vsOutput.CustomType} {vsOutput.Name};");
 
             PrintOutputStructure(sb, vsOutput);
             PrintReturnOutput(sb, vsOutput);
@@ -25,24 +25,24 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         protected virtual void PrintOutputStructure(StringBuilder sb, Struct vsOutput)
         {
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Position].FullName, Position.Reference));
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Position].FullName} = {Position.Reference};");
             if (Normal != null)
-                sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Normal].FullName, Normal.Reference));
+                sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Normal].FullName} = {Normal.Reference};");
             if (WorldPosition != null)
-                sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.WorldPosition].FullName, WorldPosition.Reference));
+                sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.WorldPosition].FullName} = {WorldPosition.Reference};");
             if (Texture != null)
-                sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Texture].FullName, Texture.Reference));
+                sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Texture].FullName} = {Texture.Reference};");
         }
 
         protected virtual void PrintReturnOutput(StringBuilder sb, Struct vsOutput)
         {
-            sb.AppendLine(string.Format("\treturn {0};", vsOutput.Name));
+            sb.AppendLine($"\treturn {vsOutput.Name};");
         }
 
         protected override void RegisterNodes()
         {
             base.RegisterNodes();
-            AddNode("WorldPosition", WorldPosition);
+            AddNode(nameof(WorldPosition), WorldPosition);
         }
     }
 
@@ -55,15 +55,15 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         public override string Operation(ref int indentation)
         {
-            Struct vsOutput = (Struct)Output;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format("\t{0} {1};", vsOutput.CustomType, vsOutput.Name));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Position].FullName, Position.Reference));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Normal].FullName, Normal.Reference));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.WorldPosition].FullName, WorldPosition.Reference));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.ShadowProjection].FullName, ShadowProjection.Reference));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Texture].FullName, Texture.Reference));
-            sb.AppendLine(string.Format("\treturn {0};", vsOutput.Name));
+            var vsOutput = (Struct)Output;
+            var sb = new StringBuilder();
+            sb.AppendLine($"\t{vsOutput.CustomType} {vsOutput.Name};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Position].FullName} = {Position.Reference};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Normal].FullName} = {Normal.Reference};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.WorldPosition].FullName} = {WorldPosition.Reference};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.ShadowProjection].FullName} = {ShadowProjection.Reference};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Texture].FullName} = {Texture.Reference};");
+            sb.AppendLine($"\treturn {vsOutput.Name};");
 
             return sb.ToString();
         }
@@ -71,7 +71,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
         protected override void RegisterNodes()
         {
             base.RegisterNodes();
-            AddNode("ShadowProjection", ShadowProjection);
+            AddNode(nameof(ShadowProjection), ShadowProjection);
         }
     }
 }

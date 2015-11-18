@@ -55,7 +55,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Operators
 
         protected override void RegisterNodes()
         {
-            AddNode("Coordinates", Coordinates);
+            AddNode(nameof(Coordinates), Coordinates);
         }
 
         protected override void SerializeVariables(BinarySerializer serializer)

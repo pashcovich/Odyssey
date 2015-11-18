@@ -24,14 +24,14 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             InputStruct = instanceStruct;
             OutputStruct = Struct.VertexPositionNormalTextureOut;
 
-            Structs.ConstantBuffer cbFrame = ConstantBuffer.CBPerFrame;
+            var cbFrame = ConstantBuffer.CBPerFrame;
             Add(cbFrame);
 
-            IVariable position = InputStruct[Param.SemanticVariables.ObjectPosition];
-            IVariable normal = InputStruct[Param.SemanticVariables.Normal];
-            IVariable texture = InputStruct[Param.SemanticVariables.Texture];
+            var position = InputStruct[Param.SemanticVariables.ObjectPosition];
+            var normal = InputStruct[Param.SemanticVariables.Normal];
+            var texture = InputStruct[Param.SemanticVariables.Texture];
 
-            CastNode nV3toV4 = new CastNode
+            var nV3toV4 = new CastNode
             {
                 Input = new SwizzleNode { Input = new ReferenceNode {Value= position}, Swizzle = new[] { Swizzle.X, Swizzle.Y, Swizzle.Z, Swizzle.Null } },
                 Output = new Vector { Type = Shaders.Type.Float4, Name = "vPosition" },
@@ -39,7 +39,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 IsVerbose = true
             };
 
-            ReferenceNode mWorld = new ReferenceNode
+            var mWorld = new ReferenceNode
             {
                 Value = InputStruct[Param.SemanticVariables.InstanceWorld],
                 Output = new Matrix {Type = Shaders.Type.Matrix, Name = "mWorld",},
@@ -47,32 +47,32 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 
             };
 
-            MatrixMultiplyNode m1m2 = new MatrixMultiplyNode
+            var m1m2 = new MatrixMultiplyNode
             {
                 Input1 = mWorld,
                 Input2 = new ReferenceNode { Value = Matrix.CameraView },
             };
 
-            MatrixMultiplyNode mulWVP = new MatrixMultiplyNode
+            var mulWVP = new MatrixMultiplyNode
             {
                 Input1 = m1m2,
                 Input2 = new ReferenceNode { Value = Matrix.CameraProjection },
                 IsVerbose = true
             };
 
-            MatrixMultiplyNode mulPosWVP = new MatrixMultiplyNode
+            var mulPosWVP = new MatrixMultiplyNode
             {
                 Input1 = nV3toV4,
                 Input2 = mulWVP,
             };
             
-            MatrixMultiplyNode mulWP = new MatrixMultiplyNode
+            var mulWP = new MatrixMultiplyNode
             {
                 Input1 = nV3toV4,
                 Input2 = mWorld,
             };
 
-            MatrixMultiplyNode mulNormal = new MatrixMultiplyNode
+            var mulNormal = new MatrixMultiplyNode
             {
                 Input1 = new ReferenceNode { Value = normal },
                 Input2 = CastNode.CastWorldFloat3x3((Matrix)mWorld.Output, "mWorld3x3")
@@ -102,17 +102,17 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             InputStruct = Struct.VertexPositionNormalTexture;
             OutputStruct = Struct.VertexPositionNormalTextureOut;
 
-            Structs.ConstantBuffer cbFrame = ConstantBuffer.CBPerFrame;
-            Structs.ConstantBuffer cbInstance = CBPerInstance;
+            var cbFrame = ConstantBuffer.CBPerFrame;
+            var cbInstance = CBPerInstance;
+
             Add(cbFrame);
             Add(cbInstance);
 
-            IVariable position = InputStruct[Param.SemanticVariables.ObjectPosition];
-            IVariable normal = InputStruct[Param.SemanticVariables.Normal];
-            IVariable texture = InputStruct[Param.SemanticVariables.Texture];
+            var position = InputStruct[Param.SemanticVariables.ObjectPosition];
+            var normal = InputStruct[Param.SemanticVariables.Normal];
+            var texture = InputStruct[Param.SemanticVariables.Texture];
 
-
-            CastNode nV3toV4 = new CastNode
+            var nV3toV4 = new CastNode
             {
                 Input = new SwizzleNode { Input = new ReferenceNode { Value = position }, Swizzle = new[] { Swizzle.X, Swizzle.Y, Swizzle.Z, Swizzle.Null } },
                 Output = new Vector { Type = Shaders.Type.Float4, Name = "vPosition" },
@@ -120,19 +120,19 @@ namespace Odyssey.Daedalus.Shaders.Techniques
                 IsVerbose = true
             };
 
-            MatrixMultiplyNode mulPosWVP = new MatrixMultiplyNode
+            var mulPosWVP = new MatrixMultiplyNode
             {
                 Input1 = nV3toV4,
                 Input2 = MatrixMultiplyNode.WorldViewProjection,
             };
 
-            MatrixMultiplyNode mulWP = new MatrixMultiplyNode
+            var mulWP = new MatrixMultiplyNode
             {
                 Input1 = nV3toV4,
                 Input2 = new ReferenceNode { Value = Matrix.EntityWorld },
             };
 
-            MatrixMultiplyNode mulNormal = new MatrixMultiplyNode
+            var mulNormal = new MatrixMultiplyNode
             {
                 Input1 = new ReferenceNode { Value = normal },
                 Input2 = CastNode.WorldInverseTransposeFloat3x3
@@ -148,11 +148,11 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             };
         }
 
-        public static Structs.ConstantBuffer CBPerInstance
+        public static ConstantBuffer CBPerInstance
         {
             get
             {
-                Structs.ConstantBuffer cbInstance = ConstantBuffer.CBPerInstance;
+                var cbInstance = ConstantBuffer.CBPerInstance;
                 cbInstance.Add(Matrix.EntityWorldInverseTranspose);
                 return cbInstance;
             }
@@ -176,7 +176,7 @@ namespace Odyssey.Daedalus.Shaders.Techniques
         {
             get
             {
-                Struct vpt = new Struct()
+                var vpt = new Struct()
                 {
                     CustomType = CustomType.VSOut,
                     Name = "output",
@@ -189,6 +189,4 @@ namespace Odyssey.Daedalus.Shaders.Techniques
             }
         }
     }
-
-
 }

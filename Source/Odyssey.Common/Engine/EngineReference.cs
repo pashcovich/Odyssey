@@ -27,15 +27,9 @@ namespace Odyssey.Engine
             this.value = value;
         }
 
-        public string Value
-        {
-            get { return value; }
-        }
+        public string Value => value;
 
-        public string Type
-        {
-            get { return type; }
-        }
+        public string Type => type;
 
         public int Index
         {
@@ -43,10 +37,7 @@ namespace Odyssey.Engine
             set { index = value; }
         }
 
-        internal static IEqualityComparer<EngineReference> Comparer
-        {
-            get { return ComparerInstance; }
-        }
+        internal static IEqualityComparer<EngineReference> Comparer => ComparerInstance;
 
         #region IXmlSerializable
 
@@ -78,7 +69,7 @@ namespace Odyssey.Engine
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}", Type, value);
+            return $"{Type}.{value}";
         }
 
         private sealed class ValueTypeEqualityComparer : IEqualityComparer<EngineReference>
@@ -96,7 +87,7 @@ namespace Odyssey.Engine
             {
                 unchecked
                 {
-                    return ((obj.value != null ? obj.value.GetHashCode() : 0)*397) ^ (obj.type != null ? obj.type.GetHashCode() : 0);
+                    return ((obj.value?.GetHashCode() ?? 0)*397) ^ (obj.type?.GetHashCode() ?? 0);
                 }
             }
         }

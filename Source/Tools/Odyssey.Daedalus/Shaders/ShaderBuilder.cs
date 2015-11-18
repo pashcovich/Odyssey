@@ -34,7 +34,7 @@ namespace Odyssey.Daedalus.Shaders
         }
 
         public string EntryPoint {get; private set;}
-        public string Output { get { return Flatten(stringList); } }
+        public string Output => Flatten(stringList);
 
         public ShaderBuilder(TechniqueKey key)
         {
@@ -48,7 +48,7 @@ namespace Odyssey.Daedalus.Shaders
         public void AddSeparator(string label)
         {
             stringList.Add(separator);
-            stringList.Add(string.Format("// {0}\n", label));
+            stringList.Add($"// {label}\n");
             stringList.Add(separator);
         }
 
@@ -62,8 +62,8 @@ namespace Odyssey.Daedalus.Shaders
         {
             parsedNodes.Clear();
 
-            List<string> slMethod = new List<string>();
-            List<IMethod> methods = new List<IMethod>();
+            var slMethod = new List<string>();
+            var methods = new List<IMethod>();
             slMethod.Add(signature);
             slMethod.Add("\n{\n"); 
             Build(node, slMethod,methods);
@@ -75,13 +75,13 @@ namespace Odyssey.Daedalus.Shaders
 
         string Flatten(IEnumerable<string> strings)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
                 foreach (string line in strings)
                     sb.Append(line.Replace("\t", tabSpaces));
                 return sb.ToString();
         }
 
-        void Build(INode node, List<string> slMethod, List<IMethod> methods)
+        void Build(INode node, ICollection<string> slMethod, List<IMethod> methods)
         {
             if (!parsedNodes.Contains(node))
                 node.Validate(key);

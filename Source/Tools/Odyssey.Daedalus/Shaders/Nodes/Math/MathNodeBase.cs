@@ -39,10 +39,10 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
 
                 Type type = GetResultType(Input1.Output.Type, Input2.Output.Type);
 
-                string name1 = Char.IsLower(Input1.Output.Name[0]) ? Input1.Output.Name.Substring(1, Input1.Output.Name.Length - 1) : Input1.Output.Name;
-                string name2 = Char.IsLower(Input2.Output.Name[0]) ? Input2.Output.Name.Substring(1, Input2.Output.Name.Length - 1) : Input2.Output.Name;
+                var name1 = Char.IsLower(Input1.Output.Name[0]) ? Input1.Output.Name.Substring(1, Input1.Output.Name.Length - 1) : Input1.Output.Name;
+                var name2 = Char.IsLower(Input2.Output.Name[0]) ? Input2.Output.Name.Substring(1, Input2.Output.Name.Length - 1) : Input2.Output.Name;
 
-                Output = Variable.InitVariable(string.Format("{0}{1}{2}", Variable.GetPrefix(type), name1, name2), type);
+                Output = Variable.InitVariable($"{Variable.GetPrefix(type)}{name1}{name2}", type);
                 return output;
             }
             set { output = value; }
@@ -63,20 +63,20 @@ namespace Odyssey.Daedalus.Shaders.Nodes.Math
         protected override string Assignment()
         {
             return AssignToInput1
-                ? string.Format("{0} {1}= {2};", Input1.Output.FullName, GetOperator(), Input2.Reference)
-                : string.Format("{0} = {1};", Output.FullName, Access());
+                ? $"{Input1.Output.FullName} {GetOperator()}= {Input2.Reference};"
+                : $"{Output.FullName} = {Access()};";
         }
 
         public override string Access()
         {
-            string access = string.Format("{0} {1} {2}", Input1.Reference, GetOperator(), Input2.Reference);
+            string access = $"{Input1.Reference} {GetOperator()} {Input2.Reference}";
             return string.Format(Parenthesize ? "({0})" : "{0}", access);
         }
 
         protected override void RegisterNodes()
         {
-            AddNode("Input1", Input1);
-            AddNode("Input2", Input2);
+            AddNode(nameof(Input1), Input1);
+            AddNode(nameof(Input2), Input2);
         }
 
         protected override void SerializeProperties(BinarySerializer serializer)

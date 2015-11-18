@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Odyssey.Daedalus.Shaders.Nodes
 {
@@ -11,26 +10,10 @@ namespace Odyssey.Daedalus.Shaders.Nodes
         [IgnoreValidation(true)]
         public INode Normal { get; set; }
 
-        public override IEnumerable<INode> DescendantNodes
-        {
-            get
-            {
-                foreach (var node in base.DescendantNodes)
-                    yield return node;
-
-                if (Normal != null)
-                {
-                    yield return Normal;
-                    foreach (var node in Normal.DescendantNodes)
-                        yield return node;
-                }
-            }
-        }
-
         protected override void RegisterNodes()
         {
             base.RegisterNodes();
-            AddNode("Normal", Normal);
+            AddNode(nameof(Normal), Normal);
         }
         
     }

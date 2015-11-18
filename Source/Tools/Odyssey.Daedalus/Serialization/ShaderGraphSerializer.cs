@@ -42,7 +42,7 @@ namespace Odyssey.Daedalus.Serialization
             int version = Reader.ReadInt32();
             if (version != Version)
             {
-                throw new NotSupportedException(string.Format("OSGB version [0x{0:X}] is not supported. Expecting [0x{1:X}]", version, Version));
+                throw new NotSupportedException($"OSGB version [0x{version:X}] is not supported. Expecting [0x{Version:X}]");
             }
             Serialize(ref techniques);
             EndChunk();

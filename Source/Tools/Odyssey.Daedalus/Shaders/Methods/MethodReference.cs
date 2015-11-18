@@ -9,10 +9,7 @@ namespace Odyssey.Daedalus.Shaders.Methods
         private string[] arguments;
         public IMethod Method { get; private set; }
 
-        public IEnumerable<string> Arguments
-        {
-            get { return arguments; }
-        }
+        public IEnumerable<string> Arguments => arguments;
 
         public MethodReference(IMethod method, IEnumerable<string> arguments) : this()
         {

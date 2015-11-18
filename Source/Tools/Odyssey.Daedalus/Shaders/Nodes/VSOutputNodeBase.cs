@@ -20,16 +20,6 @@ namespace Odyssey.Daedalus.Shaders.Nodes
         [SupportedType(Type.Struct)]
         public override IVariable Output { get; set; }
 
-        public override IEnumerable<INode> DescendantNodes
-        {
-            get
-            {
-                yield return Position;
-                foreach (var node in Position.DescendantNodes)
-                    yield return node;
-            }
-        }
-
         protected VSOutputNodeBase()
         {
             IsVerbose = true;
@@ -45,10 +35,10 @@ namespace Odyssey.Daedalus.Shaders.Nodes
         {
             Struct vsOutput = (Struct)Output;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format("\t{0} {1};", vsOutput.Type, vsOutput.Name));
-            sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.Position], Position.Access()));
+            sb.AppendLine($"\t{vsOutput.Type} {vsOutput.Name};");
+            sb.AppendLine($"\t{vsOutput[Param.SemanticVariables.Position]} = {Position.Access()};");
             //sb.AppendLine(string.Format("\t{0} = {1};", vsOutput[Param.SemanticVariables.WorldPosition], WorldPosition.Access()));
-            sb.AppendLine(string.Format("\treturn {0};", vsOutput.Name));
+            sb.AppendLine($"\treturn {vsOutput.Name};");
 
             return sb.ToString();
         }
@@ -60,7 +50,7 @@ namespace Odyssey.Daedalus.Shaders.Nodes
 
         protected override void RegisterNodes()
         {
-            AddNode("Position", Position);
+            AddNode(nameof(Position), Position);
         }
     }
 }
